@@ -2,6 +2,7 @@ import * as nt_q from "./queries"
 
 export namespace networkcube{
     
+
     export function findTemplate(nodes:nt_q.networkcube.Node[], 
         template:nt_q.networkcube.MotifTemplate, 
         config?:Object){
@@ -28,7 +29,7 @@ export namespace networkcube{
     }
 
 
-    export function findClusters(nodes:nt_q.networkcube.Node[], config?:Object){
+    export function findClusters(nodes, config?:Object){
         if(nodes.length == 0)
             return []
     

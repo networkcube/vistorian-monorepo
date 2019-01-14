@@ -1,4 +1,3 @@
-import * as nt from "./dynamicgraph" // I don't know what it does
 import * as nt_q from "./queries"
 
 export namespace networkcube {
