@@ -3,12 +3,20 @@
   "compilerOptions": {
     "rootDir": ".",
     "outDir": "build",
-    "target": "es5"
+    "target": "es5",
+    "module": "commonjs",
+    "declaration": true,
+    "noImplicitAny": false,
+    //"removeComments": true,
+    "noLib": false,
+    "preserveConstEnums": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "outFile": "./networkcube.js",
+    "sourceMap": true,
+    "watch": true
   },
-  "include": [
-    "src/*.ts",
-    "src/**/*.ts",
-    "test/*.ts",
-    "test/**/*.ts"
+  "strictFunctionTypes": false,
+  "files": [
+    "./src/Core/classes/analytics.ts"
   ]
 }

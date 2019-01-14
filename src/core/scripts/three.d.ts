@@ -5264,14 +5264,6 @@ declare module THREE {
         generateMipmaps: boolean;
     }
 
-    // Extras /////////////////////////////////////////////////////////////////////
-    export var CurveUtils: {
-        tangentQuadraticBezier(t: number, p0: number, p1: number, p2: number): number;
-        tangentCubicBezier(t: number, p0: number, p1: number, p2: number, p3: number): number;
-        tangentSpline(t: number, p0: number, p1: number, p2: number, p3: number): number;
-        interpolate(p0: number, p1: number, p2: number, p3: number, t: number): number;
-    }
-
     // deprecated.
     export var ImageUtils: {
         crossOrigin: string;
@@ -5421,6 +5413,7 @@ declare module THREE {
         tangentSpline(t: number, p0: number, p1: number, p2: number, p3: number): number;
         interpolate(p0: number, p1: number, p2: number, p3: number, t: number): number;
     };
+    
 
     export interface BoundingBox {
         minX: number;

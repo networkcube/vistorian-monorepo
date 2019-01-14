@@ -1,5 +1,8 @@
+"use strict";
 /// <reference path='../scripts/three.d.ts' />
-/// <reference path='./dynamicgraph.ts' />
+exports.__esModule = true;
+var nt = require("./dynamicgraph");
+var nt_q = require("./queries");
 var networkcube;
 (function (networkcube) {
     function getPriorityColor(element) {
@@ -89,18 +92,18 @@ var networkcube;
         if (elements.length == 0)
             return;
         var type;
-        if (elements[0] instanceof networkcube.Node)
+        if (elements[0] instanceof Node)
             type = 'node';
-        else if (elements[0] instanceof networkcube.Link) {
+        else if (elements[0] instanceof nt_q.networkcube.Link) {
             type = 'link';
         }
-        else if (elements[0] instanceof networkcube.Time) {
+        else if (elements[0] instanceof nt_q.networkcube.Time) {
             type = 'time';
         }
-        else if (elements[0] instanceof networkcube.NodePair) {
+        else if (elements[0] instanceof nt_q.networkcube.NodePair) {
             type = 'nodePair';
         }
-        else if (elements[0] instanceof networkcube.LinkType) {
+        else if (elements[0] instanceof nt.networkcube.LinkType) {
             type = 'linkType';
         }
         else if (typeof elements[0] == 'number') {
@@ -250,14 +253,6 @@ var networkcube;
         return true;
     }
     networkcube.isSame = isSame;
-    //     export function toScreen(x: number, y: number) {
-    //         var vector = new THREE.Vector3();
-    //         var projector = new THREE.Projector();
-    //         projector.projectVector(vector.setFromMatrixPosition(object.matrixWorld), camera);
-    // 
-    //         vector.x = (vector.x * widthHalf) + widthHalf;
-    //         vector.y = - (vector.y * heightHalf) + heightHalf;
-    //     }
     function sortNumber(a, b) {
         return a - b;
     }
@@ -461,4 +456,4 @@ var networkcube;
         }
         return new Blob([ia], { type: mimeString });
     }
-})(networkcube || (networkcube = {}));
+})(networkcube = exports.networkcube || (exports.networkcube = {}));

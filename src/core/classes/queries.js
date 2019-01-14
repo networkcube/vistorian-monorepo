@@ -1,5 +1,4 @@
-/// <reference path="./utils.ts" />    
-/// <reference path="./dynamicGraph.ts" />
+"use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -13,6 +12,8 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+exports.__esModule = true;
+var nt_u = require("./utils");
 var networkcube;
 (function (networkcube) {
     //// OBJECTS
@@ -748,7 +749,7 @@ var networkcube;
             }
             var array = this._elements.slice(0);
             array.sort(function (e1, e2) {
-                return networkcube.attributeSort(_this.g.get(_this.elementType, e1), _this.g.get(_this.elementType, e2), attrName, asc);
+                return nt_u.networkcube.attributeSort(_this.g.get(_this.elementType, e1), _this.g.get(_this.elementType, e2), attrName, asc);
             });
             this._elements = array;
             return this;
@@ -789,8 +790,11 @@ var networkcube;
             _this.elementType = 'node';
             return _this;
         }
-        NodeQuery.prototype.contains = function (n) {
-            return this._elements.indexOf(n.id()) > -1;
+        NodeQuery.prototype.contains = function (element) {
+            if (typeof element !== "number") {
+                return this._elements.indexOf(element.id()) > -1;
+            }
+            return _super.prototype.contains.call(this, element);
         };
         // WRAPPERS TO GENERIC FUNCTIONS IN GRAPH_ELEMENT_QUERY
         NodeQuery.prototype.highlighted = function () {
@@ -893,8 +897,11 @@ var networkcube;
             }
             return _this;
         }
-        LinkQuery.prototype.contains = function (l) {
-            return this._elements.indexOf(l.id()) > -1;
+        LinkQuery.prototype.contains = function (element) {
+            if (typeof element !== "number") {
+                return this._elements.indexOf(element.id()) > -1;
+            }
+            return _super.prototype.contains.call(this, element);
         };
         LinkQuery.prototype.highlighted = function () {
             return new LinkQuery(_super.prototype.generic_highlighted.call(this), this.g);
@@ -1010,8 +1017,11 @@ var networkcube;
             }
             return _this;
         }
-        NodePairQuery.prototype.contains = function (n) {
-            return this._elements.indexOf(n.id()) > -1;
+        NodePairQuery.prototype.contains = function (element) {
+            if (typeof element !== "number") {
+                return this._elements.indexOf(element.id()) > -1;
+            }
+            return _super.prototype.contains.call(this, element);
         };
         NodePairQuery.prototype.highlighted = function () {
             return new NodePairQuery(_super.prototype.generic_highlighted.call(this), this.g);
@@ -1090,8 +1100,11 @@ var networkcube;
             }
             return _this;
         }
-        TimeQuery.prototype.contains = function (t) {
-            return this._elements.indexOf(t.id()) > -1;
+        TimeQuery.prototype.contains = function (element) {
+            if (typeof element !== "number") {
+                return this._elements.indexOf(element.id()) > -1;
+            }
+            return _super.prototype.contains.call(this, element);
         };
         TimeQuery.prototype.highlighted = function () {
             return new TimeQuery(_super.prototype.generic_highlighted.call(this), this.g);
@@ -1192,8 +1205,11 @@ var networkcube;
             }
             return _this;
         }
-        LocationQuery.prototype.contains = function (l) {
-            return this._elements.indexOf(l.id()) > -1;
+        LocationQuery.prototype.contains = function (element) {
+            if (typeof element !== "number") {
+                return this._elements.indexOf(element.id()) > -1;
+            }
+            return _super.prototype.contains.call(this, element);
         };
         LocationQuery.prototype.highlighted = function () {
             return new LocationQuery(_super.prototype.generic_highlighted.call(this), this.g);
@@ -1322,4 +1338,4 @@ var networkcube;
         return MotifSequence;
     }());
     networkcube.MotifSequence = MotifSequence;
-})(networkcube || (networkcube = {}));
+})(networkcube = exports.networkcube || (exports.networkcube = {}));

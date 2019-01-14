@@ -1,9 +1,12 @@
-/// <reference path="./dynamicgraph.ts" />
-/// <reference path="./utils.ts" />
-/// <reference path="./search.ts" />
 /// <reference path="../scripts/jquery.d.ts" />
 
-module networkcube {
+import * as nt from "./dynamicgraph"
+import * as nt_u from "./utils"
+import * as nt_m from "./main"
+import * as nt_s from "./search"
+import * as nt_q from "./queries"
+
+export namespace networkcube {
 
     export var MESSAGE_HIGHLIGHT = 'highlight';
     export var MESSAGE_SELECTION = 'selection';
@@ -68,9 +71,11 @@ module networkcube {
     export class Message {
         id: number;
         type: string;
+        body: Object;
         constructor(type: string) {
             this.id = Math.random();
             this.type = type;
+            this.body = new Object(); // add undifined variable
         }
     }
 
@@ -99,10 +104,10 @@ module networkcube {
 
 
     // HIGHLIGHT
-    export function highlight(action: string, elementCompound?: ElementCompound): void {
+    export function highlight(action: string, elementCompound?: nt_u.networkcube.ElementCompound): void {
 
-        var g: DynamicGraph = networkcube.getDynamicGraph();
-        var idCompound: IDCompound = makeIdCompound(elementCompound);
+        var g: nt.networkcube.DynamicGraph = nt_m.networkcube.getDynamicGraph();
+        var idCompound: nt_u.networkcube.IDCompound = nt_u.networkcube.makeIdCompound(elementCompound);
 
         if (!elementCompound == undefined)
             action = 'reset';
@@ -121,19 +126,13 @@ module networkcube {
         } else {
             $('body').css('cursor', 'auto')
         }
-
-        // if(elements && elements.length > 0 && g.currentSelection_id > 0){
-        //     $('body').css('cursor', 'url(../../networkcube/icons/brush.png),auto')
-        // }else{
-        //     $('body').css('cursor', 'auto')
-        // }
     }
 
     export class HighlightMessage extends Message{
         action:string
-        idCompound:IDCompound;
+        idCompound:nt_u.networkcube.IDCompound;
 
-        constructor(action:string, idCompound?:IDCompound)
+        constructor(action:string, idCompound?:nt_u.networkcube.IDCompound)
         {
             super(MESSAGE_HIGHLIGHT);
             this.action = action;
@@ -144,13 +143,13 @@ module networkcube {
 
     // SELECTION MESSAGES
 
-    export function selection(action: string, compound: ElementCompound, selectionId?: number): void {
-        var g:DynamicGraph = networkcube.getDynamicGraph();
+    export function selection(action: string, compound: nt_u.networkcube.ElementCompound, selectionId?: number): void {
+        var g:nt.networkcube.DynamicGraph = nt_m.networkcube.getDynamicGraph();
         if(!selectionId)
             selectionId = g.currentSelection_id;
         var selection = g.getSelection(selectionId)
 
-        var idCompound:IDCompound = makeIdCompound(compound);
+        var idCompound:nt_u.networkcube.IDCompound = nt_u.networkcube.makeIdCompound(compound);
         
         var m: SelectionMessage = new SelectionMessage(
             action,
@@ -163,9 +162,9 @@ module networkcube {
     export class SelectionMessage extends Message{
         action:string
         selectionId:number;
-        idCompound:IDCompound;
+        idCompound:nt_u.networkcube.IDCompound;
 
-        constructor(action:string, idCompound:IDCompound, selectionId?:number)
+        constructor(action:string, idCompound:nt_u.networkcube.IDCompound, selectionId?:number)
         {
             super(MESSAGE_SELECTION);
             this.action = action;
@@ -177,7 +176,7 @@ module networkcube {
 
     // TIME CHANGE MESSAGES
     
-    export function timeRange(startUnix:number, endUnix:number, single:Time, propagate?:boolean){
+    export function timeRange(startUnix:number, endUnix:number, single:nt_q.networkcube.Time, propagate?:boolean){
         var m:TimeRangeMessage = new TimeRangeMessage(startUnix, endUnix);
         if(propagate == undefined)
             propagate = false;
@@ -204,7 +203,7 @@ module networkcube {
     
     export function createSelection(type:string, name:string){
 
-        var g:DynamicGraph = networkcube.getDynamicGraph();
+        var g:nt.networkcube.DynamicGraph = nt_m.networkcube.getDynamicGraph();
         var b = g.createSelection(type);
         b.name = name;
         var m = new CreateSelectionMessage(b)
@@ -214,8 +213,8 @@ module networkcube {
         return b;
     }
     export class CreateSelectionMessage extends Message {
-        selection: Selection;
-        constructor(b: Selection) {
+        selection: nt.networkcube.Selection;
+        constructor(b: nt.networkcube.Selection) {
             super(MESSAGE_SELECTION_CREATE)
             this.selection = b;
         }
@@ -225,8 +224,8 @@ module networkcube {
     // SET CURRENT SELECTION
 
 
-    export function setCurrentSelection(b: Selection) {
-        var g: DynamicGraph = networkcube.getDynamicGraph();
+    export function setCurrentSelection(b: nt.networkcube.Selection) {
+        var g: nt.networkcube.DynamicGraph = nt_m.networkcube.getDynamicGraph();
         // g.setCurrentSelection(b.id);
         var m = new SetCurrentSelectionIdMessage(b);
         // callHandler(m);
@@ -234,7 +233,7 @@ module networkcube {
     }
     export class SetCurrentSelectionIdMessage extends Message {
         selectionId: number
-        constructor(b: Selection) {
+        constructor(b: nt.networkcube.Selection) {
             super(MESSAGE_SELECTION_SET_CURRENT)
             this.selectionId = b.id;
         }
@@ -242,14 +241,14 @@ module networkcube {
 
     // CHANGE SELECTION COLOR
     
-    export function showSelectionColor(selection: Selection, showColor: boolean){
+    export function showSelectionColor(selection: nt.networkcube.Selection, showColor: boolean){
         var m = new ShowSelectionColorMessage(selection, showColor)
         distributeMessage(m);
     }
     export class ShowSelectionColorMessage extends Message {
         selectionId: number;
         showColor: boolean
-        constructor(selection: Selection, showColor: boolean) {
+        constructor(selection: nt.networkcube.Selection, showColor: boolean) {
             super(MESSAGE_SELECTION_SET_COLORING_VISIBILITY)
             this.selectionId = selection.id;
             this.showColor = showColor;
@@ -257,32 +256,14 @@ module networkcube {
     }
 
 
-    // export function filter(compound:Selection, filter:boolean){
-    //     var m = new Filter(makeIdCompound(compound), filter)
-    //     sendMessage(m);
-    // }
-    //
-    // export class Filter extends Message{
-    //     idCompound:number;
-    //     filter:string
-    //     constructor(idCompond:Selection, filter:boolean){
-    //         super(MESSAGE_FILTER)
-    //         this.idCompound = idCompound;
-    //         this.filter = filter;
-    //     }
-    // }
-    
-    /// FILTER SELECTION
-
-
-    export function filterSelection(selection: Selection, filter: boolean) {
+    export function filterSelection(selection: nt.networkcube.Selection, filter: boolean) {
         var m = new FilterSelectionMessage(selection, filter);
         distributeMessage(m);
     }
     export class FilterSelectionMessage extends Message {
         selectionId: number;
         filter: boolean
-        constructor(selection: Selection, filter: boolean) {
+        constructor(selection: nt.networkcube.Selection, filter: boolean) {
             super(MESSAGE_SELECTION_FILTER)
             this.selectionId = selection.id;
             this.filter = filter;
@@ -291,7 +272,7 @@ module networkcube {
     
     /// SWAP PRIORITY
 
-    export function swapPriority(s1: Selection, s2: Selection) {
+    export function swapPriority(s1: nt.networkcube.Selection, s2: nt.networkcube.Selection) {
         var m = new SelectionPriorityMessage(s1, s2, s2.priority, s1.priority);
         distributeMessage(m);
     }
@@ -302,7 +283,7 @@ module networkcube {
         priority1: number;
         priority2: number;
         filter: string
-        constructor(s1: Selection, s2: Selection, p1: number, p2: number) {
+        constructor(s1: nt.networkcube.Selection, s2: nt.networkcube.Selection, p1: number, p2: number) {
             super(MESSAGE_SELECTION_PRIORITY)
             this.selectionId1 = s1.id;
             this.selectionId2 = s2.id;
@@ -314,14 +295,14 @@ module networkcube {
 
     /// DELETE SELECTION
 
-    export function deleteSelection(selection: Selection){
+    export function deleteSelection(selection: nt.networkcube.Selection){
         var m = new DeleteSelectionMessage(selection);
         distributeMessage(m);
     }
 
     export class DeleteSelectionMessage extends Message {
         selectionId: number;
-        constructor(selection: Selection) {
+        constructor(selection: nt.networkcube.Selection) {
             super(MESSAGE_SELECTION_DELETE)
             this.selectionId = selection.id;
         }
@@ -331,14 +312,14 @@ module networkcube {
 
     /// SET SELECTION COLOR
     
-    export function setSelectionColor(s: Selection, color: string){
+    export function setSelectionColor(s: nt.networkcube.Selection, color: string){
         distributeMessage(new SelectionColorMessage(s, color));
     }
 
     class SelectionColorMessage extends Message {
         selectionId: number;
         color: string;
-        constructor(selection: Selection, color: string) {
+        constructor(selection: nt.networkcube.Selection, color: string) {
             super(MESSAGE_SELECTION_COLORING)
             this.selectionId = selection.id;
             this.color = color;
@@ -350,14 +331,14 @@ module networkcube {
 
 
     export function search(term:string, type?:string){
-        var idCompound:IDCompound = searchForTerm(term, networkcube.getDynamicGraph(), type);
+        var idCompound:nt_u.networkcube.IDCompound = nt_s.networkcube.searchForTerm(term, nt_m.networkcube.getDynamicGraph(), type);
         distributeMessage(new SearchResultMessage(term, idCompound));
     }
     
     export class SearchResultMessage extends Message{
-        idCompound:IDCompound;
+        idCompound:nt_u.networkcube.IDCompound;
         searchTerm:string
-        constructor(searchTerm:string, idCompound:IDCompound){
+        constructor(searchTerm:string, idCompound:nt_u.networkcube.IDCompound){
             super(MESSAGE_SEARCH_RESULT);
             this.idCompound = idCompound;
             this.searchTerm = searchTerm;
@@ -383,7 +364,7 @@ module networkcube {
         if (MESSENGER_PROPAGATE){
             localStorage[MESSAGE_KEY] = JSON.stringify(
                 message,
-                function(k, v) { return networkcube.dgraphReplacer(k, v); });
+                function(k, v) { return nt.networkcube.dgraphReplacer(k, v); });
         }
     }
 
@@ -392,10 +373,10 @@ module networkcube {
         var s = localStorage[MESSAGE_KEY];
         if (s == undefined || s == 'undefined')
             return;
-        var dgraph: DynamicGraph = getDynamicGraph();
+        var dgraph: nt.networkcube.DynamicGraph = nt_m.networkcube.getDynamicGraph();
         var m: Message = <Message>JSON.parse(
             s,
-            function(k, v) { return networkcube.dgraphReviver(dgraph, k, v); });
+            function(k, v) { return nt.networkcube.dgraphReviver(dgraph, k, v); });
         // console.log('\tMessage type', m.type, m.id)
 
         if (!m || m.id == previousMessageId) {
@@ -407,7 +388,7 @@ module networkcube {
 
 
     function processMessage(m: Message) {
-        var graph = networkcube.getDynamicGraph();
+        var graph = nt_m.networkcube.getDynamicGraph();
 
         // console.log('[Messenger] process message', m)
         if (messageHandler[m.type]) {
@@ -416,71 +397,6 @@ module networkcube {
             if (m.type == MESSAGE_HIGHLIGHT) {
                 var m2: HighlightMessage = <HighlightMessage>m;
                 graph.highlight(m2.action, m2.idCompound);
-            // } else
-            //     if (m.type == MESSAGE_SELECTION) {
-            //         var m3: SelectionMessage = <SelectionMessage>m;
-            //         var compound = cloneCompound(m3.idCompound)
-            //         graph.selection(m3.action, compound, m3.selectionId);
-            //     } else
-            //         if (m.type == MESSAGE_TIME_RANGE) {
-            //             // this type is a view message. no adjustments on the graph necessary.
-            //         } else
-            //             if (m.type == MESSAGE_SELECTION_SET_COLORING_VISIBILITY) {
-            //                 var m4: ShowSelectionColorMessage = <ShowSelectionColorMessage>m;
-            //                 graph.getSelection(m4.selectionId).showColor = m4.showColor;
-            //             } else
-            //                 if (m.type == MESSAGE_SELECTION_PRIORITY) {
-            //                     var m5: SelectionPriorityMessage = <SelectionPriorityMessage>m;
-            //                     graph.getSelection(m5.selectionId1).priority = m5.priority1;
-            //                     graph.getSelection(m5.selectionId2).priority = m5.priority2;
-            //                     var linkElements = graph.getLinks().selected().elements;
-            //                     for (var i = 0; i < linkElements.length; i++) {
-            //                         linkElements[i].getSelections().sort(sortByPriority)
-            //                     }
-            //                     var nodeElements = graph.getNodes().selected().elements;
-            //                     for (var i = 0; i < nodeElements.length; i++) {
-            //                         nodeElements[i].getSelections().sort(sortByPriority)
-            //                     }
-            //                     // elements = graph.getTimes().selected().elements;
-            //                     // for(var i=0 ; i<elements.length ; i++){
-            //                     //     elements[i].getSelections().sort(sortByPriority)
-            //                     // }
-            //                     var nodePairElements = graph.getNodePairs().selected().elements;
-            //                     for (var i = 0; i < nodePairElements.length; i++) {
-            //                         nodePairElements[i].getSelections().sort(sortByPriority)
-            //                     }
-            //                 } else
-            //                     // if(m.type == MESSAGE_FILTER){
-            //                     //     var m6:FilterM = <SelectionPriorityMessage>m;
-            //                     //     graph.filter(m.idCompound, filter)
-            //                     // }else
-            //                     if (m.type == MESSAGE_SELECTION_FILTER) {
-            //                         var m6: FilterSelectionMessage = <FilterSelectionMessage>m;
-            //                         graph.filterSelection(m6.selectionId, m6.filter);
-            //                     } else
-            //                         // test messages that don't require a message handler
-            //                         if (m.type == MESSAGE_SELECTION_CREATE) {
-            //                             var m7: CreateSelectionMessage = <CreateSelectionMessage>m;
-            //                             graph.addSelection(m7.selection.id, m7.selection.color, m7.selection.acceptedType, m7.selection.priority);
-            //                         } else
-            //                             if (m.type == MESSAGE_SELECTION_SET_CURRENT) {
-            //                                 var m8: SetCurrentSelectionIdMessage = <SetCurrentSelectionIdMessage>m;
-            //                                 graph.setCurrentSelection(m8.selectionId);
-            //                             } else
-            //                                 if (m.type == MESSAGE_SELECTION_DELETE) {
-            //                                     var m10: DeleteSelectionMessage = <DeleteSelectionMessage>m;
-            //                                     graph.deleteSelection(m10.selectionId);
-            //                                 } else
-            //                                     if (m.type == MESSAGE_SEARCH_RESULT) {
-            //                                         var m11: SearchResultMessage = <SearchResultMessage>m;
-            //                                         graph.highlight('set', m11.idCompound);
-            //                                     } else
-            //                                         if (m.type == MESSAGE_SELECTION_COLORING) {
-            //                                             var m12: SelectionColorMessage = <SelectionColorMessage>m;
-            //                                             graph.getSelection(m12.selectionId).color = m12.color;
-            //                                         }
-// 
-// 
             }else
             if(m.type == MESSAGE_SELECTION){
                 var m3:SelectionMessage = <SelectionMessage>m;
@@ -500,19 +416,15 @@ module networkcube {
 
                 var linkElements = graph.links().selected().toArray();
                 for(var i=0 ; i<linkElements.length ; i++){
-                    linkElements[i].getSelections().sort(sortByPriority)
+                    linkElements[i].getSelections().sort(nt_u.networkcube.sortByPriority)
                 }
                 var nodeElements = graph.nodes().selected().toArray();
                 for(var i=0 ; i<nodeElements.length ; i++){
-                    nodeElements[i].getSelections().sort(sortByPriority)
+                    nodeElements[i].getSelections().sort(nt_u.networkcube.sortByPriority)
                 }
-                // elements = graph.getTimes().selected().elements;
-                // for(var i=0 ; i<elements.length ; i++){
-                //     elements[i].getSelections().sort(sortByPriority)
-                // }
                 var nodePairElements = graph.nodePairs().selected().toArray();
                 for(var i=0 ; i<nodePairElements.length ; i++){
-                    nodePairElements[i].getSelections().sort(sortByPriority)
+                    nodePairElements[i].getSelections().sort(nt_u.networkcube.sortByPriority)
                 }
             }else
             // if(m.type == MESSAGE_FILTER){

@@ -1,4 +1,4 @@
-module networkcube{
+export namespace networkcube{
     
     
     export function loadDyson(url:string, callback:Function){

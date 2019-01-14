@@ -1,11 +1,12 @@
 /// <reference path="./colors.ts" />
 /// <reference path="../scripts/moment.d.ts" />
-/// <reference path="./utils.ts" />
-/// <reference path="./datamanager.ts" />
 /// <reference path="../scripts/d3.d.ts" />
-/// <reference path="./queries.ts" />
 
-module networkcube {
+import * as nt_q from "./queries"
+import * as nt_u from "./utils"
+import * as nt_d from "./datamanager"
+
+export module networkcube {
 
     export var GRANULARITY: string[] = ['millisecond', 'second', 'minute', 'hour', 'day', 'week', 'month', 'year', 'decade', 'century', 'millenium'];
 
@@ -47,12 +48,12 @@ module networkcube {
         minWeight:number = 10000000;
         maxWeight:number = -10000000;
 
-        _nodes: Node[] = [];
-        _links: Link[] = [];
-        _nodePairs: NodePair[] = [];
-        _locations: Location[] = [];
+        _nodes: nt_q.networkcube.Node[] = [];
+        _links: nt_q.networkcube.Link[] = [];
+        _nodePairs: nt_q.networkcube.NodePair[] = [];
+        _locations: nt_q.networkcube.Location[] = [];
         // Contains all time objects for this dynamic graph
-        _times: Time[] = [];
+        _times: nt_q.networkcube.Time[] = [];
         // linkTypes: LinkType[] = [];
         timeObjects = []
 
@@ -94,7 +95,7 @@ module networkcube {
         }
 
         // highlighted objects
-        highlightArrays: IDCompound = new IDCompound();
+        highlightArrays: nt_u.networkcube.IDCompound = new nt_u.networkcube.IDCompound();
 
         currentSelection_id: number = 0;
         defaultLinkSelection: Selection;
@@ -152,7 +153,7 @@ module networkcube {
         }
         static timeReviver(k: string, v: any, s: DynamicGraph): any {
             if (k == '') {
-                return copyPropsShallow(v, new Time(v.id, s));
+                return nt_u.networkcube.copyPropsShallow(v, new nt_q.networkcube.Time(v.id, s));
             } else {
                 return dgraphReviver(s, k, v);
             }
@@ -161,19 +162,19 @@ module networkcube {
         static nodeArrayReviver(k: string, v: any, s: DynamicGraph): any {
             switch (k) {
                 case '':
-                    return copyPropsShallow(v, new NodeArray());
+                    return nt_u.networkcube.copyPropsShallow(v, new NodeArray());
                 // case 'nodeType':
                 // return copyTimeSeries(v, function() { return new ScalarTimeSeries<string>(); });
                 case 'outLinks':
                 case 'inLinks':
                 case 'links':
-                    return copyTimeSeries(v, function () { return new ArrayTimeSeries<number>(); });
+                    return nt_u.networkcube.copyTimeSeries(v, function () { return new nt_q.networkcube.ArrayTimeSeries<number>(); });
                 case 'outNeighbors':
                 case 'inNeighbors':
                 case 'neighbors':
-                    return copyTimeSeries(v, function () { return new ArrayTimeSeries<number>(); });
+                    return nt_u.networkcube.copyTimeSeries(v, function () { return new nt_q.networkcube.ArrayTimeSeries<number>(); });
                 case 'locations':
-                    return copyTimeSeries(v, function () { return new ScalarTimeSeries<number>(); });
+                    return nt_u.networkcube.copyTimeSeries(v, function () { return new nt_q.networkcube.ScalarTimeSeries<number>(); });
                 default:
                     return v;
             }
@@ -182,9 +183,9 @@ module networkcube {
         static linkArrayReviver(k: string, v: any, s: DynamicGraph): any {
             switch (k) {
                 case '':
-                    return copyPropsShallow(v, new LinkArray());
+                    return nt_u.networkcube.copyPropsShallow(v, new LinkArray());
                 case 'weights':
-                    return copyTimeSeries(v, function () { return new ScalarTimeSeries<number>(); });
+                    return nt_u.networkcube.copyTimeSeries(v, function () { return new nt_q.networkcube.ScalarTimeSeries<number>(); });
                 default:
                     return v;
             }
@@ -193,7 +194,7 @@ module networkcube {
         static nodePairArrayReviver(k: string, v: any, s: DynamicGraph): any {
             switch (k) {
                 case '':
-                    return copyPropsShallow(v, new NodePairArray());
+                    return nt_u.networkcube.copyPropsShallow(v, new NodePairArray());
                 default:
                     return v;
             }
@@ -202,7 +203,7 @@ module networkcube {
         static timeArrayReviver(k: string, v: any, s: DynamicGraph): any {
             switch (k) {
                 case '':
-                    return copyPropsShallow(v, new TimeArray());
+                    return nt_u.networkcube.copyPropsShallow(v, new TimeArray());
                 case 'time':
                     var vAsArray: string[] = v;
                     return vAsArray.map(function (s, i) { return moment(s); });
@@ -214,7 +215,7 @@ module networkcube {
         static linkTypeArrayReviver(k: string, v: any, s: DynamicGraph): any {
             switch (k) {
                 case '':
-                    return copyPropsShallow(v, new LinkTypeArray());
+                    return nt_u.networkcube.copyPropsShallow(v, new LinkTypeArray());
                 default:
                     return v;
             }
@@ -222,7 +223,7 @@ module networkcube {
         static nodeTypeArrayReviver(k: string, v: any, s: DynamicGraph): any {
             switch (k) {
                 case '':
-                    return copyPropsShallow(v, new NodeTypeArray());
+                    return nt_u.networkcube.copyPropsShallow(v, new NodeTypeArray());
                 default:
                     return v;
             }
@@ -231,13 +232,13 @@ module networkcube {
         static locationArrayReviver(k: string, v: any, s: DynamicGraph): any {
             switch (k) {
                 case '':
-                    return copyPropsShallow(v, new LocationArray());
+                    return nt_u.networkcube.copyPropsShallow(v, new LocationArray());
                 default:
                     return v;
             }
         }
 
-        loadDynamicGraph(dataMgr: DataManager, dataSetName: string): void {
+        loadDynamicGraph(dataMgr: nt_d.networkcube.DataManager, dataSetName: string): void {
             this.clearSelections();
             //this.data = dataSet;
             this.name = dataSetName;
@@ -313,7 +314,7 @@ module networkcube {
 
         }
 
-        saveDynamicGraph(dataMgr: DataManager): void {
+        saveDynamicGraph(dataMgr: nt_d.networkcube.DataManager): void {
             // CACHEGRAPH : persist the entire state of the dynamic graph
             dataMgr.saveToStorage(this.name, this.gran_min_NAME, this.gran_min);
             dataMgr.saveToStorage(this.name, this.gran_max_NAME, this.gran_max);
@@ -343,7 +344,7 @@ module networkcube {
         }
 
         // Removes this graph from the cache.
-        delete(dataMgr: DataManager){
+        delete(dataMgr: nt_d.networkcube.DataManager){
             dataMgr.removeFromStorage(this.name, this.gran_min_NAME);
             dataMgr.removeFromStorage(this.name, this.gran_max_NAME);
             dataMgr.removeFromStorage(this.name, this.minWeight_NAME);
@@ -390,27 +391,27 @@ module networkcube {
             }
 
             if (this._nodes.length != other._nodes.length
-                || !compareTypesDeep(this._nodes, other._nodes, 2)) {
+                || !nt_u.networkcube.compareTypesDeep(this._nodes, other._nodes, 2)) {
                 console.log("nodes different");
                 result = false;
             }
             if (this._links.length != other._links.length
-                || !compareTypesDeep(this._links, other._links, 2)) {
+                || !nt_u.networkcube.compareTypesDeep(this._links, other._links, 2)) {
                 console.log("links different");
                 result = false;
             }
             if (this._nodePairs.length != other._nodePairs.length
-                || !compareTypesDeep(this._nodePairs, other._nodePairs, 2)) {
+                || !nt_u.networkcube.compareTypesDeep(this._nodePairs, other._nodePairs, 2)) {
                 console.log("nodePairs different");
                 result = false;
             }
             if (this._locations.length != other._locations.length
-                || !compareTypesDeep(this._locations, other._locations, 2)) {
+                || !nt_u.networkcube.compareTypesDeep(this._locations, other._locations, 2)) {
                 console.log("locations different");
                 result = false;
             }
             if (this._times.length != other._times.length
-                || !compareTypesDeep(this._times, other._times, 2)) {
+                || !nt_u.networkcube.compareTypesDeep(this._times, other._times, 2)) {
                 console.log("times different");
                 result = false;
             }
@@ -422,73 +423,73 @@ module networkcube {
 
 
             if ((this.nodeOrders && this.nodeOrders.length != other.nodeOrders.length)
-                || !compareTypesDeep(this.nodeOrders, other.nodeOrders, 2)) {
+                || !nt_u.networkcube.compareTypesDeep(this.nodeOrders, other.nodeOrders, 2)) {
                 console.log("nodeOrders different", this.nodeOrders, other.nodeOrders);
                 result = false;
             }
 
             if (this.matrix.length != other.matrix.length
-                || !compareTypesDeep(this.matrix, other.matrix, 2)) {
+                || !nt_u.networkcube.compareTypesDeep(this.matrix, other.matrix, 2)) {
                 console.log("matrix different", this.matrix, other.matrix);
                 result = false;
             }
 
             if (this.nodeArrays.length != other.nodeArrays.length
-                || !compareTypesDeep(this.nodeArrays, other.nodeArrays, 2)) {
+                || !nt_u.networkcube.compareTypesDeep(this.nodeArrays, other.nodeArrays, 2)) {
                 console.log("nodeArrays different", this.nodeArrays, other.nodeArrays);
                 result = false;
             }
 
             if (this.linkArrays.length != other.linkArrays.length
-                || !compareTypesDeep(this.linkArrays, other.linkArrays, 2)) {
+                || !nt_u.networkcube.compareTypesDeep(this.linkArrays, other.linkArrays, 2)) {
                 console.log("linkArrays different", this.linkArrays, other.linkArrays);
                 result = false;
             }
 
             if (this.nodePairArrays.length != other.nodePairArrays.length
-                || !compareTypesDeep(this.nodePairArrays, other.nodePairArrays, 2)) {
+                || !nt_u.networkcube.compareTypesDeep(this.nodePairArrays, other.nodePairArrays, 2)) {
                 console.log("nodePairArrays different", this.nodePairArrays, other.nodePairArrays);
                 result = false;
             }
 
             if (this.timeArrays.length != other.timeArrays.length
-                || !compareTypesDeep(this.timeArrays, other.timeArrays, 2)) {
+                || !nt_u.networkcube.compareTypesDeep(this.timeArrays, other.timeArrays, 2)) {
                 console.log("timeArrays different", this.timeArrays, other.timeArrays);
                 result = false;
             }
 
             if (this.linkTypeArrays.length != other.linkTypeArrays.length
-                || !compareTypesDeep(this.linkTypeArrays, other.linkTypeArrays, 2)) {
+                || !nt_u.networkcube.compareTypesDeep(this.linkTypeArrays, other.linkTypeArrays, 2)) {
                 console.log("linkTypeArrays different", this.linkTypeArrays, other.linkTypeArrays);
                 result = false;
             }
 
             if (this.nodeTypeArrays.length != other.nodeTypeArrays.length
-                || !compareTypesDeep(this.nodeTypeArrays, other.nodeTypeArrays, 2)) {
+                || !nt_u.networkcube.compareTypesDeep(this.nodeTypeArrays, other.nodeTypeArrays, 2)) {
                 console.log("nodeTypeArrays different", this.nodeTypeArrays, other.nodeTypeArrays);
                 result = false;
             }
 
             if (this.locationArrays.length != other.locationArrays.length
-                || !compareTypesDeep(this.locationArrays, other.locationArrays, 2)) {
+                || !nt_u.networkcube.compareTypesDeep(this.locationArrays, other.locationArrays, 2)) {
                 console.log("locationArrays different", this.locationArrays, other.locationArrays);
                 result = false;
             }
 
             if (this.defaultLinkSelection.elementIds.length != other.defaultLinkSelection.elementIds.length
-                || !compareTypesDeep(this.defaultLinkSelection, other.defaultLinkSelection, 2)) {
+                || !nt_u.networkcube.compareTypesDeep(this.defaultLinkSelection, other.defaultLinkSelection, 2)) {
                 console.log("defaultLinkSelection different", this.defaultLinkSelection, other.defaultLinkSelection);
                 result = false;
             }
 
             if (this.defaultNodeSelection.elementIds.length != other.defaultNodeSelection.elementIds.length
-                || !compareTypesDeep(this.defaultNodeSelection, other.defaultNodeSelection, 2)) {
+                || !nt_u.networkcube.compareTypesDeep(this.defaultNodeSelection, other.defaultNodeSelection, 2)) {
                 console.log("defaultNodeSelection different", this.defaultNodeSelection, other.defaultNodeSelection);
                 result = false;
             }
 
             if (this.selections.length != other.selections.length
-                || !compareTypesDeep(this.selections, other.selections, 2)) {
+                || !nt_u.networkcube.compareTypesDeep(this.selections, other.selections, 2)) {
                 console.log("selections different", this.selections, other.selections);
                 result = false;
             }
@@ -498,7 +499,7 @@ module networkcube {
 
         // creates this graph and fills node, link and time arrays from
         // data tables.
-        initDynamicGraph(data: DataSet): void {
+        initDynamicGraph(data: nt_d.networkcube.DataSet): void {
 
             this.clearSelections();
             // console.log('[dynamicgraph.ts] Create dynamic graph for ', data.name, data)
@@ -512,7 +513,7 @@ module networkcube {
             this.gran_min = 0;
             this.gran_max = 0;
 
-            if (isValidIndex(data.linkSchema.time)) {
+            if (nt_u.networkcube.isValidIndex(data.linkSchema.time)) {
                 var timeLabels: number[] = [];
                 var timeLabel: string;
                 var unixTimes: number[] = [];
@@ -531,7 +532,7 @@ module networkcube {
                     // console.log('PARSE LINK ROW: ', unixTime, data.linkTable[i] )
                 }
                 // obtain granularity
-                unixTimes.sort(sortNumber)
+                unixTimes.sort(nt_u.networkcube.sortNumber)
                 // console.log('>> timeArray:', timeArray)
 
                 var diff = 99999999999999;
@@ -585,7 +586,7 @@ module networkcube {
                     this.timeArrays.links.push([]);
 
                     // create time objects  
-                    this._times.push(new Time(i, this));
+                    this._times.push(new nt_q.networkcube.Time(i, this));
                     // curr_t = start.add(1, GRANULARITY[this.gran_min] + 's');
                 }
                 console.log('#TIMES:', this._times.length);
@@ -613,7 +614,7 @@ module networkcube {
                 this.timeArrays.selections.push([]);
                 this.timeArrays.filter.push(false)
                 this.timeArrays.links.push([])
-                this._times.push(new Time(0, this));
+                this._times.push(new nt_q.networkcube.Time(0, this));
             }
 
             // from here on, there is at least one time object present.
@@ -624,7 +625,7 @@ module networkcube {
             var location: Location;
 
             // if there is a location table, then there needs to be locationSchema
-            console.assert(!data.locationTable || isValidIndex(data.locationSchema.id));
+            console.assert(!data.locationTable || nt_u.networkcube.isValidIndex(data.locationSchema.id));
 
             if (data.locationTable) {
                 for (var i = 0; i < data.locationTable.length; i++) {
@@ -647,8 +648,8 @@ module networkcube {
             var nodeId_data; // node id in data set
             var nodeId_table; // node id in table
             var attribute: any;
-            var time:Time;
-            console.assert(data.nodeTable.length == 0 || isValidIndex(data.nodeSchema.id),
+            var time:nt_q.networkcube.Time;
+            console.assert(data.nodeTable.length == 0 || nt_u.networkcube.isValidIndex(data.nodeSchema.id),
                 'either there is no nodeTable data, or we have a schema for the nodetable');
 
             var nodeUserProperties = []
@@ -680,17 +681,17 @@ module networkcube {
                     nodeId_table = this.nodeArrays.id.length;
                     this.nodeArrays.id.push(nodeId_data);
                     this.nodeArrays.nodeType.push('');
-                    this.nodeArrays.outLinks.push(new ArrayTimeSeries<number>());
-                    this.nodeArrays.inLinks.push(new ArrayTimeSeries<number>());
-                    this.nodeArrays.links.push(new ArrayTimeSeries<number>());      // both, in and out
-                    this.nodeArrays.outNeighbors.push(new ArrayTimeSeries<number>());
-                    this.nodeArrays.inNeighbors.push(new ArrayTimeSeries<number>());
-                    this.nodeArrays.neighbors.push(new ArrayTimeSeries<number>());
+                    this.nodeArrays.outLinks.push(new nt_q.networkcube.ArrayTimeSeries<number>());
+                    this.nodeArrays.inLinks.push(new nt_q.networkcube.ArrayTimeSeries<number>());
+                    this.nodeArrays.links.push(new nt_q.networkcube.ArrayTimeSeries<number>());      // both, in and out
+                    this.nodeArrays.outNeighbors.push(new nt_q.networkcube.ArrayTimeSeries<number>());
+                    this.nodeArrays.inNeighbors.push(new nt_q.networkcube.ArrayTimeSeries<number>());
+                    this.nodeArrays.neighbors.push(new nt_q.networkcube.ArrayTimeSeries<number>());
                     this.nodeArrays.selections.push([]);
                     this.nodeArrays.filter.push(false);
-                    this.nodeArrays.locations.push(new ScalarTimeSeries<number>());
+                    this.nodeArrays.locations.push(new nt_q.networkcube.ScalarTimeSeries<number>());
                     this.nodeArrays.attributes.push(new Object());
-                    if (isValidIndex(data.nodeSchema.label)) {
+                    if (nt_u.networkcube.isValidIndex(data.nodeSchema.label)) {
                         this.nodeArrays.label.push(row[data.nodeSchema.label]);
                     } else {
                         this.nodeArrays.label.push(row[data.nodeSchema.id]);
@@ -699,7 +700,7 @@ module networkcube {
 
                 // get time        
                 // if (isValidIndex(data.nodeSchema.time)) {
-                if (isValidIndex(data.nodeSchema.time)) {
+                if (nt_u.networkcube.isValidIndex(data.nodeSchema.time)) {
                     timeLabel = row[data.nodeSchema.time];
                     if (timeLabel == undefined) {//} || timeStamp.indexOf('null')) {
                         time = this._times[0];
@@ -713,7 +714,7 @@ module networkcube {
                     time = this._times[0];
 
                 // check locations
-                if (isValidIndex(data.nodeSchema.location)) {
+                if (nt_u.networkcube.isValidIndex(data.nodeSchema.location)) {
                     var locId = row[data.nodeSchema.location];
                     console.log('locId', locId)
                     if (locId == null || locId == undefined || locId == -1)
@@ -722,7 +723,7 @@ module networkcube {
                 }
 
                 // gather node type
-                if (isValidIndex(data.nodeSchema.nodeType)) {
+                if (nt_u.networkcube.isValidIndex(data.nodeSchema.nodeType)) {
                     typeName = data.nodeTable[i][data.nodeSchema.nodeType]
                     typeId = this.nodeTypeArrays.name.indexOf(typeName)
                     if (typeId < 0) {
@@ -739,64 +740,12 @@ module networkcube {
                     prop = nodeUserProperties[p];
                     this.nodeArrays[prop].push(row[data.nodeSchema[prop]]);
                 }
-
-
-                // see if temporal information is available
-                // if(data.nodeSchema.time && data.nodeSchema.time > -1){
-                //     for(var field in data.nodeSchema){
-                //         if (field != undefined
-                //             && data.nodeSchema.hasOwnProperty(field)
-                //             && data.©nodeSchema[field] > -1
-                //             && field != 'label'
-                //             && field != 'time'
-                //             && field != 'locations'
-                //             && field != 'id'
-                //             ){  
-                //                 if(this.nodeArrays.attributes[nodeId_table][field] == undefined){
-                //                     this.nodeArrays.attributes[nodeId_table][field] = new ScalarTimeSeries();    
-                //                 }
-                //                 timeLabel = data.nodeTable[i][data.nodeSchema.time];
-                //                 if(timeLabel == undefined)
-                //                     continue;
-                //                 timeStamp = parseInt(moment(timeLabel, networkcube.TIME_FORMAT).format('x'));
-                //                 time = this.times[this.getTimeIdForTimeStamp(timeStamp)];
-                //                 this.nodeArrays[field][nodeId_table].set(time, row[data.nodeSchema[field]]);
-
-                //             // //in case of locations:
-                //             // if(field == 'location'){
-                //             //     if(typeof row[data.nodeSchema[field]] == 'number'){
-                //             //         id_loc = row[data.nodeSchema[field]];         
-                //             //     }
-                //             // }
-                //          }
-                //     }     
-                // }else{
-                //     // no time information available on nodes
-                //     for(var field in data.nodeSchema){
-                //         if (field != undefined
-                //             && data.nodeSchema.hasOwnProperty(field)
-                //             && data.nodeSchema[field] > -1
-                //             && field != 'label'
-                //             && field != 'time'
-                //             && field != 'id'
-                //             && field != 'locations'
-                //             )
-                //         {
-                //             // check for non temporal information
-                //             if(this.nodeArrays.attributes[nodeId_table][field] == undefined){
-                //                 this.nodeArrays.attributes[nodeId_table][field] = new ScalarTimeSeries();    
-                //             }
-                //             // eternal attributes are assigned no time.
-                //             this.nodeArrays[field][nodeId_table].set(undefined, row[data.nodeSchema[field]]); 
-                //         }
-                //     }
-                // }
             }
 
             // create matrix and initialize with -1, i.e. nodes are not connected.
             if ('id' in this.nodeArrays) {
                 for (var i = 0; i < this.nodeArrays.id.length; i++) {
-                    this.matrix.push(array(undefined, this.nodeArrays.id.length));
+                    this.matrix.push(nt_u.networkcube.array(undefined, this.nodeArrays.id.length));
                 }
             }
 
@@ -833,9 +782,9 @@ module networkcube {
 
 
             console.assert(data.linkTable.length == 0 || (
-                isValidIndex(data.linkSchema.id)
-                && isValidIndex(data.linkSchema.source)
-                && isValidIndex(data.linkSchema.target)),
+                nt_u.networkcube.isValidIndex(data.linkSchema.id)
+                && nt_u.networkcube.isValidIndex(data.linkSchema.source)
+                && nt_u.networkcube.isValidIndex(data.linkSchema.target)),
                 'either there are no links, or the linkschema is defined');
                 
             for (var i = 0; i < data.linkTable.length; i++) {
@@ -852,7 +801,7 @@ module networkcube {
                     this.linkArrays.target[linkId] = row[data.linkSchema.target];
                     this.linkArrays.linkType[linkId] = row[data.linkSchema.linkType];
                     this.linkArrays.directed[linkId] = row[data.linkSchema.directed];
-                    this.linkArrays.weights[linkId] = new ScalarTimeSeries<number>();
+                    this.linkArrays.weights[linkId] = new nt_q.networkcube.ScalarTimeSeries<number>();
                     this.linkArrays.presence[linkId] = [];
                     this.linkArrays.selections.push([]);
                     this.linkArrays.nodePair.push(undefined);
@@ -863,7 +812,7 @@ module networkcube {
                 var TIME_FORMAT: string = 'YYYY-MM-DD hh:mm:ss';
 
                 // set time information
-                if (isValidIndex(data.linkSchema.time)) {
+                if (nt_u.networkcube.isValidIndex(data.linkSchema.time)) {
                     timeLabel = data.linkTable[i][data.linkSchema.time];
                     unixTime = parseInt(moment(timeLabel, TIME_FORMAT).format('x'));
                     timeId = this.getTimeIdForUnixTime(unixTime);
@@ -878,7 +827,7 @@ module networkcube {
 
                 // set weight if applies
                 // console.log('data.linkSchema.weight', data.linkSchema.weight)
-                if (isValidIndex(data.linkSchema.weight) && data.linkTable[i][data.linkSchema.weight] != undefined) 
+                if (nt_u.networkcube.isValidIndex(data.linkSchema.weight) && data.linkTable[i][data.linkSchema.weight] != undefined) 
                 {
                     this.linkArrays.weights[linkId].set(time, parseFloat(data.linkTable[i][data.linkSchema.weight]))
                     this.minWeight = Math.min(this.minWeight, data.linkTable[i][data.linkSchema.weight])
@@ -915,7 +864,7 @@ module networkcube {
                 // in both node pairs.
                 // console.log('here');
                 nodePairId = this.matrix[s][t];
-                if (!isValidIndex(nodePairId)) {
+                if (!nt_u.networkcube.isValidIndex(nodePairId)) {
                     // console.log('create new node pair', s, t);
                     nodePairId = this.nodePairArrays.length;
                     this.matrix[s][t] = nodePairId;
@@ -940,7 +889,7 @@ module networkcube {
                         this.nodePairArrays.id.push(nodePairId);
                         this.nodePairArrays.source.push(t);
                         this.nodePairArrays.target.push(s);
-                        this.nodePairArrays.links.push(networkcube.doubleArray(this._times.length));
+                        this.nodePairArrays.links.push(nt_u.networkcube.doubleArray(this._times.length));
                     }
                     // add link only, if not already exist
                     if (this.nodePairArrays.links[nodePairId].indexOf(linkId) == -1) {
@@ -950,7 +899,7 @@ module networkcube {
                 }
 
                 // gather link types
-                if (isValidIndex(data.linkSchema.linkType)) {
+                if (nt_u.networkcube.isValidIndex(data.linkSchema.linkType)) {
                     typeName = data.linkTable[i][data.linkSchema.linkType]
                     typeId = this.linkTypeArrays.name.indexOf(typeName)
                     if (typeId < 0) {
@@ -959,8 +908,6 @@ module networkcube {
                         this.linkTypeArrays.name.push(typeName)
                     }
                     data.linkTable[i][data.linkSchema.linkType] = typeId;
-                    // this.linkArrays.linkType[i] = typeId;
-                    // console.log('this.linkArrays.type[i]', i, this.linkArrays.type[i]);
                 }
 
                 // gather user-properties: 
@@ -971,8 +918,7 @@ module networkcube {
             }
 
             // For every time, store a pointer to all its links: 
-            // var allLinks = links().toArray();
-            // var allTimes = this.g.times().toArray();
+
             for (var i = 0; i < this.linkArrays.length; i++) {
                 for (var j = 0; j < this.timeArrays.length; j++) {
                     if (this.linkArrays.weights[i].serie.hasOwnProperty(this.timeArrays.id[j].toString())) {
@@ -981,42 +927,8 @@ module networkcube {
                 }
             }
 
-
-            // for(var i=0 ; i<this.linkArrays.id.length ; i++)    
-            //     console.log('this.linkArrays.value', this.linkArrays.weights[i].serie[0]) 
-
-
-
             // create color map for link types
             var linkTypeCount: number = this.linkTypeArrays.length;
-
-            // colorScale;
-            // if (linkTypeCount <= 10) {
-            //     colorScale = d3.scale.category10();
-            // } else {
-            //     colorScale = d3.scale.category20();
-            // }
-
-            // // create color map for node types
-            // var nodeTypeCount: number = this.nodeTypeArrays.length;
-            // var colorScale;
-            // if (nodeTypeCount == 1) {
-            //     colorScale = (v)=>'#fff';
-            // }else if (nodeTypeCount <= 10) {
-            //     colorScale = d3.scale.category10();
-            // } else {
-            //     colorScale = d3.scale.category20();
-            // }
-
-            // for (var i = 0; i < this.linkTypeArrays.name.length; i++) {
-            //     this.linkTypeArrays.color.push(colorScale(i));
-            //     this.linkTypes.push(new LinkType(
-            //         this.linkTypeArrays.id[i],
-            //         this.linkTypeArrays.name[i],
-            //         this.linkTypeArrays.color[i]
-            //     ))
-            // }
-
 
             console.log('[Dynamic Graph] Dynamic Graph created: ', this.nodeArrays.length);
             console.log('[Dynamic Graph]    - Nodes: ', this.nodeArrays.length);
@@ -1142,26 +1054,6 @@ module networkcube {
                 linkSelections[0].color = '#444';
 
 
-            // create selections for node type
-            // types = [];
-            // var nodeSelections: Selection[] = [];
-            // for (var i = 0; i < this.nodeArrays.nodeType.length; i++) {
-            //     type = this.nodeArrays.nodeType[i];
-            //     if (!type || type == 'undefined')
-            //         continue;
-            //     index = types.indexOf(type);
-            //     if (index == -1) {
-            //         selection = this.createSelection('node');
-            //         selection.name = type;
-            //         nodeSelections.push(selection)
-            //         types.push(type);
-            //     } else {
-            //         selection = nodeSelections[index];
-            //     }
-            //     this.addElementToSelection(selection, this._nodes[i]);
-            //     // this.addToSelection(selection, this._links[i].id(), 'link');
-            // }
-
             this.currentSelection_id = 0;
 
         }
@@ -1198,7 +1090,7 @@ module networkcube {
             if (this.locationArrays && 'id' in this.locationArrays) {
                 for (var i = 0; i < this.locationArrays.id.length; i++) {
                     // console.log('create location', this.locationArrays.id[i]);
-                    this._locations.push(new Location(this.locationArrays.id[i], this));
+                    this._locations.push(new nt_q.networkcube.Location(this.locationArrays.id[i], this));
                 }
             }
             else {
@@ -1207,49 +1099,23 @@ module networkcube {
 
             // Populate nodes
             // console.log('populate nodes:');
-            var nodes: Node[] = [];
+            var nodes: nt_q.networkcube.Node[] = [];
             var locations;
             if ('nodeArrays' in this && this.nodeArrays) {
                 for (var i = 0; i < this.nodeArrays.id.length; i++) {
-                    nodes.push(new Node(i, this));
+                    nodes.push(new nt_q.networkcube.Node(i, this));
                 }
             }
 
             // Populate links
-            var links: Link[] = [];
-            var link: Link;
-            var source: Node, target: Node;
+            var links: nt_q.networkcube.Link[] = [];
+            var link: nt_q.networkcube.Link;
             if ('linkArrays' in this && this.linkArrays) {
                 for (var i = 0; i < this.linkArrays.source.length; i++) {
                     // console.log('link present', presence, end.time, start.time);
 
-                    link = new Link(i, this);
+                    link = new nt_q.networkcube.Link(i, this);
                     links.push(link);
-
-                    // link.source = nodes[this.nodeArrays.id.indexOf(this.linkArrays.source[i])];
-                    // link.target = nodes[this.nodeArrays.id.indexOf(this.linkArrays.target[i])];
-                    // // link nodes
-                    // source = link.source;
-                    // target = link.target;
-                    // // console.log(source, target);
-                    // source.neighbors.push(target);
-                    // target.neighbors.push(source);
-                    // source.links.push(link);
-                    // target.links.push(link);
-
-                    // source.outLinks.push(link);
-                    // target.inLinks.push(link);
-
-                    // source.outNeighbors.push(source);
-                    // target.inNeighbors.push(target);
-
-                    // if (!this.linkAttr('directed', i)) {
-                    //     source.inLinks.push(link);
-                    //     target.outLinks.push(link);
-
-                    //     source.inNeighbors.push(source);
-                    //     target.outNeighbors.push(target);
-                    // }
                 }
             }
 
@@ -1257,40 +1123,13 @@ module networkcube {
             // var nodePairs: NodePair[] = []
             var s: number, t: number;
             var pairLinks: number[];
-            var pair: NodePair;
+            var pair: nt_q.networkcube.NodePair;
             var pairLinkId: number;
             var thisGraphNodePairIds: number[] = [];
             if ('nodePairArrays' in this && this.nodePairArrays) {
                 for (var i = 0; i < this.nodePairArrays.length; i++) {
                     pairLinks = this.nodePairArrays.links[i];
-                    this._nodePairs.push(new NodePair(i, this));
-                    // for (var j = 0; j < pairLinks.length; j++) {
-                    //     pairLinkId = pairLinks[j];
-                    //     pair = undefined;
-                    //     for (var k = 0; k < nodePairs.length; k++) {
-                    //         if (nodePairs[k].id == i) {
-                    //             pair = nodePairs[k];
-                    //             break;
-                    //         }
-                    //     }
-                    //     if (!pair) {
-                    //         pair = new NodePair(i, this);
-                    //         nodePairs.push(pair)
-                    //         thisGraphNodePairIds.push(i)
-                    //         pair.source = nodes[this.pairAttr('source', i)];
-                    //         pair.target = nodes[this.pairAttr('target', i)];
-                    //     }
-
-                    //     for (var k = 0; k < links.length; k++) {
-                    //         if (links[k].id == pairLinkId) {
-                    //             link = links[k];
-                    //             break;
-                    //         }
-                    //     }
-
-                    //     pair.links.push(link);
-                    //     link.nodePair = pair;
-                    // }
+                    this._nodePairs.push(new nt_q.networkcube.NodePair(i, this));
                 }
             }
 
@@ -1301,25 +1140,8 @@ module networkcube {
             if (shouldCreateTimes) {// && 'timesArrays' in this && this.timeArrays) {
                 this._times = [];
                 for (var i = 0; i < this.timeArrays.length; i++)
-                    this._times.push(new Time(i, this));
+                    this._times.push(new nt_q.networkcube.Time(i, this));
             }
-
-            // if (shouldCreateLinkTypes) {
-            //     var linkTypeCount: number = this.linkTypeArrays.length;
-            //     var colorScale;
-            //     if (linkTypeCount <= 10) {
-            //         colorScale = d3.scale.category10();
-            //     } else {
-            //         colorScale = d3.scale.category20();
-            //     }
-            //     for (var i = 0; i < this.linkTypeArrays.name.length; i++) {
-            //         this.linkTypes.push(new LinkType(
-            //             this.linkTypeArrays.id[i],
-            //             this.linkTypeArrays.name[i],
-            //             this.linkTypeArrays.color[i]
-            //         ));
-            //     }
-            // }
 
             console.log('[DynamicNetwork:getGraph()] <<< ', Date.now() - d, 'msec')
         }
@@ -1338,15 +1160,15 @@ module networkcube {
             return this.attr(attr, id, 'time');
         }
 
-        get startTime(): Time { return this._times[0]; }
-        get endTime(): Time { return this._times[this._times.length - 1]; }
+        get startTime(): nt_q.networkcube.Time { return this._times[0]; }
+        get endTime(): nt_q.networkcube.Time { return this._times[this._times.length - 1]; }
 
         // /// SELECTIONS
         // // selections store ids of objects only.
 
 
 
-        highlight(action: string, idCompound?: IDCompound): void {
+        highlight(action: string, idCompound?: nt_u.networkcube.IDCompound): void {
 
             if (action == 'reset') {
                 // reset all
@@ -1367,19 +1189,6 @@ module networkcube {
                 return;
             }
 
-
-            // if(action == 'add'){
-            //     for(var i=0 ; i<elementIds.length ; i++){
-            //         if(this.highlightArrays[type].indexOf(elementIds[i]) == -1)
-            //             this.highlightArrays[type].push(elementIds[i]);
-            //     }
-            // }else
-            // if(action == 'remove'){
-            //     for(var i=0 ; i<elementIds.length ; i++){
-            //         if(this.highlightArrays[type].indexOf(elementIds[i]) > -1)
-            //              this.highlightArrays[type].splice(this.highlightArrays[type].indexOf(elementIds[i]),1)
-            //     }
-            // }
             if (action == 'add') {
                 for (var type in idCompound) {
                     for (var i = 0; i < idCompound[type].length; i++) {
@@ -1401,7 +1210,7 @@ module networkcube {
 
 
         // SELECT
-        selection(action: string, idCompound: IDCompound, selectionId?: number) {
+        selection(action: string, idCompound: nt_u.networkcube.IDCompound, selectionId?: number) {
             
             if (selectionId == undefined)
                 selectionId = this.currentSelection_id;
@@ -1412,7 +1221,7 @@ module networkcube {
 
             var self: DynamicGraph = this;
             if (action == 'set') {
-                var c: IDCompound = new IDCompound();
+                var c: nt_u.networkcube.IDCompound = new nt_u.networkcube.IDCompound();
                 c[selection.acceptedType] = selection.elementIds;
                 this.selection('remove', c, selectionId);
                 this.selection('add', idCompound, selectionId);
@@ -1458,7 +1267,7 @@ module networkcube {
             }
         }
 
-        addElementToSelection(selection: Selection, e: BasicElement) {
+        addElementToSelection(selection: Selection, e: nt_q.networkcube.BasicElement) {
             this.addToSelectionByTypeAndId(selection, e.type, e.id());
         }
 
@@ -1519,7 +1328,7 @@ module networkcube {
         }
         // <<<<<<< HEAD
 
-        removeElementFromSelection(selection: Selection, e: BasicElement) {
+        removeElementFromSelection(selection: Selection, e: nt_q.networkcube.BasicElement) {
             this.removeFromSelectionByTypeAndId(selection, e.type, e.id());
         }
 
@@ -1557,20 +1366,6 @@ module networkcube {
         getSelectionsByTypeAndId(type: string, id: number): Selection[] {
             return this.attributeArrays[type].selections[id];
         }
-
-
-        // // Filter
-        // filter(idCompound:ElementCompound, filter:boolean){
-        //     // console.log('compound', compound)
-        //     for(var field in compound){
-        //         for(var i=0 ; i<compound[field].length ; i++){
-        //             // test for other selections
-        //
-        //
-        //             this.attributeArrays[field].filter[i] = filter;
-        //         }
-        //     }
-        // }
 
         filterSelection(selectionId: number, filter: boolean) {
             this.getSelection(selectionId).filter = filter;
@@ -1628,7 +1423,7 @@ module networkcube {
             // =======
 
             // remove 
-            var idCompound: IDCompound = new IDCompound();
+            var idCompound: nt_u.networkcube.IDCompound = new nt_u.networkcube.IDCompound();
             idCompound[s.acceptedType + 'Ids'] = s.elementIds.slice(0);
             console.log('Delete selection->remove elemeents', s.elementIds.slice(0))
             this.selection('remove', idCompound, s.id)
@@ -1727,36 +1522,36 @@ module networkcube {
 
 
         // returns elements 
-        nodes(): NodeQuery {
-            return new NodeQuery(this.nodeArrays.id, this);
+        nodes(): nt_q.networkcube.NodeQuery {
+            return new nt_q.networkcube.NodeQuery(this.nodeArrays.id, this);
         }
-        links(): LinkQuery {
-            return new LinkQuery(this.linkArrays.id, this);
+        links(): nt_q.networkcube.LinkQuery {
+            return new nt_q.networkcube.LinkQuery(this.linkArrays.id, this);
         }
-        times(): TimeQuery {
-            return new TimeQuery(this.timeArrays.id, this);
+        times(): nt_q.networkcube.TimeQuery {
+            return new nt_q.networkcube.TimeQuery(this.timeArrays.id, this);
         }
-        locations(): LocationQuery {
-            return new LocationQuery(this.locationArrays.id, this);
+        locations(): nt_q.networkcube.LocationQuery {
+            return new nt_q.networkcube.LocationQuery(this.locationArrays.id, this);
         }
-        nodePairs(): NodePairQuery {
-            return new NodePairQuery(this.nodePairArrays.id, this);
+        nodePairs(): nt_q.networkcube.NodePairQuery {
+            return new nt_q.networkcube.NodePairQuery(this.nodePairArrays.id, this);
         }
 
         
-        linksBetween(n1:Node, n2:Node): LinkQuery{
+        linksBetween(n1:nt_q.networkcube.Node, n2:nt_q.networkcube.Node): nt_q.networkcube.LinkQuery{
             var nodePairId = this.matrix[n1.id()][n2.id()];
             if(nodePairId == undefined)
                 nodePairId = this.matrix[n2.id()][n1.id()];
             if(nodePairId == undefined)
-                return new LinkQuery([], this);
+                return new nt_q.networkcube.LinkQuery([], this);
 
-            return new LinkQuery(this.nodePair(nodePairId).links().toArray(), this);
+            return new nt_q.networkcube.LinkQuery(this.nodePair(nodePairId).links().toArray(), this);
         }
         
         
         // generic accessor method. should not be used externally
-        get(type: string, id: number): BasicElement {
+        get(type: string, id: number): nt_q.networkcube.BasicElement {
             if (type.indexOf('nodePair') > -1)
                 return this.nodePair(id);
             if (type.indexOf('node') > -1)
@@ -1769,7 +1564,7 @@ module networkcube {
                 return this.location(id);
         }
 
-        getAll(type: string): GraphElementQuery {
+        getAll(type: string): nt_q.networkcube.GraphElementQuery {
             if (type == 'nodes')
                 return this.nodes();
             if (type == 'links')
@@ -1856,15 +1651,15 @@ module networkcube {
         id: number[] = [];
         label: string[] = [];
         // nodeType: ScalarTimeSeries<string>[] = [];
-        outLinks: ArrayTimeSeries<number>[] = [];  // contains link ids only, since every GRAPH has its own EDGE object instance
-        inLinks: ArrayTimeSeries<number>[] = [];    // contains link ids only, since every GRAPH has its own EDGE object instance
-        links: ArrayTimeSeries<number>[] = [];
-        outNeighbors: ArrayTimeSeries<number>[] = [];   // contains node ids only, since every GRAPH has its own NODE object instance
-        inNeighbors: ArrayTimeSeries<number>[] = [];   // contains node ids only, since every GRAPH has its own NODE object instance
-        neighbors: ArrayTimeSeries<number>[] = [];
+        outLinks: nt_q.networkcube.ArrayTimeSeries<number>[] = [];  // contains link ids only, since every GRAPH has its own EDGE object instance
+        inLinks: nt_q.networkcube.ArrayTimeSeries<number>[] = [];    // contains link ids only, since every GRAPH has its own EDGE object instance
+        links: nt_q.networkcube.ArrayTimeSeries<number>[] = [];
+        outNeighbors: nt_q.networkcube.ArrayTimeSeries<number>[] = [];   // contains node ids only, since every GRAPH has its own NODE object instance
+        inNeighbors: nt_q.networkcube.ArrayTimeSeries<number>[] = [];   // contains node ids only, since every GRAPH has its own NODE object instance
+        neighbors: nt_q.networkcube.ArrayTimeSeries<number>[] = [];
         selections: Selection[][] = [];
         attributes: Object[] = []; // arbitrary attributes (key -> value)
-        locations: ScalarTimeSeries<number>[] = []
+        locations: nt_q.networkcube.ScalarTimeSeries<number>[] = []
         filter: boolean[] = [];
         nodeType: string[] = [];
     }
@@ -1879,7 +1674,7 @@ module networkcube {
         presence: number[][] = [];
         // array of weights per time this link is present. This is a generic field
         // that can be used for weights, e.g.
-        weights: ScalarTimeSeries<number>[] = [];
+        weights: nt_q.networkcube.ScalarTimeSeries<number>[] = [];
         selections: Selection[][] = [];
         filter: boolean[] = [];
         attributes: Object = new Object; // arbitrary attributes (key -> value)
@@ -1950,12 +1745,6 @@ module networkcube {
             this.color = color;
         }
     }
-
-    // export class Location extends BasicElement {
-    //     constructor(id: number, dynamicgraph: DynamicGraph) {
-    //         super(id, 'location', dynamicgraph)
-    //     }
-    // }
 
     export interface LegendElement {
         name: string;

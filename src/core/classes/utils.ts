@@ -1,9 +1,11 @@
 /// <reference path='../scripts/three.d.ts' />
-/// <reference path='./dynamicgraph.ts' />
-module networkcube {
 
+import * as nt from "./dynamicgraph"
+import * as nt_q from "./queries"
 
-    export function getPriorityColor(element: BasicElement): string {
+export namespace networkcube {
+
+    export function getPriorityColor(element: nt_q.networkcube.BasicElement): string {
 
         var j = 0
         var selections = element.getSelections();
@@ -62,10 +64,10 @@ module networkcube {
         return array;
     }
 
-    export function isBefore(t1: Time, t2: networkcube.Time): boolean {
+    export function isBefore(t1: nt_q.networkcube.Time, t2: nt_q.networkcube.Time): boolean {
         return t1.time < t2.time;
     }
-    export function isAfter(t1: Time, t2: Time): boolean {
+    export function isAfter(t1: nt_q.networkcube.Time, t2: nt_q.networkcube.Time): boolean {
         return t1.time > t2.time;
     }
 
@@ -95,16 +97,16 @@ module networkcube {
         if (elements[0] instanceof Node)
             type = 'node';
         else
-            if (elements[0] instanceof Link) {
+            if (elements[0] instanceof nt_q.networkcube.Link) {
                 type = 'link';
             } else
-                if (elements[0] instanceof Time) {
+                if (elements[0] instanceof nt_q.networkcube.Time) {
                     type = 'time';
                 } else
-                    if (elements[0] instanceof NodePair) {
+                    if (elements[0] instanceof nt_q.networkcube.NodePair) {
                         type = 'nodePair';
                     } else
-                        if (elements[0] instanceof LinkType) {
+                        if (elements[0] instanceof nt.networkcube.LinkType) {
                             type = 'linkType';
                         } else
                             if (typeof elements[0] == 'number') {
@@ -252,26 +254,16 @@ module networkcube {
         return true;
     }
 
-
-    //     export function toScreen(x: number, y: number) {
-    //         var vector = new THREE.Vector3();
-    //         var projector = new THREE.Projector();
-    //         projector.projectVector(vector.setFromMatrixPosition(object.matrixWorld), camera);
-    // 
-    //         vector.x = (vector.x * widthHalf) + widthHalf;
-    //         vector.y = - (vector.y * heightHalf) + heightHalf;
-    //     }
-
     export function sortNumber(a, b) {
         return a - b;
     }
 
     export class ElementCompound {
-        nodes: Node[] = [];
-        links: Link[] = [];
-        times: Time[] = [];
-        nodePairs: NodePair[] = [];
-        locations: Location[] = [];
+        nodes: nt_q.networkcube.Node[] = [];
+        links: nt_q.networkcube.Link[] = [];
+        times: nt_q.networkcube.Time[] = [];
+        nodePairs: nt_q.networkcube.NodePair[] = [];
+        locations: nt_q.networkcube.Location[] = [];
     }
     export class IDCompound {
         nodeIds: number[] = [];
@@ -330,7 +322,7 @@ module networkcube {
         }
         return result;
     }
-    export function makeElementCompound(elements: IDCompound, g:DynamicGraph): ElementCompound {
+    export function makeElementCompound(elements: IDCompound, g:nt.networkcube.DynamicGraph): ElementCompound {
         var result: ElementCompound = new ElementCompound;
         if (elements != undefined) {
             if (elements.nodeIds) {
@@ -349,7 +341,7 @@ module networkcube {
         return result;
     }
 
-    export function attributeSort(a: BasicElement, b: BasicElement, attributeName: string, asc?: boolean): number {
+    export function attributeSort(a: nt_q.networkcube.BasicElement, b: nt_q.networkcube.BasicElement, attributeName: string, asc?: boolean): number {
         var value = a.attr(attributeName);
         var result;
         if (typeof value == 'string') {
@@ -415,7 +407,7 @@ module networkcube {
     } 
     
 
-    export function formatTimeAtGranularity(time:networkcube.Time, granualarity: number) {
+    export function formatTimeAtGranularity(time:nt_q.networkcube.Time, granualarity: number) {
         var momentTime = moment(time.unixTime())
         switch (granualarity) {
             case 0: return momentTime.millisecond();
@@ -439,7 +431,7 @@ module networkcube {
         var fileNameToSaveAs = name + '_' + new Date().toUTCString() + '.png';
         var downloadLink = document.createElement("a")
         downloadLink.download = fileNameToSaveAs;
-        downloadLink.href = window.webkitURL.createObjectURL(blob);
+        downloadLink.href = (window as any).webkitURL.createObjectURL(blob);
         downloadLink.click();
     } 
 

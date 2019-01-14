@@ -1,5 +1,4 @@
-/// <reference path="./dynamicgraph.ts"/>
-/// <reference path="../scripts/lz-string.d.ts" />
+"use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -13,6 +12,10 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+exports.__esModule = true;
+/// <reference path="../scripts/lz-string.d.ts" />
+var nt = require("./dynamicgraph");
+var nt_u = require("./utils");
 var networkcube;
 (function (networkcube) {
     var DataManager = /** @class */ (function () {
@@ -156,14 +159,14 @@ var networkcube;
                 // cached at a time.
                 if (this.keepOnlyOneSession)
                     this.clearAllSessionData();
-                var graphForCaching = new networkcube.DynamicGraph();
+                var graphForCaching = new nt.networkcube.DynamicGraph();
                 graphForCaching.initDynamicGraph(data);
                 // CACHEGRAPH store DynamicGraph in localstorage
                 graphForCaching.saveDynamicGraph(this);
                 // CACHEGRAPH : this code is strictly for diagnostics;
                 var doubleCheckSave = false;
                 if (doubleCheckSave) {
-                    var testGraph = new networkcube.DynamicGraph();
+                    var testGraph = new nt.networkcube.DynamicGraph();
                     testGraph.loadDynamicGraph(this, data.name);
                     testGraph.debugCompareTo(graphForCaching);
                 }
@@ -243,7 +246,7 @@ var networkcube;
         DataManager.prototype.getGraph = function (session, dataname) {
             this.session = session;
             if (!this.dynamicGraph || this.dynamicGraph.name != dataname) {
-                this.dynamicGraph = new networkcube.DynamicGraph();
+                this.dynamicGraph = new nt.networkcube.DynamicGraph();
                 this.dynamicGraph.loadDynamicGraph(this, dataname);
                 //this.dynamicGraph.initDynamicGraph(this.getData(this.session, dataname));
                 // CACHEGRAPH read graph from localstorage
@@ -253,14 +256,14 @@ var networkcube;
         };
         DataManager.prototype.isSchemaWellDefined = function (data) {
             console.log('isSchemaWellDefined');
-            if (data.locationTable && !networkcube.isValidIndex(data.locationSchema.id))
+            if (data.locationTable && !nt_u.networkcube.isValidIndex(data.locationSchema.id))
                 return false;
-            if (data.nodeTable.length > 0 && !networkcube.isValidIndex(data.nodeSchema.id))
+            if (data.nodeTable.length > 0 && !nt_u.networkcube.isValidIndex(data.nodeSchema.id))
                 return false;
             if (data.linkTable.length > 0
-                && !(networkcube.isValidIndex(data.linkSchema.id)
-                    && networkcube.isValidIndex(data.linkSchema.source)
-                    && networkcube.isValidIndex(data.linkSchema.target)))
+                && !(nt_u.networkcube.isValidIndex(data.linkSchema.id)
+                    && nt_u.networkcube.isValidIndex(data.linkSchema.source)
+                    && nt_u.networkcube.isValidIndex(data.linkSchema.target)))
                 return false;
             return true;
         };
@@ -358,23 +361,23 @@ var networkcube;
             _this.radius = -1;
             _this.id = id;
             _this.label = label;
-            if (networkcube.isValidIndex(geoname))
+            if (nt_u.networkcube.isValidIndex(geoname))
                 _this.geoname = geoname;
-            if (networkcube.isValidIndex(longitude))
+            if (nt_u.networkcube.isValidIndex(longitude))
                 _this.longitude = longitude;
-            if (networkcube.isValidIndex(latitude))
+            if (nt_u.networkcube.isValidIndex(latitude))
                 _this.latitude = latitude;
-            if (networkcube.isValidIndex(x))
+            if (nt_u.networkcube.isValidIndex(x))
                 _this.x = x;
-            if (networkcube.isValidIndex(y))
+            if (nt_u.networkcube.isValidIndex(y))
                 _this.y = y;
-            if (networkcube.isValidIndex(z))
+            if (nt_u.networkcube.isValidIndex(z))
                 _this.z = z;
-            if (networkcube.isValidIndex(radius))
+            if (nt_u.networkcube.isValidIndex(radius))
                 _this.radius = radius;
             return _this;
         }
         return LocationSchema;
     }(TableSchema));
     networkcube.LocationSchema = LocationSchema;
-})(networkcube || (networkcube = {}));
+})(networkcube = exports.networkcube || (exports.networkcube = {}));

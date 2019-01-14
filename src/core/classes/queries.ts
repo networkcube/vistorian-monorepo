@@ -1,7 +1,7 @@
-/// <reference path="./utils.ts" />    
-/// <reference path="./dynamicGraph.ts" />
+import * as nt from "./dynamicgraph"
+import * as nt_u from "./utils"
 
-module networkcube {
+export namespace networkcube {
 
     //// OBJECTS
     /** Basic class for every object in networkcube with an ID. 
@@ -11,11 +11,11 @@ module networkcube {
     export class BasicElement {
         _id: number;
         type: string;
-        g: DynamicGraph;
+        g: nt.networkcube.DynamicGraph;
 
         // CONSTRUCTOR
 
-        constructor(id: number, type: string, dynamicGraph: DynamicGraph) {
+        constructor(id: number, type: string, dynamicGraph: nt.networkcube.DynamicGraph) {
             this._id = id;
             this.type = type;
             this.g = dynamicGraph;
@@ -41,14 +41,14 @@ module networkcube {
         // SELECTIONS
 
         /** @returns all selections this object is part of. */
-        getSelections(): Selection[] {
+        getSelections(): nt.networkcube.Selection[] {
             return this.g.attributeArrays[this.type].selections[this._id];
         }
 
         /** Adds this object to a selection
          * @param selection - the Selection object 
          */
-        addToSelection(b: Selection): void {
+        addToSelection(b: nt.networkcube.Selection): void {
             this.g.attributeArrays[this.type].selections[this._id].push(b);
         }
 
@@ -63,7 +63,7 @@ module networkcube {
             }
         }
         
-        inSelection(s:Selection):boolean{
+        inSelection(s:nt.networkcube.Selection):boolean{
             return this.getSelections().indexOf(s) > -1;
         }
 
@@ -74,7 +74,7 @@ module networkcube {
          * @param selection - (optional) if specified returns true if this object 
          * is in the passed selection.
          */
-        isSelected(selection?: Selection): boolean {
+        isSelected(selection?: nt.networkcube.Selection): boolean {
             if (!selection)
                 return this.getSelections().length > 0;
 
@@ -138,7 +138,7 @@ module networkcube {
     */
     export class Time extends BasicElement {
 
-        constructor(id: number, dynamicGraph: DynamicGraph) {
+        constructor(id: number, dynamicGraph: nt.networkcube.DynamicGraph) {
             super(id, 'time', dynamicGraph)
         }
 
@@ -185,7 +185,7 @@ module networkcube {
      */
     export class Node extends BasicElement {
 
-        constructor(id: number, graph: DynamicGraph) {
+        constructor(id: number, graph: nt.networkcube.DynamicGraph) {
             super(id, 'node', graph)
         }
 
@@ -287,7 +287,7 @@ module networkcube {
       */
     export class Link extends BasicElement {
 
-        constructor(id: number, graph: DynamicGraph) {
+        constructor(id: number, graph: nt.networkcube.DynamicGraph) {
             super(id, 'link', graph)
         }
 
@@ -340,7 +340,7 @@ module networkcube {
 
     export class NodePair extends BasicElement {
 
-        constructor(id: number, graph: DynamicGraph) {
+        constructor(id: number, graph: nt.networkcube.DynamicGraph) {
             super(id, 'nodePair', graph)
         }
 
@@ -363,7 +363,7 @@ module networkcube {
 
     export class Location extends BasicElement {
 
-        constructor(id: number, graph: DynamicGraph) {
+        constructor(id: number, graph: nt.networkcube.DynamicGraph) {
             super(id, 'location', graph)
         }
 
@@ -684,10 +684,10 @@ module networkcube {
 
 
     export class GraphElementQuery extends Query {
-        g: DynamicGraph;
+        g: nt.networkcube.DynamicGraph;
         elementType: string = '';
 
-        constructor(elements: any[], g: DynamicGraph) {
+        constructor(elements: any[], g: nt.networkcube.DynamicGraph) {
             super(elements);
             this.g = g;
         }
@@ -762,7 +762,7 @@ module networkcube {
             }
             var array = this._elements.slice(0);
             array.sort((e1, e2) => {
-                return attributeSort(
+                return nt_u.networkcube.attributeSort(
                     this.g.get(this.elementType, e1),
                     this.g.get(this.elementType, e2),
                     attrName,
@@ -804,7 +804,7 @@ module networkcube {
     export class NodeQuery extends GraphElementQuery {
         elementType = 'node';
 
-        constructor(elements: any[], g: DynamicGraph) {
+        constructor(elements: any[], g: nt.networkcube.DynamicGraph) {
             super(elements, g);
             if(elements.length > 0 && elements[0] instanceof networkcube.Node){
                 this._elements = []
@@ -821,8 +821,14 @@ module networkcube {
             this.elementType = 'node';
         }
 
-        contains(n: Node): boolean {
-            return this._elements.indexOf(n.id()) > -1;
+        contains(element: number): boolean;
+        contains(n: Node): boolean;
+
+        contains(element: any): boolean {
+            if (typeof element !== "number"){
+                return this._elements.indexOf(element.id()) > -1;
+            }
+            return super.contains(element);
         }
 
 
@@ -874,7 +880,7 @@ module networkcube {
 
         // returns the i-th element in this query
         get(i: number): Node { return this.g._nodes[this._elements[i]] }
-
+        
         last(): Node { return this.g._nodes[this._elements[this._elements.length - 1]] }
 
         // returns array of nodes
@@ -918,7 +924,7 @@ module networkcube {
     export class LinkQuery extends GraphElementQuery {
         elementType = 'link';
         
-        constructor(elements: any[], g: DynamicGraph) {
+        constructor(elements: any[], g: nt.networkcube.DynamicGraph) {
             super(elements, g);
             if(elements.length > 0 && elements[0] instanceof networkcube.Link){
                 this._elements = []
@@ -934,8 +940,14 @@ module networkcube {
             }
         }
 
-        contains(l: Link): boolean {
-            return this._elements.indexOf(l.id()) > -1;
+        contains(element: number): boolean;
+        contains(l: Link): boolean;
+
+        contains(element: any): boolean {
+            if (typeof element !== "number"){
+                return this._elements.indexOf(element.id()) > -1;
+            }
+            return super.contains(element);
         }
 
         highlighted(): LinkQuery {
@@ -1049,7 +1061,7 @@ module networkcube {
         elementType = 'nodePair';
 
 
-        constructor(elements: any[], g: DynamicGraph) {
+        constructor(elements: any[], g: nt.networkcube.DynamicGraph) {
             super(elements, g);
             this.elementType = 'nodePair';
             if(elements.length > 0 && elements[0] instanceof networkcube.NodePair){
@@ -1066,8 +1078,14 @@ module networkcube {
             }
         }
 
-        contains(n: NodePair): boolean {
-            return this._elements.indexOf(n.id()) > -1;
+        contains(element: number): boolean;
+        contains(n: NodePair): boolean;
+
+        contains(element: any): boolean {
+            if (typeof element !== "number"){
+                return this._elements.indexOf(element.id()) > -1;
+            }
+            return super.contains(element);
         }
 
 
@@ -1134,7 +1152,7 @@ module networkcube {
     export class TimeQuery extends GraphElementQuery {
         elementType = 'time';
 
-        constructor(elements: any[], g: DynamicGraph) {
+        constructor(elements: any[], g: nt.networkcube.DynamicGraph) {
             super(elements, g);
             this.elementType = 'time';
             if(elements.length > 0 && elements[0] instanceof networkcube.Time){
@@ -1151,8 +1169,14 @@ module networkcube {
             }
         }
 
-        contains(t: Time): boolean {
-            return this._elements.indexOf(t.id()) > -1;
+        contains(element: number): boolean;
+        contains(t: Time): boolean;
+
+        contains(element: any): boolean {
+            if (typeof element !== "number"){
+                return this._elements.indexOf(element.id()) > -1;
+            }
+            return super.contains(element);
         }
 
         highlighted(): TimeQuery {
@@ -1243,7 +1267,7 @@ module networkcube {
     export class LocationQuery extends GraphElementQuery {
         elementType = 'location';
 
-        constructor(elements: any[], g: DynamicGraph) {
+        constructor(elements: any[], g: nt.networkcube.DynamicGraph) {
             super(elements, g);
             this.elementType = 'location';
             if(elements.length > 0 && elements[0] instanceof networkcube.Location){
@@ -1259,9 +1283,15 @@ module networkcube {
                 }                
             }
         }
-        
-        contains(l: Location): boolean {
-            return this._elements.indexOf(l.id()) > -1;
+
+        contains(element: number): boolean;
+        contains(l: Location): boolean;
+
+        contains(element: any): boolean {
+            if (typeof element !== "number"){
+                return this._elements.indexOf(element.id()) > -1;
+            }
+            return super.contains(element);
         }
 
         highlighted(): LocationQuery {
@@ -1326,7 +1356,7 @@ module networkcube {
     }
 
 
-    function getBulkAttributes(attrName: string, ids: number[], type: string, g: DynamicGraph, t1?: Time, t2?: Time): any[] {
+    function getBulkAttributes(attrName: string, ids: number[], type: string, g: nt.networkcube.DynamicGraph, t1?: Time, t2?: Time): any[] {
         var a: any[] = [];
         var temp: any[];
         for (var i = 0; i < ids.length; i++) {
