@@ -6,8 +6,10 @@
         "sourceMap": true,
         "declaration": true,
         "outDir": "./lib",
-        "strict": true
+        "strict": true,
+        "esModuleInterop": true
     },
+    "pretty", "false"
     "include": [
         "src/**/*"
     ],
