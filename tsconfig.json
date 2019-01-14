@@ -1,22 +1,18 @@
 {
-  "extends": "./node_modules/gts/tsconfig-google.json",
-  "compilerOptions": {
-    "rootDir": ".",
-    "outDir": "build",
-    "target": "es5",
-    "module": "commonjs",
-    "declaration": true,
-    "noImplicitAny": false,
-    //"removeComments": true,
-    "noLib": false,
-    "preserveConstEnums": true,
-    "suppressImplicitAnyIndexErrors": true,
-    "outFile": "./networkcube.js",
-    "sourceMap": true,
-    "watch": true
-  },
-  "strictFunctionTypes": false,
-  "files": [
-    "./src/Core/classes/analytics.ts"
-  ]
+    "compilerOptions": {
+        "target": "es5",
+        "module": "commonjs",
+        "lib": ["es6", "dom"],
+        "sourceMap": true,
+        "declaration": true,
+        "outDir": "./lib",
+        "strict": true
+    },
+    "include": [
+        "src/**/*"
+    ],
+    "exclude": [
+        "./node_modules",
+        "./lib"
+    ]
 }
