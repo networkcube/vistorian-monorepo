@@ -1,4 +1,4 @@
-namespace colorSchemes{
+//namespace colorSchemes{
     // create more color pallets on
     // http://www.palettefx.com/
 
@@ -91,4 +91,4 @@ namespace colorSchemes{
         '#ffff99',
         '#b15928'
         ]
-}
+//}

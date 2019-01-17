@@ -1,19 +1,29 @@
 {
     "compilerOptions": {
         "target": "es5",
-        "module": "commonjs",
+        "module": "system",
         "lib": ["es6", "dom"],
         "sourceMap": true,
-        "declaration": true,
-        "outDir": "./lib",
-        "strict": true
+        "outFile": "./lib/index.js",
+        "strict": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": false,
+        "moduleResolution": "node",
+        "declaration": true
     },
-    "include": [
-        "src/**/*"
-    ],
-    "exclude": [
-        "./node_modules",
-        "./lib",
-        "./src/core"
+    "pretty": false,
+    "files": [
+        "src/dynamicgraph.ts",
+        "src/datamanager.ts",
+        "src/motifs.ts",
+        "src/analytics.ts",
+        "src/importers.ts",
+        "src/colors.ts",
+        "src/messenger.ts",
+        "src/queries.ts",
+        "src/utils.ts",
+        "src/ordering.ts",
+        "src/search.ts",
+        "src/main.ts"
     ]
 }
