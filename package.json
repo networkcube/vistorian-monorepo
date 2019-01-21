@@ -10,10 +10,11 @@
     "author": "Benjamin Bach <benj.bach@gmail.com>",
     "license": "MIT",
     "devDependencies": {
+        "@types/papaparse": "^4.5.7",
         "@types/d3": "^3.5.41",
         "@types/jquery": "^1.10.35",
         "@types/lz-string": "^1.3.32",
-        "typescript": "^3.2"
+        "typescript": "^3.2.4"
     },
     "repository": {
         "type": "git",
@@ -25,14 +26,15 @@
     ],
     "homepage": "https://github.com/networkcube/vistorian-core#readme",
     "dependencies": {
-        "@types/papaparse": "^4.5.7",
         "d3": "3.5.17",
         "exorcist": "^1.0.1",
         "jquery": "^3.3.1",
         "lz-string": "^1.3.32",
         "moment": "^2.23.0",
         "papaparse": "^4.6.3",
-        "reorder.js": "^1.0.5",
-        "science": "^1.9.3"
+        "reorder.js": "^1.0.6",
+        "science": "^1.9.3",
+        "netclustering": "file:netClustering-0.1.0",
+        "swiftset": "file:swiftSet-0.9.15"
     }
 }

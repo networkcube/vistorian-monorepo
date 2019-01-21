@@ -1,0 +1,20 @@
+{
+  "name": "swiftset",
+  "version": "0.9.15",
+  "description": "swiftSet.js provides a javascript Set data type for storing unique values and performing basic set operations swiftly",
+  "main": "swiftSet.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jabney/swiftSet.git"
+  },
+  "author": "Jean-Daniel Fekete <Jean-Daniel.Fekete@inria.fr> (http://www.aviz.fr/~fekete)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jabney/swiftSet/issues"
+  },
+  "homepage": "https://github.com/jabney/swiftSet#readme",
+  "typings": "./swiftSet.d.ts"
+}

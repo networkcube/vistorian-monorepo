@@ -1,6 +1,6 @@
 import { DynamicGraph } from './dynamicgraph'
 import { Node, Link, Time } from './queries'
-import { distance_manhattan } from './lib/science'
+//import { distance_manhattan } from './lib/science'
 import * as reorder from 'reorder.js'
 
 //namespace networkcube{
@@ -23,14 +23,14 @@ export function orderNodes(graph: DynamicGraph, config?: OrderingConfiguration):
     var end: Time;
 
     if (config != undefined) {
-        distance = config.distance ? config.distance : distance_manhattan;
+        distance = config.distance ? config.distance : distance.manhattan;
         nodes = config.nodes ? config.nodes : graph.nodes().toArray();
         links = config.links ? config.links : graph.links().toArray();
         start = config.start ? config.start : graph.startTime;
         end = config.end ? config.end : graph.endTime;
     }
     else {
-        distance = distance_manhattan;
+        distance = distance.manhattan;
         nodes = graph.nodes().toArray();
         links = graph.links().toArray();
         start = graph.startTime;

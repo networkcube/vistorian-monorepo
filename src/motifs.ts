@@ -1,7 +1,7 @@
-import * as Set from './lib/setOps';
+import * as Set from 'swiftset';
 import { Link, Node, Time, Motif, MotifTemplate } from './queries'
 import { DynamicGraph } from './dynamicgraph'
-import * as netClustering from './lib/netClustering'
+import * as netClustering from 'netclustering'
 //namespace networkcube{
 
 
