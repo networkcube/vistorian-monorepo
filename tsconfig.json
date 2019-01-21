@@ -4,12 +4,14 @@
         "module": "system",
         "lib": ["es6", "dom"],
         "sourceMap": true,
-        "declaration": true,
         "outFile": "./lib/index.js",
         "strict": true,
-        "esModuleInterop": true
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": false,
+        "moduleResolution": "node",
+        "declaration": true
     },
-    "pretty", "false"
+    "pretty": false,
     "files": [
         "src/dynamicgraph.ts",
         "src/datamanager.ts",
