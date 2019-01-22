@@ -5,15 +5,17 @@
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "scripts": {
-        "build": "tsc --pretty false"
+        "build": "tsc --pretty false",
+        "lint": "tslint -p . -e 'package.json'"
     },
     "author": "Benjamin Bach <benj.bach@gmail.com>",
     "license": "MIT",
     "devDependencies": {
-        "@types/papaparse": "^4.5.7",
         "@types/d3": "^3.5.41",
         "@types/jquery": "^1.10.35",
         "@types/lz-string": "^1.3.32",
+        "@types/papaparse": "^4.5.7",
+        "tslint": "^5.12.1",
         "typescript": "^3.2.4"
     },
     "repository": {
