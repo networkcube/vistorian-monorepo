@@ -1,0 +1,18 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "module": "system",
+        "lib": ["es6", "dom"],
+        "sourceMap": true,
+        "outFile": "./lib/index.js",
+        "strict": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "moduleResolution": "node",
+        "declaration": true
+    },
+    "pretty": false,
+    "files": [
+        "./src/nodelink.ts"
+    ]
+}
