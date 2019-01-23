@@ -1,0 +1,22 @@
+{
+  "name": "netclustering",
+  "version": "0.1.0",
+  "description": "netClustering allows you to detect clusters in networks using the Clauset, Newman and Moore community detection algorithm directly from the browse",
+  "main": "./netClustering.js",
+  "directories": {
+    "example": "example"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/john-guerra/netClusteringJs.git"
+  },
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/john-guerra/netClusteringJs/issues"
+  },
+  "homepage": "https://github.com/john-guerra/netClusteringJs#readme",
+  "typings": "./netClustering.d.ts"
+}

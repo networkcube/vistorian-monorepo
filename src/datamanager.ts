@@ -1,9 +1,8 @@
-import { DynamicGraph } from './dynamicgraph'
-import { isValidIndex } from './utils'
-import * as LZString from 'lz-string'
+import { DynamicGraph } from "./dynamicgraph";
+import { isValidIndex } from "./utils";
+import * as LZString from "lz-string";
 
-
-//namespace networkcube {
+// namespace networkcube {
 
 export interface DataManagerOptions {
     keepOnlyOneSession: boolean;
@@ -83,7 +82,7 @@ export class DataManager {
         this.session = session;
 
         // console.log('import data set', data.name, data.nodeTable, data.linkTable);
-        console.log('import data set', data.name, data);
+        console.log("import data set", data.name, data);
 
         // check if all data (tables + schemas) are there
         if (!data.nodeTable && !data.linkTable) {
@@ -103,7 +102,6 @@ export class DataManager {
         if (!data.linkSchema) {
             console.log('[n3] Link schema missing!')
         }
-
 
         // format data
         for (var i = 0; i < data.nodeTable.length; i++) {
@@ -185,7 +183,7 @@ export class DataManager {
     //             dataset.nodeSchema = this.getFromStorage<NodeSchema>(datasetname, this.NODE_SCHEMA);
     //             dataset.linkSchema = this.getFromStorage<LinkSchema>(datasetname, this.LINK_SCHEMA);
     //             dataset.locationSchema = this.getFromStorage<LocationSchema>(datasetname, this.LOCATION_SCHEMA);
-    // 
+    //
     //             return dataset;
     //         }
 
