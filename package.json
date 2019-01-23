@@ -29,8 +29,10 @@
     "dependencies": {
         "@types/d3": "^5.7.0",
         "@types/three": "^0.93.15",
-        "moment": "^2.23.0",
         "d3": "^5.7.0",
+        "jquery": "^3.3.1",
+        "moment": "^2.23.0",
+        "systemjs": "^3.0.0",
         "three": "^0.100.0",
         "vistorian-core": "file:../vistorian-core",
         "vistorian-widgets": "file:../vistorian-widgets"
