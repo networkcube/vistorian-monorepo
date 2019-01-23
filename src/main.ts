@@ -18,7 +18,7 @@ import { DynamicGraph, Selection } from './dynamicgraph'
 // import * as d3 from 'd3'
 // import * as moment from 'moment'
 
-import * as setOps from 'swiftset'
+import * as setOps from '../swiftSet-0.9.15'
 
 /** A collection of Networkcube's  global function availeble
  * through networkcube.myFunc()

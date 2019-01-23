@@ -14,7 +14,7 @@ import * as moment from 'moment'
 
 //namespace networkcube {
 
-export var GRANULARITY: string[] = ['millisecond', 'second', 'minute', 'hour', 'day', 'week', 'month', 'year', 'decade', 'century', 'millenium'];
+export var GRANULARITY: moment.unitOfTime.Base[] = ['millisecond', 'second', 'minute', 'hour', 'day', 'week', 'month', 'year']; //, 'decade', 'century', 'millenium'];
 
 export var DGRAPH_SUB: string = "[*dgraph*]";
 export var DGRAPH_SER_VERBOSE_LOGGING = false;
