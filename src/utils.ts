@@ -1,12 +1,11 @@
 import { DynamicGraph, LinkType } from './dynamicgraph'
 import {
-    BasicElement, GraphElementQuery,
-    Link, LinkQuery,
-    Node, NodeQuery,
-    NodePair, NodePairQuery,
-    Location, LocationQuery,
-    Time, TimeQuery,
-    ArrayTimeSeries, ScalarTimeSeries
+    BasicElement, 
+    Link, 
+    Node, 
+    NodePair, 
+    Location, 
+    Time
 } from './queries'
 import * as moment from 'moment'
 import * as d3 from 'd3'

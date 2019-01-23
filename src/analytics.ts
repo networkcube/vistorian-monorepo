@@ -1,4 +1,4 @@
-import { Link, Motif, MotifTemplate, Node, Time } from "./queries";
+import { Motif, Node } from "./queries";
 export function findDegree(nodes: Node[]): Motif[] {
     const motifs: Motif[] = [];
     for (const n of nodes) {

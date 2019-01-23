@@ -1,7 +1,7 @@
-import * as Set from 'swiftset';
-import { Link, Node, Time, Motif, MotifTemplate } from './queries'
+import * as Set from '../swiftSet-0.9.15';
+import { Link, Node, Motif, MotifTemplate } from './queries'
 import { DynamicGraph } from './dynamicgraph'
-import * as netClustering from 'netclustering'
+import * as netClustering from '../netClustering-0.1.0'
 //namespace networkcube{
 
 
