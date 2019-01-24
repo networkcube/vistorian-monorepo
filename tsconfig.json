@@ -13,6 +13,8 @@
     },
     "pretty": false,
     "files": [
-        "./src/nodelink.ts"
+        "./src/nodelink.ts",
+        "./src/vistorian-core-imports.ts",
+        "./src/vistorian-widgets-imports.ts"
     ]
 }
