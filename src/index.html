@@ -31,16 +31,23 @@
         </div>
     </div>
     <script src="../node_modules/systemjs/dist/system.js"></script>
-    <script>
-        System.import('../lib/index.js')
-    </script>
-    <!--<script src="../node_modules/jquery/dist/jquery.js"></script>
+    <script src="https://raw.githack.com/systemjs/systemjs/master/src/extras/named-register.js"></script>
+    <script src="../node_modules/jquery/dist/jquery.js"></script>
     <script src="../node_modules/vistorian-core/lib/index.js"></script>
-    <script src="https://d3js.org/d3.v5.min.js"></script>
-    <script src="../node_modules/d3/index.js"></script>
-    <script src="lib/cola.js"></script>
+    <script src="../node_modules/d3/dist/d3.js"></script>
     <script src="../node_modules/vistorian-widgets/lib/index.js"></script>
-    <script src="../lib/index.js"></script>-->
+    <script>
+        System.register('d3');
+    /*    System.import('../lib/index.js').then(function () {
+            console.log("Importing nodelink");
+            System.import('nodelink').then(function (nodelink) {
+                console.log("finish")
+            });
+        })
+    */
+    </script>
+    <script src="../lib/index.js"></script>
+    <!--<script src="lib/cola.js"></script>-->
 </body>
 
 </html>
