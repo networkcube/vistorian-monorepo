@@ -5,22 +5,24 @@ import sourcemaps from 'rollup-plugin-sourcemaps';
 
 export default {
     input: 'build/src/index.js',
+    external: ['d3', 'lz-string', 'reorder.js', 'netclustering', 'swiftset', 'moment'],
     output: {
         file: 'lib/vistorian-core.js',
         format: 'umd',
         sourcemap: true,
-        name: 'vc'
+        name: 'vc',
+        globals: {
+            'd3': 'd3',
+            'lz-string': 'LZString',
+            'reorder.js': 'reorder',
+            'netclustering': 'netClustering',
+            'swiftset': 'Set',
+            'moment': 'moment'
+        }
     },
     plugins: [
         nodeResolve(),
-        commonjs({
-            namedExports: {
-                'reorder.js': ['optimal_leaf_order'],
-                'netclustering':  ['cluster'],
-                'swiftset': ['intersection', 'difference'],
-                'moment': ['utc', 'unix']
-            }
-        }),
+        commonjs(),
         json(),
         sourcemaps()
     ]
