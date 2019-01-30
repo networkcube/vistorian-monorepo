@@ -71,7 +71,7 @@ export namespace networkcube {
         }
 
         $.get(url, (linkData) => {
-            var linkData: any = Papa.parse(linkData, {}).data; 
+            var linkData: any = Papa.parse(linkData, {}).data;
 
             // get references to tables
             var nodeTable: any[] = [];
@@ -178,7 +178,7 @@ export namespace networkcube {
         var dataset;
         var callBack = callBack;
 
-        d3.xml(url, "application/xml", (data) => {
+        d3.xml(url, (data: any) => { // "application/xml",
             console.log('data:', data)
             var nodes = data.documentElement.getElementsByTagName("node")
             var nodeTable = [];
@@ -891,7 +891,7 @@ export namespace networkcube {
         for (var i = 0; i < graph.links().length; i++) {
             // UNDEFINED??
             var graph_link = graph.link(i);
-            if (graph_link != undefined){
+            if (graph_link != undefined) {
                 csv += ST + graph_link.source.id() + ST + DEL
                     + ST + graph_link.target.id() + ST + BR
             }

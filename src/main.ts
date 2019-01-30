@@ -1,24 +1,11 @@
 import {
-    BasicElement, GraphElementQuery,
-    Link, LinkQuery,
-    Node, NodeQuery,
-    NodePair, NodePairQuery,
-    Location, LocationQuery,
-    Time, TimeQuery,
-    ArrayTimeSeries, ScalarTimeSeries
-} from './queries'
-import {
-    IDCompound, copyPropsShallow, copyTimeSeries, compareTypesDeep,
-    isValidIndex, sortNumber, array, doubleArray,
     getUrlVars
 } from './utils'
 import { DataManager, DataSet, DataManagerOptions } from './datamanager'
-import { DynamicGraph, Selection } from './dynamicgraph'
+import { DynamicGraph } from './dynamicgraph'
 
 // import * as d3 from 'd3'
 // import * as moment from 'moment'
-
-import * as setOps from 'swiftset'
 
 /** A collection of Networkcube's  global function availeble
  * through networkcube.myFunc()
