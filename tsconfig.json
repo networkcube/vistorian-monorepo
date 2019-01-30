@@ -1,10 +1,11 @@
 {
     "compilerOptions": {
-        "target": "es5",
-        "module": "system",
+        "target": "es2015",
+        "module": "commonjs",
         "lib": ["es6", "dom"],
         "sourceMap": true,
-        "outFile": "./lib/index.js",
+        "outDir": "./build",
+        //"outFile": "./lib/index.js",
         "strict": true,
         "esModuleInterop": true,
         "allowSyntheticDefaultImports": true,
@@ -13,8 +14,6 @@
     },
     "pretty": false,
     "files": [
-        "./src/nodelink.ts",
-        "./src/vistorian-core-imports.ts",
-        "./src/vistorian-widgets-imports.ts"
+        "./src/nodelink.ts"
     ]
 }

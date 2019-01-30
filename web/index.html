@@ -13,29 +13,18 @@
     <div>
         <div id="menuDiv">
             <!-- VS: Clicks on Manual -->
-            <a class="manual-button" target="_blank" href="https://github.com/networkcube/networkcube/wiki/Visualization-Manual#node-link-visualization-nodelink"> Manual</a>
+            <a class="manual-button" target="_blank" href="https://github.com/networkcube/networkcube/wiki/Visualization-Manual#node-link-visualization-nodelink">
+                Manual</a>
         </div>
         <div id="timelineDiv"></div>
         <div id="visDiv">
         </div>
     </div>
-    <script src="../node_modules/systemjs/dist/system.js"></script>
-    <script src="https://raw.githack.com/systemjs/systemjs/master/src/extras/named-register.js"></script>
-    <script src="../node_modules/jquery/dist/jquery.js"></script>
-    <script src="../node_modules/d3/dist/d3.js"></script>
-    <script src="../node_modules/vistorian-core/lib/index.js"></script>
-    <script src="../node_modules/vistorian-widgets/lib/index.js"></script>
-    <script>
-      System.register('d3', [], function (exp, cont) {
-          return {setters: [], execute: function() {}};
-      });
-      System.import('../lib/index.js').then(function () {
-            console.log("Importing nodelink");
-            System.import('nodelink').then(function (nodelink) {
-                console.log("finish")
-            });
-        });
-    </script>
+    <!--<script src="../node_modules/jquery/dist/jquery.js"></script>
+    <script src="../node_modules/d3/build/d3.js"></script>
+    <script src="../node_modules/moment/moment.js"></script>
+    <script src="../node_modules/lz-string/libs/lz-string.js"></script>-->
+    <script src="../lib/index.js" type="text/javascript" charset="utf-8"></script>
     <!--<script src="lib/cola.js"></script>-->
 </body>
 

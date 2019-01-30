@@ -1,15 +1,11 @@
-import {
-    dynamicgraph,
-    utils,
-    queries,
-    main,
-    messenger
-} from './vistorian-core-imports';
+import * as dynamicgraph from 'vistorian-core/src/dynamicgraph';
+import * as utils from 'vistorian-core/src/utils';
+import * as queries from 'vistorian-core/src/queries';
+import * as main from 'vistorian-core/src/main';
+import * as messenger from 'vistorian-core/src/messenger';
 
-import {
-    makeSlider,
-    TimeSlider
-} from './vistorian-widgets-imports';
+import * as ui from 'vistorian-widgets/src/ui';
+import * as timeslider from 'vistorian-widgets/src/timeslider';
 
 import * as d3 from 'd3'
 
@@ -48,7 +44,7 @@ var time_start: queries.Time = times[0];
 var time_end: queries.Time = times[times.length - 1];
 
 var nodes: queries.Node[] = dgraph.nodes().toArray();
-var nodesOrderedByDegree: queries.Node[] = dgraph.nodes().toArray().sort((n1, n2) => n2.neighbors().length - n1.neighbors().length);
+var nodesOrderedByDegree: queries.Node[] = dgraph.nodes().toArray().sort((n1: any, n2: any) => n2.neighbors().length - n1.neighbors().length);
 
 var nodePairs: queries.NodePairQuery = dgraph.nodePairs();
 var links: queries.Link[] = dgraph.links().toArray();
@@ -73,19 +69,19 @@ messenger.setDefaultEventListener(updateEvent);
 // MENU
 var menuDiv = d3.select('#menuDiv');
 /* widget/ui.js */
-makeSlider.makeSlider(menuDiv, 'Link Opacity', SLIDER_WIDTH, SLIDER_HEIGHT, LINK_OPACITY, 0, 1, function (value: number) {
+ui.makeSlider(menuDiv, 'Link Opacity', SLIDER_WIDTH, SLIDER_HEIGHT, LINK_OPACITY, 0, 1, function (value: number) {
     LINK_OPACITY = value;
     updateLinks();
 })
-makeSlider.makeSlider(menuDiv, 'Node Size', SLIDER_WIDTH, SLIDER_HEIGHT, NODE_SIZE, .01, 3, function (value: number) {
+ui.makeSlider(menuDiv, 'Node Size', SLIDER_WIDTH, SLIDER_HEIGHT, NODE_SIZE, .01, 3, function (value: number) {
     NODE_SIZE = value;
     updateNodeSize();
 })
-makeSlider.makeSlider(menuDiv, 'Edge Gap', SLIDER_WIDTH, SLIDER_HEIGHT, LINK_GAP, 0, 10, function (value: number) {
+ui.makeSlider(menuDiv, 'Edge Gap', SLIDER_WIDTH, SLIDER_HEIGHT, LINK_GAP, 0, 10, function (value: number) {
     LINK_GAP = value;
     updateLayout();
 })
-makeSlider.makeSlider(menuDiv, 'Link Width', SLIDER_WIDTH, SLIDER_HEIGHT, LINK_WIDTH, 0, 10, function (value: number) {
+ui.makeSlider(menuDiv, 'Link Width', SLIDER_WIDTH, SLIDER_HEIGHT, LINK_WIDTH, 0, 10, function (value: number) {
     LINK_WIDTH = value;
     linkWeightScale.range([0, LINK_WIDTH]);
     updateLinks();
@@ -119,7 +115,7 @@ var timeSvg: any = d3.select('#timelineDiv')
     .attr('height', TIMELINE_HEIGHT)
 
 if (dgraph.times().size() > 1) {
-    var timeSlider: TimeSlider.TimeSlider = new TimeSlider.TimeSlider(dgraph, width - 50);
+    var timeSlider: timeslider.TimeSlider = new timeslider.TimeSlider(dgraph, width - 50);
     timeSlider.appendTo(timeSvg);
     messenger.addEventListener('timeRange', timeChangedHandler)
 }
