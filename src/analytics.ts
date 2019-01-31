@@ -1,4 +1,5 @@
-import { Link, Motif, MotifTemplate, Node, Time } from "./queries";
+import { Motif } from "./queries";
+import { Node } from './dynamicgraph';
 export function findDegree(nodes: Node[]): Motif[] {
     const motifs: Motif[] = [];
     for (const n of nodes) {

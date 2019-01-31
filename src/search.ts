@@ -1,6 +1,4 @@
-import { DynamicGraph } from './dynamicgraph'
-import { IDCompound } from './utils'
-import { Link, Node, Location } from './queries'
+import { DynamicGraph, Link, Node, Location, IDCompound } from './dynamicgraph'
 //namespace networkcube{
 
 

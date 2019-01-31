@@ -1,5 +1,4 @@
-import { DynamicGraph } from './dynamicgraph'
-import { Node, Link, Time } from './queries'
+import { Node, Link, Time, DynamicGraph } from './dynamicgraph'
 //import { distance_manhattan } from './lib/science'
 import * as reorder from 'reorder.js'
 

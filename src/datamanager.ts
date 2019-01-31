@@ -1,317 +1,33 @@
-import { DynamicGraph } from "./dynamicgraph";
-import { isValidIndex } from "./utils";
-import * as LZString from "lz-string";
-
 // namespace networkcube {
 
-export interface DataManagerOptions {
-    keepOnlyOneSession: boolean;
+
+/* moved from utils to datamanager */
+export function isValidIndex(v: number | undefined): boolean {
+    return v != undefined && v > -1;
 }
 
-export class DataManager {
+/* moved from dynamicgraph to datamanager */
+export class Selection {
+    name: string;
+    elementIds: number[];
+    acceptedType: string;
+    color: string = "#3366cc"; // INIT??
+    id: number;
+    showColor: boolean = true;
+    filter: boolean = false;
+    priority: number = 0;
 
-    constructor(options?: DataManagerOptions) {
-        if (options) {
-            // initialize stuff differently here
-            if (options.keepOnlyOneSession)
-                this.setOptions(options);
-        } else {
-            this.keepOnlyOneSession = false;
-        }
+    constructor(id: number, acceptedType: string) {
+        this.id = id;
+        this.name = 'Selection-' + this.id
+        this.elementIds = [];
+        this.acceptedType = acceptedType;
+        this.priority = id;
     }
 
-    setOptions(options: DataManagerOptions): void {
-        this.keepOnlyOneSession = options.keepOnlyOneSession;
+    acceptsType(type: string) {
+        return this.acceptedType == type;
     }
-    // current dynamic graph of the visualization.
-    // The first time the getGraph() function is called
-    // that graph object is created and populated.
-    // The second time, it's just retrieved.
-    dynamicGraph?: DynamicGraph;
-
-    keepOnlyOneSession: boolean = false;
-    session: string = '';
-
-    sessionDataPrefix: string = "ncubesession";
-    // sessionDataPrefix: string = "";
-
-    clearSessionData(session: string): void {
-        var searchPrefix = this.sessionDataPrefix + this.SEP + session;
-        // var searchPrefix = session;
-        var keysToClear: string[] = [];
-        console.log('clearSessionData')
-        for (var i = 0; i < localStorage.length; i++) {
-            var key = localStorage.key(i);
-            if (!key) continue;
-            if (key.indexOf(searchPrefix) == 0)
-                keysToClear.push(key);
-            // these are the old keys that we used to store before we 
-            // added support for multiple sessions
-            else if (key.indexOf('connectoscope1') == 0)
-                keysToClear.push(key);
-        }
-        for (var i = 0; i < keysToClear.length; i++) {
-            var k = keysToClear[i];
-            console.log('remove from storage', k)
-            localStorage.removeItem(k);
-        }
-    }
-
-    clearAllSessionData(): void {
-        this.clearSessionData('');
-    }
-
-    isSessionCached(session: string, dataSetName: string): boolean {
-        var prefix = this.sessionDataPrefix + this.SEP + session + this.SEP + dataSetName;
-        //var firstSessionKey: string = null;
-        for (var i = 0; i < localStorage.length; i++) {
-            var key = localStorage.key(i);
-            if (key && key.indexOf(prefix) == 0) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Import a data set into networkcube's local storage.
-     * @param  {string}  session - current session id
-     * @param  {DataSet} data    - a networkcube.DataSet
-     */
-    importData(session: string, data: DataSet) {
-        this.session = session;
-
-        // console.log('import data set', data.name, data.nodeTable, data.linkTable);
-        console.log("import data set", data.name, data);
-
-        // check if all data (tables + schemas) are there
-        if (!data.nodeTable && !data.linkTable) {
-            console.log('Empty tables. No data imported.')
-            return;
-        }
-
-        if (!data.nodeTable) {
-            console.log('[n3] Node table missing!')
-        }
-        if (!data.linkTable) {
-            console.log('[n3] Link table missing!')
-        }
-        if (!data.nodeSchema) {
-            console.log('[n3] Node schema missing!')
-        }
-        if (!data.linkSchema) {
-            console.log('[n3] Link schema missing!')
-        }
-
-        // format data
-        for (var i = 0; i < data.nodeTable.length; i++) {
-            for (var j = 0; j < data.nodeTable[i].length; j++) {
-                if (typeof data.nodeTable[i][j] == 'string')
-                    data.nodeTable[i][j] = data.nodeTable[i][j].trim();
-            }
-        }
-        for (var i = 0; i < data.linkTable.length; i++) {
-            for (var j = 0; j < data.linkTable[i].length; j++) {
-                if (typeof data.linkTable[i][j] == 'string')
-                    data.linkTable[i][j] = data.linkTable[i][j].trim();
-            }
-        }
-
-        // this.saveToStorage(data.name, this.NODE_TABLE, data.nodeTable);
-        // this.saveToStorage(data.name, this.NODE_SCHEMA, data.nodeSchema);
-        // this.saveToStorage(data.name, this.LINK_SCHEMA, data.linkSchema);
-        // this.saveToStorage(data.name, this.LINK_TABLE, data.linkTable);
-        // // if(data.locationTable){
-        // this.saveToStorage(data.name, this.LOCATION_TABLE, data.locationTable);
-        // this.saveToStorage(data.name, this.LOCATION_SCHEMA, data.locationSchema);
-        // }
-
-        // In order to initialize the dynamic graph, our schema must be sufficiently well-defined
-        if (this.isSchemaWellDefined(data)) {
-            console.log('data is well-schematized, caching dynamicGraph');
-            // in order to ensure that we have enough quota, we only keep one session
-            // cached at a time.
-            if (this.keepOnlyOneSession)
-                this.clearAllSessionData();
-
-            var graphForCaching: DynamicGraph = new DynamicGraph();
-            graphForCaching.initDynamicGraph(data);
-            // CACHEGRAPH store DynamicGraph in localstorage
-            graphForCaching.saveDynamicGraph(this);
-
-            // CACHEGRAPH : this code is strictly for diagnostics;
-            var doubleCheckSave = false;
-            if (doubleCheckSave) {
-                var testGraph: DynamicGraph = new DynamicGraph();
-                testGraph.loadDynamicGraph(this, data.name);
-                testGraph.debugCompareTo(graphForCaching);
-            }
-        } else {
-            console.log('data is not well-schematized, so not caching dynamicGraph');
-        }
-    }
-
-    // udpates the passed dataset, i.e. stores tables and schemas as indicated.
-    // updateData(data: DataSet) {
-    //     console.log('[datamanager] Update dataset', this.session, data.name)
-    //     this.saveToStorage(data.name, this.NODE_TABLE, data.nodeTable);
-    //     this.saveToStorage(data.name, this.NODE_SCHEMA, data.nodeSchema);
-    //     this.saveToStorage(data.name, this.LINK_TABLE, data.linkTable);
-    //     this.saveToStorage(data.name, this.LINK_SCHEMA, data.linkSchema);
-    //     this.saveToStorage(data.name, this.LOCATION_TABLE, data.locationTable);
-    //     this.saveToStorage(data.name, this.LOCATION_SCHEMA, data.locationSchema);
-    //     console.log('[datamanager] Dataset updated', data);
-    // }
-
-    /**
-     * Returns the dataset with tables from the local storage by its name
-     * This method provides *full* access to the raw data, without
-     * networkcube creating a DynamicGraph object.
-     * @param  {string} session     - current session id
-     * @param  {string} datasetname - name of data set
-     * @return {[type]}             - the data set
-     */
-    //         getData(session: string, datasetname: string) {
-    //             this.session = session;
-    //             // console.log('getData()', session, datasetname)
-    //             var dataset = new DataSet({
-    //                 name: datasetname,
-    //                 nodeTable: this.getFromStorage<any[]>(datasetname, this.NODE_TABLE),
-    //                 linkTable: this.getFromStorage<any[]>(datasetname, this.LINK_TABLE),
-    //                 locationTable: this.getFromStorage<any[]>(datasetname, this.LOCATION_TABLE)
-    //             })
-    //             dataset.nodeSchema = this.getFromStorage<NodeSchema>(datasetname, this.NODE_SCHEMA);
-    //             dataset.linkSchema = this.getFromStorage<LinkSchema>(datasetname, this.LINK_SCHEMA);
-    //             dataset.locationSchema = this.getFromStorage<LocationSchema>(datasetname, this.LOCATION_SCHEMA);
-    //
-    //             return dataset;
-    //         }
-
-    // Strings used to access local storage
-    SEP: string = "_";
-    // NODE_TABLE: string = 'networkcube.nodetable';
-    // LINK_TABLE: string = 'networkcube.linktable';
-    // NODE_SCHEMA: string = 'networkcube.nodeschema';
-    // LINK_SCHEMA: string = 'networkcube.linkschema';
-    // LOCATION_TABLE: string = 'networkcube.locationtable';
-    // LOCATION_SCHEMA: string = 'networkcube.locationschema';
-    // GRAPH: string = 'networkcube.graph';
-
-    // storage primitives /////////////////////////////////////
-    //
-    saveToStorage<T>(dataName: string, valueName: string, value: T, replacer?: (key: string, value: any) => any) {
-        // console.log('saveToStorage', dataName, valueName, value);
-        // console.log('saveNodeTable', value, this.session + this.SEP + dataname + this.SEP + valueName);
-        if (value == undefined) {
-            console.log('attempting to save undefined value. aborting', dataName, valueName);
-            return;
-        }
-        var stringifyResult = JSON.stringify(value, replacer);
-
-        var stringToSave;
-        if (stringifyResult.length > 1024 * 1024 * 4)
-            stringToSave = LZString.compress(stringifyResult);
-        else
-            stringToSave = stringifyResult;
-
-        // console.log('storing ' + dataName + ', ' + valueName + '. length=' + stringToSave.length);
-        localStorage[this.sessionDataPrefix + this.SEP
-            + this.session
-            + this.SEP + dataName
-            + this.SEP + valueName] = stringToSave;
-    }
-
-    getFromStorage<TResult>(
-        dataName: string,
-        valueName: string,
-        reviver?: (key: any, value: any, state: any) => any,
-        state?: any): TResult | undefined { // : TResult
-
-        console.assert(this.session != '');
-
-        var statefulReviver;
-        if (reviver)
-            statefulReviver = function (key: any, value: any): any {
-                return reviver(key, value, state);
-            };
-        else
-            statefulReviver = undefined;
-
-        // console.log("[getFromStorage]", this.session
-        //     + this.SEP + dataName
-        //     + this.SEP + valueName);
-        var storedResult = localStorage[
-            this.sessionDataPrefix
-            + this.SEP + this.session
-            + this.SEP + dataName
-            + this.SEP + valueName];
-
-        if (storedResult && storedResult != "undefined") {
-            // we try to detect whether the string was compressed or not. Given that it is 
-            // JSON, we would expect it to begin with either a quote, a bracket, or a curly-brace
-            var parseText;
-            if ("\"'[{0123456789".indexOf(storedResult[0]) >= 0)
-                parseText = storedResult;
-            else
-                parseText = LZString.decompress(storedResult);
-
-            return <TResult>JSON.parse(parseText, statefulReviver);
-        }
-        else {
-            return undefined;
-        }
-    }
-
-    removeFromStorage(dataName: string, valueName: string): void {
-        // console.log('saveNodeTable', table, this.session + this.SEP + dataname + this.SEP + this.NODE_TABLE);
-        localStorage.removeItem(this.sessionDataPrefix
-            + this.SEP + this.session
-            + this.SEP + dataName
-            + this.SEP + valueName);
-    }
-    //
-    // end storage primitives //////////////////////////////
-
-    // GRAPH
-
-    getGraph(session: string, dataname: string): DynamicGraph {
-        this.session = session;
-        if (!this.dynamicGraph || this.dynamicGraph.name != dataname) {
-            this.dynamicGraph = new DynamicGraph();
-            this.dynamicGraph.loadDynamicGraph(this, dataname);
-            //this.dynamicGraph.initDynamicGraph(this.getData(this.session, dataname));
-            // CACHEGRAPH read graph from localstorage
-            // 
-        }
-        return this.dynamicGraph;
-    }
-
-
-    isSchemaWellDefined(data: DataSet): boolean {
-        console.log('isSchemaWellDefined');
-        if (data.locationTable && !isValidIndex(data.locationSchema.id))
-            return false;
-        if (data.nodeTable.length > 0 && !isValidIndex(data.nodeSchema.id))
-            return false;
-        if (data.linkTable.length > 0
-            && !(isValidIndex(data.linkSchema.id)
-                && isValidIndex(data.linkSchema.source)
-                && isValidIndex(data.linkSchema.target)))
-            return false;
-
-        return true;
-    }
-}
-
-
-export function getDefaultNodeSchema(): NodeSchema {
-    return new NodeSchema(0);
-}
-export function getDefaultLinkSchema(): LinkSchema {
-    return new LinkSchema(0, 1, 2);
-}
-export function getDefaultLocationSchema(): LocationSchema {
-    return new LocationSchema(0, 1, 2, 3, 4, 5, 6, 7, 8);
 }
 
 // data set / graph with name
@@ -353,6 +69,16 @@ export class DataSet {
 
         console.log('[n3] data set created', this);
     }
+}
+
+export function getDefaultNodeSchema(): NodeSchema {
+    return new NodeSchema(0);
+}
+export function getDefaultLinkSchema(): LinkSchema {
+    return new LinkSchema(0, 1, 2);
+}
+export function getDefaultLocationSchema(): LocationSchema {
+    return new LocationSchema(0, 1, 2, 3, 4, 5, 6, 7, 8);
 }
 
 export class TableSchema {
@@ -420,19 +146,19 @@ export class LocationSchema extends TableSchema {
         this.label = label;
 
         if (isValidIndex(geoname))
-            this.geoname = geoname != undefined ? geoname: -1; // geoname never will be undefined at this point
+            this.geoname = geoname != undefined ? geoname : -1; // geoname never will be undefined at this point
         if (isValidIndex(longitude))
-            this.longitude = longitude != undefined ? longitude: -1;
+            this.longitude = longitude != undefined ? longitude : -1;
         if (isValidIndex(latitude))
-            this.latitude = latitude != undefined ? latitude: -1;
+            this.latitude = latitude != undefined ? latitude : -1;
         if (isValidIndex(x))
-            this.x = x != undefined ? x: -1;
+            this.x = x != undefined ? x : -1;
         if (isValidIndex(y))
-            this.y = y != undefined ? y: -1;
+            this.y = y != undefined ? y : -1;
         if (isValidIndex(z))
-            this.z = z != undefined ? z: -1;
+            this.z = z != undefined ? z : -1;
         if (isValidIndex(radius))
-            this.radius = radius != undefined ? radius: -1;
+            this.radius = radius != undefined ? radius : -1;
     }
 }
 //}

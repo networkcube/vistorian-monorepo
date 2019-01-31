@@ -1,6 +1,6 @@
 import swiftSet from 'swiftset';
-import { Link, Node, Motif, MotifTemplate } from './queries'
-import { DynamicGraph } from './dynamicgraph'
+import { Motif, MotifTemplate } from './queries'
+import { DynamicGraph, Link, Node } from './dynamicgraph'
 import netClustering from 'netclustering'
 //namespace networkcube{
 

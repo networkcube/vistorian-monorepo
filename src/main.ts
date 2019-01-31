@@ -1,8 +1,8 @@
 import {
     getUrlVars
 } from './utils'
-import { DataManager, DataSet, DataManagerOptions } from './datamanager'
-import { DynamicGraph } from './dynamicgraph'
+import { DataSet } from './datamanager'
+import { DynamicGraph, DataManager, DataManagerOptions } from './dynamicgraph'
 
 // import * as d3 from 'd3'
 // import * as moment from 'moment'
