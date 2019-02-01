@@ -1,6 +1,5 @@
 import * as dynamicgraph from 'vistorian-core/src/dynamicgraph';
 import * as utils from 'vistorian-core/src/utils';
-import * as queries from 'vistorian-core/src/queries';
 import * as main from 'vistorian-core/src/main';
 import * as messenger from 'vistorian-core/src/messenger';
 
@@ -39,15 +38,15 @@ var positions: Object = new Object();
 
 // get dynamic graph
 var dgraph: dynamicgraph.DynamicGraph = main.getDynamicGraph();
-var times: queries.Time[] = dgraph.times().toArray();
-var time_start: queries.Time = times[0];
-var time_end: queries.Time = times[times.length - 1];
+var times: dynamicgraph.Time[] = dgraph.times().toArray();
+var time_start: dynamicgraph.Time = times[0];
+var time_end: dynamicgraph.Time = times[times.length - 1];
 
-var nodes: queries.Node[] = dgraph.nodes().toArray();
-var nodesOrderedByDegree: queries.Node[] = dgraph.nodes().toArray().sort((n1: any, n2: any) => n2.neighbors().length - n1.neighbors().length);
+var nodes: dynamicgraph.Node[] = dgraph.nodes().toArray();
+var nodesOrderedByDegree: dynamicgraph.Node[] = dgraph.nodes().toArray().sort((n1: any, n2: any) => n2.neighbors().length - n1.neighbors().length);
 
-var nodePairs: queries.NodePairQuery = dgraph.nodePairs();
-var links: queries.Link[] = dgraph.links().toArray();
+var nodePairs: dynamicgraph.NodePairQuery = dgraph.nodePairs();
+var links: dynamicgraph.Link[] = dgraph.links().toArray();
 var nodeLength: number = nodes.length;
 
 
@@ -226,7 +225,7 @@ function init() {
         .data(nodes)
         .enter()
         .append('circle')
-        .attr('r', (n: queries.Node) => getNodeRadius(n))
+        .attr('r', (n: dynamicgraph.Node) => getNodeRadius(n))
         .attr('class', 'nodes')
         .style('fill', COLOR_DEFAULT_NODE)
         .on('mouseover', mouseOverNode)
@@ -333,7 +332,7 @@ function getLabelWidth(n: any) {
 function getLabelHeight(n: any) {
     return 18;
 }
-function getNodeRadius(n: queries.Node) {
+function getNodeRadius(n: dynamicgraph.Node) {
     return Math.sqrt(n.links().length) * NODE_SIZE + 1;
 }
 
@@ -539,8 +538,8 @@ function updateLinks() {
 }
 
 function calculateCurvedLinks() {
-    var path: any, dir: any, offset: any, offset2: any, multiLink: queries.NodePair | undefined;
-    var links: queries.Link[];
+    var path: any, dir: any, offset: any, offset2: any, multiLink: dynamicgraph.NodePair | undefined;
+    var links: dynamicgraph.Link[];
     for (var i = 0; i < dgraph.nodePairs().length; i++) {
         multiLink = dgraph.nodePair(i);
         if (multiLink) {

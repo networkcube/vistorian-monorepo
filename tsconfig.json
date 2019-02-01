@@ -1,15 +1,14 @@
 {
     "compilerOptions": {
-        "target": "es2015",
-        "module": "commonjs",
-        "lib": ["es6", "dom"],
+        "outDir": "./build/",
+        "target": "es6",
+        "module": "es2015",
         "sourceMap": true,
-        "outDir": "./build",
-        //"outFile": "./lib/index.js",
         "strict": true,
         "esModuleInterop": true,
         "allowSyntheticDefaultImports": true,
         "moduleResolution": "node",
+        "resolveJsonModule": true,
         "declaration": true
     },
     "pretty": false,

@@ -1,8 +1,16 @@
-let path = require('path');
+const path = require('path');
+const CircularDependencyPlugin = require('circular-dependency-plugin');
 
 module.exports = {
     entry: './src/index.ts', // INDEX IS NEEDED?
     devtool: 'inline-source-map',
+    plugins: [
+        new CircularDependencyPlugin({
+            exclude: /a\.js|node_modules/,
+            failOnError: true,
+            cwd: process.cwd(),
+        })
+    ],
     module: {
         rules: [
             {
