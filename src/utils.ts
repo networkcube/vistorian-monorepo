@@ -567,6 +567,19 @@ export function getSVGString(svgNode: any) {
 }
 
 
+export function exportPNG(canvas: any, name: string) {
+    var dataURL: any = canvas.toDataURL('image/jpg', 1);
+    var blob: any = dataURItoBlob(dataURL);
+    // window.open(dataURL);
+
+    var fileNameToSaveAs: any = name + '_' + new Date().toUTCString() + '.png';
+    var downloadLink: any = document.createElement("a")
+    downloadLink.download = fileNameToSaveAs;
+    downloadLink.href = (window as any).webkitURL.createObjectURL(blob);
+    downloadLink.click();
+}
+
+
 // returns a blob from a URL/URI
 function dataURItoBlob(dataURI: string): Blob {
     // convert base64/URLEncoded data component to raw binary data held in a string

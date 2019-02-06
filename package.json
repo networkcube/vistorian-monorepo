@@ -43,7 +43,6 @@
         "moment": "^2.23.0",
         "papaparse": "^4.6.3",
         "reorder.js": "^1.0.6",
-        "science": "^1.9.3",
         "netclustering": "file:netClustering-0.1.0",
         "swiftset": "file:swiftSet-0.9.15"
     }

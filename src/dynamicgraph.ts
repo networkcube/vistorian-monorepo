@@ -2,6 +2,7 @@ import { DataSet, Selection, isValidIndex } from './datamanager'
 // import * as d3 from 'd3'
 import * as moment from 'moment'
 import * as LZString from "lz-string";
+import { selection } from 'd3';
 
 //namespace networkcube {
 
@@ -44,7 +45,7 @@ export class DynamicGraph {
     name: string = ''; // INIT??
 
     // data meta data
-    gran_min: number = Number.MIN_VALUE; // INIT?
+    gran_min: number = 0; // INIT?
     gran_max: number = Number.MAX_VALUE; // INIT?
 
     minWeight: number = 10000000;
@@ -58,11 +59,13 @@ export class DynamicGraph {
     _times: Time[] = [];
     // linkTypes: LinkType[] = [];
     timeObjects: any[] = []
-
+    
     nodeOrders: Ordering[] = []; // INIT?
-
+    
     // Matrix for fast access to node pairs (link)
     matrix: number[][] = []; // fast access to node pairs.
+    
+    selections: Selection[] = [];
 
     // node attributes
     nodeArrays: NodeArray = new NodeArray();
@@ -105,7 +108,6 @@ export class DynamicGraph {
     defaultLinkSelection: Selection = this.createSelection('link');
     defaultNodeSelection: Selection = this.createSelection('node');
 
-    selections: Selection[] = [];
 
     // ACCESSOR FUNCTIONS
     // universal accesor
@@ -928,7 +930,6 @@ export class DynamicGraph {
             // For every direction (s,t) and (t,s), an individual link pair
             // exists. If an underlying link is undirected, it is referenced
             // in both node pairs.
-            // console.log('here');
             nodePairId = this.matrix[s][t];
             if (!isValidIndex(nodePairId)) {
                 // console.log('create new node pair', s, t);
@@ -3303,6 +3304,8 @@ export class LinkQuery extends GraphElementQuery {
   */
 export class Link extends BasicElement {
 
+    targetNPO: any = undefined;
+    sourceNPO: any = undefined;
     constructor(id: number, graph: DynamicGraph) {
         super(id, 'link', graph)
     }
