@@ -1,5 +1,5 @@
-import { DynamicGraph, LinkType } from './dynamicgraph'
 import {
+<<<<<<< HEAD
     BasicElement, 
     Link, 
     Node, 
@@ -7,10 +7,82 @@ import {
     Location, 
     Time
 } from './queries'
+=======
+    BasicElement,
+    Time,
+    IDCompound,
+    DynamicGraph,
+    NodePair,
+    Node,
+    Link,
+    LinkType,
+    copyPropsShallow
+} from './dynamicgraph'
+>>>>>>> ee2731e2adc7617f0c0d750fb7dff1642c35c5d7
 import * as moment from 'moment'
 import * as d3 from 'd3'
 
 //namespace networkcube {
+
+
+/* moved from utils to queries */
+
+export function getType(elements: any[]): string | undefined { // before was only string
+
+    var type: string = ''; // before only string, without init
+    if (elements.length == 0)
+        return;
+    if (elements[0] instanceof Node)
+        type = 'node';
+    else
+        if (elements[0] instanceof Link) {
+            type = 'link';
+        } else
+            if (elements[0] instanceof Time) {
+                type = 'time';
+            } else
+                if (elements[0] instanceof NodePair) {
+                    type = 'nodePair';
+                } else
+                    if (elements[0] instanceof LinkType) {
+                        type = 'linkType';
+                    } else
+                        if (typeof elements[0] == 'number') {
+                            type = 'number';
+                        }
+
+    return type;
+}
+
+/* moved from utils to queries */
+
+export function makeElementCompound(elements: IDCompound, g: DynamicGraph): ElementCompound {
+    var result: ElementCompound = new ElementCompound;
+    if (elements != undefined) {
+        if (elements.nodeIds) {
+            result.nodes = <Node[]>elements.nodeIds.map((id, i) => g.node(id)); // ?? WITH OR WITHOUT ?? .filter((element) => { return (element != undefined) });
+        }
+        if (elements.linkIds) {
+            result.links = <Link[]>elements.linkIds.map((id, i) => g.link(id));
+        }
+        if (elements.timeIds) {
+            result.times = <Time[]>elements.timeIds.map((id, i) => g.time(id));
+        }
+        if (elements.nodePairIds) {
+            result.nodePairs = <NodePair[]>elements.nodePairIds.map((id, i) => g.nodePair(id));
+        }
+    }
+    return result;
+}
+
+/* moved from utils to queries */
+export class ElementCompound {
+    nodes: Node[] = [];
+    links: Link[] = [];
+    times: Time[] = [];
+    nodePairs: NodePair[] = [];
+    locations: Location[] = [];
+}
 
 
 export function getPriorityColor(element: BasicElement): string | undefined { // before: return string
@@ -50,35 +122,13 @@ export function capitalizeFirstLetter(string: string): string {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-export function isValidIndex(v: number | undefined): boolean {
-    return v != undefined && v > -1;
-}
-
-export function array(value: any, size: number): any[] {
-    var array: any[] = []
-    while (size--) array[size] = value;
-    return array;
-}
-export function doubleArray(size1: number, size2?: number, value?: any): any[] {
-    var array: any[] = []
-    if (value == undefined)
-        value = []
-    var a: any[] = [];
-
-    if (size2) {
-        while (size2--) a[size2] = value;
-    }
-    while (size1--) array[size1] = a.slice(0);
-
-    return array;
-}
-
 export function isBefore(t1: Time, t2: Time): boolean {
     return t1.time < t2.time;
 }
 export function isAfter(t1: Time, t2: Time): boolean {
     return t1.time > t2.time;
 }
+
 
 export function hex2Rgb(hex: string): number[] {
     return [hexToR(hex), hexToG(hex), hexToB(hex)]
@@ -97,33 +147,6 @@ export function hex2RgbNormalized(hex: string): number[] {
     return [hexToR(hex) / 255, hexToG(hex) / 255, hexToB(hex) / 255]
 }
 
-
-export function getType(elements: any[]): string | undefined { // before was only string
-
-    var type: string = ''; // before only string, without init
-    if (elements.length == 0)
-        return;
-    if (elements[0] instanceof Node)
-        type = 'node';
-    else
-        if (elements[0] instanceof Link) {
-            type = 'link';
-        } else
-            if (elements[0] instanceof Time) {
-                type = 'time';
-            } else
-                if (elements[0] instanceof NodePair) {
-                    type = 'nodePair';
-                } else
-                    if (elements[0] instanceof LinkType) {
-                        type = 'linkType';
-                    } else
-                        if (typeof elements[0] == 'number') {
-                            type = 'number';
-                        }
-
-    return type;
-}
 
 export function areEqualShallow(a: any, b: any): boolean {
     for (var key in a) {
@@ -153,63 +176,10 @@ export function compareTypesShallow(a: any, b: any): boolean {
     }
 }
 
-export function compareTypesDeep(a: any, b: any, depth: number): boolean {
-    var result = true;
-    if (a == null || b == null)
-        return a == b;
-    if (typeof a != typeof b)
-        return false;
-    else if (typeof a != 'object')
-        return true;
-    else if (a.constructor !== b.constructor)
-        return false;
-    else {
-        if (depth > 0) {
-            for (var key in a) {
-                if (key in b
-                    && a.hasOwnProperty(key)
-                    && b.hasOwnProperty(key)
-                    && !compareTypesDeep(a[key], b[key], depth - 1)) {
-                    console.log("compareFailed for key", key, a[key], b[key]);
-                    result = false;
-                }
-            }
-        }
-        return result;
-    }
-}
-
-export function copyPropsShallow(source: any, target: any): any {
-    for (var p in source) {
-        if (source.hasOwnProperty(p))
-            target[p] = source[p];
-    }
-    return target;
-}
-export function copyTimeseriesPropsShallow(source: any, target: any): any {
-    for (var q in source) {
-        if (source.hasOwnProperty(q)) {
-            for (var p in source[q]) {
-                if (source[q].hasOwnProperty(p)) {
-                    target[q][p] = source[q][p];
-                }
-            }
-        }
-    }
-    return target;
-}
-
 export function copyArray<TElement>(arr: any[], ctorFunc: () => TElement): TElement[] {
     var arrayClone: TElement[] = [];
     for (var elem in arr) {
         arrayClone.push(copyPropsShallow(arr[elem], ctorFunc()));
-    }
-    return arrayClone;
-}
-export function copyTimeSeries<TElement>(arr: any[], ctorFunc: () => TElement): TElement[] {
-    var arrayClone: TElement[] = [];
-    for (var elem in arr) {
-        arrayClone.push(copyTimeseriesPropsShallow(arr[elem], ctorFunc()));
     }
     return arrayClone;
 }
@@ -263,28 +233,6 @@ export function isSame(a: any[], b: any[]): boolean {
     return true;
 }
 
-
-export function sortNumber(a: any, b: any) {
-    return a - b;
-}
-
-export class ElementCompound {
-    nodes: Node[] = [];
-    links: Link[] = [];
-    times: Time[] = [];
-    nodePairs: NodePair[] = [];
-    locations: Location[] = [];
-}
-export class IDCompound {
-    nodeIds: number[] = [];
-    linkIds: number[] = [];
-    timeIds: number[] = [];
-    nodePairIds: number[] = [];
-    locationIds: number[] = [];
-}
-
-
-
 export function cloneCompound(compound: IDCompound): IDCompound {
     var result: IDCompound = new IDCompound();
     if (compound.nodeIds) {
@@ -318,53 +266,17 @@ export function makeIdCompound(elements: ElementCompound | undefined): IDCompoun
     var result: IDCompound = new IDCompound;
     if (elements != undefined) {
         if (elements.nodes) {
-            result.nodeIds = elements.nodes.map((n, i) => n.id());
+            result.nodeIds = elements.nodes.map((n: any, i: any) => n.id());
         }
         if (elements.links) {
-            result.linkIds = elements.links.map((n, i) => n.id());
+            result.linkIds = elements.links.map((n: any, i: any) => n.id());
         }
         if (elements.times) {
-            result.timeIds = elements.times.map((n, i) => n.id());
+            result.timeIds = elements.times.map((n: any, i: any) => n.id());
         }
         if (elements.nodePairs) {
-            result.nodePairIds = elements.nodePairs.map((n, i) => n.id());
+            result.nodePairIds = elements.nodePairs.map((n: any, i: any) => n.id());
         }
-    }
-    return result;
-}
-export function makeElementCompound(elements: IDCompound, g: DynamicGraph): ElementCompound {
-    var result: ElementCompound = new ElementCompound;
-    if (elements != undefined) {
-        if (elements.nodeIds) {
-            result.nodes = <Node[]>elements.nodeIds.map((id, i) => g.node(id)); // ?? WITH OR WITHOUT ?? .filter((element) => { return (element != undefined) });
-        }
-        if (elements.linkIds) {
-            result.links = <Link[]>elements.linkIds.map((id, i) => g.link(id));
-        }
-        if (elements.timeIds) {
-            result.times = <Time[]>elements.timeIds.map((id, i) => g.time(id));
-        }
-        if (elements.nodePairIds) {
-            result.nodePairs = <NodePair[]>elements.nodePairIds.map((id, i) => g.nodePair(id));
-        }
-    }
-    return result;
-}
-
-export function attributeSort(a: BasicElement, b: BasicElement, attributeName: string, asc?: boolean): number {
-    var value = a.attr(attributeName);
-    var result;
-    if (typeof value == 'string') {
-        result = a.attr(attributeName).localeCompare(b.attr(attributeName));
-    }
-    else if (typeof value == 'number') {
-        result = b.attr(attributeName) - a.attr(attributeName);
-    } else {
-        result = 0;
-    }
-
-    if (asc == false) {
-        result = -result;
     }
     return result;
 }
@@ -662,6 +574,19 @@ export function getSVGString(svgNode: any) {
         var refNode = element.hasChildNodes() ? element.children[0] : null;
         element.insertBefore(styleElement, refNode);
     }
+}
+
+
+export function exportPNG(canvas: any, name: string) {
+    var dataURL: any = canvas.toDataURL('image/jpg', 1);
+    var blob: any = dataURItoBlob(dataURL);
+    // window.open(dataURL);
+
+    var fileNameToSaveAs: any = name + '_' + new Date().toUTCString() + '.png';
+    var downloadLink: any = document.createElement("a")
+    downloadLink.download = fileNameToSaveAs;
+    downloadLink.href = (window as any).webkitURL.createObjectURL(blob);
+    downloadLink.click();
 }
 
 

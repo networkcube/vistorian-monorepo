@@ -1,8 +1,7 @@
-import { IDCompound, makeIdCompound, ElementCompound, sortByPriority } from './utils'
-// import { DataManager, DataSet, DataManagerOptions } from './datamanager'
-import { DynamicGraph, Selection, dgraphReplacer, dgraphReviver } from './dynamicgraph'
+import { makeIdCompound, sortByPriority, ElementCompound } from './utils'
+import { Selection } from './datamanager'
+import { Time, DynamicGraph, dgraphReplacer, dgraphReviver, IDCompound } from './dynamicgraph'
 import { getDynamicGraph } from './main'
-import { Time } from './queries'
 import { searchForTerm } from './search'
 
 // import * as trace from 'trace'

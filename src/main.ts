@@ -1,14 +1,22 @@
 import {
     getUrlVars
 } from './utils'
+<<<<<<< HEAD
 import { DataManager, DataSet, DataManagerOptions } from './datamanager'
 import { DynamicGraph } from './dynamicgraph'
+=======
+import { DataSet } from './datamanager'
+import { DynamicGraph, DataManager, DataManagerOptions } from './dynamicgraph'
+>>>>>>> ee2731e2adc7617f0c0d750fb7dff1642c35c5d7
 
 // import * as d3 from 'd3'
 // import * as moment from 'moment'
 
+<<<<<<< HEAD
 // import * as setOps from '../swiftSet-0.9.15'
 
+=======
+>>>>>>> ee2731e2adc7617f0c0d750fb7dff1642c35c5d7
 /** A collection of Networkcube's  global function availeble
  * through networkcube.myFunc()
  * */
