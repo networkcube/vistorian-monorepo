@@ -1,13 +1,4 @@
 import {
-<<<<<<< HEAD
-    BasicElement, 
-    Link, 
-    Node, 
-    NodePair, 
-    Location, 
-    Time
-} from './queries'
-=======
     BasicElement,
     Time,
     IDCompound,
@@ -18,7 +9,6 @@ import {
     LinkType,
     copyPropsShallow
 } from './dynamicgraph'
->>>>>>> ee2731e2adc7617f0c0d750fb7dff1642c35c5d7
 import * as moment from 'moment'
 import * as d3 from 'd3'
 
