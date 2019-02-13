@@ -151,7 +151,7 @@ var svg: any = d3.select('#visSvg')
         // zoom 
         (<Event>d3.event).preventDefault();
         (<Event>d3.event).stopPropagation();
-        //var globalZoom = 1 + d3.event.wheelDelta / 1000;
+        //var globalZoom = 1 + d3.event.wheelDelta / 1000; // wheelDelta only in v4 or more
         var globalZoom = 1 ;
         var mouse = [(<MouseEvent>d3.event).x - panOffsetGlobal[0], (<MouseEvent>d3.event).y - panOffsetGlobal[1]];
         var d: any, n: any;
