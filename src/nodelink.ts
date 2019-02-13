@@ -42,11 +42,11 @@ var times: dynamicgraph.Time[] = dgraph.times().toArray();
 var time_start: dynamicgraph.Time = times[0];
 var time_end: dynamicgraph.Time = times[times.length - 1];
 
-var nodes: dynamicgraph.Node[] = dgraph.nodes().toArray();
+var nodes: any = dgraph.nodes().toArray();
 var nodesOrderedByDegree: dynamicgraph.Node[] = dgraph.nodes().toArray().sort((n1: any, n2: any) => n2.neighbors().length - n1.neighbors().length);
 
 var nodePairs: dynamicgraph.NodePairQuery = dgraph.nodePairs();
-var links: dynamicgraph.Link[] = dgraph.links().toArray();
+var links: any = dgraph.links().toArray();
 var nodeLength: number = nodes.length;
 
 
@@ -55,7 +55,7 @@ var nodeLength: number = nodes.length;
 var hiddenLabels: any = [];
 var LABELING_STRATEGY: number = 1;
 
-var linkWeightScale = d3.scaleLinear().range([0, LINK_WIDTH]);
+var linkWeightScale = d3.scale.linear().range([0, LINK_WIDTH]);
 linkWeightScale.domain([
     0,
     dgraph.links().weights().max()
@@ -133,12 +133,12 @@ var globalZoom: number = 1;
 var svg: any = d3.select('#visSvg')
     .on('mousedown', () => {
         isMouseDown = true;
-        mouseStart = [d3.event.x, d3.event.y];
+        mouseStart = [(<MouseEvent>d3.event).x, (<MouseEvent>d3.event).y];
     })
     .on('mousemove', () => {
         if (isMouseDown) {
-            panOffsetLocal[0] = (d3.event.x - mouseStart[0]) * globalZoom;
-            panOffsetLocal[1] = (d3.event.y - mouseStart[1]) * globalZoom;
+            panOffsetLocal[0] = ((<MouseEvent>d3.event).x - mouseStart[0]) * globalZoom;
+            panOffsetLocal[1] = ((<MouseEvent>d3.event).y - mouseStart[1]) * globalZoom;
             svg.attr("transform", "translate(" + (panOffsetGlobal[0] + panOffsetLocal[0]) + ',' + (panOffsetGlobal[1] + panOffsetLocal[1]) + ")");
         }
     })
@@ -149,10 +149,11 @@ var svg: any = d3.select('#visSvg')
     })
     .on('wheel', () => {
         // zoom 
-        d3.event.preventDefault();
-        d3.event.stopPropagation();
-        var globalZoom = 1 + d3.event.wheelDelta / 1000;
-        var mouse = [d3.event.x - panOffsetGlobal[0], d3.event.y - panOffsetGlobal[1]];
+        (<Event>d3.event).preventDefault();
+        (<Event>d3.event).stopPropagation();
+        //var globalZoom = 1 + d3.event.wheelDelta / 1000;
+        var globalZoom = 1 ;
+        var mouse = [(<MouseEvent>d3.event).x - panOffsetGlobal[0], (<MouseEvent>d3.event).y - panOffsetGlobal[1]];
         var d: any, n: any;
         for (var i = 0; i < nodes.length; i++) {
             n = nodes[i]
@@ -180,20 +181,41 @@ var visualLinks: any;
 var layout: any;
 
 // line function for curved links
-var lineFunction: any = d3.line()
+var lineFunction: any = d3.svg.line() // only line() d3 v4
     .x(function (d: any) { return d.x; })
     .y(function (d: any) { return d.y; })
-    .curve(d3.curveLinear);
+    .interpolate("basis")// d3 v4 is .curve(d3.curveLinear);
 
 for (var i = 0; i < nodes.length; i++) {
     (nodes as any)[i]['width'] = getNodeRadius(nodes[i]) * 2;
     (nodes as any)[i]['height'] = getNodeRadius(nodes[i]) * 2;
 }
 
+/* d3 v3 */
+layout = d3.layout.force()
+    // layout = cola.d3adaptor()
+    .linkDistance(30)
+    .size([width, height])
+    .nodes(nodes)
+    .links(links)
+    .on('end', () => {
+        updateNodes();
+        updateLinks();
+        updateLayout();
+        // package layout coordinates
+        var coords = []
+        for (var i = 0; i < nodes.length; i++) {
+            coords.push({ x: (nodes[i] as any).x, y: (nodes[i] as any).y })
+        }
+        messenger.sendMessage('layout', { coords: coords })
+    })
+    .start()
+
+
+/* d3 v4 */
+/*
 layout = d3.forceSimulation()
-    //.linkDistance(30)
     .force("link", d3.forceLink().distance(30).strength(0.1))
-    //.size([width, height]) // SEARCH HOW SET SIZE
     .nodes(nodes)
     .force("link", d3.forceLink().links(links))
     .on('end', () => {
@@ -209,7 +231,7 @@ layout = d3.forceSimulation()
         }
         messenger.sendMessage('layout', { coords: coords })
     })
-// .start() // NOT NEEDED
+*/
 
 // show layout-message    
 showMessage('Calculating<br/>layout');
@@ -218,8 +240,6 @@ init();
 function init() {
     // CREATE NODES:
     // node circles
-
-    console.log(nodes.length);
 
     visualNodes = nodeLayer.selectAll('nodes')
         .data(nodes)
