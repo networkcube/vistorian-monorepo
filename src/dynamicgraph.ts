@@ -2,7 +2,7 @@ import { DataSet, Selection, isValidIndex } from './datamanager'
 // import * as d3 from 'd3'
 import * as moment from 'moment'
 import * as LZString from "lz-string";
-import { selection } from 'd3';
+//import { selection } from 'd3';
 
 //namespace networkcube {
 
@@ -59,12 +59,12 @@ export class DynamicGraph {
     _times: Time[] = [];
     // linkTypes: LinkType[] = [];
     timeObjects: any[] = []
-    
+
     nodeOrders: Ordering[] = []; // INIT?
-    
+
     // Matrix for fast access to node pairs (link)
     matrix: number[][] = []; // fast access to node pairs.
-    
+
     selections: Selection[] = [];
 
     // node attributes

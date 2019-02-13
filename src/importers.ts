@@ -13,7 +13,7 @@ export namespace networkcube {
 
 
     export function loadDyson(url: string, callback: Function) {
-        d3.json(url, (data) => {
+        d3.json(url, (data: any) => {
             // create node table
             var nodeTable = []
             var nodeSchema = { id: 0, label: 1 }
