@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="./static/styles1.css">
+    <link rel="stylesheet" type="text/css" href="./static/styles2.css">
+
+    <!-- VS: Call to trace.js -->
+    <script type="text/javascript" src="./traces/trace.js"></script>
+
+    <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyBLqH0fxzF-b2Z6uxbzqGKJy09tUQ3C3IM&sensor=false"></script>
+    <!--<script src="lib/d3.js"></script>
+    <script src="lib/seedrandom.js"></script>-->
+</head>
+<title>Map</title>
+
+<body>
+    <!-- VS: Call to trace_test_130529 -->
+    <script type="text/javascript" src="./traces/trace_test_130529.js"></script>
+    <div>
+        <div id="menuDiv">
+
+            <!-- VS: Clicks on Manual -->
+            <a class="manual-button" target="_blank" href="https://github.com/networkcube/networkcube/wiki/Visualization-Manual#geomap-visualization-map"
+                onclick="trace.event('help', 'ts_mapVisManual', 'CCC', 'DDD')">Manual</a>
+        </div>
+        <div id="timelineDiv">
+        </div>
+        <div id="visDiv">
+        </div>
+    </div>
+    <script src="../node_modules/jquery/dist/jquery.js"></script>
+    <script src="../node_modules/d3/d3.min.js"></script>
+    <script src="../node_modules/moment/moment.js"></script>
+    <script src="../lib/index.js"></script>
+</body>
+
+</html>

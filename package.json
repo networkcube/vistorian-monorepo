@@ -1,0 +1,46 @@
+{
+    "name": "vistorian-vis",
+    "version": "0.0.1-alpha",
+    "description": "Vistorian-vis is a java script / (Typescript) library and a programming framework for interactive network visualizations with:",
+    "main": "lib/index.js",
+    "types": "lib/index.d.js",
+    "scripts": {
+        "build": "tsc --pretty false && webpack --config webpack.config.js",
+        "lint": "tslint -p . -e 'package.json'",
+        "clean": "rimraf lib",
+        "start": "webpack-dev-server --config webpack.config.js --open"
+    },
+    "author": "Benjamin Bach <benj.bach@gmail.com>",
+    "license": "MIT",
+    "devDependencies": {
+        "@types/jquery": "^1.10.35",
+        "rimraf": "^2.6.3",
+        "ts-loader": "^5.3.3",
+        "tslint": "^5.12.1",
+        "typescript": "^3.2.4",
+        "webpack": "^4.29.0",
+        "webpack-bundle-analyzer": "^3.0.3",
+        "webpack-cli": "^3.2.1",
+        "webpack-dev-server": "^3.1.14"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/networkcube/vistorian-vis.git"
+    },
+    "collaborators": [
+        "Jean-Daniel Fekete <Jean-Daniel.Fekete@inria.fr",
+        "Alexandra Ibarra Cuesta"
+    ],
+    "homepage": "https://github.com/networkcube/networkcube#readme",
+    "dependencies": {
+        "@types/d3": "^3.0",
+        "@types/three": "^0.93.15",
+        "circular-dependency-plugin": "^5.0.2",
+        "d3": "^3.0",
+        "jquery": "^3.3.1",
+        "moment": "^2.23.0",
+        "three": "^0.100.0",
+        "vistorian-core": "file:../vistorian-core",
+        "vistorian-widgets": "file:../vistorian-widgets"
+    }
+}
