@@ -1,7 +1,7 @@
 {
-    "name": "vistorian-nodelink",
+    "name": "vistorian-matrix",
     "version": "0.0.1-alpha",
-    "description": "Vistorian-nodelink is a java script / (Typescript) library and a programming framework for interactive network visualizations with:",
+    "description": "Vistorian-matrix is a java script / (Typescript) library and a programming framework for interactive network visualizations with:",
     "main": "lib/index.js",
     "types": "lib/index.d.js",
     "scripts": {
@@ -25,7 +25,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/networkcube/vistorian-nodelink.git"
+        "url": "git+https://github.com/networkcube/vistorian-matrix.git"
     },
     "collaborators": [
         "Jean-Daniel Fekete <Jean-Daniel.Fekete@inria.fr",
