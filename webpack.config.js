@@ -2,7 +2,7 @@ const path = require('path');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
 
 module.exports = {
-    mode: 'development',
+    mode: 'production',
     entry: './src/index.ts', 
     devtool: 'inline-source-map',
     plugins: [
