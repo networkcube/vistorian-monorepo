@@ -1,7 +1,7 @@
 {
-    "name": "vistorian-vis",
+    "name": "vistorian-map",
     "version": "0.0.1-alpha",
-    "description": "Vistorian-vis is a java script / (Typescript) library and a programming framework for interactive network visualizations with:",
+    "description": "Vistorian-map is a java script / (Typescript) library and a programming framework for interactive network visualizations with:",
     "main": "lib/index.js",
     "types": "lib/index.d.js",
     "scripts": {
@@ -25,7 +25,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/networkcube/vistorian-vis.git"
+        "url": "git+https://github.com/networkcube/vistorian-map.git"
     },
     "collaborators": [
         "Jean-Daniel Fekete <Jean-Daniel.Fekete@inria.fr",
