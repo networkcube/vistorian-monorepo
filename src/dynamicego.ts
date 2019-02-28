@@ -162,7 +162,9 @@ export function visualize() {
     createTimes()
     createLinks()
 
+    console.log("WEBGL");
     webgl.render();
+    console.log("WEBGL 2");
 }
 
 var rowBars: any;
