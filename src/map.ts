@@ -837,11 +837,12 @@ function updateLinks() {
         })
         .style('stroke-width', function (d: any) {
             var weight = linkWeightScale(d.weights(time_start, time_end).mean());
+            var thisSelection = d3.select(this);
             if (weight < 0) {
                 weight = -weight;
-                d3.select(self).attr('stroke-dasharray', '1,2') // BEFORE this ??
+                thisSelection.attr('stroke-dasharray', '1,2') // BEFORE this ??
             } else {
-                d3.select(self).attr('stroke-dasharray', '0') // BEFORE this ??
+                thisSelection.attr('stroke-dasharray', '0') // BEFORE this ??
             }
             if (d.isHighlighted())
                 weight *= 2;

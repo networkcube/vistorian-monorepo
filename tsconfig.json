@@ -9,7 +9,8 @@
         "allowSyntheticDefaultImports": true,
         "moduleResolution": "node",
         "resolveJsonModule": true,
-        "declaration": true
+        "declaration": true,
+        "noImplicitThis": false
     },
     "pretty": false,
     "files": [
