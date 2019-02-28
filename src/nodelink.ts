@@ -199,6 +199,7 @@ layout = d3.layout.force()
     .nodes(nodes)
     .links(links)
     .on('end', () => {
+        unshowMessage();
         updateNodes();
         updateLinks();
         updateLayout();
@@ -288,6 +289,7 @@ function init() {
 
     // CREATE LINKS
     calculateCurvedLinks();
+    console.log("VISUALLINKS");
     visualLinks = linkLayer.selectAll('visualLinks')
         .data(links)
         .enter()
@@ -336,6 +338,7 @@ function updateLayout() {
 
     // update link positions
     calculateCurvedLinks();
+    console.log("VISUALLINK2")
     visualLinks
         .attr('d', (d: any) => lineFunction(d.path))
 
