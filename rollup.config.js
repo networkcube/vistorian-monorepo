@@ -8,7 +8,7 @@ export default {
     external: ['d3', 'lz-string', 'reorder.js', 'netclustering', 'swiftset', 'moment'],
     output: {
         file: 'lib/vistorian-core.js',
-        format: 'cjs',
+        format: 'umd',
         sourcemap: true,
         name: 'vc',
         globals: {

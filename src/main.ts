@@ -257,4 +257,8 @@ export function isTrackingSet(): Boolean {
     // console.log('isTrackingSet', value)
     return value === null ? false : true;
 }
-//}
+
+export function deleteData(dataSetName: string){
+    // deletes a network
+    getDynamicGraph(dataSetName).delete(dataManager);
+}

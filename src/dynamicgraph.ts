@@ -249,12 +249,15 @@ export class DynamicGraph {
         this.clearSelections();
         //this.data = dataSet;
         this.name = dataSetName;
+        console.log('name:', this.name);
         var thisGraph = this;
+        console.log('thisGraph:', thisGraph);
 
         // CACHEGRAPH : load from storage the entire state of the graph
 
         /* UNDEFINED PROBLEM */
         var gran_min_storage = dataMgr.getFromStorage<number>(this.name, this.gran_min_NAME);
+        console.log('this.gran_min:', gran_min_storage);
         if (gran_min_storage != undefined)
             this.gran_min = gran_min_storage;
         console.log('this.gran_min', this.gran_min);
@@ -384,6 +387,36 @@ export class DynamicGraph {
         dataMgr.saveToStorage(this.name, this.linkTypeArrays_NAME, this.linkTypeArrays, this.standardArrayReplacer);
         dataMgr.saveToStorage(this.name, this.nodeTypeArrays_NAME, this.nodeTypeArrays, this.standardArrayReplacer);
         dataMgr.saveToStorage(this.name, this.locationArrays_NAME, this.locationArrays, this.standardArrayReplacer);
+    }
+
+    // Removes this graph from the cache.
+    delete(dataMgr: DataManager) {
+        dataMgr.removeFromStorage(this.name, this.gran_min_NAME);
+        dataMgr.removeFromStorage(this.name, this.gran_max_NAME);
+        dataMgr.removeFromStorage(this.name, this.minWeight_NAME);
+        dataMgr.removeFromStorage(this.name, this.maxWeight_NAME);
+
+        dataMgr.removeFromStorage(this.name, this.matrix_NAME);
+        dataMgr.removeFromStorage(this.name, this.nodeArrays_NAME);
+        // when we tried to persist the entire linkArrays, javascript threw an
+        // exception, so for now we will simply try to save out the parts. 
+        dataMgr.removeFromStorage(this.name, this.linkArrays_NAME);
+        // dataMgr.saveToStorage(this.name, this.linkArrays_NAME+"source", this.linkArrays.source, this.standardReplacer);
+        // dataMgr.saveToStorage(this.name, this.linkArrays_NAME+"target", this.linkArrays.target, this.standardReplacer);
+        // dataMgr.saveToStorage(this.name, this.linkArrays_NAME+"linkType", this.linkArrays.linkType, this.standardReplacer);
+        // dataMgr.saveToStorage(this.name, this.linkArrays_NAME+"directed", this.linkArrays.directed, this.standardReplacer);
+        // dataMgr.saveToStorage(this.name, this.linkArrays_NAME+"nodePair", this.linkArrays.nodePair, this.standardReplacer);
+        // dataMgr.saveToStorage(this.name, this.linkArrays_NAME+"presence", this.linkArrays.presence, this.standardReplacer);
+        // dataMgr.saveToStorage(this.name, this.linkArrays_NAME+"weights", this.linkArrays.weights, this.standardReplacer);
+        // dataMgr.saveToStorage(this.name, this.linkArrays_NAME+"filter", this.linkArrays.filter, this.standardReplacer);
+        // dataMgr.saveToStorage(this.name, this.linkArrays_NAME+"attributes", this.linkArrays.attributes, this.standardReplacer);
+
+        dataMgr.removeFromStorage(this.name, this.nodePairArrays_NAME);
+        dataMgr.removeFromStorage(this.name, this.timeArrays_NAME);
+        dataMgr.removeFromStorage(this.name, this.linkTypeArrays_NAME);
+        dataMgr.removeFromStorage(this.name, this.nodeTypeArrays_NAME);
+        dataMgr.removeFromStorage(this.name, this.locationArrays_NAME);
+
     }
 
     debugCompareTo(other: DynamicGraph): boolean {
@@ -540,6 +573,14 @@ export class DynamicGraph {
             for (var i = 0; i < data.linkTable.length; i++) {
                 timeLabel = data.linkTable[i][data.linkSchema.time];
                 unixTime = parseInt(moment.utc(timeLabel, TIME_FORMAT).format('x'));
+                if (i == 0) {
+                    console.log("linkTable[i]: ", data.linkTable[i]);
+                    console.log("linkTable: ", data.linkTable[i][data.linkSchema.time]);
+                    console.log("timeLabel: ", timeLabel);
+                    console.log("moment.utc: ", moment.utc(timeLabel, TIME_FORMAT));
+                    console.log("moment format: ", moment.utc(timeLabel, TIME_FORMAT).format('x'));
+                    console.log("unixTime: ", unixTime);
+                }
                 if (unixTime == undefined)
                     continue;
 
@@ -595,7 +636,7 @@ export class DynamicGraph {
             // this._times = [];
             for (var i = 0; i < unixTimes.length; i++) {
                 this.timeArrays.id.push(i);
-                this.timeArrays.momentTime.push(moment.unix(unixTimes[i]));
+                this.timeArrays.momentTime.push(moment.utc(unixTimes[i]));
                 this.timeArrays.label.push(this.timeArrays.momentTime[i].format(TIME_FORMAT));
                 this.timeArrays.unixTime.push(unixTimes[i]);
                 this.timeArrays.selections.push([]);
@@ -626,7 +667,7 @@ export class DynamicGraph {
         if (this.timeArrays.length == 0) {
             // null time object that represents one time step for the entire graph, i.e. a static graph
             this.timeArrays.id.push(0);
-            this.timeArrays.momentTime.push(moment.unix(0));
+            this.timeArrays.momentTime.push(moment.utc(0));
             this.timeArrays.unixTime.push(0);
             this.timeArrays.selections.push([]);
             this.timeArrays.filter.push(false)
@@ -3727,15 +3768,19 @@ export class DataManager {
             + this.SEP + dataName
             + this.SEP + valueName];
 
+        console.log("storedResult", storedResult);
+
         if (storedResult && storedResult != "undefined") {
             // we try to detect whether the string was compressed or not. Given that it is 
             // JSON, we would expect it to begin with either a quote, a bracket, or a curly-brace
             var parseText;
+            console.log("IF");
             if ("\"'[{0123456789".indexOf(storedResult[0]) >= 0)
                 parseText = storedResult;
             else
                 parseText = LZString.decompress(storedResult);
 
+            console.log("parseText", parseText);
             return <TResult>JSON.parse(parseText, statefulReviver);
         }
         else {
@@ -3752,6 +3797,7 @@ export class DataManager {
     }
     //
     // end storage primitives //////////////////////////////
+
 
     // GRAPH
 

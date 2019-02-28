@@ -320,7 +320,7 @@ export function isPointInPolyArray(poly: number[][], pt: number[]) {
 
 
 export function formatTimeAtGranularity(time: Time, granualarity: number) {
-    var momentTime = moment.unix(time.unixTime())
+    var momentTime = moment.utc(time.unixTime())
     switch (granualarity) {
         case 0: return momentTime.millisecond();
         case 1: return momentTime.second();
