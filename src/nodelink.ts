@@ -1,15 +1,10 @@
-import {
-    dynamicgraph,
-    utils,
-    queries,
-    main,
-    messenger
-} from './vistorian-core-imports';
+import * as dynamicgraph from 'vistorian-core/src/dynamicgraph';
+import * as utils from 'vistorian-core/src/utils';
+import * as main from 'vistorian-core/src/main';
+import * as messenger from 'vistorian-core/src/messenger';
 
-import {
-    makeSlider,
-    TimeSlider
-} from './vistorian-widgets-imports';
+import * as ui from 'vistorian-widgets/src/ui';
+import * as timeslider from 'vistorian-widgets/src/timeslider';
 
 import * as d3 from 'd3'
 
@@ -43,15 +38,15 @@ var positions: Object = new Object();
 
 // get dynamic graph
 var dgraph: dynamicgraph.DynamicGraph = main.getDynamicGraph();
-var times: queries.Time[] = dgraph.times().toArray();
-var time_start: queries.Time = times[0];
-var time_end: queries.Time = times[times.length - 1];
+var times: dynamicgraph.Time[] = dgraph.times().toArray();
+var time_start: dynamicgraph.Time = times[0];
+var time_end: dynamicgraph.Time = times[times.length - 1];
 
-var nodes: queries.Node[] = dgraph.nodes().toArray();
-var nodesOrderedByDegree: queries.Node[] = dgraph.nodes().toArray().sort((n1, n2) => n2.neighbors().length - n1.neighbors().length);
+var nodes: any = dgraph.nodes().toArray();
+var nodesOrderedByDegree: dynamicgraph.Node[] = dgraph.nodes().toArray().sort((n1: any, n2: any) => n2.neighbors().length - n1.neighbors().length);
 
-var nodePairs: queries.NodePairQuery = dgraph.nodePairs();
-var links: queries.Link[] = dgraph.links().toArray();
+var nodePairs: dynamicgraph.NodePairQuery = dgraph.nodePairs();
+var links: any = dgraph.links().toArray();
 var nodeLength: number = nodes.length;
 
 
@@ -60,7 +55,7 @@ var nodeLength: number = nodes.length;
 var hiddenLabels: any = [];
 var LABELING_STRATEGY: number = 1;
 
-var linkWeightScale = d3.scaleLinear().range([0, LINK_WIDTH]);
+var linkWeightScale = d3.scale.linear().range([0, LINK_WIDTH]);
 linkWeightScale.domain([
     0,
     dgraph.links().weights().max()
@@ -73,19 +68,19 @@ messenger.setDefaultEventListener(updateEvent);
 // MENU
 var menuDiv = d3.select('#menuDiv');
 /* widget/ui.js */
-makeSlider.makeSlider(menuDiv, 'Link Opacity', SLIDER_WIDTH, SLIDER_HEIGHT, LINK_OPACITY, 0, 1, function (value: number) {
+ui.makeSlider(menuDiv, 'Link Opacity', SLIDER_WIDTH, SLIDER_HEIGHT, LINK_OPACITY, 0, 1, function (value: number) {
     LINK_OPACITY = value;
     updateLinks();
 })
-makeSlider.makeSlider(menuDiv, 'Node Size', SLIDER_WIDTH, SLIDER_HEIGHT, NODE_SIZE, .01, 3, function (value: number) {
+ui.makeSlider(menuDiv, 'Node Size', SLIDER_WIDTH, SLIDER_HEIGHT, NODE_SIZE, .01, 3, function (value: number) {
     NODE_SIZE = value;
     updateNodeSize();
 })
-makeSlider.makeSlider(menuDiv, 'Edge Gap', SLIDER_WIDTH, SLIDER_HEIGHT, LINK_GAP, 0, 10, function (value: number) {
+ui.makeSlider(menuDiv, 'Edge Gap', SLIDER_WIDTH, SLIDER_HEIGHT, LINK_GAP, 0, 10, function (value: number) {
     LINK_GAP = value;
     updateLayout();
 })
-makeSlider.makeSlider(menuDiv, 'Link Width', SLIDER_WIDTH, SLIDER_HEIGHT, LINK_WIDTH, 0, 10, function (value: number) {
+ui.makeSlider(menuDiv, 'Link Width', SLIDER_WIDTH, SLIDER_HEIGHT, LINK_WIDTH, 0, 10, function (value: number) {
     LINK_WIDTH = value;
     linkWeightScale.range([0, LINK_WIDTH]);
     updateLinks();
@@ -119,7 +114,7 @@ var timeSvg: any = d3.select('#timelineDiv')
     .attr('height', TIMELINE_HEIGHT)
 
 if (dgraph.times().size() > 1) {
-    var timeSlider: TimeSlider.TimeSlider = new TimeSlider.TimeSlider(dgraph, width - 50);
+    var timeSlider: timeslider.TimeSlider = new timeslider.TimeSlider(dgraph, width - 50);
     timeSlider.appendTo(timeSvg);
     messenger.addEventListener('timeRange', timeChangedHandler)
 }
@@ -138,12 +133,12 @@ var globalZoom: number = 1;
 var svg: any = d3.select('#visSvg')
     .on('mousedown', () => {
         isMouseDown = true;
-        mouseStart = [d3.event.x, d3.event.y];
+        mouseStart = [(<MouseEvent>d3.event).x, (<MouseEvent>d3.event).y];
     })
     .on('mousemove', () => {
         if (isMouseDown) {
-            panOffsetLocal[0] = (d3.event.x - mouseStart[0]) * globalZoom;
-            panOffsetLocal[1] = (d3.event.y - mouseStart[1]) * globalZoom;
+            panOffsetLocal[0] = ((<MouseEvent>d3.event).x - mouseStart[0]) * globalZoom;
+            panOffsetLocal[1] = ((<MouseEvent>d3.event).y - mouseStart[1]) * globalZoom;
             svg.attr("transform", "translate(" + (panOffsetGlobal[0] + panOffsetLocal[0]) + ',' + (panOffsetGlobal[1] + panOffsetLocal[1]) + ")");
         }
     })
@@ -154,10 +149,11 @@ var svg: any = d3.select('#visSvg')
     })
     .on('wheel', () => {
         // zoom 
-        d3.event.preventDefault();
-        d3.event.stopPropagation();
-        var globalZoom = 1 + d3.event.wheelDelta / 1000;
-        var mouse = [d3.event.x - panOffsetGlobal[0], d3.event.y - panOffsetGlobal[1]];
+        (<Event>d3.event).preventDefault();
+        (<Event>d3.event).stopPropagation();
+        //var globalZoom = 1 + d3.event.wheelDelta / 1000; // wheelDelta only in v4 or more
+        var globalZoom = 1 ;
+        var mouse = [(<MouseEvent>d3.event).x - panOffsetGlobal[0], (<MouseEvent>d3.event).y - panOffsetGlobal[1]];
         var d: any, n: any;
         for (var i = 0; i < nodes.length; i++) {
             n = nodes[i]
@@ -185,20 +181,42 @@ var visualLinks: any;
 var layout: any;
 
 // line function for curved links
-var lineFunction: any = d3.line()
+var lineFunction: any = d3.svg.line() // only line() d3 v4
     .x(function (d: any) { return d.x; })
     .y(function (d: any) { return d.y; })
-    .curve(d3.curveLinear);
+    .interpolate("basis")// d3 v4 is .curve(d3.curveLinear);
 
 for (var i = 0; i < nodes.length; i++) {
     (nodes as any)[i]['width'] = getNodeRadius(nodes[i]) * 2;
     (nodes as any)[i]['height'] = getNodeRadius(nodes[i]) * 2;
 }
 
+/* d3 v3 */
+layout = d3.layout.force()
+    // layout = cola.d3adaptor()
+    .linkDistance(30)
+    .size([width, height])
+    .nodes(nodes)
+    .links(links)
+    .on('end', () => {
+        unshowMessage();
+        updateNodes();
+        updateLinks();
+        updateLayout();
+        // package layout coordinates
+        var coords = []
+        for (var i = 0; i < nodes.length; i++) {
+            coords.push({ x: (nodes[i] as any).x, y: (nodes[i] as any).y })
+        }
+        messenger.sendMessage('layout', { coords: coords })
+    })
+    .start()
+
+
+/* d3 v4 */
+/*
 layout = d3.forceSimulation()
-    //.linkDistance(30)
     .force("link", d3.forceLink().distance(30).strength(0.1))
-    //.size([width, height]) // SEARCH HOW SET SIZE
     .nodes(nodes)
     .force("link", d3.forceLink().links(links))
     .on('end', () => {
@@ -214,7 +232,7 @@ layout = d3.forceSimulation()
         }
         messenger.sendMessage('layout', { coords: coords })
     })
-// .start() // NOT NEEDED
+*/
 
 // show layout-message    
 showMessage('Calculating<br/>layout');
@@ -224,13 +242,11 @@ function init() {
     // CREATE NODES:
     // node circles
 
-    console.log(nodes.length);
-
     visualNodes = nodeLayer.selectAll('nodes')
         .data(nodes)
         .enter()
         .append('circle')
-        .attr('r', (n: queries.Node) => getNodeRadius(n))
+        .attr('r', (n: dynamicgraph.Node) => getNodeRadius(n))
         .attr('class', 'nodes')
         .style('fill', COLOR_DEFAULT_NODE)
         .on('mouseover', mouseOverNode)
@@ -273,6 +289,7 @@ function init() {
 
     // CREATE LINKS
     calculateCurvedLinks();
+    console.log("VISUALLINKS");
     visualLinks = linkLayer.selectAll('visualLinks')
         .data(links)
         .enter()
@@ -321,6 +338,7 @@ function updateLayout() {
 
     // update link positions
     calculateCurvedLinks();
+    console.log("VISUALLINK2")
     visualLinks
         .attr('d', (d: any) => lineFunction(d.path))
 
@@ -337,7 +355,7 @@ function getLabelWidth(n: any) {
 function getLabelHeight(n: any) {
     return 18;
 }
-function getNodeRadius(n: queries.Node) {
+function getNodeRadius(n: dynamicgraph.Node) {
     return Math.sqrt(n.links().length) * NODE_SIZE + 1;
 }
 
@@ -543,8 +561,8 @@ function updateLinks() {
 }
 
 function calculateCurvedLinks() {
-    var path: any, dir: any, offset: any, offset2: any, multiLink: queries.NodePair | undefined;
-    var links: queries.Link[];
+    var path: any, dir: any, offset: any, offset2: any, multiLink: dynamicgraph.NodePair | undefined;
+    var links: dynamicgraph.Link[];
     for (var i = 0; i < dgraph.nodePairs().length; i++) {
         multiLink = dgraph.nodePair(i);
         if (multiLink) {
