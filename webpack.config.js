@@ -2,7 +2,7 @@ const path = require('path');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
 
 module.exports = {
-    mode: 'production',
+    mode: 'development',
     entry: './src/index.ts', 
     devtool: 'inline-source-map',
     plugins: [
@@ -25,6 +25,7 @@ module.exports = {
         extensions: ['.tsx', '.ts', '.js']
     },
     output: {
+        library: "dynamicego",
         libraryTarget: "umd",
         filename: 'index.js',
         path: path.resolve(__dirname, 'lib')
