@@ -1,10 +1,12 @@
+/// <reference path="../../vistorian-core/src/lib/d3.d.ts"/>
+
 import * as utils from 'vistorian-core/src/utils';
 import * as dynamicgraph from 'vistorian-core/src/dynamicgraph';
 import * as main from 'vistorian-core/src/main';
 import * as messenger from 'vistorian-core/src/messenger';
 import * as datamanager from 'vistorian-core/src/datamanager';
 
-import * as d3 from 'd3';
+//import * as d3 from 'd3';
 
 import $ from 'jquery';
 
