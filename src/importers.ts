@@ -1,4 +1,6 @@
-import * as d3 from 'd3'
+/// <reference path="./lib/d3.d.ts"/>
+
+//import * as d3 from 'd3'
 import {
     DataSet, LinkSchema, NodeSchema
 } from './datamanager'

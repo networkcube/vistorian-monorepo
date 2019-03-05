@@ -1,8 +1,6 @@
 import { DataSet, Selection, isValidIndex } from './datamanager'
-// import * as d3 from 'd3'
 import * as moment from 'moment'
 import * as LZString from "lz-string";
-//import { selection } from 'd3';
 
 //namespace networkcube {
 

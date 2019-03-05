@@ -1,3 +1,5 @@
+/// <reference path="./lib/d3.d.ts"/>
+
 import {
     BasicElement,
     Time,
@@ -10,7 +12,7 @@ import {
     copyPropsShallow
 } from './dynamicgraph'
 import * as moment from 'moment'
-import * as d3 from 'd3'
+// import * as d3 from 'd3'
 
 //namespace networkcube {
 
