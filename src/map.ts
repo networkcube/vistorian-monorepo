@@ -1,4 +1,5 @@
 /// <reference path="lib/google.maps.d.ts" />
+/// <reference path="../../vistorian-core/src/lib/d3.d.ts"/>
 
 import * as dynamicgraph from 'vistorian-core/src/dynamicgraph';
 import * as utils from 'vistorian-core/src/utils';
@@ -8,7 +9,7 @@ import * as messenger from 'vistorian-core/src/messenger';
 import * as ui from 'vistorian-widgets/src/ui';
 import * as timeslider from 'vistorian-widgets/src/timeslider';
 
-import * as d3 from 'd3';
+//import * as d3 from 'd3';
 import * as moment from 'moment';
 
 var COLOR_DEFAULT_LINK: string = '#999999';
