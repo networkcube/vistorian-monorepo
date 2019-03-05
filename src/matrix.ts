@@ -1,5 +1,7 @@
+/// <reference path="../../vistorian-core/src/lib/d3.d.ts"/>
+
 import * as THREE from 'three';
-import * as d3 from 'd3';
+//import * as d3 from 'd3';
 
 import * as dynamicgraph from 'vistorian-core/src/dynamicgraph';
 import * as utils from 'vistorian-core/src/utils';
