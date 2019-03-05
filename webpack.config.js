@@ -25,6 +25,7 @@ module.exports = {
         extensions: ['.tsx', '.ts', '.js']
     },
     output: {
+        library: "matrix",
         libraryTarget: "umd",
         filename: 'index.js',
         path: path.resolve(__dirname, 'lib')
