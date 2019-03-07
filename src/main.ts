@@ -4,9 +4,6 @@ import {
 import { DataSet } from './datamanager'
 import { DynamicGraph, DataManager, DataManagerOptions } from './dynamicgraph'
 
-// import * as d3 from 'd3'
-// import * as moment from 'moment'
-
 /** A collection of Networkcube's  global function availeble
  * through networkcube.myFunc()
  * */
