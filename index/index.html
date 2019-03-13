@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8; X-Content-Type-Options=nosniff">
+    <link rel="stylesheet" type="text/css" href="../web/static/styles1.css">
+    <link rel="stylesheet" type="text/css" href="../web/static/styles2.css">
+
+    <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+</head>
+<title>Node link diagram</title>
+
+<body>
+    <div>
+        <div id="menuDiv">
+            <!-- VS: Clicks on Manual -->
+            <a class="manual-button" target="_blank"
+                href="https://github.com/networkcube/networkcube/wiki/Visualization-Manual#node-link-visualization-nodelink">
+                Manual</a>
+        </div>
+        <div id="timelineDiv"></div>
+        <div id="visDiv">
+        </div>
+    </div>
+    <script src="../d3.js"></script>
+    <script src="../node_modules/jquery/dist/jquery.js"></script>
+    <script src="../node_modules/jstorage/jstorage.js"></script>
+    <script src="../node_modules/moment/moment.js"></script>
+    <script type="text/javascript" charset="utf8" src="./DataTables-1.10.7/media/js/jquery.dataTables.js"></script>
+
+    <script> var exports = {}; </script>
+    <script src="../node_modules/vistorian-core/lib/vistorian-core.js"></script>
+    <script src="../node_modules/vistorian-vis/lib/vistorian-vis.js"></script>
+
+    <script type="text/javascript">
+
+        if (window.location.port)
+            SERVER = location.protocol + '//' + window.location.hostname + ':' + window.location.port + '' + window.location.pathname + '/';
+        else
+            SERVER = location.protocol + '//' + window.location.hostname + '' + window.location.pathname + '/' ;
+
+        SERVER = SERVER.split('web/')[0]
+
+        $(document).ready(function () {
+            var width = window.innerWidth - 30;
+            width_col1 = 220;
+            width_col2 = (width - width_col1);
+
+            var height = window.innerHeight - 50
+
+            var params = window.vc.utils.getUrlVars();//{"session": 0, "datasetName":"demo_scientists"};
+            console.log(params['session'], params['datasetName'])
+            params['datasetName'] = params['datasetName'].replace(/___/g, ' ');
+
+            /*
+                    window.vc.main.createVisualizationIFrame(
+                        'bookmarkFrame',
+                        SERVER + '../node_modules/vistorian-bookmarkbrowser/web/index.html',
+                        params['session'], params['datasetName'],
+                        width_col1, height
+                    );
+            */
+
+            window.vc.main.createVisualizationIFrame(
+                'visFrame',
+                SERVER + '../web/index.html',
+                params['session'], params['datasetName'],
+                width_col2, height
+            );
+
+            //window.exports.networkcube.vistorian.setHeader('logoFrame', params['datasetName']);
+
+        });
+    </script>
+
+
+</body>
+
+</html>
