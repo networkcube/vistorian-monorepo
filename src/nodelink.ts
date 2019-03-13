@@ -1,3 +1,5 @@
+/// <reference path="../../vistorian-core/src/lib/d3.d.ts"/>
+
 import * as dynamicgraph from 'vistorian-core/src/dynamicgraph';
 import * as utils from 'vistorian-core/src/utils';
 import * as main from 'vistorian-core/src/main';
@@ -6,7 +8,7 @@ import * as messenger from 'vistorian-core/src/messenger';
 import * as ui from 'vistorian-widgets/src/ui';
 import * as timeslider from 'vistorian-widgets/src/timeslider';
 
-import * as d3 from 'd3'
+// import * as d3 from 'd3'
 
 var COLOR_DEFAULT_LINK: string = '#999999';
 var COLOR_DEFAULT_NODE: string = '#333333';
@@ -133,12 +135,13 @@ var globalZoom: number = 1;
 var svg: any = d3.select('#visSvg')
     .on('mousedown', () => {
         isMouseDown = true;
-        mouseStart = [(<MouseEvent>d3.event).x, (<MouseEvent>d3.event).y];
+        // <MouseEvent>
+        mouseStart = [(d3.event).x, (d3.event).y];
     })
     .on('mousemove', () => {
         if (isMouseDown) {
-            panOffsetLocal[0] = ((<MouseEvent>d3.event).x - mouseStart[0]) * globalZoom;
-            panOffsetLocal[1] = ((<MouseEvent>d3.event).y - mouseStart[1]) * globalZoom;
+            panOffsetLocal[0] = ((d3.event).x - mouseStart[0]) * globalZoom;
+            panOffsetLocal[1] = ((d3.event).y - mouseStart[1]) * globalZoom;
             svg.attr("transform", "translate(" + (panOffsetGlobal[0] + panOffsetLocal[0]) + ',' + (panOffsetGlobal[1] + panOffsetLocal[1]) + ")");
         }
     })
@@ -149,11 +152,12 @@ var svg: any = d3.select('#visSvg')
     })
     .on('wheel', () => {
         // zoom 
-        (<Event>d3.event).preventDefault();
-        (<Event>d3.event).stopPropagation();
+        // <Event>
+        (<any>d3.event).preventDefault();
+        (<any>d3.event).stopPropagation();
         //var globalZoom = 1 + d3.event.wheelDelta / 1000; // wheelDelta only in v4 or more
         var globalZoom = 1 ;
-        var mouse = [(<MouseEvent>d3.event).x - panOffsetGlobal[0], (<MouseEvent>d3.event).y - panOffsetGlobal[1]];
+        var mouse = [(d3.event).x - panOffsetGlobal[0], (d3.event).y - panOffsetGlobal[1]];
         var d: any, n: any;
         for (var i = 0; i < nodes.length; i++) {
             n = nodes[i]
