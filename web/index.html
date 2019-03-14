@@ -8,13 +8,16 @@
     <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
 
     <!-- VS: Call to trace.js -->
-    <script type="text/javascript" src="./traces/trace.js"></script>
+    <script type="text/javascript" src="../static/traces/trace.js"></script>
+    <script src="../node_modules/jquery/dist/jquery.js"></script>
+    <script src="../d3.js"></script>
+    <script src="./lib/science.js"></script>
 </head>
 <title>Ego Network Visualization</title>
 
 <body>
     <!-- VS: Call to trace_test_130529 -->
-    <script type="text/javascript" src="./traces/trace_test_130529.js"></script>
+    <script type="text/javascript" src="../static/traces/trace_test_130529.js"></script>
     <div>
         <div id="menu">
             <label>Select any node to show only this node's relations.</label></br>
@@ -26,9 +29,6 @@
         </div>
         <div id="visDiv"></div>
     </div>
-    <script src="../node_modules/jquery/dist/jquery.js"></script>
-    <script src="../node_modules/d3/d3.min.js"></script>
-    <script src="./lib/science.js"></script>
     <script src="../lib/index.js" type="text/javascript"></script>
 
 </body>
