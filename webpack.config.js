@@ -5,6 +5,10 @@ module.exports = {
     mode: 'development',
     entry: './src/index.ts', 
     devtool: 'inline-source-map',
+    externals: {
+        d3: 'd3',
+        science: 'science'
+    },
     plugins: [
         new CircularDependencyPlugin({
             exclude: /a\.js|node_modules/,
