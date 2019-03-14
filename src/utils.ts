@@ -100,6 +100,7 @@ export function sortByPriority(s1: any, s2: any) {
 export function getUrlVars(): Object {
     var vars: Object = {};
     var params = window.location.search.replace("?", "").split('&');
+    console.log(params);
     var tmp: any;
     var value: any;
     params.forEach(function (item) {
