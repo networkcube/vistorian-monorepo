@@ -34,15 +34,15 @@
     ],
     "homepage": "https://github.com/networkcube/networkcube#readme",
     "dependencies": {
-        "@types/three": "^0.93.15",
+        "@types/three": "^0.93.27",
         "circular-dependency-plugin": "^5.0.2",
         "jquery": "^3.3.1",
-        "moment": "^2.23.0",
-        "three": "^0.100.0",
-        "reorder.js": "^1.0.6",
         "jstorage": "^0.4.8",
+        "moment": "^2.23.0",
+        "reorder.js": "^1.0.6",
+        "three": "^0.100.0",
         "vistorian-core": "file:../vistorian-core",
-        "vistorian-widgets": "file:../vistorian-widgets",
-        "vistorian-vis": "file:../vistorian-vis"
+        "vistorian-vis": "file:../vistorian-vis",
+        "vistorian-widgets": "file:../vistorian-widgets"
     }
 }
