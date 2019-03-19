@@ -1,6 +1,5 @@
 /// <reference path="./lib/d3.d.ts"/>
 
-//import * as d3 from 'd3'
 import {
     BasicElement,
     Time,
@@ -13,9 +12,6 @@ import {
     copyPropsShallow
 } from './dynamicgraph'
 import * as moment from 'moment'
-
-//namespace networkcube {
-
 
 /* moved from utils to queries */
 
@@ -100,7 +96,6 @@ export function sortByPriority(s1: any, s2: any) {
 export function getUrlVars(): Object {
     var vars: Object = {};
     var params = window.location.search.replace("?", "").split('&');
-    console.log(params);
     var tmp: any;
     var value: any;
     params.forEach(function (item) {
@@ -380,7 +375,6 @@ export function downloadPNGfromSVG(name: string, svgId: string) {
 export function getBlobFromSVG(name: string, svgId: string, callback?: Function) {
     var width = $('#' + svgId).width();
     var height = $('#' + svgId).height();
-    console.log('SVG SIZE: ' + width, height)
     if (callback != undefined) // UNDEFINED ?? 
         getBlobFromSVGString(name, getSVGString(d3.select('#' + svgId).node()), width, height, callback) // what happend if callback undefinied (example above)
 }
@@ -397,8 +391,6 @@ export function getBlobFromSVGNode(name: string, svgNode: any, callback: Functio
     getBlobFromSVGString(name, string, width, height, callback, backgroundColor)
 }
 export function getBlobFromSVGString(name: string, svgString: string, width: number, height: number, callback: Function, backgroundColor?: string) {
-    console.log('width', width)
-    console.log('height', height)
     // get SVG string
     // CREATE PNG
     var format: any = format ? format : 'png';
@@ -415,7 +407,6 @@ export function getBlobFromSVGString(name: string, svgString: string, width: num
     var image: any = new Image();
     image.src = imgsrc;
 
-    console.log('image', image)
     image.onload = function () {
         context.clearRect(0, 0, width, height);
         if (backgroundColor) {
@@ -425,79 +416,13 @@ export function getBlobFromSVGString(name: string, svgString: string, width: num
         context.drawImage(image, 0, 0, width, height);
 
         canvas.toBlob(function (blob: any) {
-            console.log('BLOB', blob)
-            // var filesize = Math.round( blob.length/1024 ) + ' KB';
             callback(blob, name)
         });
     };
 
-    // return getBlobFromCanvas(canvas);
-
-    // var dataURL = canvas.toDataURL("image/png");
-    // // ?? 
-    // return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
 }
 
-// function generateStyleDefs(svgDomElement)
-// {
-//     var styleDefs = "";
-//     var sheets = document.styleSheets;
-//     for (var i = 0; i < sheets.length; i++) {
-//       var rules = sheets[i].cssRules;
-//       for (var j = 0; j < rules.length; j++) {
-//         var rule = rules[j];
-//         if (rule.style) {
-//           var selectorText = rule.selectorText;
-//           var elems = svgDomElement.querySelectorAll(selectorText);
-//           console.log('elems', svgDomElement, elems.length)
-//           if (elems.length) {
-//             styleDefs += selectorText + " { " + rule.style.cssText + " }\n";
-//           }
-//         }
-//       }
-//     }
-
-//     var s = document.createElement('style');
-//     s.setAttribute('type', 'text/css');
-//     s.innerHTML = "<![CDATA[\n" + styleDefs + "\n]]>";
-//     //somehow cdata section doesn't always work; you could use this instead:
-//     //s.innerHTML = styleDefs;
-
-//     var defs = document.createElement('defs');
-//     defs.appendChild(s);
-//     svgDomElement.insertBefore(defs, svgDomElement.firstChild);
-//   }
-
-// export function getPNGURL(svgId):String
-// {
-//     var svgString = getSVGString(d3.select('#'+svgId).node());
-//     var obj = getPNGFromSVG(svgString, $('#'+svgId).width(), $('#'+svgId).height(), 'png');
-
-//     return obj.image;
-
-// }
-
-// function getPNGFromSVG( svgString, width, height, format):Object 
-// {
-//     var format = format ? format : 'png';
-
-//     var imgsrc = 'data:image/svg+xml;base64,'+ btoa( unescape( encodeURIComponent( svgString ) ) ); // Convert SVG string to data URL
-
-//     var canvas = document.createElement("canvas");    
-//     canvas.width = width;
-//     canvas.height = height;
-
-//     var context = canvas.getContext("2d");
-
-//     var image = new Image();
-
-//     image.src = imgsrc;
-//     return {image:image, canvas:canvas};
-// }
-
-// returns the svg string from an svg node.
 export function getSVGString(svgNode: any) {
-    console.log('SVG NODE', svgNode);
     svgNode.setAttribute('xlink', 'http://www.w3.org/1999/xlink');
     var cssStyleText = getCSSStyles(svgNode);
     appendCSS(cssStyleText, svgNode);
@@ -642,4 +567,3 @@ export function showMessage(message: string, timeout: any) {
 }
 
 
-//}

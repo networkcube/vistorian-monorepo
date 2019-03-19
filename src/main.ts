@@ -7,7 +7,6 @@ import { DynamicGraph, DataManager, DataManagerOptions } from './dynamicgraph'
 /** A collection of Networkcube's  global function availeble
  * through networkcube.myFunc()
  * */
-//namespace networkcube {
 
 // must agree with var of same name in DynamicGraph.initDynamicGraph()
 export var TIME_FORMAT: string = 'YYYY-MM-DD hh:mm:ss';
@@ -54,33 +53,8 @@ export function clearAllDataManagerSessionCaches() {
 }
 
 
-// getData() -> gets session and datatype parameter from the url
-// getData(datsetname) -> retrives data from current session
-//     export function getData(dataName?: string): DataSet {
-//         // console.log('getUrlVars()', getUrlVars())
-//         if (!dataName)
-//             dataName = getUrlVars()['datasetName'];
-//         this.session = getUrlVars()['session'];
-// 
-//         // console.log('call getData',dataName, this.session)
-//         return dataManager.getData(this.session, dataName);
-//     }
-
-// Updates the passed data set
-// export function updateData(dataSet: DataSet) {
-//     dataManager.updateData(dataSet);
-// }
-
 export function getDynamicGraph(dataName?: string, sessionName?: string): DynamicGraph {
-    /*
-    var so = setOps;
-    
-    so.pushUid(function () {
-        return this._id; // WHAT IS IT? (_id)
-    });
-    */
     var vars = getUrlVars();
-    // console.log('getUrlVars()', vars)
     if (!dataName)
         dataName = (vars as any)['datasetName'];
     if (!sessionName)
@@ -88,7 +62,6 @@ export function getDynamicGraph(dataName?: string, sessionName?: string): Dynami
     else
         session = sessionName;
 
-    // console.log('[networkcube] getDynamicGraph', dataName, this.session)
     return dataManager.getGraph(session, (dataName as string));
 }
 
@@ -99,14 +72,12 @@ export function getDynamicGraph(dataName?: string, sessionName?: string): Dynami
 // opens a new window and loads a visualization of type vistype,
 // // with the data set dataname
 export function openVisualizationWindow(session: string, visUri: string, dataName: string) {
-    // console.log('[n3] Create Visualization', visType, 'for data', dataName);
     openView(session, visUri, dataName, false);
 }
 
 // opens a new tab and loads a visualization of type vistype,
 // // with the data set dataname
 export function openVisualizationTab(session: string, visUri: string, dataName: string) {
-    // console.log('[n3] Create Visualization', visType, 'for data', dataName);
     openView(session, visUri, dataName, true);
 }
 
@@ -187,7 +158,6 @@ export function createVisualizationIFrame(parentId: string, visUri: string, sess
     width: number,
     height: number, visParams?: any) {
 
-    // console.log('[networkcube] Create iframe ', visType);
     $('#' + parentId)
         .append('<iframe></iframe>')
         .attr('width', width)
@@ -231,27 +201,16 @@ export function getURLString(dataName: string) {
     return '?session=' + session + '&datasetName=' + dataName;
 }
 
-// // creates a visualization of type vistype. This function
-// // must be called form the individual visualization windows to obtain the
-// // visualization object.
-// export function getVisualization(vistype:string):Visualization{
-//     var vis:Visualization = new networkcube[vistype]();
-//     return vis;
-// }
-
-
 /// UTILITY FUNCTIONS
 export enum OrderType { Local, Global, Data };
 
 export function isTrackingEnabled(): Boolean {
     var value = localStorage.getItem("NETWORKCUBE_IS_TRACKING_ENABLED");
-    console.log('>>>>>>>', value);
     return value == 'true' ? true : false;
 }
 
 export function isTrackingSet(): Boolean {
     var value = localStorage.getItem("NETWORKCUBE_IS_TRACKING_ENABLED");
-    // console.log('isTrackingSet', value)
     return value === null ? false : true;
 }
 

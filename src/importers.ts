@@ -1,7 +1,5 @@
 /// <reference path="./lib/d3.d.ts"/>
 
-//import * as d3 from 'd3'
-
 import {
     DataSet, LinkSchema, NodeSchema
 } from './datamanager'
@@ -61,7 +59,6 @@ export namespace networkcube {
         if (timeFormat == undefined)
             timeFormat = 'x';
 
-        console.log('linkSchema', linkSchema)
 
         // Check if linkSchema is well defined: 
         if (linkSchema.source == undefined) {
@@ -182,7 +179,6 @@ export namespace networkcube {
         var callBack = callBack;
 
         d3.xml(url, (data: any) => { // "application/xml",
-            console.log('data:', data)
             var nodes = data.documentElement.getElementsByTagName("node")
             var nodeTable = [];
             var nodeIds = []
@@ -252,7 +248,6 @@ export namespace networkcube {
             for (var i = 0; i < links.length; i++) {
                 link = links[i]
                 for (prop in link) {
-                    // console.log('link prop: ', prop)
                     if (link.hasOwnProperty(prop)
                         && prop != 'id'
                         && prop != 'linkType'
@@ -302,13 +297,7 @@ export namespace networkcube {
             var nodeUserProperties = []
             for (var i = 0; i < nodes.length; i++) {
                 node = nodes[i];
-                // if(node.lng && node.lat){
-                //     locationTable.push([locationTable.length, node.lng, node.lat])
-                //     nodeSchema['location'] = 3
-                //     line.push(locationTable.length-1)
-                // }   
                 for (prop in node) {
-                    // console.log('node prop: ', prop)
                     if (node.hasOwnProperty(prop)
                         && prop != 'id'
                         && prop != 'label'
@@ -318,7 +307,6 @@ export namespace networkcube {
                         && prop != 'location'
                         && prop != 'constructor') {
                         if ((nodeSchema as any)[prop] == undefined) {
-                            console.log('node user-prop found', prop)
                             nodeUserProperties.push(prop);
                             (nodeSchema as any)[prop] = 1 + nodeUserProperties.length;
                         }
@@ -351,10 +339,8 @@ export namespace networkcube {
                         line.push(node[prop])
                     }
                 }
-                // console.log('node line', line);
                 nodeTable.push(line)
             }
-            // console.log('>>locationTable', locationTable);
 
             if (dataName == undefined)
                 dataName = url.split('=')[0];
@@ -377,7 +363,6 @@ export namespace networkcube {
         var callBack = callBack;
 
         d3.json(url, (data) => {
-            console.log('data:', data)
             if (!data)
                 return;
 
@@ -622,8 +607,6 @@ export namespace networkcube {
                             currRow++;
                         }
             }
-            // console.log('-->nodeTable:', nodeTable)
-            // console.log('-->linkTable:', linkTable)
             callBack(new DataSet({
                 name: url.split('=')[0],
                 nodeTable: nodeTable,
@@ -788,24 +771,8 @@ export namespace networkcube {
                 }
 
                 weight = 1;
-                // if(line.length >= 3){
-                //     weight = line[2];
-                // }    
                 linkTable.push([linkTable.length, si, ti, weight])
 
-                // for(var j=1 ; j<line.length ; j++){
-                //     t = line[j]
-                //     console.log('\tt', t)
-                //     if(t == undefined)
-                //         continue;
-                //     t = t.toLowerCase().trim();
-                //     var ti = nodeLabels.indexOf(t)
-                //     if(ti == -1){
-                //         ti = nodeLabels.length;
-                //         nodeLabels.push(t)
-                //     }
-                //     linkTable.push([linkTable.length, si, ti])                    
-                // }
             }
             for (i = 0; i <= nodeLabels.length; i++) {
                 nodeTable.push([i, nodeLabels[i] + '']);
@@ -857,7 +824,6 @@ export namespace networkcube {
                     continue;
                 }
                 for (var j = 1; j < line.length; j++) {
-                    // ?                    if(j<10)console.log('line[j].replace(' ', '')', line[j].replace(/\s/g, ''))
                     if (line[j].length > 0 && parseInt(line[j].replace(/\s/g, '')) > 300000) {
                         linkTable.push([linkTable.length, t, j - 1])
                     }
@@ -892,7 +858,6 @@ export namespace networkcube {
         var ST = '';
         var BR = '\n';
         for (var i = 0; i < graph.links().length; i++) {
-            // UNDEFINED??
             var graph_link = graph.link(i);
             if (graph_link != undefined) {
                 csv += ST + graph_link.source.id() + ST + DEL
@@ -915,17 +880,5 @@ export namespace networkcube {
         downloadLink.href = (window as any).webkitURL.createObjectURL(textFileAsBlob);
         downloadLink.click();
     }
-
-
-
-
-    // function indexOf(arrayString[], string:String):number{
-    //     for (var i=0 ; i<arrayString.length;i++) {
-    //         if (arrayString[i].indexOf(string)> -1 && arrayString[i].length == string.length) {
-    //             return i;
-    //         }
-    //     }
-    // }
-
 
 }

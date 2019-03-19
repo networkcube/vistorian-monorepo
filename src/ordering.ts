@@ -1,8 +1,5 @@
 import { Node, Link, Time, DynamicGraph } from './dynamicgraph'
-//import { distance_manhattan } from './lib/science'
 import * as reorder from 'reorder.js'
-
-//namespace networkcube{
 
 /**
 * Calculates an ordering for the passed graph and time span
@@ -36,7 +33,6 @@ export function orderNodes(graph: DynamicGraph, config?: OrderingConfiguration):
         end = graph.endTime;
     }
 
-    // console.log('-> yeah! Reorder!')
     // init similarity matrix with all 0.
     var arr: number[];
     for (var i = 0; i < nodes.length; i++) {
@@ -51,7 +47,6 @@ export function orderNodes(graph: DynamicGraph, config?: OrderingConfiguration):
     var l: Link;
     var s: number;
     var t: number;
-    // console.log('order with', links.length, 'links and ', nodes.length,  'nodes');
     for (var i = 0; i < links.length; i++) {
         weight = 0;
         // check if nodes are in allowed nodes
@@ -70,14 +65,12 @@ export function orderNodes(graph: DynamicGraph, config?: OrderingConfiguration):
         }
     }
 
-    // console.log('similarityMatrix', similarityMatrix)
     // Reorder
     var leafOrder = reorder
         .optimal_leaf_order()
         .distance(distance)
         .reorder(similarityMatrix);
 
-    // console.log(leafOrder);
     leafOrder.forEach(function (lo: any, i: number) {
         order[nodes[lo].id()] = i;
     });
@@ -88,7 +81,6 @@ export function orderNodes(graph: DynamicGraph, config?: OrderingConfiguration):
 
 
 export class OrderingConfiguration {
-    // HOW TO INIT?
     start: Time;
     end: Time;
     nodes: Node[] = [];
@@ -101,4 +93,3 @@ export class OrderingConfiguration {
             this.end = end
     }
 }
-//}

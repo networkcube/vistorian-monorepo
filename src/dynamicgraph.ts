@@ -2,8 +2,6 @@ import { DataSet, Selection, isValidIndex } from './datamanager'
 import * as moment from 'moment'
 import * as LZString from "lz-string";
 
-//namespace networkcube {
-
 export var GRANULARITY: moment.unitOfTime.Base[] = ['millisecond', 'second', 'minute', 'hour', 'day', 'week', 'month', 'year']; //, 'decade', 'century', 'millenium'];
 
 export var DGRAPH_SUB: string = "[*dgraph*]";
@@ -245,20 +243,14 @@ export class DynamicGraph {
 
     loadDynamicGraph(dataMgr: DataManager, dataSetName: string): void {
         this.clearSelections();
-        //this.data = dataSet;
         this.name = dataSetName;
-        console.log('name:', this.name);
         var thisGraph = this;
-        console.log('thisGraph:', thisGraph);
 
         // CACHEGRAPH : load from storage the entire state of the graph
 
-        /* UNDEFINED PROBLEM */
         var gran_min_storage = dataMgr.getFromStorage<number>(this.name, this.gran_min_NAME);
-        console.log('this.gran_min:', gran_min_storage);
         if (gran_min_storage != undefined)
             this.gran_min = gran_min_storage;
-        console.log('this.gran_min', this.gran_min);
 
         var gran_max_storage = dataMgr.getFromStorage<number>(this.name, this.gran_max_NAME);
         if (gran_max_storage != undefined)
@@ -459,12 +451,6 @@ export class DynamicGraph {
             console.log("times different");
             result = false;
         }
-        // if (this.linkTypes.length != other.linkTypes.length
-        //     || !compareTypesDeep(this.linkTypes, other.linkTypes, 2)) {
-        //     console.log("linkTypes different", this.linkTypes, other.linkTypes);
-        //     result = false;
-        // }
-
 
         if ((this.nodeOrders && this.nodeOrders.length != other.nodeOrders.length)
             || !compareTypesDeep(this.nodeOrders, other.nodeOrders, 2)) {
@@ -571,25 +557,15 @@ export class DynamicGraph {
             for (var i = 0; i < data.linkTable.length; i++) {
                 timeLabel = data.linkTable[i][data.linkSchema.time];
                 unixTime = parseInt(moment.utc(timeLabel, TIME_FORMAT).format('x'));
-                if (i == 0) {
-                    console.log("linkTable[i]: ", data.linkTable[i]);
-                    console.log("linkTable: ", data.linkTable[i][data.linkSchema.time]);
-                    console.log("timeLabel: ", timeLabel);
-                    console.log("moment.utc: ", moment.utc(timeLabel, TIME_FORMAT));
-                    console.log("moment format: ", moment.utc(timeLabel, TIME_FORMAT).format('x'));
-                    console.log("unixTime: ", unixTime);
-                }
                 if (unixTime == undefined)
                     continue;
 
                 if (unixTimes.indexOf(unixTime) == -1) {
                     unixTimes.push(unixTime);
                 }
-                // console.log('PARSE LINK ROW: ', unixTime, data.linkTable[i] )
             }
             // obtain granularity
             unixTimes.sort(sortNumber)
-            // console.log('>> timeArray:', timeArray)
 
             var diff = 99999999999999;
             for (var i = 0; i < unixTimes.length - 2; i++) {
@@ -645,9 +621,6 @@ export class DynamicGraph {
                 this._times.push(new Time(i, this));
                 // curr_t = start.add(1, GRANULARITY[this.gran_min] + 's');
             }
-            console.log('#TIMES:', this._times.length);
-            console.log('   minTime', this.timeArrays.label[0])
-            console.log('   maxTime', this.timeArrays.label[this.timeArrays.length - 1])
 
             // Now, all existing times with events and potentially
             // attributes associated, have been created. 
@@ -719,7 +692,6 @@ export class DynamicGraph {
                 && prop != 'nodeType'
                 && prop != 'location'
                 && prop != 'constructor') {
-                // console.log('user-prop found for nodes', prop)
                 nodeUserProperties.push(prop);
                 // create property
                 (this.nodeArrays as any)[prop] = []
@@ -879,7 +851,6 @@ export class DynamicGraph {
                 && prop != 'target'
                 && prop != 'weight'
                 && prop != 'directed') {
-                // console.log('user-prop found for links', prop)
                 linkUserProperties.push(prop);
                 // create property
                 (this.linkArrays as any)[prop] = []
@@ -897,7 +868,6 @@ export class DynamicGraph {
         for (var i = 0; i < data.linkTable.length; i++) {
             row = data.linkTable[i];
             linkId = row[data.linkSchema.id];
-            // console.log('[initDynamicGraph] row', row, linkId)
             this.linkArrays.directed.push(false); // this is default and can be overwritten in the following.
 
             // check if linkId, i.e. link exists
@@ -934,7 +904,6 @@ export class DynamicGraph {
             this.linkArrays.presence[linkId].push(timeId);
 
             // set weight if applies
-            // console.log('data.linkSchema.weight', data.linkSchema.weight)
             if (isValidIndex(data.linkSchema.weight) && data.linkTable[i][data.linkSchema.weight] != undefined) {
                 this.linkArrays.weights[linkId].set(time, data.linkTable[i][data.linkSchema.weight])
                 this.minWeight = Math.min(this.minWeight, data.linkTable[i][data.linkSchema.weight])
@@ -971,7 +940,6 @@ export class DynamicGraph {
             // in both node pairs.
             nodePairId = this.matrix[s][t];
             if (!isValidIndex(nodePairId)) {
-                // console.log('create new node pair', s, t);
                 nodePairId = this.nodePairArrays.length;
                 this.matrix[s][t] = nodePairId;
                 this.nodePairArrays.id.push(nodePairId);
@@ -1014,8 +982,6 @@ export class DynamicGraph {
                     this.linkTypeArrays.name.push(typeName)
                 }
                 data.linkTable[i][data.linkSchema.linkType] = typeId;
-                // this.linkArrays.linkType[i] = typeId;
-                // console.log('this.linkArrays.type[i]', i, this.linkArrays.type[i]);
             }
 
             // gather user-properties: 
@@ -1037,41 +1003,11 @@ export class DynamicGraph {
         }
 
 
-        // for(var i=0 ; i<this.linkArrays.id.length ; i++)    
-        //     console.log('this.linkArrays.value', this.linkArrays.weights[i].serie[0]) 
 
 
 
         // create color map for link types
         var linkTypeCount: number = this.linkTypeArrays.length;
-
-        // colorScale;
-        // if (linkTypeCount <= 10) {
-        //     colorScale = d3.scale.category10();
-        // } else {
-        //     colorScale = d3.scale.category20();
-        // }
-
-        // // create color map for node types
-        // var nodeTypeCount: number = this.nodeTypeArrays.length;
-        // var colorScale;
-        // if (nodeTypeCount == 1) {
-        //     colorScale = (v)=>'#fff';
-        // }else if (nodeTypeCount <= 10) {
-        //     colorScale = d3.scale.category10();
-        // } else {
-        //     colorScale = d3.scale.category20();
-        // }
-
-        // for (var i = 0; i < this.linkTypeArrays.name.length; i++) {
-        //     this.linkTypeArrays.color.push(colorScale(i));
-        //     this.linkTypes.push(new LinkType(
-        //         this.linkTypeArrays.id[i],
-        //         this.linkTypeArrays.name[i],
-        //         this.linkTypeArrays.color[i]
-        //     ))
-        // }
-
 
         console.log('[Dynamic Graph] Dynamic Graph created: ', this.nodeArrays.length);
         console.log('[Dynamic Graph]    - Nodes: ', this.nodeArrays.length);
@@ -1249,7 +1185,6 @@ export class DynamicGraph {
         // populate locations
         if (this.locationArrays && 'id' in this.locationArrays) {
             for (var i = 0; i < this.locationArrays.id.length; i++) {
-                // console.log('create location', this.locationArrays.id[i]);
                 this._locations.push(new Location(this.locationArrays.id[i], this));
             }
         }
@@ -1258,7 +1193,6 @@ export class DynamicGraph {
         }
 
         // Populate nodes
-        // console.log('populate nodes:');
         var nodes: Node[] = [];
         var locations;
         if ('nodeArrays' in this && this.nodeArrays) {
@@ -1273,40 +1207,14 @@ export class DynamicGraph {
         var source: Node, target: Node;
         if ('linkArrays' in this && this.linkArrays) {
             for (var i = 0; i < this.linkArrays.source.length; i++) {
-                // console.log('link present', presence, end.time, start.time);
 
                 link = new Link(i, this);
                 links.push(link);
 
-                // link.source = nodes[this.nodeArrays.id.indexOf(this.linkArrays.source[i])];
-                // link.target = nodes[this.nodeArrays.id.indexOf(this.linkArrays.target[i])];
-                // // link nodes
-                // source = link.source;
-                // target = link.target;
-                // // console.log(source, target);
-                // source.neighbors.push(target);
-                // target.neighbors.push(source);
-                // source.links.push(link);
-                // target.links.push(link);
-
-                // source.outLinks.push(link);
-                // target.inLinks.push(link);
-
-                // source.outNeighbors.push(source);
-                // target.inNeighbors.push(target);
-
-                // if (!this.linkAttr('directed', i)) {
-                //     source.inLinks.push(link);
-                //     target.outLinks.push(link);
-
-                //     source.inNeighbors.push(source);
-                //     target.outNeighbors.push(target);
-                // }
             }
         }
 
         // Populate node pairs
-        // var nodePairs: NodePair[] = []
         var s: number, t: number;
         var pairLinks: number[];
         var pair: NodePair;
@@ -1489,11 +1397,8 @@ export class DynamicGraph {
     addToAttributeArraysSelection(selection: Selection, type: string, id: number) {
         // check for priority of selections, then add where appropriate
         var elementSelections = (this.attributeArrays as any)[type].selections[id];
-        // console.log('selection.priority', selection.priority)
-        // console.log('elementSelections', elementSelections.length)
         for (var i = 0; i < elementSelections.length; i++) {
             if (elementSelections[i].priority > selection.priority) {
-                // console.log('insert new selection at', i)
                 (this.attributeArrays as any)[type].selections[id].splice(i, 0, selection);
                 return;
             }
@@ -1613,19 +1518,6 @@ export class DynamicGraph {
     }
 
 
-    // // Filter
-    // filter(idCompound:ElementCompound, filter:boolean){
-    //     // console.log('compound', compound)
-    //     for(var field in compound){
-    //         for(var i=0 ; i<compound[field].length ; i++){
-    //             // test for other selections
-    //
-    //
-    //             this.attributeArrays[field].filter[i] = filter;
-    //         }
-    //     }
-    // }
-
     filterSelection(selectionId: number, filter: boolean) {
         var selection: any = this.getSelection(selectionId);
         if (selection != undefined) {
@@ -1670,7 +1562,6 @@ export class DynamicGraph {
         s.color = this.BOOKMARK_COLORS(this.selectionColor_pointer % 10);
         this.selectionColor_pointer++;
         this.selections.push(s);
-        // console.log('Create new selection:', s.id)
         return s;
     }
 
@@ -3559,7 +3450,6 @@ export class DataManager {
         var searchPrefix = this.sessionDataPrefix + this.SEP + session;
         // var searchPrefix = session;
         var keysToClear: string[] = [];
-        console.log('clearSessionData')
         for (var i = 0; i < localStorage.length; i++) {
             var key = localStorage.key(i);
             if (!key) continue;
@@ -3572,7 +3462,6 @@ export class DataManager {
         }
         for (var i = 0; i < keysToClear.length; i++) {
             var k = keysToClear[i];
-            console.log('remove from storage', k)
             localStorage.removeItem(k);
         }
     }
@@ -3600,9 +3489,6 @@ export class DataManager {
      */
     importData(session: string, data: DataSet) {
         this.session = session;
-
-        // console.log('import data set', data.name, data.nodeTable, data.linkTable);
-        console.log("import data set", data.name, data);
 
         // check if all data (tables + schemas) are there
         if (!data.nodeTable && !data.linkTable) {
@@ -3671,42 +3557,6 @@ export class DataManager {
         }
     }
 
-    // udpates the passed dataset, i.e. stores tables and schemas as indicated.
-    // updateData(data: DataSet) {
-    //     console.log('[datamanager] Update dataset', this.session, data.name)
-    //     this.saveToStorage(data.name, this.NODE_TABLE, data.nodeTable);
-    //     this.saveToStorage(data.name, this.NODE_SCHEMA, data.nodeSchema);
-    //     this.saveToStorage(data.name, this.LINK_TABLE, data.linkTable);
-    //     this.saveToStorage(data.name, this.LINK_SCHEMA, data.linkSchema);
-    //     this.saveToStorage(data.name, this.LOCATION_TABLE, data.locationTable);
-    //     this.saveToStorage(data.name, this.LOCATION_SCHEMA, data.locationSchema);
-    //     console.log('[datamanager] Dataset updated', data);
-    // }
-
-    /**
-     * Returns the dataset with tables from the local storage by its name
-     * This method provides *full* access to the raw data, without
-     * networkcube creating a DynamicGraph object.
-     * @param  {string} session     - current session id
-     * @param  {string} datasetname - name of data set
-     * @return {[type]}             - the data set
-     */
-    //         getData(session: string, datasetname: string) {
-    //             this.session = session;
-    //             // console.log('getData()', session, datasetname)
-    //             var dataset = new DataSet({
-    //                 name: datasetname,
-    //                 nodeTable: this.getFromStorage<any[]>(datasetname, this.NODE_TABLE),
-    //                 linkTable: this.getFromStorage<any[]>(datasetname, this.LINK_TABLE),
-    //                 locationTable: this.getFromStorage<any[]>(datasetname, this.LOCATION_TABLE)
-    //             })
-    //             dataset.nodeSchema = this.getFromStorage<NodeSchema>(datasetname, this.NODE_SCHEMA);
-    //             dataset.linkSchema = this.getFromStorage<LinkSchema>(datasetname, this.LINK_SCHEMA);
-    //             dataset.locationSchema = this.getFromStorage<LocationSchema>(datasetname, this.LOCATION_SCHEMA);
-    //
-    //             return dataset;
-    //         }
-
     // Strings used to access local storage
     SEP: string = "_";
     // NODE_TABLE: string = 'networkcube.nodetable';
@@ -3720,8 +3570,6 @@ export class DataManager {
     // storage primitives /////////////////////////////////////
     //
     saveToStorage<T>(dataName: string, valueName: string, value: T, replacer?: (key: string, value: any) => any) {
-        // console.log('saveToStorage', dataName, valueName, value);
-        // console.log('saveNodeTable', value, this.session + this.SEP + dataname + this.SEP + valueName);
         if (value == undefined) {
             console.log('attempting to save undefined value. aborting', dataName, valueName);
             return;
@@ -3734,7 +3582,6 @@ export class DataManager {
         else
             stringToSave = stringifyResult;
 
-        // console.log('storing ' + dataName + ', ' + valueName + '. length=' + stringToSave.length);
         localStorage[this.sessionDataPrefix + this.SEP
             + this.session
             + this.SEP + dataName
@@ -3757,28 +3604,22 @@ export class DataManager {
         else
             statefulReviver = undefined;
 
-        // console.log("[getFromStorage]", this.session
-        //     + this.SEP + dataName
-        //     + this.SEP + valueName);
         var storedResult = localStorage[
             this.sessionDataPrefix
             + this.SEP + this.session
             + this.SEP + dataName
             + this.SEP + valueName];
 
-        console.log("storedResult", storedResult);
 
         if (storedResult && storedResult != "undefined") {
             // we try to detect whether the string was compressed or not. Given that it is 
             // JSON, we would expect it to begin with either a quote, a bracket, or a curly-brace
             var parseText;
-            console.log("IF");
             if ("\"'[{0123456789".indexOf(storedResult[0]) >= 0)
                 parseText = storedResult;
             else
                 parseText = LZString.decompress(storedResult);
 
-            console.log("parseText", parseText);
             return <TResult>JSON.parse(parseText, statefulReviver);
         }
         else {
@@ -3787,7 +3628,6 @@ export class DataManager {
     }
 
     removeFromStorage(dataName: string, valueName: string): void {
-        // console.log('saveNodeTable', table, this.session + this.SEP + dataname + this.SEP + this.NODE_TABLE);
         localStorage.removeItem(this.sessionDataPrefix
             + this.SEP + this.session
             + this.SEP + dataName
@@ -3804,9 +3644,6 @@ export class DataManager {
         if (!this.dynamicGraph || this.dynamicGraph.name != dataname) {
             this.dynamicGraph = new DynamicGraph();
             this.dynamicGraph.loadDynamicGraph(this, dataname);
-            //this.dynamicGraph.initDynamicGraph(this.getData(this.session, dataname));
-            // CACHEGRAPH read graph from localstorage
-            // 
         }
         return this.dynamicGraph;
     }

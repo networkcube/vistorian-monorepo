@@ -2,8 +2,6 @@ import swiftSet from 'swiftset';
 import { Motif, MotifTemplate } from './queries'
 import { DynamicGraph, Link, Node } from './dynamicgraph'
 import netClustering from 'netclustering'
-//namespace networkcube{
-
 
 export function findTemplate(nodes: Node[],
     template: MotifTemplate,
@@ -39,7 +37,6 @@ export function findClusters(nodes: Node[], config?: Object) {
     var links: any[] = nodes[0].g.links().toArray()
     for (var i = 0; i < links.length; i++) {
         links[i].value = links[i].weights().sum() // VALUE ???
-        // console.log('value', links[i].value)
     }
     var clusters = netClustering.cluster(nodes, links);
 
@@ -47,14 +44,12 @@ export function findClusters(nodes: Node[], config?: Object) {
     var clusterArray = []
     // replace ids with nodes
 
-    // console.log('clusters found', clusters.length)
     var clusterLinks: any[] = []
     var cl;
     var s, t
     for (var c = 0; c < clusters.length; c++) {
         clusterLinks = []
         cl = clusters[c]
-        // console.log('cluster', cl.length)
         // exclude clusters with less than 4 nodes
         if (cl.length < 4)
             continue;
@@ -157,7 +152,6 @@ function bronKerboschIterative(nodes: Node[], config: Object): any[] {
         r = [].concat(step[R]);
         p = [].concat(step[P]);
         x = [].concat(step[X]);
-        // console.log('step', step[R].length, step[P].length, step[X].length)
         if (p.length == 0
             && x.length == 0) {
             cliques.push(r.slice())
@@ -264,7 +258,6 @@ export function findStars(nodes: Node[], config?: any) {
             if (neighbors.indexOf(lls[j].other(n)) == -1)
                 neighbors.push(lls[j].other(n))
         }
-        // console.log('\tneighbors.length', neighbors.length, neighbors)
         if (neighbors.length <= config.minNeighborCount)
             continue;
 
