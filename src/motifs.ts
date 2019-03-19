@@ -1,9 +1,7 @@
-import * as Set from '../swiftSet-0.9.15';
-import { Link, Node, Motif, MotifTemplate } from './queries'
-import { DynamicGraph } from './dynamicgraph'
-import * as netClustering from '../netClustering-0.1.0'
-//namespace networkcube{
-
+import swiftSet from 'swiftset';
+import { Motif, MotifTemplate } from './queries'
+import { DynamicGraph, Link, Node } from './dynamicgraph'
+import netClustering from 'netclustering'
 
 export function findTemplate(nodes: Node[],
     template: MotifTemplate,
@@ -39,7 +37,6 @@ export function findClusters(nodes: Node[], config?: Object) {
     var links: any[] = nodes[0].g.links().toArray()
     for (var i = 0; i < links.length; i++) {
         links[i].value = links[i].weights().sum() // VALUE ???
-        // console.log('value', links[i].value)
     }
     var clusters = netClustering.cluster(nodes, links);
 
@@ -47,14 +44,12 @@ export function findClusters(nodes: Node[], config?: Object) {
     var clusterArray = []
     // replace ids with nodes
 
-    // console.log('clusters found', clusters.length)
     var clusterLinks: any[] = []
     var cl;
     var s, t
     for (var c = 0; c < clusters.length; c++) {
         clusterLinks = []
         cl = clusters[c]
-        // console.log('cluster', cl.length)
         // exclude clusters with less than 4 nodes
         if (cl.length < 4)
             continue;
@@ -157,7 +152,6 @@ function bronKerboschIterative(nodes: Node[], config: Object): any[] {
         r = [].concat(step[R]);
         p = [].concat(step[P]);
         x = [].concat(step[X]);
-        // console.log('step', step[R].length, step[P].length, step[X].length)
         if (p.length == 0
             && x.length == 0) {
             cliques.push(r.slice())
@@ -183,7 +177,7 @@ function bronKerboschIterative(nodes: Node[], config: Object): any[] {
 
             newStep = [r]
 
-            p = Set.intersection(p2, v.neighbors().toArray())
+            p = swiftSet.intersection(p2, v.neighbors().toArray())
             p2 = []
             for (var i = 0; i < p.length; i++) {
                 if (p2.indexOf(p[i]) == -1)
@@ -191,7 +185,7 @@ function bronKerboschIterative(nodes: Node[], config: Object): any[] {
             }
             newStep.push(p2)
 
-            x = Set.intersection(x2, v.neighbors().toArray())
+            x = swiftSet.intersection(x2, v.neighbors().toArray())
             x2 = []
             for (var i = 0; i < x.length; i++) {
                 if (x2.indexOf(x[i]) == -1)
@@ -254,7 +248,7 @@ export function findStars(nodes: Node[], config?: any) {
     for (var i = 0; i < nodes.length; i++) {
         n = nodes[i];
         lls = n.links().toArray();
-        lls = Set.intersection(lls, config.links);
+        lls = swiftSet.intersection(lls, config.links);
         if (lls.length <= config.minLinkCount)
             continue
 
@@ -264,7 +258,6 @@ export function findStars(nodes: Node[], config?: any) {
             if (neighbors.indexOf(lls[j].other(n)) == -1)
                 neighbors.push(lls[j].other(n))
         }
-        // console.log('\tneighbors.length', neighbors.length, neighbors)
         if (neighbors.length <= config.minNeighborCount)
             continue;
 
@@ -304,26 +297,26 @@ export function findTriangles(nodes: Node[], config?: any): Motif[] {
     for (var i = 0; i < config.links.length; i++) {
         s = config.links[i].source;
         ns = s.neighbors().toArray();
-        ns = Set.intersection(ns, nodes);
+        ns = swiftSet.intersection(ns, nodes);
         if (ns.length == 0)
             continue;
         t = config.links[i].target;
         nt = t.neighbors().toArray();
-        nt = Set.intersection(nt, nodes);
+        nt = swiftSet.intersection(nt, nodes);
         if (nt.length == 0)
             continue;
-        common = Set.intersection(ns, nt);
+        common = swiftSet.intersection(ns, nt);
         // remove s and t from common neighbors
-        common = Set.difference(common, [s, t])
+        common = swiftSet.difference(common, [s, t])
         if (common.length == 0)
             continue;
 
         // create triangle motifs
         for (var j = 0; j < common.length; j++) {
             n = common[j];
-            ll1 = Set.intersection(g.linksBetween(s, n).toArray(), config.links);
+            ll1 = swiftSet.intersection(g.linksBetween(s, n).toArray(), config.links);
             if (ll1.length == 0) continue;
-            ll2 = Set.intersection(g.linksBetween(t, n).toArray(), config.links);
+            ll2 = swiftSet.intersection(g.linksBetween(t, n).toArray(), config.links);
             if (ll2.length == 0) continue;
 
             ll1 = ll1.concat(ll2);

@@ -1,29 +1,19 @@
 {
     "compilerOptions": {
-        "target": "es5",
-        "module": "system",
-        "lib": ["es6", "dom"],
+        "outDir": "./build/",
+        "target": "es6",
+        "module": "es2015",
         "sourceMap": true,
-        "outFile": "./lib/index.js",
         "strict": true,
         "esModuleInterop": true,
-        "allowSyntheticDefaultImports": false,
+        "allowSyntheticDefaultImports": true,
         "moduleResolution": "node",
+        "resolveJsonModule": true,
         "declaration": true
     },
     "pretty": false,
-    "files": [
-        "src/dynamicgraph.ts",
-        "src/datamanager.ts",
-        "src/motifs.ts",
-        "src/analytics.ts",
-        "src/importers.ts",
-        "src/colors.ts",
-        "src/messenger.ts",
-        "src/queries.ts",
-        "src/utils.ts",
-        "src/ordering.ts",
-        "src/search.ts",
-        "src/main.ts"
+    "files": ["src/index.ts"],
+    "include": [
+        "src/**/*.ts"
     ]
 }

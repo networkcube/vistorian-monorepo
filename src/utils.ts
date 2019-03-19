@@ -1,16 +1,76 @@
-import { DynamicGraph, LinkType } from './dynamicgraph'
-import {
-    BasicElement, 
-    Link, 
-    Node, 
-    NodePair, 
-    Location, 
-    Time
-} from './queries'
-import * as moment from 'moment'
-import * as d3 from 'd3'
+/// <reference path="./lib/d3.d.ts"/>
 
-//namespace networkcube {
+import {
+    BasicElement,
+    Time,
+    IDCompound,
+    DynamicGraph,
+    NodePair,
+    Node,
+    Link,
+    LinkType,
+    copyPropsShallow
+} from './dynamicgraph'
+import * as moment from 'moment'
+
+/* moved from utils to queries */
+
+export function getType(elements: any[]): string | undefined { // before was only string
+
+    var type: string = ''; // before only string, without init
+    if (elements.length == 0)
+        return;
+    if (elements[0] instanceof Node)
+        type = 'node';
+    else
+        if (elements[0] instanceof Link) {
+            type = 'link';
+        } else
+            if (elements[0] instanceof Time) {
+                type = 'time';
+            } else
+                if (elements[0] instanceof NodePair) {
+                    type = 'nodePair';
+                } else
+                    if (elements[0] instanceof LinkType) {
+                        type = 'linkType';
+                    } else
+                        if (typeof elements[0] == 'number') {
+                            type = 'number';
+                        }
+
+    return type;
+}
+
+/* moved from utils to queries */
+
+export function makeElementCompound(elements: IDCompound, g: DynamicGraph): ElementCompound {
+    var result: ElementCompound = new ElementCompound;
+    if (elements != undefined) {
+        if (elements.nodeIds) {
+            result.nodes = <Node[]>elements.nodeIds.map((id, i) => g.node(id)); // ?? WITH OR WITHOUT ?? .filter((element) => { return (element != undefined) });
+        }
+        if (elements.linkIds) {
+            result.links = <Link[]>elements.linkIds.map((id, i) => g.link(id));
+        }
+        if (elements.timeIds) {
+            result.times = <Time[]>elements.timeIds.map((id, i) => g.time(id));
+        }
+        if (elements.nodePairIds) {
+            result.nodePairs = <NodePair[]>elements.nodePairIds.map((id, i) => g.nodePair(id));
+        }
+    }
+    return result;
+}
+
+/* moved from utils to queries */
+export class ElementCompound {
+    nodes: Node[] = [];
+    links: Link[] = [];
+    times: Time[] = [];
+    nodePairs: NodePair[] = [];
+    locations: Location[] = [];
+}
 
 
 export function getPriorityColor(element: BasicElement): string | undefined { // before: return string
@@ -50,35 +110,13 @@ export function capitalizeFirstLetter(string: string): string {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-export function isValidIndex(v: number | undefined): boolean {
-    return v != undefined && v > -1;
-}
-
-export function array(value: any, size: number): any[] {
-    var array: any[] = []
-    while (size--) array[size] = value;
-    return array;
-}
-export function doubleArray(size1: number, size2?: number, value?: any): any[] {
-    var array: any[] = []
-    if (value == undefined)
-        value = []
-    var a: any[] = [];
-
-    if (size2) {
-        while (size2--) a[size2] = value;
-    }
-    while (size1--) array[size1] = a.slice(0);
-
-    return array;
-}
-
 export function isBefore(t1: Time, t2: Time): boolean {
     return t1.time < t2.time;
 }
 export function isAfter(t1: Time, t2: Time): boolean {
     return t1.time > t2.time;
 }
+
 
 export function hex2Rgb(hex: string): number[] {
     return [hexToR(hex), hexToG(hex), hexToB(hex)]
@@ -97,33 +135,6 @@ export function hex2RgbNormalized(hex: string): number[] {
     return [hexToR(hex) / 255, hexToG(hex) / 255, hexToB(hex) / 255]
 }
 
-
-export function getType(elements: any[]): string | undefined { // before was only string
-
-    var type: string = ''; // before only string, without init
-    if (elements.length == 0)
-        return;
-    if (elements[0] instanceof Node)
-        type = 'node';
-    else
-        if (elements[0] instanceof Link) {
-            type = 'link';
-        } else
-            if (elements[0] instanceof Time) {
-                type = 'time';
-            } else
-                if (elements[0] instanceof NodePair) {
-                    type = 'nodePair';
-                } else
-                    if (elements[0] instanceof LinkType) {
-                        type = 'linkType';
-                    } else
-                        if (typeof elements[0] == 'number') {
-                            type = 'number';
-                        }
-
-    return type;
-}
 
 export function areEqualShallow(a: any, b: any): boolean {
     for (var key in a) {
@@ -153,63 +164,10 @@ export function compareTypesShallow(a: any, b: any): boolean {
     }
 }
 
-export function compareTypesDeep(a: any, b: any, depth: number): boolean {
-    var result = true;
-    if (a == null || b == null)
-        return a == b;
-    if (typeof a != typeof b)
-        return false;
-    else if (typeof a != 'object')
-        return true;
-    else if (a.constructor !== b.constructor)
-        return false;
-    else {
-        if (depth > 0) {
-            for (var key in a) {
-                if (key in b
-                    && a.hasOwnProperty(key)
-                    && b.hasOwnProperty(key)
-                    && !compareTypesDeep(a[key], b[key], depth - 1)) {
-                    console.log("compareFailed for key", key, a[key], b[key]);
-                    result = false;
-                }
-            }
-        }
-        return result;
-    }
-}
-
-export function copyPropsShallow(source: any, target: any): any {
-    for (var p in source) {
-        if (source.hasOwnProperty(p))
-            target[p] = source[p];
-    }
-    return target;
-}
-export function copyTimeseriesPropsShallow(source: any, target: any): any {
-    for (var q in source) {
-        if (source.hasOwnProperty(q)) {
-            for (var p in source[q]) {
-                if (source[q].hasOwnProperty(p)) {
-                    target[q][p] = source[q][p];
-                }
-            }
-        }
-    }
-    return target;
-}
-
 export function copyArray<TElement>(arr: any[], ctorFunc: () => TElement): TElement[] {
     var arrayClone: TElement[] = [];
     for (var elem in arr) {
         arrayClone.push(copyPropsShallow(arr[elem], ctorFunc()));
-    }
-    return arrayClone;
-}
-export function copyTimeSeries<TElement>(arr: any[], ctorFunc: () => TElement): TElement[] {
-    var arrayClone: TElement[] = [];
-    for (var elem in arr) {
-        arrayClone.push(copyTimeseriesPropsShallow(arr[elem], ctorFunc()));
     }
     return arrayClone;
 }
@@ -263,28 +221,6 @@ export function isSame(a: any[], b: any[]): boolean {
     return true;
 }
 
-
-export function sortNumber(a: any, b: any) {
-    return a - b;
-}
-
-export class ElementCompound {
-    nodes: Node[] = [];
-    links: Link[] = [];
-    times: Time[] = [];
-    nodePairs: NodePair[] = [];
-    locations: Location[] = [];
-}
-export class IDCompound {
-    nodeIds: number[] = [];
-    linkIds: number[] = [];
-    timeIds: number[] = [];
-    nodePairIds: number[] = [];
-    locationIds: number[] = [];
-}
-
-
-
 export function cloneCompound(compound: IDCompound): IDCompound {
     var result: IDCompound = new IDCompound();
     if (compound.nodeIds) {
@@ -318,53 +254,17 @@ export function makeIdCompound(elements: ElementCompound | undefined): IDCompoun
     var result: IDCompound = new IDCompound;
     if (elements != undefined) {
         if (elements.nodes) {
-            result.nodeIds = elements.nodes.map((n, i) => n.id());
+            result.nodeIds = elements.nodes.map((n: any, i: any) => n.id());
         }
         if (elements.links) {
-            result.linkIds = elements.links.map((n, i) => n.id());
+            result.linkIds = elements.links.map((n: any, i: any) => n.id());
         }
         if (elements.times) {
-            result.timeIds = elements.times.map((n, i) => n.id());
+            result.timeIds = elements.times.map((n: any, i: any) => n.id());
         }
         if (elements.nodePairs) {
-            result.nodePairIds = elements.nodePairs.map((n, i) => n.id());
+            result.nodePairIds = elements.nodePairs.map((n: any, i: any) => n.id());
         }
-    }
-    return result;
-}
-export function makeElementCompound(elements: IDCompound, g: DynamicGraph): ElementCompound {
-    var result: ElementCompound = new ElementCompound;
-    if (elements != undefined) {
-        if (elements.nodeIds) {
-            result.nodes = <Node[]>elements.nodeIds.map((id, i) => g.node(id)); // ?? WITH OR WITHOUT ?? .filter((element) => { return (element != undefined) });
-        }
-        if (elements.linkIds) {
-            result.links = <Link[]>elements.linkIds.map((id, i) => g.link(id));
-        }
-        if (elements.timeIds) {
-            result.times = <Time[]>elements.timeIds.map((id, i) => g.time(id));
-        }
-        if (elements.nodePairIds) {
-            result.nodePairs = <NodePair[]>elements.nodePairIds.map((id, i) => g.nodePair(id));
-        }
-    }
-    return result;
-}
-
-export function attributeSort(a: BasicElement, b: BasicElement, attributeName: string, asc?: boolean): number {
-    var value = a.attr(attributeName);
-    var result;
-    if (typeof value == 'string') {
-        result = a.attr(attributeName).localeCompare(b.attr(attributeName));
-    }
-    else if (typeof value == 'number') {
-        result = b.attr(attributeName) - a.attr(attributeName);
-    } else {
-        result = 0;
-    }
-
-    if (asc == false) {
-        result = -result;
     }
     return result;
 }
@@ -418,7 +318,7 @@ export function isPointInPolyArray(poly: number[][], pt: number[]) {
 
 
 export function formatTimeAtGranularity(time: Time, granualarity: number) {
-    var momentTime = moment.unix(time.unixTime())
+    var momentTime = moment.utc(time.unixTime())
     switch (granualarity) {
         case 0: return momentTime.millisecond();
         case 1: return momentTime.second();
@@ -475,7 +375,6 @@ export function downloadPNGfromSVG(name: string, svgId: string) {
 export function getBlobFromSVG(name: string, svgId: string, callback?: Function) {
     var width = $('#' + svgId).width();
     var height = $('#' + svgId).height();
-    console.log('SVG SIZE: ' + width, height)
     if (callback != undefined) // UNDEFINED ?? 
         getBlobFromSVGString(name, getSVGString(d3.select('#' + svgId).node()), width, height, callback) // what happend if callback undefinied (example above)
 }
@@ -492,8 +391,6 @@ export function getBlobFromSVGNode(name: string, svgNode: any, callback: Functio
     getBlobFromSVGString(name, string, width, height, callback, backgroundColor)
 }
 export function getBlobFromSVGString(name: string, svgString: string, width: number, height: number, callback: Function, backgroundColor?: string) {
-    console.log('width', width)
-    console.log('height', height)
     // get SVG string
     // CREATE PNG
     var format: any = format ? format : 'png';
@@ -510,7 +407,6 @@ export function getBlobFromSVGString(name: string, svgString: string, width: num
     var image: any = new Image();
     image.src = imgsrc;
 
-    console.log('image', image)
     image.onload = function () {
         context.clearRect(0, 0, width, height);
         if (backgroundColor) {
@@ -520,79 +416,13 @@ export function getBlobFromSVGString(name: string, svgString: string, width: num
         context.drawImage(image, 0, 0, width, height);
 
         canvas.toBlob(function (blob: any) {
-            console.log('BLOB', blob)
-            // var filesize = Math.round( blob.length/1024 ) + ' KB';
             callback(blob, name)
         });
     };
 
-    // return getBlobFromCanvas(canvas);
-
-    // var dataURL = canvas.toDataURL("image/png");
-    // // ?? 
-    // return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
 }
 
-// function generateStyleDefs(svgDomElement)
-// {
-//     var styleDefs = "";
-//     var sheets = document.styleSheets;
-//     for (var i = 0; i < sheets.length; i++) {
-//       var rules = sheets[i].cssRules;
-//       for (var j = 0; j < rules.length; j++) {
-//         var rule = rules[j];
-//         if (rule.style) {
-//           var selectorText = rule.selectorText;
-//           var elems = svgDomElement.querySelectorAll(selectorText);
-//           console.log('elems', svgDomElement, elems.length)
-//           if (elems.length) {
-//             styleDefs += selectorText + " { " + rule.style.cssText + " }\n";
-//           }
-//         }
-//       }
-//     }
-
-//     var s = document.createElement('style');
-//     s.setAttribute('type', 'text/css');
-//     s.innerHTML = "<![CDATA[\n" + styleDefs + "\n]]>";
-//     //somehow cdata section doesn't always work; you could use this instead:
-//     //s.innerHTML = styleDefs;
-
-//     var defs = document.createElement('defs');
-//     defs.appendChild(s);
-//     svgDomElement.insertBefore(defs, svgDomElement.firstChild);
-//   }
-
-// export function getPNGURL(svgId):String
-// {
-//     var svgString = getSVGString(d3.select('#'+svgId).node());
-//     var obj = getPNGFromSVG(svgString, $('#'+svgId).width(), $('#'+svgId).height(), 'png');
-
-//     return obj.image;
-
-// }
-
-// function getPNGFromSVG( svgString, width, height, format):Object 
-// {
-//     var format = format ? format : 'png';
-
-//     var imgsrc = 'data:image/svg+xml;base64,'+ btoa( unescape( encodeURIComponent( svgString ) ) ); // Convert SVG string to data URL
-
-//     var canvas = document.createElement("canvas");    
-//     canvas.width = width;
-//     canvas.height = height;
-
-//     var context = canvas.getContext("2d");
-
-//     var image = new Image();
-
-//     image.src = imgsrc;
-//     return {image:image, canvas:canvas};
-// }
-
-// returns the svg string from an svg node.
 export function getSVGString(svgNode: any) {
-    console.log('SVG NODE', svgNode);
     svgNode.setAttribute('xlink', 'http://www.w3.org/1999/xlink');
     var cssStyleText = getCSSStyles(svgNode);
     appendCSS(cssStyleText, svgNode);
@@ -665,6 +495,19 @@ export function getSVGString(svgNode: any) {
 }
 
 
+export function exportPNG(canvas: any, name: string) {
+    var dataURL: any = canvas.toDataURL('image/jpg', 1);
+    var blob: any = dataURItoBlob(dataURL);
+    // window.open(dataURL);
+
+    var fileNameToSaveAs: any = name + '_' + new Date().toUTCString() + '.png';
+    var downloadLink: any = document.createElement("a")
+    downloadLink.download = fileNameToSaveAs;
+    downloadLink.href = (window as any).webkitURL.createObjectURL(blob);
+    downloadLink.click();
+}
+
+
 // returns a blob from a URL/URI
 function dataURItoBlob(dataURI: string): Blob {
     // convert base64/URLEncoded data component to raw binary data held in a string
@@ -724,4 +567,3 @@ export function showMessage(message: string, timeout: any) {
 }
 
 
-//}
