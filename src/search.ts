@@ -1,8 +1,4 @@
-import { DynamicGraph } from './dynamicgraph'
-import { IDCompound } from './utils'
-import { Link, Node, Location } from './queries'
-//namespace networkcube{
-
+import { DynamicGraph, Link, Node, Location, IDCompound } from './dynamicgraph'
 
 export function searchForTerm(term: string, dgraph: DynamicGraph, type?: string): IDCompound {
 	var terms = term.toLowerCase().split(',');
@@ -12,7 +8,6 @@ export function searchForTerm(term: string, dgraph: DynamicGraph, type?: string)
 
 	for (var i = 0; i < terms.length; i++) {
 		term = terms[i].trim();
-		console.log('search term', term)
 		if (!type || type == 'node')
 			result.nodeIds = result.nodeIds.concat(dgraph.nodes().filter(
 				(e: Node) =>
@@ -55,4 +50,3 @@ class StringContainsFilter {
 	}
 }
 
-//}
