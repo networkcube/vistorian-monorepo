@@ -2,6 +2,6 @@
 *.js.map
 debug/*
 node_modules
-build
-lib
+build/*
+lib/*
 package-lock.json
