@@ -9,7 +9,6 @@ import * as messenger from 'vistorian-core/src/messenger';
 import * as ui from 'vistorian-widgets/src/ui';
 import * as timeslider from 'vistorian-widgets/src/timeslider';
 
-//import * as d3 from 'd3';
 import * as moment from 'moment';
 
 var COLOR_DEFAULT_LINK: string = '#999999';
@@ -218,17 +217,13 @@ function init() {
         var delta: any = current - lastPanUpdate;
         if (delta < 1000) {
             var pps = (1000 / delta).toFixed(0);
-            // console.log('pan-update took', delta.toFixed(2), 'ms. PPS=', pps);
         }
         lastPanUpdate = current;
         $('#weirdDiv').css('width', window.innerWidth * Math.random());
         $('#weirdDiv').parent().parent().css('width', window.innerWidth * Math.random());
 
         var northWest: any = { x: map.getBounds().getSouthWest().lng(), y: map.getBounds().getNorthEast().lat() }
-        // console.log('map.getBounds', overlay)
     });
-
-
 
     // create overlay over googlemaps
     overlay = new google.maps.OverlayView();
@@ -251,7 +246,6 @@ function init() {
         }
 
         map.addListener('mouseout', function (ev: any) {
-            //console.log('mouseout');
             hideLocationsWindow();
         });
 
@@ -260,8 +254,6 @@ function init() {
         svg = d3.select(layer).append("svg:svg")
             .attr('id', 'svgOverlay')
             .style('overflow', 'visible');
-
-
 
         // CREATE LOCATION MARKERS (Cirle for every location)
 
@@ -330,20 +322,6 @@ function init() {
                 messenger.highlight('reset')
             })
 
-        // .on('click', d => {
-        //     var selections = d.getSelections();
-        //     var currentSelection = this.dgraph.getCurrentSelection();
-        //     for (var j = 0; j < selections.length; j++) {
-        //         if (selections[j] == currentSelection) {
-        //             networkcube.selection('remove', <networkcube.ElementCompound>{ links: [d] });
-        //             return;
-        //         }
-        //     }
-        //     networkcube.selection('add', <networkcube.ElementCompound>{ links: [d] });
-        // })
-
-
-
         // DRAW NODES (one for every node x position it is at)
 
         // obtain nodePositionObjects
@@ -356,12 +334,9 @@ function init() {
         for (var i = 0; i < nodes.length; i++) {
             n = nodes[i];
             positions = n.locationSerie().serie;
-            // console.log('>', n.locationSerie().serie)
             serie = new dynamicgraph.ScalarTimeSeries<Object>();
             nodePositionObjectsLookupTable.push(serie);
-            // console.log('ITERATE ALL NODES', positions.length);
             for (var tId in positions) {
-                // console.log('tId', tId)
                 googleLatLng = new google.maps.LatLng(
                     positions[tId].latitude(),
                     positions[tId].longitude());
@@ -373,12 +348,10 @@ function init() {
                     positions[tId].npos.push(npo);
                 }
                 npo.geoPos = googleLatLng
-                // console.log('>>>>', positions[tId].latitude(), positions[tId].longitude() )
                 npo.timeIds.push(parseInt(tId))
                 serie.set(dgraph.time(parseInt(tId)), npo)
             }
         }
-
 
         // assign NPOs to links
         var loc: any; // BEFORE queries.Location;
@@ -393,71 +366,12 @@ function init() {
 
                 link.sourceNPO.outNeighbors.push(link.targetNPO)
                 link.targetNPO.inNeighbors.push(link.sourceNPO)
-                // console.log("sourceNPO.y", link.sourceNPO.y)
             })
-
-
-        // // POSITION NODES WITHOUT OWN POSITIONS (tentatively)
-        // // 1. create layout network 
-        // var layoutNodes = []
-        // for(var i=0 ; i < nodePositionObjects.length ; i++){
-        //     layoutNodes.push({id:i,
-        //         x: nodePositionObjects[i].geoPos.lng(),
-        //         y: nodePositionObjects[i].geoPos.lat() 
-        //     })
-        //     if(layoutNodes[i].x != undefined && layoutNodes[i].x != 0
-        //     && layoutNodes[i].y != undefined && layoutNodes[i].y != 0){
-        //         layoutNodes[i].fixed = true;
-        //     }else{
-        //         layoutNodes[i].fixed = false;
-        //         layoutNodes[i].x = Math.random() * 1
-        //         layoutNodes[i].y = Math.random() * 1
-        //     }
-
-        // }
-
-
-        // var layoutLinks = []
-        // for(var i=0 ; i < links.length ; i++){
-        //     layoutLinks.push({
-        //         source: nodePositionObjects.indexOf(links[i].sourceNPO),
-        //         target: nodePositionObjects.indexOf(links[i].targetNPO),
-        //     })
-        // }
-
-        // var force = d3.layout.force()
-        //     .nodes(layoutNodes)
-        //     .links(layoutLinks)
-        //     .linkDistance(1)
-        //     .start()
-        //     .on('end', ()=>{
-        //         var npo
-        //         for(var i=0 ; i < layoutNodes.length ; i++){
-        //             if(!layoutNodes[i].fixed){
-        //                 npo = nodePositionObjects[i]
-        //                 npo.geoPos = new google.maps.LatLng(layoutNodes[i].x,layoutNodes[i].y);
-        //             }
-        //         }
-        //         overlay.draw();
-        // })
-
-
 
         visualNodes = svg.selectAll(".node")
             .data(nodePositionObjects)
             .enter()
             .append('g')
-        // .on('click', d => {
-        //     var selections = d.getSelections();
-        //     var currentSelection = this.dgraph.getCurrentSelection();
-        //     for (var j = 0; j < selections.length; j++) {
-        //         if (selections[j] == currentSelection) {
-        //             networkcube.selection('remove', <networkcube.ElementCompound>{ nodes: [d.node] });
-        //             return;
-        //         }
-        //     }
-        //     networkcube.selection('add', <networkcube.ElementCompound>{ nodes: [d.node] });
-        // });
 
         // NODE CIRLCE
         visualNodes.append("circle")
@@ -465,11 +379,6 @@ function init() {
             .attr("r", function (d: any) {
                 return nodeSizeFunction(d.node.neighbors().length);
             })
-
-        // LOCATION CIRCLE for displaced nodes
-        // visualNodes.append("circle")
-        //     .attr("class", "displacementCircle");
-
 
         // bb: not any longer needed for labeling is handled globally
         // maybe include again later 
@@ -546,7 +455,6 @@ function init() {
                     sourcePoint = new google.maps.Point(0, 0); // NOT NECCESARY
                 } else {
                     sourcePoint = projection.fromDivPixelToLatLng({ x: sourceNPO.x, y: sourceNPO.y });
-                    // console.log('sourcePoint.lat()', sourcePoint.lat(), sourcePoint.lng())
                     sourcePoint = new google.maps.Point(sourcePoint.y * F, sourcePoint.x * F); //{ x: sourcePoint.lng() * F, y: sourcePoint.lat() * F };
                 }
 
@@ -570,19 +478,16 @@ function init() {
             }
         }
 
-        // var nodeHighlighted = false;  
         if (prevIntersectedNode != intersectedNode) {
             messenger.highlight('reset');
             if (intersectedNode != undefined) {
                 var newElement = new utils.ElementCompound();
                 newElement.nodes = [intersectedNode]
                 messenger.highlight('set', newElement);
-                // nodeHighlighted = true;
             }
         }
         prevIntersectedNode = intersectedNode;
 
-        // if(!nodeHighlighted){
         if (prevIntersectedLink != intersectedLink) {
             messenger.highlight('reset');
             if (intersectedLink != undefined) {
@@ -593,7 +498,6 @@ function init() {
             }
         }
         prevIntersectedLink = intersectedLink;
-        // }
 
         if (intersectedLink == undefined && intersectedNode == undefined) {
             if (ev.pixel)
@@ -606,14 +510,11 @@ function init() {
 
     overlay.draw = function () {
         updateGeoNodePositions()
-        // updateNodeDisplacementVectors();
         updateNodePositions();
         updateLocationMarkers();
     }
 
     overlay.setMap(map);
-
-
 }
 
 
@@ -637,7 +538,6 @@ var hittestRect: google.maps.LatLngBounds = new google.maps.LatLngBounds();
 var hittestRadius = 20;
 
 function displayLocationsWindow(currentProjection: google.maps.MapCanvasProjection, point: google.maps.Point, latLng: google.maps.LatLng): boolean {
-    //console.log('displayLocationsWindow');
     // define hit-test rectangle
     var projection = currentProjection;
     // if we have drifted outside the original, then hide the location div
@@ -708,23 +608,6 @@ function displayLocationsWindow(currentProjection: google.maps.MapCanvasProjecti
         .attr('class', 'nodeListItem')
         .append('nobr')
         .text(function (d: any) { return d.label(); })
-    // .on('mouseover', function(d, i) {
-    //     networkcube.highlight('set', <networkcube.ElementCompound>{ nodes: [d.node] })
-    // })
-    // .on('mouseout', d => {
-    //     networkcube.highlight('reset')
-    // })
-    // .on('click', d => {
-    //     var selections = d.getSelections();
-    //     var currentSelection = this.dgraph.getCurrentSelection();
-    //     for (var j = 0; j < selections.length; j++) {
-    //         if (selections[j] == currentSelection) {
-    //             networkcube.selection('remove', <networkcube.ElementCompound>{ nodes: [d.node] });
-    //             return;
-    //         }
-    //     }
-    //     networkcube.selection('add', <networkcube.ElementCompound>{ nodes: [d.node] });
-    // });
 
     var translatePoint: google.maps.Point = projection.fromLatLngToDivPixel(latLng);
     translatePoint.x += 20;
@@ -792,9 +675,7 @@ function updateGeoNodePositions() {
     for (var i = 0; i < nodePositionObjects.length; i++) {
         npo = nodePositionObjects[i];
 
-        // console.log("1) npo.geoPos", npo.geoPos.lat(), npo.geoPos.lng());
         pos = geoProjection.fromLatLngToDivPixel(npo.geoPos);
-        // console.log("2) npo.geoPos", npo.geoPos.lng(), pos.y);
 
         if (pos.x == undefined) {
             npo.xOrig = 0;
@@ -894,7 +775,6 @@ function updateNodes() {
 
         })
 
-
     // update node labels
     vNodeLabels
         .attr('visibility', (n: any) => {
@@ -984,9 +864,7 @@ function updateLocationMarkers() {
             var pixelpos: google.maps.Point = geoProjection.fromLatLngToDivPixel(pos);
             return 'translate(' + (pixelpos.x) + ',' + (pixelpos.y) + ')';
         })
-
 }
-
 
 // Calculates curve paths for links
 function updateLinkPaths() {
@@ -998,7 +876,6 @@ function updateLinkPaths() {
     var cx1: any, cy1: any, cx2: any, cy2: any;
     for (var i = 0; i < dgraph.links().length; i++) {
         link = dgraph.link(i);
-        // console.log('link', link.id())
 
         if (link)
             sourceNPO = link.sourceNPO;
@@ -1046,7 +923,6 @@ function updateLinkPaths() {
             cy2 = cy1;
             (link as any)['path'] = [
                 { x: sourceNPO.x, y: sourceNPO.y },
-                // { x: cx2, y: cy2 },
                 { x: targetNPO.x, y: targetNPO.y }]
         }
     }
@@ -1055,8 +931,6 @@ function updateLinkPaths() {
         .attr("d", function (d: any) { return line(d.path); })
 
 }
-
-
 
 function showLabel(i: any, b: any) {
     if (b) {
@@ -1071,8 +945,6 @@ function showLabel(i: any, b: any) {
             .attr('visibility', 'hidden')
     }
 }
-
-
 
 function setRelationTypeVisibility(relType: any, b: any) {
     d3.selectAll('.link')
@@ -1121,8 +993,6 @@ ui.makeSlider(menuDiv, 'Opacity of Positionless Nodes', 200, MENU_HEIGHT, INNER_
     updateNodes();
 })
 
-
-
 function stretchVector(vec: any, finalLength: any) {
     var len = 0
     for (var i = 0; i < vec.length; i++) {
@@ -1135,8 +1005,6 @@ function stretchVector(vec: any, finalLength: any) {
 
     return vec;
 }
-
-
 
 function timeChangedHandler(m: messenger.TimeRangeMessage) {
 
@@ -1166,11 +1034,6 @@ function timeChangedHandler(m: messenger.TimeRangeMessage) {
 
 function updateEvent(m: messenger.TimeRangeMessage) { // BEFORE messenger.Message) {
     if (m && m.type == 'timeRange' && dgraph.times().size() > 1) {
-        /* BEFORE
-        time_start = dgraph.time(m.startId);
-        time_end = dgraph.time(m.endId);
-        timeSlider.set(time_start, time_end);
-        */
         timeSlider.set(m.startUnix, m.endUnix);
     }
 
@@ -1267,7 +1130,6 @@ function updateNodeDisplacementVectors() {
         }
     }
 
-
     // create displacement vector for each NPO
 }
 
@@ -1282,7 +1144,6 @@ function getNodePositionObjectsForLocation(n: dynamicgraph.Node, long: number, l
             a = Math.round(s.serie[t].geoPos.lng() * 100) / 100
             b = Math.round(s.serie[t].geoPos.lat() * 100) / 100
             if (a == long && b == lat) {
-                // console.log('\tLOC FOUND',long, lat, n.label())
                 return s.serie[t];
             }
         }
@@ -1305,7 +1166,6 @@ function getNodePositionObjectsForLocation(n: dynamicgraph.Node, long: number, l
 function getNodePositionObjectAtTime(n: dynamicgraph.Node, tId: number): Object {
     var s: any = nodePositionObjectsLookupTable[n.id()]
     var npo: any;
-    // console.log('s.serie[tId]', tId, s.serie[tId])
 
     if (s.serie[tId] == undefined) {
         // check if empty node object exist for n
