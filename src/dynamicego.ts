@@ -6,7 +6,6 @@ import * as main from 'vistorian-core/src/main';
 import * as utils from 'vistorian-core/src/utils';
 import * as ordering from 'vistorian-core/src/ordering';
 
-//import * as d3 from 'd3';
 import * as THREE from 'three';
 
 import * as glutils from 'vistorian-widgets/src/glutils';
@@ -114,8 +113,6 @@ var timeline: tline.Timeline = new tline.Timeline(webgl, dgraph, TABLE_PADDING_L
 // VERTICAL SCROLL EVENT
 window.addEventListener("mousewheel", mouseWheelHandler, false);
 
-
-console.log("UPDATE")
 $('#menu').append('\
             <select id="labelOrdering">\
                 <option value="data">As appear in table</option>\
@@ -146,7 +143,6 @@ export function visualize() {
     // IF TIMES UNDEFINED?
     startUnix = times[0] ? times[0].unixTime() : 0;
     endUnix = times[times.length - 1] ? times[times.length - 1].unixTime() : 0;
-    console.log('timeXFunction(startUnix)', timeXFunction(startUnix))
 
     timeXFunction
         .domain([startUnix, endUnix])
@@ -164,9 +160,7 @@ export function visualize() {
     createTimes()
     createLinks()
 
-    console.log("WEBGL");
     webgl.render();
-    console.log("WEBGL 2");
 }
 
 var rowBars: any;
@@ -290,13 +284,11 @@ export function createLinks() {
         .style('stroke-width', 1)
         .style('opacity', .3)
         .on('mouseover', (d: any, i: any) => {
-            console.log('mouse over year', d.times().get(0).format('DD/MM, YYYY'))
             messenger.highlight('set', <utils.ElementCompound>{ links: [d] });
             timeline.highlight(d.times().get(0).unixTime())
         })
         .on('mouseout', (d: any, i: any) => {
             messenger.highlight('reset');
-            // timeline.highlight()
         })
 }
 
@@ -358,7 +350,6 @@ export function updateCurrentOrder() {
             rank++;
         }
     }
-    console.log('currentNodeOrder', currentNodeOrder)
 
     nodeYPosFunction.domain([0, rank])
         .range([TABLE_TOP + ROW_HEIGHT, TABLE_TOP + ROW_HEIGHT * (rank - nodesScrollStart)])
@@ -525,7 +516,6 @@ export function updateGlobalOrder(validNodes?: dynamicgraph.Node[]) {
             globalNodeOrder.push(dgraph.node(nodeOrder[i]));
         }
     }
-    console.log('globalNodeOrder', globalNodeOrder)
     updateCurrentOrder();
 }
 
@@ -555,14 +545,12 @@ export function makeArcPath(link: dynamicgraph.Link): Object[] {
 export function showEgoNetwork(n: dynamicgraph.Node) {
     if (egoNode == n) {
         egoNode = undefined;
-        console.log("HERE?")
         updateGlobalOrder()
     } else {
         egoNode = n;
         var a: any[] = egoNode.neighbors().removeDuplicates().toArray()
         if (a.indexOf(egoNode) == -1)
             a.push(egoNode);
-        console.log("OR HERE?")
         updateGlobalOrder(a)
     }
     d3.selectAll('.nodeLabel')
