@@ -8,8 +8,6 @@ import * as messenger from 'vistorian-core/src/messenger';
 import * as ui from 'vistorian-widgets/src/ui';
 import * as timeslider from 'vistorian-widgets/src/timeslider';
 
-// import * as d3 from 'd3'
-
 var COLOR_DEFAULT_LINK: string = '#999999';
 var COLOR_DEFAULT_NODE: string = '#333333';
 var COLOR_HIGHLIGHT: string = '#ff8800';
@@ -155,7 +153,6 @@ var svg: any = d3.select('#visSvg')
         // <Event>
         (<any>d3.event).preventDefault();
         (<any>d3.event).stopPropagation();
-        //var globalZoom = 1 + d3.event.wheelDelta / 1000; // wheelDelta only in v4 or more
         var globalZoom = 1 ;
         var mouse = [(d3.event).x - panOffsetGlobal[0], (d3.event).y - panOffsetGlobal[1]];
         var d: any, n: any;
@@ -197,7 +194,6 @@ for (var i = 0; i < nodes.length; i++) {
 
 /* d3 v3 */
 layout = d3.layout.force()
-    // layout = cola.d3adaptor()
     .linkDistance(30)
     .size([width, height])
     .nodes(nodes)
@@ -293,7 +289,6 @@ function init() {
 
     // CREATE LINKS
     calculateCurvedLinks();
-    console.log("VISUALLINKS");
     visualLinks = linkLayer.selectAll('visualLinks')
         .data(links)
         .enter()
@@ -342,15 +337,12 @@ function updateLayout() {
 
     // update link positions
     calculateCurvedLinks();
-    console.log("VISUALLINK2")
     visualLinks
         .attr('d', (d: any) => lineFunction(d.path))
 
 
     // update nodelabel visibility after layout update.
     updateLabelVisibility();
-
-    // webgl.render();
 
 }
 function getLabelWidth(n: any) {
@@ -462,9 +454,6 @@ function timeChangedHandler(m: messenger.TimeRangeMessage) {
             break;
         }
     }
-    // if(time_end==undefined){
-    //     time_end = times[times.length-1]
-    // }
 
     timeSlider.set(m.startUnix, m.endUnix);
     updateLinks();
@@ -480,8 +469,6 @@ function updateEvent(m: messenger.Message) {
 function updateNodeSize() {
     visualNodes
         .attr('r', (n: any) => getNodeRadius(n))
-
-
 }
 
 function updateNodes() {
@@ -504,8 +491,6 @@ function updateNodes() {
             else
                 return 1;
         })
-
-
 
     nodeLabels
         .attr('visibility', (e: any) => e.isHighlighted()
@@ -634,52 +619,6 @@ function stretchVector(vec: any, finalLength: any) {
 
     return vec
 }
-
-// var visualLassoPoints:svg.WebGLElementQuery;
-// function lassoMoveHandler(lassoPoints:number[][]){
-
-//     if(visualLassoPoints != undefined)
-//         visualLassoPoints.removeAll();
-
-//     visualLassoPoints = svg.selectAll('visualLassoPoints')
-//         .data(lassoPoints)
-//         .append('circle')
-//             .attr('r', 1)
-//             .style('fill', '#ff9999')
-//             .attr('x', (d)=>d[0])
-//             .attr('y', (d)=>d[1])
-
-// }
-
-
-// function lassoEndHandler(lassoPoints:number[][]){
-
-//     if(visualLassoPoints != undefined)
-//         visualLassoPoints.removeAll();
-
-
-//     var selectedNodes = []
-//     for(var i=0 ; i <nodes.length ; i++){
-//         if(networkcube.isPointInPolyArray(lassoPoints, [nodes[i].x, nodes[i].y]))
-//             selectedNodes.push(nodes[i])
-//     }   
-//     console.log('Selected nodes:', selectedNodes.length)
-//     // get links in selection
-//     var selectedLinks = []
-//     var incidentLinks = [];
-//     for(var i=0 ; i <selectedNodes.length ; i++){
-//         for(var j=i+1 ; j <selectedNodes.length ; j++){
-//             // incidentLinks = dgraph.linksBetween(selectedNodes[i], selectedNodes[j]).presentIn(time_start,time_end).toArray() 
-//             incidentLinks = dgraph.linksBetween(selectedNodes[i], selectedNodes[j]).toArray() 
-//             selectedLinks = selectedLinks.concat(incidentLinks);
-//         }   
-//     }   
-//     console.log('Selected links:', selectedLinks.length)
-//     if(selectedNodes.length > 0){
-//         networkcube.selection('set', {nodes:selectedNodes, links:selectedLinks})
-//     }
-// }
-
 function showMessage(message: string) {
     if ($('#messageBox'))
         $('#messageBox').remove();
