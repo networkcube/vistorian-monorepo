@@ -316,7 +316,6 @@
                 $.get("https://raw.githubusercontent.com/networkcube/vistorian/master/demo/demo_scientists.vistorian",
                     function (data) {
                         window.exports.networkcube.vistorian.importData(JSON.parse(data), 0);
-                        console.log(data)
                         window.exports.networkcube.vistorian.importIntoNetworkcube(JSON.parse(data), 0)
                     });
 

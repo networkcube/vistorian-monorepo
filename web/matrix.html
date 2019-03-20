@@ -63,8 +63,6 @@
 
         SERVER = SERVER.split('web/')[0]
 
-        console.log('>> SERVER: ', SERVER)
-
         $(document).ready(function () {
             var width = window.innerWidth - 30;
             width_col1 = 220;
@@ -74,7 +72,6 @@
 
             var params = window.vc.utils.getUrlVars();
             params['datasetName'] = params['datasetName'].replace(/___/g, ' ');
-            console.log(params);
             window.vc.main.createVisualizationIFrame(
                 'bookmarkFrame',
                 SERVER + '../node_modules/vistorian-bookmarkbrowser/web/index.html',
