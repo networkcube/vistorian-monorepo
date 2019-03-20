@@ -6,8 +6,6 @@ import * as main from 'vistorian-core/src/main';
 import * as messenger from 'vistorian-core/src/messenger';
 import * as datamanager from 'vistorian-core/src/datamanager';
 
-//import * as d3 from 'd3';
-
 import $ from 'jquery';
 
 var RECT_SIZE: number = 13;
@@ -31,7 +29,6 @@ messenger.addEventListener('searchResult', searchResultHandler);
 // add node selections
 createSelectionCategory('Node Selections', 'node');
 createSelectionCategory('Link Selections', 'link');
-//createSelectionCategory('Time Selections', 'time');
 
 updateLists();
 
@@ -65,8 +62,6 @@ export function updateLists() {
 
 	updateList('node', 'Node Selections')
 	updateList('link', 'Link Selections')
-	//updateList('time', 'Time Selections')
-
 
 	d3.selectAll('.icon_showColor')
 		.attr('xlink:href', function (d: any) { if (d.showColor) return 'drop-full.png'; return 'drop-empty.png' })
@@ -142,7 +137,6 @@ export function updateList(type: string, name: string) {
 			messenger.showSelectionColor(d, !d.showColor);
 		})
 
-
 	nodeGs.append('svg:image')
 		.attr('id', 'eye_' + name)
 		.attr('class', 'icon_eye icon')
@@ -178,7 +172,6 @@ export function updateList(type: string, name: string) {
 		.attr('xlink:href', 'delete.png')
 		.attr('x', 130 + (RECT_SIZE + GAP_ICONS) * i++)
 		.on('click', function (d: datamanager.Selection, i: number) {
-			console.log('CLICK')
 			messenger.deleteSelection(d);
 		})
 
@@ -205,7 +198,6 @@ export function saveSearchResultAsSelection(type: string) {
 	(selectionIdCompound as any)[type + 'Ids'] = (searchMessage.idCompound as any)[type + 'Ids']
 	var temp: utils.ElementCompound = utils.makeElementCompound(selectionIdCompound, dgraph);
 	window.setTimeout(() => {
-		console.log('set selection', selectionIdCompound, s.id)
 		messenger.highlight('reset');
 		window.setTimeout(() => {
 			messenger.selection('set', utils.makeElementCompound(selectionIdCompound, dgraph), s.id);
