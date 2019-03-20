@@ -1,7 +1,6 @@
 /// <reference path="../../vistorian-core/src/lib/d3.d.ts"/>
 
 import * as THREE from 'three';
-//import * as d3 from 'd3';
 
 import * as dynamicgraph from 'vistorian-core/src/dynamicgraph';
 import * as utils from 'vistorian-core/src/utils';
@@ -14,9 +13,6 @@ import * as glutils from 'vistorian-widgets/src/glutils';
 
 const COLOR_HIGHLIGHT = 0x000000;
 const COLOR_SELECTION = 0xff0000;
-// let COLOR_CELL_DEFAULT = 0x000000;
-// let COLOR_CELL_FILTER = 0xdddddd;
-
 
 class NMargin {
   left: number;
@@ -24,7 +20,6 @@ class NMargin {
   constructor(v: number) {
     this.left = v;
     this.top = v;
-    //this.setMargin(v);
   }
   setMargin(v: number) {
     this.left = v;
@@ -68,8 +63,6 @@ class MatrixMenu {
     let orderingMenu = $("#networkcube-matrix-menu")
       .append('<select id="labelOrdering"></select>')
 
-
-    //$("#networkcube-matrix-menu").append('<a class="manual-button" target="_blank" href="https://github.com/networkcube/networkcube/wiki/Visualization-Manual#matrix-visualization-matrix"  onclick="trace_help()">Manual</a>');
     // VS: Clicks on Manual
     $("#networkcube-matrix-menu")
       .append('<a class="manual-button" target="_blank" href="https://github.com/networkcube/networkcube/wiki/Visualization-Manual#matrix-visualization-matrix" onclick="trace_help()">Manual</a>');
@@ -83,8 +76,6 @@ class MatrixMenu {
 
     this.elem.append('<input value="Re-run" id="reorderBtn" type="button"/>');
     $('#reorderBtn').click(this.reorderHandler);
-
-    //$('#dataName').text(this.matrix.dgraphName());
   }
   updateCellSize() {
     let value: any = $('#cellSizeBox').val();
@@ -170,12 +161,6 @@ class CellLabel {
       .text(val ? val : 0)
       .attr('z', 2)
       .style('font-size', fw);
-    // this.cellLabelBackground
-    //   .attr('x', mx + 10)
-    //   .attr('y', -my + 11)
-    //   .attr("width",70)
-    //   .attr("height", 22)
-    //   .style('opacity', .8);
   }
 }
 class MatrixOverview {
@@ -245,10 +230,6 @@ class MatrixOverview {
 
   private zoomed = () => {
     let z: number, tr: any[] = [];
-    //var transform: any = d3.zoomTransform(this.svg.node());
-    //z = transform.k;
-    //tr[0] = transform.x;
-    //tr[1] = transform.y;
     z = this.zoom.scale();
     tr = this.zoom.translate();
     this.updateTransform(z, tr);
@@ -277,9 +258,6 @@ class MatrixOverview {
     tr[1] = this.ratio !== 0 ? -tr[1] / this.ratio : 0;
     this.ratio = this.height !== 0 ? r / this.height : 0;
 
-    // HERE NOT CALL TO ZOOMED FUNCTION! WHY?!
-    //this.zoom.scaleTo(this.focus, z);
-    //this.zoom.translateTo(this.focus, tr);
     this.zoom.scale(z);
     this.zoom.translate(tr);
 
@@ -486,10 +464,7 @@ class MatrixVisualization {
     this.elem.node().appendChild(this.canvas);
     this.view = d3.select(this.canvas);
     this.zoom = d3.behavior.zoom();
-    //.scaleExtent([0.2, 4])
-    //.on('zoom', this.zoomed);
     this.view.call(this.zoom);//.on('zoom', this.zoomed));
-    //this.zoom.on('zoom', this.zoomed);
     this.initGeometry();
     this.cellSize = this.matrix.cellSize;
 
@@ -516,38 +491,6 @@ class MatrixVisualization {
     this.webgl.canvas.addEventListener('mouseup', this.mouseUpHandler);
     this.webgl.canvas.addEventListener('click', this.clickHandler);
 
-
-    // this.scene = new THREE.Scene();
-    // // camera
-    // // this.camera = new THREE.OrthographicCamera(
-    // //   this.width / -2,
-    // //   this.width / 2,
-    // //   this.height/ 2,
-    // //   this.height / -2,
-    // //   0, 1000)
-    // // this.scene.add(this.camera);
-    // this.camera.position.x = this.width / 2;
-    // this.camera.position.y = -this.height / 2;
-    // this.camera.position.z = 100;
-
-    // // renderer
-    // this.renderer = new THREE.WebGLRenderer({ antialias: true })
-    // this.renderer.setSize(this.width, this.height);
-    // this.renderer.setClearColor(0xffffff, 1);
-
-    // this.initTextureFramebuffer();
-
-    // // position canvas element containing cells
-    // this.canvas = this.renderer.domElement;
-
-    // // set canvas listeners
-    // this.canvas.addEventListener('mousemove', this.mouseMoveHandler);
-    // this.canvas.addEventListener('mousedown', this.mouseDownHandler);
-    // this.canvas.addEventListener('mouseup', this.mouseUpHandler);
-    // this.canvas.addEventListener('click', this.clickHandler);
-
-    // // init glutils renderer for D3 wrapper
-    // glutils.setWebGL(this.scene, this.camera, this.renderer, this.canvas);
   }
 
   initTextureFramebuffer() {
@@ -590,7 +533,6 @@ class MatrixVisualization {
     let begin = d.getTime();
     this.renderer.render(this.scene, this.camera);
     d = new Date();
-    // console.log('>>>> RENDERED ', (d.getTime() - begin), ' ms.');
   }
 
   updateData(data: { [id: number]: { [id: number]: dynamicgraph.NodePair } },
@@ -607,10 +549,6 @@ class MatrixVisualization {
     this.offset = offset;
     this.cellSize = cellSize;
 
-
-    /* VERRR */
-    //this.zoom.scaleTo(this.view, scale); // here call to zoomed function
-    //this.zoom.translateTo(this.view, tr); // here call to zoomed function again
 
     this.zoom.scale(scale);
     this.zoom.translate(tr);
@@ -659,34 +597,10 @@ class MatrixVisualization {
       let smallDim = Math.min(this.height, this.width);
 
       this.resizeCanvas(smallDim, smallDim);
-      //
-      // this.renderer.render(this.scene, this.camera, this.bufferTexture);
-      // // Read the contents of the framebuffer
-      //
-      // console.log(this.bufferTexture);
-      // // this.bufferTexture.__webglTexture.flipY = false;
-      //
-      // var dat = new Uint8Array(this.bufferTexture.width * this.bufferTexture.height * 4);
-      //
-      //
-      // this.renderer.readRenderTargetPixels(this.bufferTexture, 0, 0, this.bufferTexture.width, this.bufferTexture.height, dat);
-      //
-      // // Create a 2D canvas to store the result
-      // var canvas = document.createElement('canvas');
-      // canvas.width = this.bufferTexture.width;
-      // canvas.height = this.bufferTexture.height;
-      // var context = canvas.getContext('2d');
-      //
-      // // Copy the pixels to a 2D canvas
-      // var imageData = context.createImageData(this.bufferTexture.width, this.bufferTexture.height);
-      // imageData.data.set(dat);
-      // context.putImageData(imageData, 0, 0, 0, 0, canvas.width, canvas.height);
-
 
       this.matrix.hideCellLabel();
       this.render();
 
-      // let imgData = this.canvas.toDataURL();
       let imgData = this.canvas.toDataURL();
       this.matrix.updateOverviewImage(imgData);
 
@@ -744,10 +658,6 @@ class MatrixVisualization {
       if (!this.linksPos[row]) this.linksPos[row] = {};
       if (!this.linksPos[row][col]) this.linksPos[row][col] = [];
       this.linksPos[row][col].push(e.id());
-
-      //x = this.cellSize/2 + row * this.cellSize - this.cellSize / 2 + seg * j + seg / 2;
-      //y = this.cellSize/2 + col * this.cellSize;
-      //this.paintCell(e.id(), x, y, seg, [color.r, color.g, color.b, alpha], meanWeight>0);
     }
 
   }
@@ -788,7 +698,6 @@ class MatrixVisualization {
     this.guideLines = [];
 
     if (!this.data) return;
-    // console.log("update guidelines")
 
     let w = this.ncols * this.cellSize;
     let h = this.nrows * this.cellSize;
@@ -915,15 +824,13 @@ class MatrixVisualization {
       }
     this.hoveredLinks = [];
   }
+  
   clickHandler(e: Event) {
     console.log("click");
   }
+
   private zoomed = () => {
     let z: number, tr: number[] = [];
-    //var transform: any = d3.zoomTransform(this.view.node());
-    //z = transform.k;
-    //tr[0] = transform.x;
-    //tr[1] = transform.y;
     z = this.zoom.scale();
     tr = this.zoom.translate();
     this.updateTransform(z, tr);
@@ -932,15 +839,11 @@ class MatrixVisualization {
   updateTransform(z: any, tr: any) {
     tr[0] = Math.min(0, tr[0]);
     tr[1] = Math.min(0, tr[1]);
-    // var transform: any = d3.zoomTransform(this.view.node());
-    //z = transform.k;
     this.zoom.scale(z);
     this.zoom.translate(tr);
     this.matrix.updateTransform(z, tr);
   }
 }
-
-
 
 class Matrix {
 
@@ -1007,7 +910,6 @@ class Matrix {
   }
   setVis(matrixVis: MatrixVisualization) {
     this.visualization = matrixVis;
-    // this.overview.setCanvasRatio(this.visualization.width/this.visualization.height);
     this.resetTransform();
   }
   setLabels(matrixLabels: MatrixLabels) {
@@ -1114,19 +1016,6 @@ class Matrix {
 
 
   longestLabelLength() {
-    // let longestLabelNode;
-    // if(this.dgraph){
-    //   longestLabelNode = this.dgraph.nodes().toArray().reduce(
-    //     function(p, v, i, arr) {
-    //       if (p == null || p.label() == null ||
-    //         (v.label() && v.label().length > p.label().length))
-    //         return v;
-    //       else
-    //         return p;
-    //     });
-    // }
-    // this.labelLength = longestLabelNode ? longestLabelNode.label().length+8 : 8;
-    // this.labelLength = Math.min(this.labelLength, 30);
     this.labelLength = 30;
   }
   calculatePlotMargin() {
@@ -1277,11 +1166,7 @@ class Matrix {
           for (let link of node.links().toArray()) {
             let neighbor = link.source.id() == node.id() ? link.target : link.source;
             if (neighbor.isVisible())
-              // &&
-              //this.nodeOrder[neighbor.id()] >= this.bbox.x0 &&
-              //  this.nodeOrder[neighbor.id()] <= this.bbox.x1){
               highlightedLinksIds.push(link.id());
-            //}
           }
         }
       }
@@ -1314,9 +1199,6 @@ class Matrix {
         break;
       }
     }
-    // this.startTime = this._dgraph.time(m.startId);
-    // this.endTime = this._dgraph.time(m.endId);
-    // this.timeSlider.set(this.startTime, this.endTime);
     if (this.timeSlider)
       this.timeSlider.set(m.startUnix, m.endUnix);
 
