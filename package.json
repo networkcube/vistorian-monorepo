@@ -1,6 +1,6 @@
 {
-    "name": "vistorian-dynamicego-test",
-    "version": "0.0.3-alpha",
+    "name": "vistorian-dynamicego",
+    "version": "0.0.1-alpha",
     "description": "Vistorian-dynamicego is a java script / (Typescript) library and a programming framework for interactive network visualizations with:",
     "main": "lib/index.js",
     "types": "lib/index.d.js",
@@ -38,8 +38,8 @@
         "jquery",
         "jstorage",
         "moment",
-        "vistorian-core-test",
-        "vistorian-vis-test"
+        "vistorian-core",
+        "vistorian-vis"
     ],
     "dependencies": {
         "@types/three": "^0.93.27",
@@ -50,8 +50,8 @@
         "three": "^0.100.0",
         "jstorage": "^0.4.8",
         "lz-string": "^1.4.4",
-        "vistorian-core-test": "0.0.20-alpha",
-        "vistorian-vis-test": "0.0.8-alpha",
-        "vistorian-widgets-test": "0.0.6-alpha"
+        "vistorian-core": "latest",
+        "vistorian-vis": "latest",
+        "vistorian-widgets": "latest"
     }
 }

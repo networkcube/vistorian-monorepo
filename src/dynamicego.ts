@@ -1,16 +1,16 @@
 /// <reference path="./lib/d3.d.ts"/>
 
-import * as dynamicgraph from 'vistorian-core-test/src/dynamicgraph';
-import * as messenger from 'vistorian-core-test/src/messenger';
-import * as main from 'vistorian-core-test/src/main';
-import * as utils from 'vistorian-core-test/src/utils';
-import * as ordering from 'vistorian-core-test/src/ordering';
+import * as dynamicgraph from 'vistorian-core/src/dynamicgraph';
+import * as messenger from 'vistorian-core/src/messenger';
+import * as main from 'vistorian-core/src/main';
+import * as utils from 'vistorian-core/src/utils';
+import * as ordering from 'vistorian-core/src/ordering';
 
 import * as THREE from 'three';
 
-import * as glutils from 'vistorian-widgets-test/src/glutils';
-import * as tline from 'vistorian-widgets-test/src/timeline';
-import * as timeslider from 'vistorian-widgets-test/src/timeslider';
+import * as glutils from 'vistorian-widgets/src/glutils';
+import * as tline from 'vistorian-widgets/src/timeline';
+import * as timeslider from 'vistorian-widgets/src/timeslider';
 
 // DATA
 var dgraph: dynamicgraph.DynamicGraph = main.getDynamicGraph();
