@@ -3,4 +3,4 @@
 debug/*
 node_modules
 build
-lib
+/lib
