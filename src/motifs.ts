@@ -1,4 +1,4 @@
-import swiftSet from 'swiftset';
+// import swiftSet from 'swiftset';
 import { Motif, MotifTemplate } from './queries'
 import { DynamicGraph, Link, Node } from './dynamicgraph'
 import netClustering from 'netclustering'
@@ -68,6 +68,7 @@ export function findClusters(nodes: Node[], config?: Object) {
     return motifs;
 }
 
+/*
 export function findCliques(nodes: Node[], config?: any) {
     var cliques = [];
     // var p=[];
@@ -105,6 +106,7 @@ export function findCliques(nodes: Node[], config?: any) {
 
     return motifs;
 };
+*/
 
 function bronKerbosch(nodes: Node[], r: any[], p: any[], x: any[], cliques: any[], config: Object) {
 
@@ -128,6 +130,7 @@ function bronKerbosch(nodes: Node[], r: any[], p: any[], x: any[], cliques: any[
     });
 }
 
+/*
 function bronKerboschIterative(nodes: Node[], config: Object): any[] {
     var cliques: any[] = []
 
@@ -200,6 +203,7 @@ function bronKerboschIterative(nodes: Node[], config: Object): any[] {
 
     return cliques;
 }
+*/
 
 export function findFullEgoNetwork(nodes: Node[], config?: Object): Motif[] {
     var motifs: Motif[] = [];
@@ -225,6 +229,7 @@ export function findFullEgoNetwork(nodes: Node[], config?: Object): Motif[] {
     return motifs;
 }
 
+/*
 export function findStars(nodes: Node[], config?: any) {
     if (!config)
         var config: any = {}
@@ -271,7 +276,9 @@ export function findStars(nodes: Node[], config?: any) {
     }
     return motifs;
 }
+*/
 
+/*
 // returns triangles
 export function findTriangles(nodes: Node[], config?: any): Motif[] {
 
@@ -330,7 +337,7 @@ export function findTriangles(nodes: Node[], config?: any): Motif[] {
 
     return motifs;
 }
-
+*/
 
 
 
