@@ -8,7 +8,8 @@
         "build": "tsc --pretty false && webpack --config webpack.config.js",
         "lint": "tslint -p . -e 'package.json'",
         "clean": "rimraf lib",
-        "start": "webpack-dev-server --config webpack.config.js --open"
+        "start": "webpack-dev-server --config webpack.config.js --open",
+        "prepare": "npm run build"
     },
     "author": "Benjamin Bach <benj.bach@gmail.com>",
     "license": "MIT",
@@ -33,15 +34,24 @@
         "Alexandra Ibarra Cuesta"
     ],
     "homepage": "https://github.com/networkcube/networkcube#readme",
+    "bundledDependencies": [
+        "jquery",
+        "jstorage",
+        "moment",
+        "vistorian-core",
+        "vistorian-vis"
+    ],
     "dependencies": {
         "@types/three": "^0.93.27",
+        "@types/lz-string": "^1.3.33",
         "circular-dependency-plugin": "^5.0.2",
         "jquery": "^3.3.1",
         "moment": "^2.23.0",
         "three": "^0.100.0",
         "jstorage": "^0.4.8",
-        "vistorian-core": "file:../vistorian-core",
-        "vistorian-widgets": "file:../vistorian-widgets",
-        "vistorian-vis": "file:../vistorian-vis"
+        "lz-string": "^1.4.4",
+        "vistorian-core": "latest",
+        "vistorian-vis": "latest",
+        "vistorian-widgets": "latest"
     }
 }

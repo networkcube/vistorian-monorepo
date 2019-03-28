@@ -1,5 +1,5 @@
 /// <reference path="lib/google.maps.d.ts" />
-/// <reference path="../../vistorian-core/src/lib/d3.d.ts"/>
+/// <reference path="./lib/d3.d.ts"/>
 
 import * as dynamicgraph from 'vistorian-core/src/dynamicgraph';
 import * as utils from 'vistorian-core/src/utils';
