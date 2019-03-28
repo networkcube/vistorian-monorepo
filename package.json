@@ -31,20 +31,33 @@
         "Alexandra Ibarra Cuesta"
     ],
     "homepage": "https://github.com/networkcube/networkcube#readme",
+    "bundledDependencies": [
+        "jquery",
+        "jstorage",
+        "vistorian-vis",
+        "vistorian-core",
+        "vistorian-nodelink",
+        "vistorian-bookmarkbrowser",
+        "vistorian-dynamicego",
+        "vistorian-map",
+        "vistorian-matrix"
+    ],
     "dependencies": {
+        "@types/lz-string": "^1.3.33",
         "circular-dependency-plugin": "^5.0.2",
         "html-loader": "^0.5.5",
         "jquery": "^3.3.1",
         "jstorage": "^0.4.8",
+        "lz-string": "^1.4.4",
         "moment": "^2.23.0",
         "papaparse": "^4.6.3",
-        "vistorian-bookmarkbrowser": "file:../vistorian-bookmarkbrowser",
-        "vistorian-core": "file:../vistorian-core",
-        "vistorian-dynamicego": "file:../vistorian-dynamicego",
-        "vistorian-map": "file:../vistorian-map",
-        "vistorian-matrix": "file:../vistorian-matrix",
-        "vistorian-nodelink": "file:../vistorian-nodelink",
-        "vistorian-vis": "file:../vistorian-vis",
-        "vistorian-widgets": "file:../vistorian-widgets"
+        "vistorian-bookmarkbrowser": "latest",
+        "vistorian-core": "latest",
+        "vistorian-dynamicego": "latest",
+        "vistorian-map": "latest",
+        "vistorian-matrix": "latest",
+        "vistorian-nodelink": "latest",
+        "vistorian-vis": "latest",
+        "vistorian-widgets": "latest"
     }
 }
