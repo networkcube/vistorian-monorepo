@@ -1,4 +1,4 @@
-/// <reference path="../../vistorian-core/src/lib/d3.d.ts"/>
+/// <reference path="./lib/d3.d.ts"/>
 
 import * as THREE from 'three';
 
