@@ -996,8 +996,10 @@ export class DynamicGraph {
         // var allTimes = this.g.times().toArray();
         for (var i = 0; i < this.linkArrays.length; i++) {
             for (var j = 0; j < this.timeArrays.length; j++) {
-                if (this.linkArrays.weights[i].serie.hasOwnProperty(this.timeArrays.id[j].toString())) {
-                    this.timeArrays.links[j].push(this.linkArrays.id[i]);
+                if(this.linkArrays.weights[i]) {
+                    if (this.linkArrays.weights[i].serie.hasOwnProperty(this.timeArrays.id[j].toString())) {
+                        this.timeArrays.links[j].push(this.linkArrays.id[i]);
+                    }
                 }
             }
         }
@@ -3255,7 +3257,7 @@ export class Link extends BasicElement {
     /** Returns this link's weights over time as NumberQuery
     * If no time parameter is supplied, returns *all* weights of this
      * link over all time steps.  
-     * @param t1 - start time. If only this parameter is specified, returns 
+     * @param t1 - start time. If only this parameter is specified, returns
      * only the value for t1.
      * @param t2 - end time. If this parameter is specified, returns 
      * weights between t1 and t2.
