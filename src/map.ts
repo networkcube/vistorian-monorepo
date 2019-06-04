@@ -210,6 +210,16 @@ function init() {
         $('#weirdDiv').parent().parent().css('width', window.innerWidth * Math.random());
     });
 
+    var bcNode = new BroadcastChannel('row_hovered_over_node');
+    bcNode.onmessage = function (ev) {
+        updateNodes(ev.data.id);
+    };
+
+    var bcLink = new BroadcastChannel('row_hovered_over_link');
+    bcLink.onmessage = function (ev) {
+        updateLinks(ev.data.id);
+    };
+
     var lastPanUpdate: number = window.performance.now();
     map.addListener('center_changed', function (e: any) {
 
@@ -687,17 +697,23 @@ function updateGeoNodePositions() {
     }
 }
 
-function updateLinks() {
+function updateLinks(highlightId?: number) {
 
     visualLinks
         .transition().duration(100)
         .style('stroke', function (d: any) {
             var color = utils.getPriorityColor(d);
+            if(highlightId && highlightId == d._id){
+                return 'orange';
+            }
             if (!color)
                 color = COLOR_DEFAULT_LINK;
             return color;
         })
         .attr('opacity', (d: any) => {
+            if(highlightId && highlightId == d._id){
+                return 1;
+            }
             var visible = d.isVisible();
             if (!visible || !d.presentIn(time_start, time_end))
                 return 0;
@@ -726,7 +742,10 @@ function updateLinks() {
             } else {
                 thisSelection.attr('stroke-dasharray', '0') // BEFORE this ??
             }
-            if (d.isHighlighted())
+            if(highlightId && highlightId == d._id){
+                weight *=3;
+            }
+            else if(d.isHighlighted())
                 weight *= 2;
             return weight;
         })
@@ -734,7 +753,7 @@ function updateLinks() {
 }
 
 var visibleLabels: any[] = []
-function updateNodes() {
+function updateNodes(highlightId?: number) {
 
     visibleLabels = [];
 
@@ -757,6 +776,9 @@ function updateNodes() {
             var color: any;
             if (d.node.isHighlighted()) {
                 color = COLOR_HIGHLIGHT;
+            }
+            else if(highlightId && highlightId == d.node._id){
+                    return 'orange';
             } else {
                 color = utils.getPriorityColor(d.node);
             }
@@ -765,6 +787,9 @@ function updateNodes() {
             return color;
         })
         .style('opacity', (d: any) => {
+            if(highlightId && highlightId == d.node._id){
+                return 1;
+            }
             if (!d.node.isVisible())
                 return 0;
             return d.timeIds[0] <= time_end.id() && d.timeIds[d.timeIds.length - 1] >= time_start.id() ?
