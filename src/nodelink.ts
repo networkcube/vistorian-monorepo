@@ -49,12 +49,17 @@ var nodePairs: dynamicgraph.NodePairQuery = dgraph.nodePairs();
 var links: any = dgraph.links().toArray();
 var nodeLength: number = nodes.length;
 
-//When a row is hovered over in dataview.ts, a message is received here to highlight the corresponding link.
-var bc = new BroadcastChannel('row_hovered_over');
-bc.onmessage = function (ev) {
+//When a link row is hovered over in dataview.ts, a message is received here to highlight the corresponding link.
+var bcLink = new BroadcastChannel('row_hovered_over_link');
+bcLink.onmessage = function (ev) {
     updateLinks(ev.data.id)
 };
 
+//When a node row is hovered over in dataview.ts, a message is received here to highlight the corresponding link.
+var bcNode = new BroadcastChannel('row_hovered_over_node');
+bcNode.onmessage = function (ev) {
+    updateNodes(ev.data.id)
+};
 
 // states
 // var mouseDownNode = undefined;
@@ -477,11 +482,14 @@ function updateNodeSize() {
         .attr('r', (n: any) => getNodeRadius(n))
 }
 
-function updateNodes() {
+function updateNodes(highlightId?: number) {
     visualNodes
         .style('fill', (d: any) => {
             var color: string | undefined;
-            if (d.isHighlighted()) {
+            if(highlightId && highlightId == d._id){
+                color = COLOR_HIGHLIGHT;
+            }
+            else if(d.isHighlighted()){
                 color = COLOR_HIGHLIGHT;
             } else {
                 color = utils.getPriorityColor(d);
