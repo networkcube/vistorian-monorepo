@@ -12,7 +12,7 @@ var COLOR_DEFAULT_LINK: string = '#999999';
 var COLOR_DEFAULT_NODE: string = '#333333';
 var COLOR_HIGHLIGHT: string = '#ff8800';
 var LINK_OPACITY: number = .5;
-var LINK_WIDTH: number = 10;
+var LINK_WIDTH: number = 1;
 var OFFSET_LABEL = { x: 5, y: 4 }
 var LINK_GAP: number = 2;
 var LAYOUT_TIMEOUT: number = 3000;
@@ -41,12 +41,15 @@ var dgraph: dynamicgraph.DynamicGraph = main.getDynamicGraph();
 var times: dynamicgraph.Time[] = dgraph.times().toArray();
 var time_start: dynamicgraph.Time = times[0];
 var time_end: dynamicgraph.Time = times[times.length - 1];
+var directed = dgraph.directed;
 
 var nodes: any = dgraph.nodes().toArray();
 var nodesOrderedByDegree: dynamicgraph.Node[] = dgraph.nodes().toArray().sort((n1: any, n2: any) => n2.neighbors().length - n1.neighbors().length);
 
 var nodePairs: dynamicgraph.NodePairQuery = dgraph.nodePairs();
 var links: any = dgraph.links().toArray();
+var linkArrays = dgraph.linkArrays;
+links = addDirectionToLinks(links, linkArrays);
 var nodeLength: number = nodes.length;
 
 //When a link row is hovered over in dataview.ts, a message is received here to highlight the corresponding link.
@@ -118,6 +121,21 @@ function makeDropdown(d3parent: any, name: string, values: String[], callback: F
     })
 }
 
+function addDirectionToLinks(links: any, linkArrays: any) {
+    for(var i=0 ; i <links.length ; i++){
+        var directionValue = linkArrays.directed[i];
+
+        if (["yes","true"].indexOf(directionValue) > -1 || directed){
+            links[i].directed = true;
+        }
+        //else if(["no","false"].indexOf(directionValue) > -1) {links[i].directed = false;}
+        else{
+            links[i].directed = false;
+        }
+    }
+    return links;
+}
+
 // TIMELINE
 var timeSvg: any = d3.select('#timelineDiv')
     .append('svg')
@@ -134,6 +152,7 @@ if (dgraph.times().size() > 1) {
 
 $('#visDiv').append('<svg id="visSvg" width="' + (width - 20) + '" height="' + (height - 20) + '"></svg>');
 
+console.log(dgraph);
 var mouseStart: number[];
 var panOffsetLocal: number[] = [0, 0];
 var panOffsetGlobal: number[] = [0, 0];
@@ -197,6 +216,23 @@ var lineFunction: any = d3.svg.line() // only line() d3 v4
     .x(function (d: any) { return d.x; })
     .y(function (d: any) { return d.y; })
     .interpolate("basis")// d3 v4 is .curve(d3.curveLinear);
+
+function marker(color: any) {
+
+    svg.append("svg:defs").append("svg:marker")
+        .attr("id", color.replace("#", ""))
+        .attr("viewBox", "0 -5 10 10")
+        .attr("refX", 12)
+        .attr("refY", 0)
+        .attr("markerWidth", 6)
+        .attr("markerHeight", 6)
+        .attr("orient", "auto") //auto-start-reverse to flip
+        .append("svg:path")
+        .attr("d", "M0,-5L10,0L0,5")
+        .style("fill", color);
+
+    return "url(" + color + ")";
+};
 
 for (var i = 0; i < nodes.length; i++) {
     (nodes as any)[i]['width'] = getNodeRadius(nodes[i]) * 2;
@@ -537,6 +573,17 @@ function updateNodes(highlightId?: number) {
 //Optional parameter highlightId used to highlight specific link on receiving hoverover message.
 function updateLinks(highlightId?: number){
     visualLinks
+        .attr('marker-end',function (d: any) {
+            if(d.directed){
+                var color = utils.getPriorityColor(d);
+                if(!color)
+                    color = COLOR_DEFAULT_LINK;
+                if(highlightId && highlightId == d._id) {
+                    return 'black';
+                }
+                return marker(color);
+            }
+        })
         .style('stroke', function (d: any) {
             var color = utils.getPriorityColor(d);
             if (!color)
@@ -579,8 +626,8 @@ function calculateCurvedLinks() {
             if (multiLink.links().length < 2) {
                 (multiLink.links().toArray() as any)[0]['path'] = [
                     { x: (multiLink.source as any).x, y: (multiLink.source as any).y },
-                    { x: (multiLink.source as any).x, y: (multiLink.source as any).y },
-                    { x: (multiLink.target as any).x, y: (multiLink.target as any).y },
+                    // { x: (multiLink.source as any).x, y: (multiLink.source as any).y },
+                    // { x: (multiLink.target as any).x, y: (multiLink.target as any).y },
                     { x: (multiLink.target as any).x, y: (multiLink.target as any).y }]
             } else {
                 links = multiLink.links().toArray();
@@ -609,17 +656,19 @@ function calculateCurvedLinks() {
 
                     // calculate paths
                     for (var j = 0; j < links.length; j++) {
-                        (links[j] as any)['path'] = [
-                            { x: (multiLink.source as any).x, y: (multiLink.source as any).y },
-                            {
-                                x: (multiLink.source as any).x + offset2[0] + (j - links.length / 2 + .5) * offset[0],
-                                y: ((multiLink.source as any).y + offset2[1] + (j - links.length / 2 + .5) * offset[1])
-                            },
-                            {
-                                x: (multiLink.target as any).x - offset2[0] + (j - links.length / 2 + .5) * offset[0],
-                                y: ((multiLink.target as any).y - offset2[1] + (j - links.length / 2 + .5) * offset[1])
-                            },
-                            { x: (multiLink.target as any).x, y: (multiLink.target as any).y }]
+                        if (links[j] as any) {
+                            (links[j] as any)['path'] = [
+                                {x: (multiLink.source as any).x, y: (multiLink.source as any).y},
+                                {
+                                    x: (multiLink.source as any).x + offset2[0] + (j - links.length / 2 + .5) * offset[0],
+                                    y: ((multiLink.source as any).y + offset2[1] + (j - links.length / 2 + .5) * offset[1])
+                                },
+                                {
+                                    x: (multiLink.target as any).x - offset2[0] + (j - links.length / 2 + .5) * offset[0],
+                                    y: ((multiLink.target as any).y - offset2[1] + (j - links.length / 2 + .5) * offset[1])
+                                },
+                                {x: (multiLink.target as any).x, y: (multiLink.target as any).y}]
+                        }
                     }
 
                 }
