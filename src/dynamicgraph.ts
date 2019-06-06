@@ -49,6 +49,7 @@ export class DynamicGraph {
 
     _nodes: Node[] = [];
     _links: Link[] = [];
+    directed: boolean = false;
     _nodePairs: NodePair[] = [];
     _locations: Location[] = [];
     // Contains all time objects for this dynamic graph
@@ -121,6 +122,8 @@ export class DynamicGraph {
     //
     gran_min_NAME: string = "gran_min";
     gran_max_NAME: string = "gran_max_NAME";
+
+    directed_NAME: string = "directed_NAME";
 
     minWeight_NAME: string = "minWeight_NAME";
     maxWeight_NAME: string = "maxWeight_NAME";
@@ -256,6 +259,10 @@ export class DynamicGraph {
         if (gran_max_storage != undefined)
             this.gran_max = gran_max_storage;
 
+        var directed_storage = dataMgr.getFromStorage<boolean>(this.name, this.directed_NAME);
+        if (directed_storage != undefined)
+            this.directed = directed_storage;
+
         var minWeight_storage = dataMgr.getFromStorage<number>(this.name, this.minWeight_NAME);
         if (minWeight_storage != undefined)
             this.minWeight = minWeight_storage;
@@ -354,6 +361,7 @@ export class DynamicGraph {
         // CACHEGRAPH : persist the entire state of the dynamic graph
         dataMgr.saveToStorage(this.name, this.gran_min_NAME, this.gran_min);
         dataMgr.saveToStorage(this.name, this.gran_max_NAME, this.gran_max);
+        dataMgr.saveToStorage(this.name, this.directed_NAME, this.directed);
         dataMgr.saveToStorage(this.name, this.minWeight_NAME, this.minWeight);
         dataMgr.saveToStorage(this.name, this.maxWeight_NAME, this.maxWeight);
 
@@ -383,6 +391,7 @@ export class DynamicGraph {
     delete(dataMgr: DataManager) {
         dataMgr.removeFromStorage(this.name, this.gran_min_NAME);
         dataMgr.removeFromStorage(this.name, this.gran_max_NAME);
+        dataMgr.removeFromStorage(this.name, this.directed_NAME);
         dataMgr.removeFromStorage(this.name, this.minWeight_NAME);
         dataMgr.removeFromStorage(this.name, this.maxWeight_NAME);
 
@@ -423,6 +432,11 @@ export class DynamicGraph {
         }
         if (this.gran_max != other.gran_max) {
             console.log("gran_max different", this.gran_max, other.gran_max);
+            result = false;
+        }
+
+        if (this.directed != other.directed) {
+            console.log("directed different", this.directed, other.directed);
             result = false;
         }
 
@@ -540,6 +554,7 @@ export class DynamicGraph {
 
         //this.data = data;s
         this.name = data.name;
+        this.directed = data.directed;
 
         // fill node, link arrays and time
 
@@ -955,22 +970,23 @@ export class DynamicGraph {
                 this.linkArrays.nodePair[linkId] = nodePairId;
             }
 
-            if (this.linkArrays.directed[i]) {
-                nodePairId = this.matrix[t][s];
-                if (!nodePairId) {
-                    nodePairId = this.nodePairArrays.id.length;
-                    this.matrix[t][s] = nodePairId;
-                    this.nodePairArrays.id.push(nodePairId);
-                    this.nodePairArrays.source.push(t);
-                    this.nodePairArrays.target.push(s);
-                    this.nodePairArrays.links.push(doubleArray(this._times.length));
-                }
-                // add link only, if not already exist
-                if (this.nodePairArrays.links[nodePairId].indexOf(linkId) == -1) {
-                    this.nodePairArrays.links[nodePairId].push(linkId);
-                    this.linkArrays.nodePair[linkId] = nodePairId;
-                }
-            }
+            //May affect matrix view, but breaks nodelink directionality
+            // if (this.linkArrays.directed[i]) {
+            //     nodePairId = this.matrix[t][s];
+            //     if (!nodePairId) {
+            //         nodePairId = this.nodePairArrays.id.length;
+            //         this.matrix[t][s] = nodePairId;
+            //         this.nodePairArrays.id.push(nodePairId);
+            //         this.nodePairArrays.source.push(t);
+            //         this.nodePairArrays.target.push(s);
+            //         this.nodePairArrays.links.push(doubleArray(this._times.length));
+            //     }
+            //     // add link only, if not already exist
+            //     if (this.nodePairArrays.links[nodePairId].indexOf(linkId) == -1) {
+            //         this.nodePairArrays.links[nodePairId].push(linkId);
+            //         this.linkArrays.nodePair[linkId] = nodePairId;
+            //     }
+            // }
 
             // gather link types
             if (isValidIndex(data.linkSchema.linkType)) {
@@ -3617,7 +3633,13 @@ export class DataManager {
             // we try to detect whether the string was compressed or not. Given that it is 
             // JSON, we would expect it to begin with either a quote, a bracket, or a curly-brace
             var parseText;
-            if ("\"'[{0123456789".indexOf(storedResult[0]) >= 0)
+            if(storedResult == "true"){
+                parseText = true;
+            }
+            else if(storedResult == "false"){
+                parseText = false;
+            }
+            else if ("\"'[{0123456789".indexOf(storedResult[0]) >= 0)
                 parseText = storedResult;
             else
                 parseText = LZString.decompress(storedResult);

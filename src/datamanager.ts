@@ -42,12 +42,14 @@ export class DataSet {
     selections: Selection[] = [] //predefined selections (not link type)
 
     timeFormat: string = ''; // INIT?????????????
+    directed: boolean;
 
     // constructor(name:string, nodeTable:any[], linkTable:any[], nodeSchema:NodeSchema, linkSchema:LinkSchema, locationTable?:any, locationSchema?:LocationSchema){
     constructor(params: any) { // before without any
         this.name = params.name;
         this.nodeTable = params.nodeTable;
         this.linkTable = params.linkTable;
+        this.directed = params.directed;
 
         if (params.nodeSchema == undefined)
             this.nodeSchema = getDefaultNodeSchema();
