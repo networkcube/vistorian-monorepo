@@ -52,7 +52,7 @@ export function createSelectionCategory(name: string, type: string) {
 export function createSelection(type: string) {
 
 	var b: datamanager.Selection = dgraph.createSelection(type) // IS IT OK?? (dgraph)
-	var timer: number = setTimeout((e: any) => {
+	var timer: number = window.setTimeout((e: any) => {
 		messenger.setCurrentSelection(b);
 		updateLists();
 	}, 500);
