@@ -5,7 +5,7 @@
     "private": false,
     "types": "lib/index.d.ts",
     "scripts": {
-        "build": "tsc --pretty false && rollup -c",
+        "build": "tsc --pretty false && rollup -c && typedoc",
         "lint": "tslint -p . -e 'package.json'",
         "clean": "rimraf lib",
         "prepare": "npm run build"
@@ -14,7 +14,7 @@
     "license": "MIT",
     "devDependencies": {
         "@types/jquery": "^1.10.35",
-        "@types/lz-string": "^1.3.32",
+        "@types/lz-string": "^1.3.33",
         "@types/papaparse": "^4.5.7",
         "rimraf": "^2.6.3",
         "rollup": "^1.1.2",
@@ -39,6 +39,7 @@
         "moment"
     ],
     "dependencies": {
+        "acorn": "^6.1.1",
         "exorcist": "^1.0.1",
         "jquery": "^3.3.1",
         "lz-string": "^1.3.32",
