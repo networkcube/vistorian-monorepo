@@ -64,66 +64,16 @@
 	<div class="row">
 		<div class="col-8 col-content">
 			<div class="tsd-panel tsd-typography">
-				<h1 id="networkcube">Networkcube</h1>
-				<p>Networkcube is a java script / (Typescript) library and a programming framework for interactive network visualizations with:</p>
+				<h1 id="vistorian-core">Vistorian-core</h1>
+				<p>This repository contains the core logic behind networkcube.</p>
+				<p>Vistorian-core is a dependency for other components but isn&#39;t run directly.</p>
+				<p>The latest stable version can be installed into an npm project with <code>npm install vistorian-core</code>.</p>
+				<p>Alternatively, for development:</p>
 				<ul>
-					<li>different link types</li>
-					<li>multiple links between nodes</li>
-					<li>link weights</li>
-					<li>temporal information on links (weigth, existence)</li>
-					<li>geographical positions attached to nodes</li>
+					<li><code>git clone https://github.com/networkcube/vistorian-core</code></li>
+					<li><code>cd vistorian-core</code></li>
+					<li><code>npm install</code></li>
 				</ul>
-				<p>Networkcube is currently has been build with two goals in mind: </p>
-				<ul>
-					<li>Ready-to-use visualizations that can be embedded in any web environment, e.g. to provide state-of-the-art visualizations to a specific group of stateholders or in a specific domain. </li>
-					<li>Rapidly prototype, deploy, and mature novel network visualizations. </li>
-					<li>Browser-based: networkcube runs entirely in the browser and does not use any server. None of your data is transmitted over the network nor stored on any server.</li>
-				</ul>
-				<p>Networkcube is designed for research and is currently in a prorotype phase. However, the code is open and contributions are welcome. Please read the <a href="Home">Wiki</a> for more information or contact us: <a href="mailto:benj.bach@gmail.com">benj.bach@gmail.com</a>.</p>
-				<p>Each visualization in networkcube is its individual model and runs in an iFrame. Visualizations are hosted here on github and can be integrated in any website. So, the only thing your website has to care is importing a user&#39;s data into the browser (<a href="https://github.com/networkcube/networkcube/wiki/Importing-Data)">https://github.com/networkcube/networkcube/wiki/Importing-Data)</a>.</p>
-				<h2 id="demos-and-example-projects">Demos and Example Projects</h2>
-				<p>Networkcube has been used in the following projects:</p>
-				<ul>
-					<li>Vistorian (<a href="http://vistorian.net)">http://vistorian.net)</a>: A visualization platform for the social network visualization.</li>
-					<li>ConnectoScope: A visualization platform for brain connectivity in neuroscience</li>
-				</ul>
-				<p>A ready-to-use version can be found on <a href="http://networkcube.net">http://networkcube.net</a>.</p>
-				<h2 id="using-networkcube-in-your-projects">Using Networkcube in your projects</h2>
-				<ul>
-					<li><p>Include the following link into your website: <a href="https://networkcube.github.io/networkcube/core/networkcube.js">https://networkcube.github.io/networkcube/core/networkcube.js</a></p>
-					</li>
-					<li><p>Learn how to import data (<a href="https://github.com/networkcube/networkcube/wiki/Importing-Data">https://github.com/networkcube/networkcube/wiki/Importing-Data</a>) and how to use the network API (<a href="https://github.com/networkcube/networkcube/wiki/Query-API">https://github.com/networkcube/networkcube/wiki/Query-API</a>)</p>
-					</li>
-				</ul>
-				<h2 id="components">Components</h2>
-				<p>The Networkcube framework conists of the following components and features: </p>
-				<ul>
-					<li>Methods for <strong>loading network data</strong> from various formats, e.g. csv, json, GEDCOM, etc.</li>
-					<li>Importing data into the <strong>local storage</strong> of your browser. Data is not uploaded onto any server, unless you provide the
-					server and program the backend. Technically, this is possible. Eventually this means that once you the visualization(s) with your data show up on your screen, no internet connection is necessary anymore. Data and events are handled completely locally on your machine.</li>
-					<li>an <strong>API to query the network</strong> you stored in the local storage, such as link weights for a certain period, a node&#39;s neighbors, links of a certain type. etc.</li>
-					<li>an initial <strong>set of common state-of-the-art network visualizations</strong> including Node-Link diagrams, Adjacency Matrices, Dynamic Ego network visualization, and a geographical Map.
-						Visualizations are referenced via a URL and can hence sit anywhere in the internet. Once the visualization code is loaded
-					all it needs to do is to query the data from the local storage.</li>
-					<li>A <strong>messenger to send events between all the visualizations</strong> in your browser: be they in windows, tabs, or iFrames. Messages pass simple interaction events such as node selection or changes to a time slider for temporal navigation.</li>
-				</ul>
-				<h2 id="technical-specifications">Technical Specifications</h2>
-				<ul>
-					<li>Networkcube is written in TypeScript (<a href="https://www.typescriptlang.org)">https://www.typescriptlang.org)</a>, a typed language that compiles into
-					JavaScript.  </li>
-					<li>Data is stored in the browser&#39;s local storage, which currently is limited to 5MB. For projects on using larger networks, contact us.</li>
-					<li>Networkcube and the visualizations are optimized for Google Chrome. They have <em>not</em> been tested on other browsers. (Feel free to do so and let us know what happens).</li>
-					<li>Visualizations are generally written in WebGL using the THREE.js library (<a href="http://threejs.org)">http://threejs.org)</a>. Certain parts of the visualizations are implemented in D3.</li>
-				</ul>
-				<h2 id="run-your-own-networkcube-instance-for-development">Run your own networkcube instance for development</h2>
-				<ol>
-					<li>Clone this git</li>
-					<li>Place it on a http server.</li>
-					<li><p>Navigate to <code>&lt;your_serverpath&gt;/networkcube/web/index.html</code>* to run the local demo and test if all is working fine.</p>
-					</li>
-					<li><p>On my machine this looks like <code>http://localhost/~bbach/networkcube/web</code> </p>
-					</li>
-				</ol>
 			</div>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
