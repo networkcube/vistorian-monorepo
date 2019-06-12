@@ -179,7 +179,7 @@ var svg: any = d3.select('#visSvg')
         panOffsetGlobal[1] += panOffsetLocal[1]
     })
     .on('wheel', () => {
-        // zoom 
+        // zoom
         // <Event>
         (<any>d3.event).preventDefault();
         (<any>d3.event).stopPropagation();
@@ -281,7 +281,7 @@ layout = d3.forceSimulation()
     })
 */
 
-// show layout-message    
+// show layout-message
 showMessage('Calculating<br/>layout');
 
 init();
@@ -311,7 +311,7 @@ function init() {
         })
 
 
-    // node labels 
+    // node labels
 
     nodeLabelOutlines = labelLayer.selectAll('.nodeLabelOutlines')
         .data(nodes)
@@ -659,14 +659,16 @@ function calculateCurvedLinks() {
                         if (links[j] as any) {
                             (links[j] as any)['path'] = [
                                 {x: (multiLink.source as any).x, y: (multiLink.source as any).y},
-                                {
-                                    x: (multiLink.source as any).x + offset2[0] + (j - links.length / 2 + .5) * offset[0],
-                                    y: ((multiLink.source as any).y + offset2[1] + (j - links.length / 2 + .5) * offset[1])
-                                },
-                                {
-                                    x: (multiLink.target as any).x - offset2[0] + (j - links.length / 2 + .5) * offset[0],
-                                    y: ((multiLink.target as any).y - offset2[1] + (j - links.length / 2 + .5) * offset[1])
-                                },
+
+                                //Curves links
+                                // {
+                                //     x: (multiLink.source as any).x + offset2[0] + (j - links.length / 2 + .5) * offset[0],
+                                //     y: ((multiLink.source as any).y + offset2[1] + (j - links.length / 2 + .5) * offset[1])
+                                // },
+                                // {
+                                //     x: (multiLink.target as any).x - offset2[0] + (j - links.length / 2 + .5) * offset[0],
+                                //     y: ((multiLink.target as any).y - offset2[1] + (j - links.length / 2 + .5) * offset[1])
+                                // },
                                 {x: (multiLink.target as any).x, y: (multiLink.target as any).y}]
                         }
                     }
