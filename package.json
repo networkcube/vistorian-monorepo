@@ -1,6 +1,6 @@
 {
     "name": "vistorian-map",
-    "version": "0.0.1-alpha",
+    "version": "0.0.2-alpha",
     "description": "Vistorian-map is a java script / (Typescript) library and a programming framework for interactive network visualizations with:",
     "main": "lib/index.js",
     "types": "lib/index.d.js",
