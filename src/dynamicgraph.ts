@@ -733,6 +733,8 @@ export class DynamicGraph {
                 this.nodeArrays.filter.push(false);
                 this.nodeArrays.locations.push(new ScalarTimeSeries<number>());
                 this.nodeArrays.attributes.push(new Object());
+                this.nodeArrays.colors.push('')
+                this.nodeArrays.shapes.push('')
                 if (isValidIndex(data.nodeSchema.label)) {
                     this.nodeArrays.label.push(row[data.nodeSchema.label]);
                 } else {
@@ -762,6 +764,12 @@ export class DynamicGraph {
                 if (locId == null || locId == undefined)
                     continue;
                 this.nodeArrays.locations[nodeId_data].set(time, locId);
+            }
+
+            // check shapes
+            if (isValidIndex(data.nodeSchema.shape)) {
+                var shape = row[data.nodeSchema.shape];
+                this.nodeArrays.shapes.push(shape);
             }
 
             // gather node type
@@ -1818,6 +1826,8 @@ export class NodeArray extends AttributeArray {
     locations: ScalarTimeSeries<number>[] = []
     filter: boolean[] = [];
     nodeType: string[] = [];
+    colors: string[] = [];
+    shapes: string[] = [];
 }
 
 export class LinkArray extends AttributeArray {
@@ -2992,6 +3002,10 @@ export class Node extends BasicElement {
      * If no string value was delivered by the user, returns the ID as string.
      */
     label(): string { return '' + this.attr('label'); }
+
+    shape(): string { return '' + this.attr('shape');}
+
+    color(): string { return '' + this.attr('color');}
 
     nodeType(): string { return this.attr('nodeType') }
 

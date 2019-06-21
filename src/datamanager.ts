@@ -98,6 +98,8 @@ export class NodeSchema extends TableSchema {
     time: number = -1;
     location: number = -1;
     nodeType: number = -1;
+    shape: number = -1;
+    color: number = -1;
     constructor(id: number) {
         super('nodeSchema');
         this.id = id;
