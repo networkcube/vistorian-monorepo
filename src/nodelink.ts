@@ -77,7 +77,8 @@ linkWeightScale.domain([
 
 messenger.setDefaultEventListener(updateEvent);
 
-
+const colorSet = new Set(['red', 'orange', 'yellow', 'green', 'purple']);
+var colorMappings = generateColorMappings();
 
 // MENU
 var menuDiv = d3.select('#menuDiv');
@@ -103,6 +104,20 @@ makeDropdown(menuDiv, 'Labeling', ['Automatic', 'Hide All', 'Show All', 'Neighbo
     LABELING_STRATEGY = parseInt(selection);
     updateLabelVisibility();
 })
+
+function generateColorMappings() {
+    var colorMappings: { [color: string]: string; } = {};
+
+    (dgraph.nodeArrays as any).color.forEach(function (color: any) {
+        if (!colorMappings[color]) {
+            let colorSetAsArray = Array.from(colorSet)
+            var generatedColor = colorSetAsArray[Math.floor(Math.random() * colorSetAsArray.length)]
+            colorMappings[color] = generatedColor;
+            colorSet.delete(generatedColor);
+        }
+    });
+    return colorMappings;
+}
 
 function makeDropdown(d3parent: any, name: string, values: String[], callback: Function) {
     var s: any = d3parent.append('select')
@@ -295,7 +310,7 @@ function init() {
         .append('circle')
         .attr('r', (n: dynamicgraph.Node) => getNodeRadius(n))
         .attr('class', 'nodes')
-        .style('fill', COLOR_DEFAULT_NODE)
+        .style('fill', (n: dynamicgraph.Node) => getNodeColor(n))
         .on('mouseover', mouseOverNode)
         .on('mouseout', mouseOutNode)
         .on('click', (d: any) => {
@@ -402,6 +417,14 @@ function getNodeRadius(n: dynamicgraph.Node) {
     return Math.sqrt(n.links().length) * NODE_SIZE + 1;
 }
 
+
+function getNodeColor(n: dynamicgraph.Node) {
+    return colorMappings[n.color()];
+}
+
+function getNodeShape(n: dynamicgraph.Node) {
+    return "circle";
+}
 
 function updateLabelVisibility() {
     hiddenLabels = [];
@@ -531,7 +554,7 @@ function updateNodes(highlightId?: number) {
                 color = utils.getPriorityColor(d);
             }
             if (!color)
-                color = COLOR_DEFAULT_NODE;
+                color = getNodeColor(d);
             return color;
         })
         .style('opacity', (d: any) => {
