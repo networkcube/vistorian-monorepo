@@ -1028,8 +1028,22 @@ export class DynamicGraph {
             }
         }
 
+        //Build a color mapping
+        const colorSet = new Set(['#e4549b', '#a33a36', '#bd6221', '#dfba47', '#b5b867', '#479b7f', '#335b8e', '#78387d']);
+        var colorMappings: { [color: string]: string; } = {};
+        (this.nodeArrays as any).color.forEach(function (color: any) {
+            if (!colorMappings[color]) {
+                let colorSetAsArray = Array.from(colorSet)
+                var generatedColor = colorSetAsArray[Math.floor(Math.random() * colorSetAsArray.length)]
+                colorMappings[color] = generatedColor;
+                colorSet.delete(generatedColor);
+            }
+        });
 
-
+        //Add color values to nodeArray colors
+        for(var i=0; i<(this.nodeArrays as any).color.length; i++) {
+            (this.nodeArrays as any).color[i] = [(this.nodeArrays as any).color[i], colorMappings[(this.nodeArrays as any).color[i]]];
+        }
 
 
         // create color map for link types
