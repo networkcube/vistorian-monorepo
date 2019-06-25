@@ -77,8 +77,6 @@ linkWeightScale.domain([
 
 messenger.setDefaultEventListener(updateEvent);
 
-const colorSet = new Set(['red', 'orange', 'yellow', 'green', 'purple']);
-var colorMappings = generateColorMappings();
 
 // MENU
 var menuDiv = d3.select('#menuDiv');
@@ -104,20 +102,6 @@ makeDropdown(menuDiv, 'Labeling', ['Automatic', 'Hide All', 'Show All', 'Neighbo
     LABELING_STRATEGY = parseInt(selection);
     updateLabelVisibility();
 })
-
-function generateColorMappings() {
-    var colorMappings: { [color: string]: string; } = {};
-
-    (dgraph.nodeArrays as any).color.forEach(function (color: any) {
-        if (!colorMappings[color]) {
-            let colorSetAsArray = Array.from(colorSet)
-            var generatedColor = colorSetAsArray[Math.floor(Math.random() * colorSetAsArray.length)]
-            colorMappings[color] = generatedColor;
-            colorSet.delete(generatedColor);
-        }
-    });
-    return colorMappings;
-}
 
 function makeDropdown(d3parent: any, name: string, values: String[], callback: Function) {
     var s: any = d3parent.append('select')
@@ -419,7 +403,7 @@ function getNodeRadius(n: dynamicgraph.Node) {
 
 
 function getNodeColor(n: dynamicgraph.Node) {
-    return colorMappings[n.color()];
+    return n.color().split('#')[1];
 }
 
 function getNodeShape(n: dynamicgraph.Node) {
