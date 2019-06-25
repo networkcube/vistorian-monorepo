@@ -30,6 +30,8 @@ messenger.addEventListener('searchResult', searchResultHandler);
 createSelectionCategory('Node Selections', 'node');
 createSelectionCategory('Link Selections', 'link');
 
+createViewOnlyCategory('Node Colours', 'nodeColor')
+
 updateLists();
 
 export function createSelectionCategory(name: string, type: string) {
@@ -49,6 +51,89 @@ export function createSelectionCategory(name: string, type: string) {
 
 }
 
+export function createViewOnlyCategory(name: string, type: string) {
+
+	var nodeDiv: any = d3.select('body').append('div')
+		.attr('id', 'divViewOnly_' + type)
+
+	nodeDiv.append('p')
+		.attr('id', 'titleViewOnly_' + type)
+		.html(name + ':')
+
+}
+
+export function updateViewOnlyList(type: string, name: string){
+
+	//Remove duplicates
+	var tmp: any[] = [];
+	var trimmedColors = (dgraph.nodeArrays as any).color.filter(function (v: any) {
+		if (tmp.indexOf(v.toString()) < 0) {
+			tmp.push(v.toString());
+			return v;
+		}
+	});
+	//Remove null/undefinted
+	var tmp: any[] = [];
+	var trimmedColorsNoNulls = trimmedColors.filter(function (v: any) {
+		if(v[0] != null) {
+			return v;
+		}
+	});
+
+	d3.select('#divViewOnly_' + type)
+		.selectAll('.selectionDiv_' + type)
+		.remove();
+
+	var nodeGs: any = d3.select('#divViewOnly_' + type)
+		.selectAll('.selectionDiv_' + type)
+		.data(trimmedColorsNoNulls)
+		.enter()
+		.append('div')
+		.attr('class', 'selectionDiv_' + type)
+		.attr('height', LINE_HEIGHT)
+		.append('svg')
+		.attr('class', 'svg_' + type)
+		.attr('height', LINE_HEIGHT)
+		.attr('width', width)
+		.append('g')
+		.attr('transform', 'translate(' + INTENT + ',0)')
+
+	d3.selectAll('.selectionDiv_' + type)
+		.style('background-color', function (d: any) {
+			if(d) {
+				if (dgraph.currentSelection_id == d.id)
+					return '#cccccc';
+			}
+			return '#ffffff';
+		})
+
+	nodeGs.append('rect')
+		.attr('x', 0)
+		.attr('y', 0)
+		.attr('width', RECT_SIZE)
+		.attr('height', RECT_SIZE)
+		.style('fill', function (d: any) { return d[1] })
+		.on('click', function (d: any) {
+			messenger.setSelectionColor(d, '#' + Math.floor(Math.random() * 16777215).toString(16));
+		})
+
+	nodeGs.append('text')
+		.attr('class', 'selectionLabel')
+		.text(function (d: any) {
+			return d[0];
+		})
+		.style('font-size', RECT_SIZE)
+		.style('font-family', 'Helvetica')
+		.attr('x', RECT_SIZE + 10)
+		.attr('y', RECT_SIZE * .8)
+		.on('click', function (d: any) {
+			messenger.setCurrentSelection(d);
+			updateLists();
+		})
+
+
+}
+
 export function createSelection(type: string) {
 
 	var b: datamanager.Selection = dgraph.createSelection(type) // IS IT OK?? (dgraph)
@@ -62,6 +147,7 @@ export function updateLists() {
 
 	updateList('node', 'Node Selections')
 	updateList('link', 'Link Selections')
+	updateViewOnlyList('nodeColor', 'Node Colors')
 
 	d3.selectAll('.icon_showColor')
 		.attr('xlink:href', function (d: any) { if (d.showColor) return 'drop-full.png'; return 'drop-empty.png' })
