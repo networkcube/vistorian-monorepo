@@ -1045,6 +1045,23 @@ export class DynamicGraph {
             (this.nodeArrays as any).color[i] = [(this.nodeArrays as any).color[i], colorMappings[(this.nodeArrays as any).color[i]]];
         }
 
+        //Build a shape mapping
+        const shapeSet = new Set(['cross', 'diamond', 'square', 'triangle-down', 'triangle-up']);
+        var shapeMappings: { [shape: string]: string; } = {};
+        (this.nodeArrays as any).shape.forEach(function (shape: any) {
+            if (!shapeMappings[shape]) {
+                let shapeSetAsArray = Array.from(shapeSet)
+                var generatedShape = shapeSetAsArray[Math.floor(Math.random() * shapeSetAsArray.length)]
+                shapeMappings[shape] = generatedShape;
+                shapeSet.delete(generatedShape);
+            }
+        });
+
+        //Add shapes to nodeArray shapes
+        for(var i=0; i<(this.nodeArrays as any).shape.length; i++) {
+            (this.nodeArrays as any).shape[i] = [(this.nodeArrays as any).shape[i], shapeMappings[(this.nodeArrays as any).shape[i]]];
+        }
+
 
         // create color map for link types
         var linkTypeCount: number = this.linkTypeArrays.length;
