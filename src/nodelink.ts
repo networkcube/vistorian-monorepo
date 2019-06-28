@@ -285,14 +285,13 @@ showMessage('Calculating<br/>layout');
 
 init();
 function init() {
-    // CREATE NODES:
-    // node circles
 
     visualNodes = nodeLayer.selectAll('nodes')
         .data(nodes)
         .enter()
-        .append('circle')
-        .attr('r', (n: dynamicgraph.Node) => getNodeRadius(n))
+        .append('path')
+        // @ts-ignore
+        .attr('d', (n: dynamicgraph.Node) => d3.svg.symbol().type(getNodeShape(n))())
         .attr('class', 'nodes')
         .style('fill', (n: dynamicgraph.Node) => getNodeColor(n))
         .on('mouseover', mouseOverNode)
@@ -370,8 +369,10 @@ function updateLayout() {
 
     // update node positions
     visualNodes
-        .attr('cx', (d: any, i: any) => d.x)
-        .attr('cy', (d: any, i: any) => d.y)
+        .attr('transform', function(d: any){
+                return 'translate('+ d.x +','+ d.y +')'
+        })
+
 
     nodeLabels
         .attr('x', (d: any, i: any) => d.x + OFFSET_LABEL.x)
@@ -403,11 +404,18 @@ function getNodeRadius(n: dynamicgraph.Node) {
 
 
 function getNodeColor(n: dynamicgraph.Node) {
-    return n.color().split('#')[1];
+    if( n.color().split('#')[0] !== ",") {
+        return n.color().split('#')[1];
+    }
+    return 'black'
 }
 
 function getNodeShape(n: dynamicgraph.Node) {
-    return "circle";
+    var tmp = n.shape().split(',');
+    if(tmp && tmp[0]) {
+        return tmp[tmp.length - 1];
+    }
+    return 'circle'
 }
 
 function updateLabelVisibility() {
