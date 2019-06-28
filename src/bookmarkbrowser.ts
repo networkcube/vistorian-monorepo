@@ -31,6 +31,7 @@ createSelectionCategory('Node Selections', 'node');
 createSelectionCategory('Link Selections', 'link');
 
 createViewOnlyCategory('Node Colours', 'nodeColor')
+createViewOnlyCategory('Node Shapes', 'nodeShape')
 
 updateLists();
 
@@ -64,21 +65,41 @@ export function createViewOnlyCategory(name: string, type: string) {
 
 export function updateViewOnlyList(type: string, name: string){
 
-	//Remove duplicates
-	var tmp: any[] = [];
-	var trimmedColors = (dgraph.nodeArrays as any).color.filter(function (v: any) {
-		if (tmp.indexOf(v.toString()) < 0) {
-			tmp.push(v.toString());
-			return v;
-		}
-	});
-	//Remove null/undefinted
-	var tmp: any[] = [];
-	var trimmedColorsNoNulls = trimmedColors.filter(function (v: any) {
-		if(v[0] != null) {
-			return v;
-		}
-	});
+    if(type == "nodeColor" ) {
+        //Remove duplicates
+        var tmp: any[] = [];
+        var trimmedColors = (dgraph.nodeArrays as any).color.filter(function (v: any) {
+            if (tmp.indexOf(v.toString()) < 0) {
+                tmp.push(v.toString());
+                return v;
+            }
+        });
+        //Remove null/undefinted
+        var tmp: any[] = [];
+        var trimmedColorsNoNulls = trimmedColors.filter(function (v: any) {
+            if (v[0] != null) {
+                return v;
+            }
+        });
+    }
+
+    if(type == "nodeShape" ) {
+        //Remove duplicates
+        var tmp: any[] = [];
+        var trimmedShapes = (dgraph.nodeArrays as any).shape.filter(function (v: any) {
+            if (tmp.indexOf(v.toString()) < 0) {
+                tmp.push(v.toString());
+                return v;
+            }
+        });
+        //Remove null/undefinted
+        var tmp: any[] = [];
+        var trimmedShapesNoNulls = trimmedShapes.filter(function (v: any) {
+            if (v[0] != null) {
+                return v;
+            }
+        });
+    }
 
 	d3.select('#divViewOnly_' + type)
 		.selectAll('.selectionDiv_' + type)
@@ -86,7 +107,14 @@ export function updateViewOnlyList(type: string, name: string){
 
 	var nodeGs: any = d3.select('#divViewOnly_' + type)
 		.selectAll('.selectionDiv_' + type)
-		.data(trimmedColorsNoNulls)
+		.data(function(){
+		    if(type == "nodeColor") {
+		        return trimmedColorsNoNulls;
+            }
+            if(type == "nodeShape") {
+                return trimmedShapesNoNulls;
+            }
+        })
 		.enter()
 		.append('div')
 		.attr('class', 'selectionDiv_' + type)
@@ -107,15 +135,28 @@ export function updateViewOnlyList(type: string, name: string){
 			return '#ffffff';
 		})
 
-	nodeGs.append('rect')
-		.attr('x', 0)
-		.attr('y', 0)
-		.attr('width', RECT_SIZE)
-		.attr('height', RECT_SIZE)
-		.style('fill', function (d: any) { return d[1] })
-		.on('click', function (d: any) {
-			messenger.setSelectionColor(d, '#' + Math.floor(Math.random() * 16777215).toString(16));
-		})
+	if(type == "nodeColor" ) {
+		nodeGs.append('rect')
+			.attr('x', 0)
+			.attr('y', 0)
+			.attr('width', RECT_SIZE)
+			.attr('height', RECT_SIZE)
+			.style('fill', function (d: any) {
+				return d[1]
+			})
+			.on('click', function (d: any) {
+				messenger.setSelectionColor(d, '#' + Math.floor(Math.random() * 16777215).toString(16));
+			})
+	}
+
+	if(type == "nodeShape" ) {
+
+		nodeGs.append('path')
+			.attr("transform", function() { return "translate(7,7)"; })
+			// @ts-ignore
+			.attr('d', (n: string[]) => d3.svg.symbol().size(40).type(getNodeShape(n))())
+			.style('fill', 'black')
+	}
 
 	nodeGs.append('text')
 		.attr('class', 'selectionLabel')
@@ -148,8 +189,9 @@ export function updateLists() {
 	updateList('node', 'Node Selections')
 	updateList('link', 'Link Selections')
 	updateViewOnlyList('nodeColor', 'Node Colors')
+    updateViewOnlyList('nodeShape', 'Node Shapes')
 
-	d3.selectAll('.icon_showColor')
+    d3.selectAll('.icon_showColor')
 		.attr('xlink:href', function (d: any) { if (d.showColor) return 'drop-full.png'; return 'drop-empty.png' })
 	d3.selectAll('.icon_eye')
 		.attr('xlink:href', function (d: any) { if (d.filter) return 'eye-blind.png'; return 'eye-seeing.png' })
@@ -296,4 +338,12 @@ export function saveSearchResultAsSelection(type: string) {
 export function clearSearchSelection() {
 	messenger.highlight('reset');
 	$('#searchResults').empty();
+}
+
+export function getNodeShape(n: string[]) {
+	var tmp = (n[1] as any).split(',');
+	if(tmp) {
+		return tmp[tmp.length - 1];
+	}
+	return 'wye'
 }
