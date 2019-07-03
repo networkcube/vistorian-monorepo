@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "outDir": "./build/",
+    "target": "es6",
+    "module": "es2015",
+    "sourceMap": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "declaration": true
+  },
+  "pretty": false,
+  "files": [
+    "web/src/dataview.ts",
+    "web/src/storage.ts",
+    "web/src/utils.ts",
+    "web/src/vistorian.ts"
+  ]
+}
