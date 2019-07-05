@@ -22,11 +22,11 @@ Get the latest version of node/npm
 ## Local development with all components
 Make a directory e.g "vistorian"
 
-Inside this directory clone all the repositories that the vistorian requires
+Inside this directory clone all 7 repositories that the vistorian requires
 
 * `git lone https://github.com/networkcube/vistorian-core`
 
-* `git clone https://github.com/networkcube/vistorian-webgit`
+* `git clone https://github.com/networkcube/vistorian-web`
 
 * `git clone https://github.com/networkcube/vistorian-bookmarkbrowser`
 
