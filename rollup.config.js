@@ -5,7 +5,16 @@ import sourcemaps from 'rollup-plugin-sourcemaps';
 
 export default {
     input: 'build/src/index.js',
-    external: ['d3', 'lz-string', 'reorder.js', 'netclustering', 'swiftset', 'moment'],
+    external: [
+        'd3',
+        'lz-string',
+        'reorder.js',
+        'netclustering',
+        'swiftset',
+        'moment',
+        'three',
+        'jquery'
+    ],
     output: {
         file: 'lib/vistorian-core.js',
         format: 'umd',
@@ -17,7 +26,9 @@ export default {
             'reorder.js': 'reorder',
             'netclustering': 'netClustering',
             'swiftset': 'Set',
-            'moment': 'moment'
+            'moment': 'moment',
+            'three': 'three',
+            'jquery': '$'
         }
     },
     plugins: [

@@ -368,7 +368,7 @@ export class DynamicGraph {
         dataMgr.saveToStorage(this.name, this.matrix_NAME, this.matrix);
         dataMgr.saveToStorage(this.name, this.nodeArrays_NAME, this.nodeArrays, this.standardArrayReplacer);
         // when we tried to persist the entire linkArrays, javascript threw an
-        // exception, so for now we will simply try to save out the parts. 
+        // exception, so for now we will simply try to save out the parts.
         dataMgr.saveToStorage(this.name, this.linkArrays_NAME, this.linkArrays, this.standardArrayReplacer);
         // dataMgr.saveToStorage(this.name, this.linkArrays_NAME+"source", this.linkArrays.source, this.standardReplacer);
         // dataMgr.saveToStorage(this.name, this.linkArrays_NAME+"target", this.linkArrays.target, this.standardReplacer);
@@ -398,7 +398,7 @@ export class DynamicGraph {
         dataMgr.removeFromStorage(this.name, this.matrix_NAME);
         dataMgr.removeFromStorage(this.name, this.nodeArrays_NAME);
         // when we tried to persist the entire linkArrays, javascript threw an
-        // exception, so for now we will simply try to save out the parts. 
+        // exception, so for now we will simply try to save out the parts.
         dataMgr.removeFromStorage(this.name, this.linkArrays_NAME);
         // dataMgr.saveToStorage(this.name, this.linkArrays_NAME+"source", this.linkArrays.source, this.standardReplacer);
         // dataMgr.saveToStorage(this.name, this.linkArrays_NAME+"target", this.linkArrays.target, this.standardReplacer);
@@ -569,8 +569,11 @@ export class DynamicGraph {
             var unixTime: number;
 
             // get unix times for all times
+            console.log("GEtting unix times for all times - linktable")
+            console.log(data.linkTable)
             for (var i = 0; i < data.linkTable.length; i++) {
                 timeLabel = data.linkTable[i][data.linkSchema.time];
+                console.log(data.linkTable[i])
                 unixTime = parseInt(moment.utc(timeLabel, TIME_FORMAT).format('x'));
                 if (unixTime == undefined)
                     continue;
@@ -632,17 +635,17 @@ export class DynamicGraph {
                 this.timeArrays.filter.push(false)
                 this.timeArrays.links.push([]);
 
-                // create time objects  
+                // create time objects
                 this._times.push(new Time(i, this));
                 // curr_t = start.add(1, GRANULARITY[this.gran_min] + 's');
             }
 
             // Now, all existing times with events and potentially
-            // attributes associated, have been created. 
+            // attributes associated, have been created.
             // Below, we create a simple array of moment.moments
-            // for any possible time unit for every aggregation level. 
-            // In fact, those structures are created on-demand, i.e. 
-            // the first time they are needed. 
+            // for any possible time unit for every aggregation level.
+            // In fact, those structures are created on-demand, i.e.
+            // the first time they are needed.
             // Here, we only create the meta-structure
             for (var g = 0; g <= GRANULARITY.length; g++) {
                 this.timeObjects.push([]) // AQUIIIII
@@ -742,10 +745,16 @@ export class DynamicGraph {
                 }
             }
 
-            // get time        
+            // get time
             // if (isValidIndex(data.nodeSchema.time)) {
+
             if (isValidIndex(data.nodeSchema.time)) {
                 timeLabel = row[data.nodeSchema.time];
+                console.log("params")
+                console.log(timeLabel)
+                console.log(TIME_FORMAT)
+                console.log(moment.utc(timeLabel, TIME_FORMAT))
+                console.log(moment.utc(timeLabel, TIME_FORMAT).format('x'))
                 var timeIdForUnixTime = this.getTimeIdForUnixTime(parseInt(moment.utc(timeLabel, TIME_FORMAT).format('x')))
                 if (timeLabel == undefined || timeIdForUnixTime == undefined) {//} || timeStamp.indexOf('null')) {
                     time = this._times[0];
@@ -785,7 +794,7 @@ export class DynamicGraph {
                 data.nodeTable[i][data.nodeSchema.nodeType] = typeId;
             }
 
-            // gather user-properties: 
+            // gather user-properties:
             for (var p = 0; p < nodeUserProperties.length; p++) {
                 prop = nodeUserProperties[p];
                 (this.nodeArrays as any)[prop].push(row[(data.nodeSchema as any)[prop]]);
@@ -802,9 +811,9 @@ export class DynamicGraph {
             //             && field != 'time'
             //             && field != 'locations'
             //             && field != 'id'
-            //             ){  
+            //             ){
             //                 if(this.nodeArrays.attributes[nodeId_table][field] == undefined){
-            //                     this.nodeArrays.attributes[nodeId_table][field] = new ScalarTimeSeries();    
+            //                     this.nodeArrays.attributes[nodeId_table][field] = new ScalarTimeSeries();
             //                 }
             //                 timeLabel = data.nodeTable[i][data.nodeSchema.time];
             //                 if(timeLabel == undefined)
@@ -816,11 +825,11 @@ export class DynamicGraph {
             //             // //in case of locations:
             //             // if(field == 'location'){
             //             //     if(typeof row[data.nodeSchema[field]] == 'number'){
-            //             //         id_loc = row[data.nodeSchema[field]];         
+            //             //         id_loc = row[data.nodeSchema[field]];
             //             //     }
             //             // }
             //          }
-            //     }     
+            //     }
             // }else{
             //     // no time information available on nodes
             //     for(var field in data.nodeSchema){
@@ -835,10 +844,10 @@ export class DynamicGraph {
             //         {
             //             // check for non temporal information
             //             if(this.nodeArrays.attributes[nodeId_table][field] == undefined){
-            //                 this.nodeArrays.attributes[nodeId_table][field] = new ScalarTimeSeries();    
+            //                 this.nodeArrays.attributes[nodeId_table][field] = new ScalarTimeSeries();
             //             }
             //             // eternal attributes are assigned no time.
-            //             this.nodeArrays[field][nodeId_table].set(undefined, row[data.nodeSchema[field]]); 
+            //             this.nodeArrays[field][nodeId_table].set(undefined, row[data.nodeSchema[field]]);
             //         }
             //     }
             // }
@@ -932,7 +941,7 @@ export class DynamicGraph {
                 this.minWeight = Math.min(this.minWeight, data.linkTable[i][data.linkSchema.weight])
                 this.maxWeight = Math.max(this.maxWeight, data.linkTable[i][data.linkSchema.weight])
             } else {
-                // set one = presence 
+                // set one = presence
                 this.minWeight = 0
                 this.maxWeight = 1
                 this.linkArrays.weights[linkId].set(time, 1)
@@ -1008,14 +1017,14 @@ export class DynamicGraph {
                 data.linkTable[i][data.linkSchema.linkType] = typeId;
             }
 
-            // gather user-properties: 
+            // gather user-properties:
             for (var p = 0; p < linkUserProperties.length; p++) {
                 prop = linkUserProperties[p];
                 (this.linkArrays as any)[prop].push(row[(data.linkSchema as any)[prop]]);
             }
         }
 
-        // For every time, store a pointer to all its links: 
+        // For every time, store a pointer to all its links:
         // var allLinks = links().toArray();
         // var allTimes = this.g.times().toArray();
         for (var i = 0; i < this.linkArrays.length; i++) {
@@ -1061,6 +1070,8 @@ export class DynamicGraph {
         for(var i=0; i<(this.nodeArrays as any).shape.length; i++) {
             (this.nodeArrays as any).shape[i] = [(this.nodeArrays as any).shape[i], shapeMappings[(this.nodeArrays as any).shape[i]]];
         }
+        console.log(" TEST ")
+        console.log(this)
 
 
         // create color map for link types
@@ -1229,7 +1240,7 @@ export class DynamicGraph {
     // }
 
     // Creates a new graph with all nodes and edges from start to end.
-    // CACHEGRAPH : this code needs to be leveraged to initialize all of the fields from 
+    // CACHEGRAPH : this code needs to be leveraged to initialize all of the fields from
     // windowGraph that are now part of this class
     private createGraphObjects(shouldCreateTimes: boolean, shouldCreateLinkTypes: any): void {
 
@@ -1426,7 +1437,7 @@ export class DynamicGraph {
         var selection: any = this.getSelection(selectionId);
         if (!selection) {
             console.error('[DynamicGraph] Selection with ', selectionId, 'not found in ', this.selections);
-            return; // WITH RETURN ? 
+            return; // WITH RETURN ?
         }
 
         var self: DynamicGraph = this;
@@ -1460,7 +1471,7 @@ export class DynamicGraph {
                 return;
             }
         }
-        // if not already selected and if not higher priority than any other 
+        // if not already selected and if not higher priority than any other
         // selection, append to the end.
         (this.attributeArrays as any)[type].selections[id].push(selection);
     }
@@ -1481,7 +1492,7 @@ export class DynamicGraph {
     addToSelectionByTypeAndId(selection: Selection, type: string, id: number) {
         if (type != selection.acceptedType) {
             console.log('attempting to put object of the wrong type into a selection');
-            return; // don't proceed with selection;    
+            return; // don't proceed with selection;
         }
         selection.elementIds.push(id);
         this.addToAttributeArraysSelection(selection, type, id);
@@ -1512,7 +1523,7 @@ export class DynamicGraph {
         //         addToSelection(selection: Selection, id:number, elementType:string) {
         //             selection.elementIds.push(id);
 
-        //             var e:BasicElement = this.get(elementType, id); 
+        //             var e:BasicElement = this.get(elementType, id);
         //             e.addToSelection(selection);
         // >>>>>>> api
         // remove from default selection
@@ -1553,7 +1564,7 @@ export class DynamicGraph {
         // <<<<<<< HEAD
         this.removeFromAttributeArraysSelection(selection, type, id);
         // =======
-        //             var e:BasicElement = this.get(elementType, id); 
+        //             var e:BasicElement = this.get(elementType, id);
         //             e.removeFromSelection(selection);
         // >>>>>>> api
 
@@ -1632,7 +1643,7 @@ export class DynamicGraph {
         //             this.selection('remove', compound, s.id)
         // =======
 
-        // remove 
+        // remove
         if (s != undefined) {
             var idCompound: IDCompound = new IDCompound();
             (idCompound as any)[s.acceptedType + 'Ids'] = s.elementIds.slice(0);
@@ -1683,6 +1694,8 @@ export class DynamicGraph {
     // internal utils
     getTimeIdForUnixTime(unixTime: number): number | undefined { // before only number
         var timeId: number;
+        console.log("unixTime: ")
+        console.log(unixTime)
         for (timeId = 0; timeId < this.timeArrays.length; timeId++) {
             if (unixTime == this.timeArrays.unixTime[timeId]) {
                 timeId;
@@ -1735,7 +1748,7 @@ export class DynamicGraph {
     }
 
 
-    // returns elements 
+    // returns elements
     nodes(): NodeQuery {
         return new NodeQuery(this.nodeArrays.id, this);
     }
@@ -2024,10 +2037,10 @@ export class GraphElementQuery extends Query {
         this.elementType = elementType;
     }
 
-    /** @returns a query that contains only the elements matching 
+    /** @returns a query that contains only the elements matching
      * the filter critera;
      * @param attribute - name of attribute that is used on filter
-     * @param filter - function evaluating if the attribute's value is valid. 
+     * @param filter - function evaluating if the attribute's value is valid.
       */
     generic_filter(filter: Function): any[] {
         var arr: any[] = [];
@@ -2054,7 +2067,7 @@ export class GraphElementQuery extends Query {
         }
         return arr;
     }
-    /** @returns a query with visible elements. 
+    /** @returns a query with visible elements.
      */
     generic_visible(): any[] {
         var arr: any[] = [];
@@ -2078,7 +2091,7 @@ export class GraphElementQuery extends Query {
         }
         return arr;
     }
-    /** @returns a query with only the elements present in the specified time step 
+    /** @returns a query with only the elements present in the specified time step
      * or period.
      */
     generic_presentIn(start: Time, end?: Time): any[] {
@@ -2122,8 +2135,8 @@ export class GraphElementQuery extends Query {
         for (var i = 0; i < this._elements.length; i++) {
             // for(var j=i+1 ; j <this._elements.length ; j++){
             //     if(this._elements[i]==this._elements[j])
-            //         this._elements.slice(j,1);                                 
-            // }    
+            //         this._elements.slice(j,1);
+            // }
             if (uniqueElements.indexOf(this._elements[i]) == -1)
                 uniqueElements.push(this._elements[i])
         }
@@ -2142,13 +2155,13 @@ export class GraphElementQuery extends Query {
     //     var result:GraphElementQuery<T> = new GraphElementQuery<T>();
     //     for(var i=0 ; i<array.length ; i++){
     //         result.add(array[i]);
-    //     }                 
-    //     return result; 
+    //     }
+    //     return result;
     // }
 }
 
-/** Basic class for every object in networkcube with an ID. 
- * A BasicElement is a wrapper to the DynamicGraph and that 
+/** Basic class for every object in networkcube with an ID.
+ * A BasicElement is a wrapper to the DynamicGraph and that
  * represents any object, i.e. node, link, node pair, time, location.
 */
 
@@ -2173,7 +2186,7 @@ export class BasicElement {
         return this._id;
     }
 
-    /** Generic method to return an attribute value for this element 
+    /** Generic method to return an attribute value for this element
      * @param attr: attribute name on this object.
      * @returns the attribute's value. */
     attr(attr: string): any {
@@ -2190,7 +2203,7 @@ export class BasicElement {
     }
 
     /** Adds this object to a selection
-     * @param selection - the Selection object 
+     * @param selection - the Selection object
      */
     addToSelection(b: Selection): void {
         (this.g.attributeArrays as any)[this.type].selections[this._id].push(b);
@@ -2215,7 +2228,7 @@ export class BasicElement {
     // DISPLAY STATES
 
     /** @returns true if this object is selected.
-     * @param selection - (optional) if specified returns true if this object 
+     * @param selection - (optional) if specified returns true if this object
      * is in the passed selection.
      */
     isSelected(selection?: Selection): boolean {
@@ -2258,9 +2271,9 @@ export class BasicElement {
 
     // OTHER QUERIES
 
-    /** @returns true if this object is present in the graph 
+    /** @returns true if this object is present in the graph
      * in a specific time or a time period.
-     * @param start -  start time. If only this parameter is passed to the 
+     * @param start -  start time. If only this parameter is passed to the
      * function, method returns if this object is present in this time step.
      * @param end - end time. If this parameter is specified, returns if this
      * object is present between start and end.
@@ -2277,9 +2290,9 @@ export class BasicElement {
     }
 }
 
-/** A time series with a scalar value per time step. 
+/** A time series with a scalar value per time step.
  * This class nestes an object that holds information for time
- * steps in the format key->value. I.e. the value for the 
+ * steps in the format key->value. I.e. the value for the
  * time step with ID 3 is accessed by this.3   */
 export class ScalarTimeSeries<T>{
     serie: any = {};
@@ -2316,7 +2329,7 @@ export class ScalarTimeSeries<T>{
 
     /** Returns all values as array.
      * @param removeDuplicates
-     * @returns array with values; 
+     * @returns array with values;
      */
     toArray(removeDuplicates?: boolean): T[] {
         if (removeDuplicates == undefined)
@@ -2337,9 +2350,9 @@ export class ScalarTimeSeries<T>{
 }
 
 
-/** A time series with an array per time step. 
+/** A time series with an array per time step.
 * This class nestes an object that holds information for time
-* steps in the format key->value. I.e. the value for the 
+* steps in the format key->value. I.e. the value for the
 * time step with ID 3 is accessed by this.3   */
 export class ArrayTimeSeries<T>{
     serie: Object = {};
@@ -2445,7 +2458,7 @@ export class TimeQuery extends GraphElementQuery {
         // for(var j=0 ; j<allTimes.length ; j++){
         //     if(allLinks[i].presentIn(allTimes[j])){
         //         links.push(allLinks[i].id());
-        //         break    
+        //         break
         //     }
         // }
         // }
@@ -3029,7 +3042,7 @@ export class Node extends BasicElement {
 
     // SPECIFIC ATTRIBUTE QUERIES
 
-    /** @returns this node's label, specified by the user. 
+    /** @returns this node's label, specified by the user.
      * If no string value was delivered by the user, returns the ID as string.
      */
     label(): string { return '' + this.attr('label'); }
@@ -3040,12 +3053,12 @@ export class Node extends BasicElement {
 
     nodeType(): string { return this.attr('nodeType') }
 
-    /** Returns this nodes neighbors in a NodeQuery. No duplicates. 
+    /** Returns this nodes neighbors in a NodeQuery. No duplicates.
      * If no parameter is supplied, returns *all* neighbors of this
-     * node over all time steps.  
-     * @param t1 - start time. If only this parameter is specified, returns 
+     * node over all time steps.
+     * @param t1 - start time. If only this parameter is specified, returns
      * neighbors in this time step only.
-     * @param t2 - end time. If this parameter is specified, returns 
+     * @param t2 - end time. If this parameter is specified, returns
      * neighbors between t1 and t2.
     */
     neighbors(t1?: Time, t2?: Time): NodeQuery {
@@ -3151,7 +3164,7 @@ export class Node extends BasicElement {
     // TODO
     // presentIn(start: Time, end?: Time): boolean {
     //     // TODO, consider present times for nodes.
-    //     return true; 
+    //     return true;
     // }
 }
 
@@ -3317,10 +3330,10 @@ export class Link extends BasicElement {
 
     /** Returns this link's weights over time as NumberQuery
     * If no time parameter is supplied, returns *all* weights of this
-     * link over all time steps.  
+     * link over all time steps.
      * @param t1 - start time. If only this parameter is specified, returns
      * only the value for t1.
-     * @param t2 - end time. If this parameter is specified, returns 
+     * @param t2 - end time. If this parameter is specified, returns
      * weights between t1 and t2.
     */
     weights(start?: Time, end?: Time): NumberQuery {
@@ -3341,8 +3354,8 @@ export class Link extends BasicElement {
         // var times = []
         // var allTimes = this.g.times().toArray();
         // for(var t in weights.serie){
-        //     times.push(allTimes[parseInt(t)]);               
-        // }                        
+        //     times.push(allTimes[parseInt(t)]);
+        // }
         return new TimeQuery(this.attr('presence'), this.g);
     }
 
@@ -3518,7 +3531,7 @@ export class DataManager {
             if (!key) continue;
             if (key.indexOf(searchPrefix) == 0)
                 keysToClear.push(key);
-            // these are the old keys that we used to store before we 
+            // these are the old keys that we used to store before we
             // added support for multiple sessions
             else if (key.indexOf('connectoscope1') == 0)
                 keysToClear.push(key);
@@ -3675,7 +3688,7 @@ export class DataManager {
 
 
         if (storedResult && storedResult != "undefined") {
-            // we try to detect whether the string was compressed or not. Given that it is 
+            // we try to detect whether the string was compressed or not. Given that it is
             // JSON, we would expect it to begin with either a quote, a bracket, or a curly-brace
             var parseText;
             if(storedResult == "true"){
