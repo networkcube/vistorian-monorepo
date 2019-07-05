@@ -24,7 +24,7 @@ Make a directory e.g "vistorian"
 
 Inside this directory clone all 7 repositories that the vistorian requires
 
-* `git lone https://github.com/networkcube/vistorian-core`
+* `git clone https://github.com/networkcube/vistorian-core`
 
 * `git clone https://github.com/networkcube/vistorian-web`
 
