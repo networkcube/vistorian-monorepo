@@ -49,3 +49,23 @@ If you have have the 'vistorian' folder placed inside your /localhost, you shoul
 If you have no local host / local server running, you can a server that comes with node in the "vistorian-web" repo. Inside the "vistorian-web" folder run 
 
 * `npm start`
+
+
+## Local development
+
+Using the above method, will install the npm packages from the online sources in the global npm repository.
+
+To instead use the local copies of these dependencies to enable local development for work across repositories, you need to change the locations where the vistorian packages are loaded from. 
+
+Each vistorian repository / folder (e.g., vistorian-nodelink) has a filed calle `package.json`. This file has a field called `dependencies` which states where its dependencies are loaded from. In order to enable local development, you need to replace each vistorian package as follows, pointing to the local copy of the repository. 
+
+`"vistorian-xxx": "latest"` with  `"vistorian-xxx": "file:../vistorian-xxx"`.
+
+E.g., 
+
+`"vistorian-matrix": "latest"` becomes `"vistorian-matrix": "file:../vistorian-mattrix"`.
+
+Obviously, do only need link to the local copies if you're actually aiming to make changes to the respective package. Otherwise, just use the npm packages. 
+
+## Pushing changes to git
+<pending>
