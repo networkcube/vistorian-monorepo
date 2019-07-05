@@ -38,8 +38,7 @@
         "jquery",
         "jstorage",
         "moment",
-        "vistorian-core",
-        "vistorian-vis"
+        "vistorian-core"
     ],
     "dependencies": {
         "@types/three": "^0.93.27",
@@ -50,8 +49,6 @@
         "three": "^0.100.0",
         "jstorage": "^0.4.8",
         "lz-string": "^1.4.4",
-        "vistorian-core": "latest",
-        "vistorian-vis": "latest",
-        "vistorian-widgets": "latest"
+        "vistorian-core": "latest"
     }
 }
