@@ -9,7 +9,7 @@
         "lint": "tslint -p . -e 'package.json'",
         "clean": "rimraf lib",
         "start": "webpack-dev-server --config webpack.config.js --open",
-        "linkall": "npm link ../vistorian-vis && npm link ../vistorian-bookmarkbrowser && npm link ../vistorian-core && npm link ../vistorian-dynamicego && npm link ../vistorian-map && npm link ../vistorian-matrix && npm link ../vistorian-nodelink && npm link ../vistorian-widgets "
+        "linkall": "npm link ../vistorian-bookmarkbrowser && npm link ../vistorian-core && npm link ../vistorian-dynamicego && npm link ../vistorian-map && npm link ../vistorian-matrix && npm link ../vistorian-nodelink"
     },
     "author": "Benjamin Bach <benj.bach@gmail.com>",
     "license": "MIT",
@@ -60,7 +60,6 @@
         "vistorian-dynamicego": "latest",
         "vistorian-map": "latest",
         "vistorian-matrix": "latest",
-        "vistorian-nodelink": "latest",
-        "vistorian-widgets": "latest"
+        "vistorian-nodelink": "latest"
     }
 }
