@@ -35,6 +35,7 @@ module.exports = {
         contentBase: './'
     },
     output: {
+        library: "nodelink",
         libraryTarget: "umd",
         filename: 'index.js',
         path: path.resolve(__dirname, 'lib')

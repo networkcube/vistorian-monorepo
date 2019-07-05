@@ -5,8 +5,8 @@ import * as utils from 'vistorian-core/src/utils';
 import * as main from 'vistorian-core/src/main';
 import * as messenger from 'vistorian-core/src/messenger';
 
-import * as ui from 'vistorian-widgets/src/ui';
-import * as timeslider from 'vistorian-widgets/src/timeslider';
+import * as ui from 'vistorian-core/src/ui';
+import * as timeslider from 'vistorian-core/src/timeslider';
 
 var COLOR_DEFAULT_LINK: string = '#999999';
 var COLOR_DEFAULT_NODE: string = '#333333';
