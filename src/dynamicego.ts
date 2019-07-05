@@ -8,9 +8,9 @@ import * as ordering from 'vistorian-core/src/ordering';
 
 import * as THREE from 'three';
 
-import * as glutils from 'vistorian-widgets/src/glutils';
-import * as tline from 'vistorian-widgets/src/timeline';
-import * as timeslider from 'vistorian-widgets/src/timeslider';
+import * as glutils from 'vistorian-core/src/glutils';
+import * as tline from 'vistorian-core/src/timeline';
+import * as timeslider from 'vistorian-core/src/timeslider';
 
 // DATA
 var dgraph: dynamicgraph.DynamicGraph = main.getDynamicGraph();
