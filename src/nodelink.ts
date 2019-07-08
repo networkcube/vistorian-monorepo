@@ -12,6 +12,7 @@ var COLOR_DEFAULT_LINK: string = '#999999';
 var COLOR_DEFAULT_NODE: string = '#333333';
 var COLOR_HIGHLIGHT: string = '#ff8800';
 var LINK_OPACITY: number = .5;
+var NODE_OPACITY: number = 1;
 var LINK_WIDTH: number = 1;
 var OFFSET_LABEL = { x: 5, y: 4 }
 var LINK_GAP: number = 2;
@@ -20,7 +21,7 @@ var LABELBACKGROUND_OPACITY: number = 1;
 var LABELDISTANCE: number = 10;
 var SLIDER_WIDTH: number = 100
 var SLIDER_HEIGHT: number = 35;
-var NODE_SIZE: number = 1;
+var NODE_SIZE: number = 10;
 
 var width: number = window.innerWidth
 var height: number = window.innerHeight - 100;
@@ -85,7 +86,11 @@ ui.makeSlider(menuDiv, 'Link Opacity', SLIDER_WIDTH, SLIDER_HEIGHT, LINK_OPACITY
     LINK_OPACITY = value;
     updateLinks();
 })
-ui.makeSlider(menuDiv, 'Node Size', SLIDER_WIDTH, SLIDER_HEIGHT, NODE_SIZE, .01, 3, function (value: number) {
+ui.makeSlider(menuDiv, 'Node Opacity', SLIDER_WIDTH, SLIDER_HEIGHT, NODE_OPACITY, 0, 1, function (value: number) {
+    NODE_OPACITY = value;
+    updateNodes();
+})
+ui.makeSlider(menuDiv, 'Node Size', SLIDER_WIDTH, SLIDER_HEIGHT, NODE_SIZE, .01, 30, function (value: number) {
     NODE_SIZE = value;
     updateNodeSize();
 })
@@ -181,7 +186,6 @@ var svg: any = d3.select('#visSvg')
         // zoom
         (<any>d3.event).preventDefault();
         (<any>d3.event).stopPropagation();
-        console.log(d3.event,e)
         var globalZoom = 1 + (<any>d3.event).wheelDelta / 1000;
         var mouse = [(d3.event).x - panOffsetGlobal[0], (d3.event).y - panOffsetGlobal[1]];
         var d: any, n: any;
@@ -214,10 +218,11 @@ var layout: any;
 var lineFunction: any = d3.svg.line() // only line() d3 v4
     .x(function (d: any) { return d.x; })
     .y(function (d: any) { return d.y; })
-    .interpolate("basis")// d3 v4 is .curve(d3.curveLinear);
+    .interpolate("none")
+    // .interpolate("basis")// d3 v4 is .curve(d3.curveLinear);
 
-function marker(color: any) {
-
+function marker(color: any) 
+{
     svg.append("svg:defs").append("svg:marker")
         .attr("id", color.replace("#", ""))
         .attr("viewBox", "0 -5 10 10")
@@ -283,6 +288,7 @@ layout = d3.forceSimulation()
 // show layout-message
 showMessage('Calculating<br/>layout');
 
+
 init();
 function init() {
 
@@ -307,6 +313,7 @@ function init() {
             }
             messenger.selection('add', <utils.ElementCompound>{ nodes: [d] });
         })
+       
 
 
     // node labels
@@ -329,6 +336,7 @@ function init() {
         .text((d: any) => d.label())
         .style('font-size', 12)
         .attr('visibility', 'hidden')
+    
 
 
 
@@ -338,6 +346,7 @@ function init() {
         .data(links)
         .enter()
         .append('path')
+        // .attr("marker-end", "url(#triangle)")
         .attr('d', (d: any) => lineFunction(d.path))
         .style('opacity', LINK_OPACITY)
         .on('mouseover', (d: any, i: any) => {
@@ -358,9 +367,9 @@ function init() {
             messenger.selection('add', <utils.ElementCompound>{ links: [d] });
         })
 
-
     updateLinks();
     updateNodes();
+    updateNodeSize();
 
     updateLayout();
 }
@@ -530,7 +539,9 @@ function updateEvent(m: messenger.Message) {
 
 function updateNodeSize() {
     visualNodes
-        .attr('r', (n: any) => getNodeRadius(n))
+        // .attr('r', (n: any) => getNodeRadius(n))
+        //@ts-ignore
+        .attr('d', (n: any) => d3.svg.symbol().size(getNodeRadius(n)).type(getNodeShape(n))())
 }
 
 function updateNodes(highlightId?: number) {
@@ -554,7 +565,7 @@ function updateNodes(highlightId?: number) {
             if (!visible)
                 return 0;
             else
-                return 1;
+                return NODE_OPACITY;
         })
 
     nodeLabels
@@ -632,7 +643,8 @@ function updateLinks(highlightId?: number){
 
 }
 
-function calculateCurvedLinks() {
+function calculateCurvedLinks()
+{
     var path: any, dir: any, offset: any, offset2: any, multiLink: dynamicgraph.NodePair | undefined;
     var links: dynamicgraph.Link[];
     for (var i = 0; i < dgraph.nodePairs().length; i++) {
@@ -674,16 +686,15 @@ function calculateCurvedLinks() {
                         if (links[j] as any) {
                             (links[j] as any)['path'] = [
                                 {x: (multiLink.source as any).x, y: (multiLink.source as any).y},
-
-                                //Curves links
-                                // {
-                                //     x: (multiLink.source as any).x + offset2[0] + (j - links.length / 2 + .5) * offset[0],
-                                //     y: ((multiLink.source as any).y + offset2[1] + (j - links.length / 2 + .5) * offset[1])
-                                // },
-                                // {
-                                //     x: (multiLink.target as any).x - offset2[0] + (j - links.length / 2 + .5) * offset[0],
-                                //     y: ((multiLink.target as any).y - offset2[1] + (j - links.length / 2 + .5) * offset[1])
-                                // },
+                                //Curved links
+                                {
+                                    x: (multiLink.source as any).x + offset2[0] + (j - links.length / 2 + .5) * offset[0],
+                                    y: ((multiLink.source as any).y + offset2[1] + (j - links.length / 2 + .5) * offset[1])
+                                },
+                                {
+                                    x: (multiLink.target as any).x - offset2[0] + (j - links.length / 2 + .5) * offset[0],
+                                    y: ((multiLink.target as any).y - offset2[1] + (j - links.length / 2 + .5) * offset[1])
+                                },
                                 {x: (multiLink.target as any).x, y: (multiLink.target as any).y}]
                         }
                     }
