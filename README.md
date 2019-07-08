@@ -67,5 +67,9 @@ E.g.,
 
 Obviously, do only need link to the local copies if you're actually aiming to make changes to the respective package. Otherwise, just use the npm packages. 
 
+The repository vistorian-devtools has two scripts which do that work for you: 
+* `vistorian-local': sets all links to local development ("file:../vistorian-x")
+* `vistorian-global': sets all links to the latest npm version ("latest")
+
 ## Pushing changes to git
 <pending>
