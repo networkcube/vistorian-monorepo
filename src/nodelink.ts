@@ -177,12 +177,12 @@ var svg: any = d3.select('#visSvg')
         panOffsetGlobal[0] += panOffsetLocal[0]
         panOffsetGlobal[1] += panOffsetLocal[1]
     })
-    .on('wheel', () => {
+    .on('wheel.zoom', (e) => {
         // zoom
-        // <Event>
         (<any>d3.event).preventDefault();
         (<any>d3.event).stopPropagation();
-        var globalZoom = 1 ;
+        console.log(d3.event,e)
+        var globalZoom = 1 + (<any>d3.event).wheelDelta / 1000;
         var mouse = [(d3.event).x - panOffsetGlobal[0], (d3.event).y - panOffsetGlobal[1]];
         var d: any, n: any;
         for (var i = 0; i < nodes.length; i++) {

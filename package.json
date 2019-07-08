@@ -39,8 +39,7 @@
         "jquery",
         "jstorage",
         "moment",
-        "vistorian-core",
-        "vistorian-vis"
+        "vistorian-core"
     ],
     "dependencies": {
         "@types/lz-string": "^1.3.33",
@@ -54,6 +53,6 @@
         "moment": "^2.23.0",
         "papaparse": "^5.0.0",
         "three": "^0.100.0",
-        "vistorian-core": "latest"
+        "vistorian-core": "file:../vistorian-core"
     }
 }
