@@ -72,4 +72,14 @@ The repository vistorian-devtools has two scripts which do that work for you:
 * `vistorian-global': sets all links to the latest npm version ("latest")
 
 ## Pushing changes to git
-<pending>
+
+If you are done with your local development and you want to push your changes to git, you need o go through the following steps: 
+
+* publish to npm, 
+* make sure all package.json files are linking to the npm versions. This is done, e.g., through the `vistorian-global' script.
+* Ensure you are a collaborator, follow this link https://docs.npmjs.com/adding-collaborators-to-private-packages-owned-by-a-user-account to add collaborators.
+* Update the version number in  `package.json' of the repository you wish to publish
+* Run `npm login', to login
+* Run `npm publish'
+
+* make sure all package.json files are linking to the npm versions. This is done, e.g., through the `vistorian-global' script. 
