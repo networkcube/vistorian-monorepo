@@ -68,8 +68,8 @@ E.g.,
 Obviously, do only need link to the local copies if you're actually aiming to make changes to the respective package. Otherwise, just use the npm packages. 
 
 The repository vistorian-devtools has two scripts which do that work for you: 
-* `vistorian-local': sets all links to local development ("file:../vistorian-x")
-* `vistorian-global': sets all links to the latest npm version ("latest")
+* `vistorian-local`: sets all links to local development ("file:../vistorian-x")
+* `vistorian-global: sets all links to the latest npm version ("latest")
 
 ## Pushing changes to git
 
@@ -80,6 +80,6 @@ If you are done with your local development and you want to push your changes to
 
 ## Publish packages to npm 
 * Ensure you are a collaborator, follow this link https://docs.npmjs.com/adding-collaborators-to-private-packages-owned-by-a-user-account to add collaborators.
-* Update the version number in  `package.json' of the repository you wish to publish
-* Run `npm login', to login
-* Run `npm publish'
+* Update the version number in  `package.json` of the repository you wish to publish
+* Run `npm login`, to login
+* Run `npm publish`
