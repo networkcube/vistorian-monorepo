@@ -5,7 +5,7 @@
     "private": false,
     "types": "lib/index.d.ts",
     "scripts": {
-        "build": "tsc --pretty false && rollup -c && typedoc",
+        "build": "tsc --pretty false && rollup -c",
         "lint": "tslint -p . -e 'package.json'",
         "clean": "rimraf lib",
         "prepare": "npm run build"
