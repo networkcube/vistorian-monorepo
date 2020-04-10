@@ -53,6 +53,6 @@
         "moment": "^2.23.0",
         "papaparse": "^5.0.0",
         "three": "^0.100.0",
-        "vistorian-core": "latest"
+        "vistorian-core": "file:../vistorian-core"
     }
 }
