@@ -5,7 +5,7 @@
     "main": "lib/index.js",
     "types": "lib/index.d.js",
     "scripts": {
-        "build": "tsc --pretty false && webpack --config webpack.config.js && typedoc",
+        "build": "tsc --pretty false && webpack --config webpack.config.js",
         "lint": "tslint -p . -e 'package.json'",
         "clean": "rimraf lib",
         "start": "webpack-dev-server --config webpack.config.js --open",
@@ -50,6 +50,6 @@
         "three": "^0.100.0",
         "jstorage": "^0.4.8",
         "lz-string": "^1.4.4",
-        "vistorian-core": "latest"
+        "vistorian-core": "file:../vistorian-core"
     }
 }
