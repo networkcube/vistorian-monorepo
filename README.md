@@ -104,16 +104,20 @@ If you are done with your local development and you want to push your changes to
 
 * make sure all package.json files are linking to the npm versions. This is done best by the `bashscripts/global` script.
 
-* push to the respective github reposiories. The `bashscripts/gitpush -m 'my git message'` will execute the following scripts for each local repository. 
+* push to the respective github reposiories. The `bashscripts/gitpush -m 'my git message'` will execute 
+* `./global` to set any dependency to the global npm repository
+* then, for each local repository. 
    * `git add --all`
    * `git commit -m 'my git message'`
    * `git push` 
+* `./local` to set any dependency back to the local repository to continue your work.
 
-The script does not execute `bashscipts/global`! You need to do this manually.
 
+__6) Publish packages to npm__ 
 
-## Publish packages to npm 
-* Ensure you are a collaborator, follow this link https://docs.npmjs.com/adding-collaborators-to-private-packages-owned-by-a-user-account to add collaborators.
+First, ensure you are a collaborator who is authorized to publish npm packages about the vistorian. Follow this link https://docs.npmjs.com/adding-collaborators-to-private-packages-owned-by-a-user-account to add collaborators.
+
+Then, 
 * Update the version number in  `package.json` of the repository you wish to publish
 * Run `npm login`, to login
 * Run `npm publish`
