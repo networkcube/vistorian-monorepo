@@ -56,11 +56,11 @@
         "lz-string": "^1.4.4",
         "moment": "^2.23.0",
         "papaparse": "^4.6.3",
-        "vistorian-core": "latest",
-        "vistorian-bookmarkbrowser": "latest",
-        "vistorian-dynamicego": "latest",
-        "vistorian-map": "latest",
-        "vistorian-matrix": "latest",
-        "vistorian-nodelink": "latest"
+        "vistorian-core": "file:../vistorian-core",
+        "vistorian-bookmarkbrowser": "file:../vistorian-bookmarkbrowser",
+        "vistorian-dynamicego": "file:../vistorian-dynamicego",
+        "vistorian-map": "file:../vistorian-map",
+        "vistorian-matrix": "file:../vistorian-matrix",
+        "vistorian-nodelink": "file:../vistorian-nodelink"
     }
 }
