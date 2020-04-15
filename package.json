@@ -50,6 +50,6 @@
         "three": "^0.100.0",
         "jstorage": "^0.4.8",
         "lz-string": "^1.4.4",
-        "vistorian-core": "latest"
+        "vistorian-core": "file:../vistorian-core"
     }
 }
