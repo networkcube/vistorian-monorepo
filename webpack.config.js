@@ -22,7 +22,7 @@ module.exports = {
             {
                 test: /\.tsx?$/,
                 use: 'ts-loader',
-                include: __dirname
+                exclude: /node_modules/
             }
         ]
     },
