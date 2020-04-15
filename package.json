@@ -50,6 +50,6 @@
         "reorder.js": "^1.0.6",
         "three": "^0.100.0",
         "lz-string": "^1.4.4",
-        "vistorian-core": "latest"
+        "vistorian-core": "file:../vistorian-core"
     }
 }
