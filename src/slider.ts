@@ -82,7 +82,10 @@ export class Slider {
             .attr("cx", this.LEFT)
             .attr("cy", this.TOP)
             .attr("fill", "#777")
+            .attr('ontouchend','trace.event(\'vis_4\',document.location.pathname,this.parentElement.previousElementSibling.innerHTML ,\'cx\' + this.getAttribute(\'cx\'))')
+            .attr('onmouseup','trace.event(\'vis_4\',document.location.pathname,this.parentElement.previousElementSibling.innerHTML ,\'cx\' + this.getAttribute(\'cx\'))')
             .call(this.drag);
+            
     }
 
     dragStartXMouse: any;
