@@ -65,7 +65,7 @@ export function loadVisualizationList() {
     visualizations.forEach(function (v) {
         $('#visualizationList')
             .append('<li class="visLink" title="Show ' + v[0] + ' visualization.">\
-                        <button onclick="window.exports.networkcube.dataview.loadVisualization(\'' + v[1] + '\')" class="visbutton hastooltip">\
+                        <button onclick="window.exports.networkcube.dataview.loadVisualization(\'' + v[1] + '\');trace.event(\'vis_1\',\'data view\',\'Vis Creation Link Clicked\',\'' + v[1] + '\');" class="visbutton hastooltip">\
                             <img src="../static/figures/' + v[1] + '.png" class="visicon"/>\
                             <p>' + v[0] + '</p>\
                         </button>\
@@ -73,12 +73,12 @@ export function loadVisualizationList() {
     })
     $('#visualizationList')
         .append('<li class="visLink" title="Show matrix and node-link split-view.">\
-            <button onclick="window.exports.networkcube.dataview.loadVisualization(\'mat-nl\')" class="visbutton hastooltip">\
+            <button onclick="window.exports.networkcube.dataview.loadVisualization(\'mat-nl\');trace.event(\'vis_1\',\'data view\',\'Vis Creation Link Clicked\',\'Matrix & Node Link\');" class="visbutton hastooltip">\
             <img src="../static/figures/nl+mat.png" class="visicon"/><p>Matrix + Node Link</p>\
         </button></li>')
     $('#visualizationList')
         .append('<li class="visLink" title="Show all visualizations.">\
-        <button onclick="window.exports.networkcube.dataview.loadVisualization(\'tileview\')" class="visbutton hastooltip">\
+        <button onclick="window.exports.networkcube.dataview.loadVisualization(\'tileview\');trace.event(\'vis_1\',\'data view\',\'Vis Creation Link Clicked\',\'Tile View Link\');" class="visbutton hastooltip">\
         <img src="../static/figures/all.png" class="visicon"/><p>All</p>\
         </button></li>')
 }
@@ -95,7 +95,7 @@ export function loadTableList() {
             shownName = t.substring(0, 30) + '..';
         $('#tableList').append('<li>\
             <a onclick="showSingleTable(\'' + t + '\')"  class="underlined">' + shownName + '.csv</a>\
-            <img class="controlIcon" title="Delete this table." src="../static/logos/delete.png" onclick="removeTable(\''+ t + '\')"/>\
+            <img class="controlIcon" title="Delete this table." src="../static/logos/delete.png" onclick="removeTable(\''+ t + '\');trace.event(\'dat_4\',\'data view\',\'selected table\',\'deleted\')"/>\
         </li>')
     })
 }
@@ -111,8 +111,8 @@ export function loadNetworkList() {
         $('#networkList').append('\
             <li>\
                 <a onclick="window.exports.networkcube.dataview.showNetwork(\'' + network.id + '\')"  class="underlined">' + network.name + '</a>\
-                <img class="controlIcon" title="Delete this network." src="../static/logos/delete.png" onclick="removeNetwork(\''+ network.id + '\')"/>\
-                <img class="controlIcon" title="Download this network in .vistorian format." src="../static/logos/download.png" onclick="exportNetwork(\''+ network.id + '\')"/>\
+                <img class="controlIcon" title="Delete this network." src="../static/logos/delete.png" onclick="removeNetwork(\''+ network.id + '\');trace.event(\'dat_4\',\'data view\',\'selected network\',\'deleted\')"/>\
+                <img class="controlIcon" title="Download this network in .vistorian format." src="../static/logos/download.png" onclick="exportNetwork(\''+ network.id + '\');trace.event(\'dat_7\',\'data view\',\'selected network\',\'downloaded\')"/>\
             </li>')
     })
 }
@@ -413,7 +413,7 @@ export function showTable(table: vistorian.VTable, elementName: string, isLocati
 
     // CREATE TABLE MENU    
     // export button
-    var csvExportButton = $('<button class="tableMenuButton" onclick="window.exports.networkcube.dataview.exportCurrentTableCSV(\'' + table.name + '\')">Export as CSV</button>')
+    var csvExportButton = $('<button class="tableMenuButton" onclick="window.exports.networkcube.dataview.exportCurrentTableCSV(\'' + table.name + '\');trace.event(\'dat_8\', \'data view\', \'export as CSV file\',\'' + elementName +'\' )">Export as CSV</button>')
     tableMenu.append(csvExportButton);
 
     // create table
@@ -429,7 +429,7 @@ export function showTable(table: vistorian.VTable, elementName: string, isLocati
     tHead.append(tr);
 
     for (var c = 0; c < data[0].length; c++) {
-        var td = $('<th></th>').addClass('th').attr('contenteditable', 'false');
+        var td = $('<th></th>').addClass('th').attr('contenteditable', 'false').attr('onclick','trace.event(\'dat_16\',\'data view\',\'column\',\'Sorted\')')
         tr.append(td);
         td.html(data[0][c]);
     }
@@ -461,7 +461,7 @@ export function showTable(table: vistorian.VTable, elementName: string, isLocati
             if(isLocationTable && data[0][c] == "Geoname"){
                 td = $('<td></td>').attr('contenteditable', 'false');
             }else{
-                td = $('<td></td>').attr('contenteditable', 'true');
+                td = $('<td onchange=trace.event(\'dat_10\', \'data view\',\'' + elementName +' table \', \'cell edited\' )></td>').attr('contenteditable', 'true');
             }
             td.data('row', r);
             td.data('column', c);
@@ -507,7 +507,7 @@ export function showTable(table: vistorian.VTable, elementName: string, isLocati
         for (var i = 0; i < table.data[0].length; i++) {
             cell = $('<th class="schemaCell" id="schemaCell_' + schema.name + '_' + i + '"></th>')
             schemaRow.append(cell);
-            select = $('<select class="schemaSelection" onchange="window.exports.networkcube.dataview.schemaSelectionChanged(this.value, ' + i + ' , \'' + schema.name + '\')"></select>');
+            select = $('<select class="schemaSelection" onchange="window.exports.networkcube.dataview.schemaSelectionChanged(this.value, ' + i + ' , \'' + schema.name + '\');trace.event(\'dat_11\',\'data view\',\'Column Data Type Specified\', this.value);"></select>');
             cell.append(select);
             select.append('<option>(Not visualized)</option>')
             for (var field in schema) {

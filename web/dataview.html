@@ -19,9 +19,17 @@
     <script src="../node_modules/jquery/dist/jquery.js" type="text/javascript"></script>
     <script src="./static/jquery-ui.js"></script>
     <script src="../node_modules/vistorian-core/lib/vistorian-core.js"></script>
+
+    <link rel="stylesheet" href="bookmarkLogConsent.css">
+    <script src='bookmarkLogConsent.js'></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 </head>
 
-<body>
+<body onload="trace.event('log', 'start', 'webpage', document.location.pathname);checkLogStatus();dragElement(document.getElementById('mydiv'));">
     <!-- VS: Call to trace_test_130529 -->
     <script type="text/javascript" src="../static/traces/trace_test_130529.js"></script>
 
@@ -33,6 +41,16 @@
                     This is your data view. Below you find a list of visualizations and the
                     networks currently in your browser.
                 </p>
+                <p >
+                    <h6><strong>Try Bookmarks now!</strong> </h6>
+                </p>
+                <div class="onoffswitch"> 
+                    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="consentOnoffswitch" data-toggle="modal" data-target="#myModal" tabindex="0" > 
+                    <label class="onoffswitch-label" for="consentOnoffswitch">
+                        <span class="onoffswitch-inner"></span>
+                        <span class="onoffswitch-switch"></span>
+                    </label>
+                </div>
             </td>
             <td>
                 <div id="visualizationListDiv">
@@ -46,7 +64,7 @@
                 <div id="networkListDiv">
                     <h2>
                         Networks
-                        <input type="button" class="menuButton hastooltip" value="New" onclick="window.exports.networkcube.dataview.createNetwork()"
+                        <input type="button" class="menuButton hastooltip" value="New" onclick="window.exports.networkcube.dataview.createNetwork();trace.event('dat_1', 'data view', 'new network', 'created')"
                             title="Create new network from one or more tables." />
                     </h2>
                     <ul id="networkList" class="nointent"></ul>
@@ -56,7 +74,7 @@
                     <h2>
                         Data Tables
                         <input id="files" type="file" name="file" class="inputfile" value="Upload" name="files[]"
-                            data-multiple-caption="{count} files selected" multiple />
+                            data-multiple-caption="{count} files selected" multiple onchange="trace.event('dat_2_DT', 'data view', 'DataTables_FileUpload', 'new file upload')"/>
                         <label for="files" class="menuButton hastooltip" title="Upload a new table in CSV file.">
                             Upload
                         </label>
@@ -67,7 +85,7 @@
                 <div>
                     <input id="clearCacheButton" type="button" class=" hastooltip" value="Empty browser cache"
                         title="This will remove ALL your networks and tables from your browser cache. FOREVER. Use this function if your browser is not repsponding anymore. "
-                        onclick="window.exports.networkcube.dataview.clearCache()"></button>
+                        onclick="window.exports.networkcube.dataview.clearCache();trace.event('dat_5','data view','browser cache','cleared')"></button>
                 </div>
             </td>
 
@@ -79,11 +97,11 @@
                     <div id="networkInfoDiv">
                         <h2>Network
                             <input id="saveNetworkButton" class="tableMenuButton" type="button" value="Save Network"
-                                onclick="window.exports.networkcube.dataview.saveCurrentNetwork(false)" />
+                                onclick="window.exports.networkcube.dataview.saveCurrentNetwork(false);trace.event('dat_17', 'data view', 'network', 'saved')"" />
                             <input id="deleteNetworkButton" class="tableMenuButton" type="button" value="Delete Network"
-                                onclick="window.exports.networkcube.dataview.deleteCurrentNetwork()" />
+                                onclick="window.exports.networkcube.dataview.deleteCurrentNetwork();trace.event('dat_6', 'data view', 'network', 'deleted')" />
                         </h2>
-                        <p>Name: <input id="networknameInput" type="text" size="50" />
+                        <p>Name: <input id="networknameInput" type="text" size="50" onchange="trace.event('dat_9', 'data view', 'network name', 'updated')"/>
                         </p>
                         <p id="networkStatus"></p>
                     </div>
@@ -97,11 +115,11 @@
                                         node table describes a node and its relations, or attributes.</i></p>
                             </p>
                             Select a previously uploaded node table from the list: <select id="nodetableSelect"
-                                onchange="window.exports.networkcube.dataview.setNodeTable(this)">
+                                onchange="window.exports.networkcube.dataview.setNodeTable(this);trace.event('dat_3_NT', 'data view', 'NodeTable_select', ' NT selected')">
                                 <option value="---">---</option>
                             </select>
                             or <input id="nodeTableUpload" type="file" name="file" class="inputfile" value="Upload"
-                                name="files[]" data-multiple-caption="{count} files selected" />
+                                name="files[]" data-multiple-caption="{count} files selected" onchange="trace.event('dat_2_NT', 'data view', 'NodeTable_FileUpload', 'new NT file upload')"/>
                             <label for="nodeTableUpload" class="menuButton hastooltip"
                                 title="Upload a new table in CSV file.">
                                 Upload new node table
@@ -125,18 +143,18 @@
                                         type, link weight, and locations of source and target nodes while connected
                                         through this link.</i></p>
                             </p>
-                            Select a previously uploaded link table from the list: <select id="linktableSelect"
-                                onchange="window.exports.networkcube.dataview.setLinkTable(this)">
+                            Select a previously uploaded link table from the list: <select id="linktableSelect" 
+                                onchange="window.exports.networkcube.dataview.setLinkTable(this);trace.event('dat_3_LK', 'data view', 'LinkTable_select', ' LK selected')">
                                 <option value="---">---</option>
                             </select>
                             or <input id="linkTableUpload" type="file" name="file" class="inputfile" value="Upload"
-                                name="files[]" data-multiple-caption="{count} files selected" />
+                                name="files[]" data-multiple-caption="{count} files selected" onchange="trace.event('dat_2_LK', 'data view', 'LinkTable_FileUpload', 'new LK file upload')"/>
                             <label for="linkTableUpload" class="menuButton hastooltip"
                                 title="Upload a new table in CSV file.">
                                 Upload new link table
                             </label>
                             <p>
-                                <input type="checkbox" name="directedCheckbox" onclick="window.exports.networkcube.dataview.directedCheckboxClick()">Directed
+                                <input type="checkbox" name="directedCheckbox" onclick="window.exports.networkcube.dataview.directedCheckboxClick();trace.event('dat_12', 'data view', 'directed checkbox', this.checked)">Directed
                             </p>
                         </div>
                         <div id="linkTableDiv" class="tableDiv"></div>
@@ -151,13 +169,13 @@
                                 </p>
                             </p>
                             Select a previously uploaded location table from the list: <select id="locationtableSelect"
-                                onchange="window.exports.networkcube.dataview.setLocationTable(this)">
+                                onchange="window.exports.networkcube.dataview.setLocationTable(this);trace.event('dat_3_LO', 'data view', 'LocationTable_select', ' LO selected')">
                                 <option value="---">---</option>
                             </select>
                             or
-                            <button class="menuButton" onclick="window.exports.networkcube.dataview.extractLocations()">Extract locations from node and link
+                            <button class="menuButton" onclick="window.exports.networkcube.dataview.extractLocations();trace.event('dat_14', 'data view', 'extract locations', 'clicked')">Extract locations from node and link
                                 tables</button>
-                            <button class="menuButton" onclick="window.exports.networkcube.dataview.updateLocations()">Update location coordinates</button>
+                            <button class="menuButton" onclick="window.exports.networkcube.dataview.updateLocations();trace.event('dat_13', 'data view', 'update Locations coordinates', 'clicked')">Update location coordinates</button>
                         </div>
 
                         <div id="locationTableDiv" class="tableDiv"></div>
@@ -229,6 +247,64 @@
 
 
     </script>
+       <div id="mydiv" style="display :none;">
+        <div id="mydivheader">Click here to move
+            <button type="button" class="close"  onclick="turnLoggingOff()">×</button>
+        </div>
+        <iframe id="myFrame" src="logbook.html"></iframe>
+        </div>
+    
+            <div class="container">
+            
+                <!-- The Modal -->
+                <div class="modal" id="myModal">
+                <div class="modal-dialog modal-dialog-scrollable">
+                    <div class="modal-content">
+                    
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h1 class="modal-title">Enabling Vistorian Bookmarks Tool</h1>
+                        <button type="button" class="close" data-dismiss="modal" onclick="turnLoggingOff()">×</button>
+                    </div>
+                    
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <h3>Vistorian Logging Consent Form</h3>
+            
+                    <p>By clicking the (Enable Bookmarks Tool) button you will be agreeing to the terms and conditions and turning ON the logging process. The Vistorian logs your activity anonymously(e.g. the fact that a user(you) created a node link diagram or a matrix, or used filters, or the fact that you uploaded a new file). This allows us to understand how Vistorian is used and to improve it.</p>
+            
+                    <p>This Logging data will be saved on a secure server which is accessible only by the Vistorian team. No personal information will be collected or saved within the logging data. The data you upload to visualize (your research data) remains on your computer and is not saved anywhere else. In other words, no-one else can see your data unless you personally share it with someone else </p>
+            
+                    <p>If you agree to allow the logging</p>
+            
+                    <ul>
+                        <li>You will activate the (bookmarks) feature and will be able to bookmark your progress, write your own work notes, and caegories them based on their type</li>
+                        <li>Your interactions will anonymous be logged for improvement purposes</li>
+                        <li>Contact us by email to book a consultation with our visualization experts. You will be provided with a copy of the consent form and a questionnaire, and a session to be booked for you to discuss your questions.</li>
+                    </ul>
+            
+                        <p>You can turn logging OFF at any time by disabling the bookmark tool.</p>
+            
+                        Once bookmark is disbaled no more logging will be captured. Nothing will be sent to the server.</p>
+            
+                    <p>You will be able to enable bookmark tool again and enjoy the visualizations&rsquo; export feature if you wish.</p>
+            
+                    <p>The data we gather from your visits to the Vistorian are de-identified and contains no personal information.&nbsp;if you wish this data to be removed from the server please send a personal email to vistorian@ed.ac.uk</p>
+            
+                        <p>Thank you for agreeing to participate in our research.</p>
+                        <p><b>The Vistorian Team</b></p>
+                    
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="turnLoggingOff()">Disable</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="turnOnLogging()">Enable Bookmark Tool</button>
+                    </div>
+                    
+                    </div>
+                </div>
+                </div>
+                
+            </div>
 
 
 </body>

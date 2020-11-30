@@ -36,6 +36,7 @@ module.exports = {
         path: path.resolve(__dirname, 'lib')
     },
     devServer: {
-        contentBase: './'
+        contentBase: './',
+        port:8081
     },
 };

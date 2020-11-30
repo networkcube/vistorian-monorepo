@@ -283,6 +283,11 @@ export function setHeader(elementId: String, datasetname: String) {
     var dataname: any = $('\
         <p style="margin:5px;background-color:#eeeeee;border-radius:2px;padding-left:10px;padding:5px;"><b>Data:</b> '+ datasetname + '</h2>')
     $('#' + elementId).append(dataname);
+    $('#' + elementId).load('../web/try3.html')
+
+    //$('#' + elementId).append('')
+    //$('#' + elementId).append('')
+    //$('#' + elementId).append('')
 
     var vars: any = utils.getUrlVars();
 
