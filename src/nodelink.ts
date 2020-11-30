@@ -111,6 +111,7 @@ makeDropdown(menuDiv, 'Labeling', ['Automatic', 'Hide All', 'Show All', 'Neighbo
 function makeDropdown(d3parent: any, name: string, values: String[], callback: Function) {
     var s: any = d3parent.append('select')
         .attr('id', "selection-input_" + name)
+        .attr('onchange','trace.event(\'vis_9\',\'Node Link\',\'selection-input_' + name + '\',this.value)')
 
     s.append('option')
         .html('Chose ' + name + ':')
@@ -299,7 +300,9 @@ function init() {
         // @ts-ignore
         .attr('d', (n: dynamicgraph.Node) => d3.svg.symbol().type(getNodeShape(n))())
         .attr('class', 'nodes')
-        .style('fill', (n: dynamicgraph.Node) => getNodeColor(n))
+        .style('fill', (n: dynamicgraph.Node) => getNodeColor(n)) 
+        .attr('onclick','\'vis_29\',document.location.pathname,\'Node\',\'Click\'')
+        .attr('onmouseover','\'vis_30\',document.location.pathname,\'Node\',\'Mouse Over\'')
         .on('mouseover', mouseOverNode)
         .on('mouseout', mouseOutNode)
         .on('click', (d: any) => {
@@ -348,6 +351,8 @@ function init() {
         .append('path')
         // .attr("marker-end", "url(#triangle)")
         .attr('d', (d: any) => lineFunction(d.path))
+        .attr('onclick','\'vis_31\',document.location.pathname,\'Link\',\'Click\'')
+        .attr('onmouseover','\'vis_32\',document.location.pathname,\'Link\',\'Mouse Over\'')
         .style('opacity', LINK_OPACITY)
         .on('mouseover', (d: any, i: any) => {
             messenger.highlight('set', <utils.ElementCompound>{ links: [d] })
