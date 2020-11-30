@@ -29,13 +29,13 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/networkcube/vistorian-web.git"
+        "url": "git+https://github.com/alkadi-mh/vistorian-web_tr.git"
     },
     "collaborators": [
         "Jean-Daniel Fekete <Jean-Daniel.Fekete@inria.fr",
         "Alexandra Ibarra Cuesta"
     ],
-    "homepage": "https://github.com/networkcube/networkcube#readme",
+    "homepage": "https://github.com/alkadi-mh/vistorian-web_tr#readme",
     "bundledDependencies": [
         "jquery",
         "jstorage",
