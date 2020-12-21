@@ -43,6 +43,7 @@ function dragElement(elmnt) {
 
 function turnLoggingOff(){
     localStorage.setItem("acceptLogging", '');
+    trace.event('log_10', 'stop logging', 'webpage', document.location.pathname);
     var checkBox = document.getElementById("consentOnoffswitch");
     checkBox.checked=false;
     var bookmarksTool = document.getElementById("mydiv");
@@ -52,6 +53,7 @@ function turnLoggingOff(){
 }
 function turnOnLogging(){
     localStorage.setItem("acceptLogging", 'true');
+    trace.event('log_5', 'start logging', 'webpage', document.location.pathname);
     var bookmarksTool = document.getElementById("mydiv"); 
     bookmarksTool.style.display = "block";
 }
@@ -61,4 +63,24 @@ function checkLogStatus(){
         checkBox.checked=true;
         turnOnLogging();
     }
+}
+var toolbarMHeight,toolbarMWidth,toolbarTop,toolbarRight;
+function minimizeBookmarks(){
+  
+  toolbarMHeight=document.getElementById("mydiv").style.maxHeight;
+  toolbarMWidth=document.getElementById("mydiv").style.maxWidth;
+  toolbarTop=document.getElementById("mydiv").style.top;
+  toolbarRight=document.getElementById("mydiv").style.right;
+  document.getElementById("mydiv").style.top=(parseInt(screen.outerHeight)-parseInt(document.getElementById("mydiv").style.maxHeight)) +"px";
+  document.getElementById("myFrame").style.display = "none";
+  document.getElementById("mydiv").style.maxHeight = document.getElementById("mydivheader").scrollHeight +"px";
+}
+function maxmizeBookmarks(){
+  
+  document.getElementById("mydiv").style.maxHeight = toolbarMHeight;
+  document.getElementById("mydiv").style.maxWidth=toolbarMWidth;
+  document.getElementById("mydiv").style.top=toolbarTop;
+  document.getElementById("mydiv").style.right=toolbarRight;
+  document.getElementById("myFrame").style.display = "Block";
+
 }

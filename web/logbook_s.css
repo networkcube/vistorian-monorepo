@@ -1,11 +1,17 @@
-
-
-#logbook_header
-{
-    display:flex;
-    align-items: center;
-    justify-content: space-around;
+.hd_div {
+  display: flex;
+  justify-content: space-between;
 }
+
+
+.hd_div .hd_btn,div label {
+
+  margin: 0 10px;
+  flex: auto ;
+}
+  
+
+
 input[type='text'],select,textarea {
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
@@ -55,14 +61,23 @@ input[type='text'],select,textarea {
     transition: max-height 0.2s ease-out;
     background-color: #f1f1f1;
   }
+
   div {
     margin: 10px ;
   }
-  fieldset {
-    margin-bottom: 1em;
-    border: 1px solid #888;
-    border-right: 1px solid #666;
-    border-bottom: 1px solid #666;
-  }
+.menuButton{
+    background-color:#bbb;
+    border-radius:15px;
+    border: none;
+    display:inline-block;
+    cursor:pointer;
+    color:#fff;
+    font-size:14px;
+    font-weight: normal;
+    padding-top: 0px;
+    padding-right: 6px;
+    padding-bottom: 0px;
+    padding-left: 6px;
+    margin-left: 5px;
 
-  
+}

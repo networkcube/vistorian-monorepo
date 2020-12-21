@@ -19,7 +19,7 @@
     <script src="../node_modules/jquery/dist/jquery.js" type="text/javascript"></script>
     <script src="./static/jquery-ui.js"></script>
     <script src="../node_modules/vistorian-core/lib/vistorian-core.js"></script>
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="bookmarkLogConsent.css">
     <script src='bookmarkLogConsent.js'></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -200,7 +200,7 @@
         <a class="footer" href="https://go.microsoft.com/fwlink/?LinkId=521839" title="privacy">Privacy & Cookies</a> |
         <a class="footer" href="https://go.microsoft.com/fwlink/?LinkID=760869" title="terms of use">Terms Of Use</a> |
         <a class="footer" href="http://go.microsoft.com/fwlink/?LinkId=506942" title="trademarks">Trademarks</a>
-        © 2016 Microsoft <img src="../static/logos/logo-microsoft.png" height="20px"> © 2016 INRIA <img
+        © <script>document.write(new Date().getFullYear())</script> Microsoft <img src="../static/logos/logo-microsoft.png" height="20px"> © <script>document.write(new Date().getFullYear())</script> INRIA <img
             src="../static/logos/logo-inria.png" height="20px">
     </div>
 
@@ -247,64 +247,68 @@
 
 
     </script>
-       <div id="mydiv" style="display :none;">
-        <div id="mydivheader">Click here to move
-            <button type="button" class="close"  onclick="turnLoggingOff()">×</button>
+       <div id="mydiv" style="display :none;resize:both;overflow:auto;min-width:20%;">
+        <div id="mydivheader" class="collapsible"><strong> Bookmarks</strong> (Click header to move)
+            <button type="button" class="close"  onclick="turnLoggingOff()">&nbsp;×&nbsp;</button>
+            <button type="button" class="close"  onclick="maxmizeBookmarks();">&nbsp;&nbsp;<i class="fa fa-window-maximize" style="font-size:12px"></i></button>
+
+            <button type="button" class="close"  onclick="minimizeBookmarks();">&nbsp;&nbsp;<i class="fa fa-window-minimize" style="font-size:12px"></i></button>
         </div>
-        <iframe id="myFrame" src="logbook.html"></iframe>
+    
+        <iframe id="myFrame" src="logbook.html" ></iframe>
         </div>
     
             <div class="container">
             
-                <!-- The Modal -->
-                <div class="modal" id="myModal">
-                <div class="modal-dialog modal-dialog-scrollable">
-                    <div class="modal-content">
-                    
-                    <!-- Modal Header -->
-                    <div class="modal-header">
-                        <h1 class="modal-title">Enabling Vistorian Bookmarks Tool</h1>
-                        <button type="button" class="close" data-dismiss="modal" onclick="turnLoggingOff()">×</button>
-                    </div>
-                    
-                    <!-- Modal body -->
-                    <div class="modal-body">
-                        <h3>Vistorian Logging Consent Form</h3>
+        <!-- The Modal -->
+        <div class="modal" id="myModal">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
             
-                    <p>By clicking the (Enable Bookmarks Tool) button you will be agreeing to the terms and conditions and turning ON the logging process. The Vistorian logs your activity anonymously(e.g. the fact that a user(you) created a node link diagram or a matrix, or used filters, or the fact that you uploaded a new file). This allows us to understand how Vistorian is used and to improve it.</p>
-            
-                    <p>This Logging data will be saved on a secure server which is accessible only by the Vistorian team. No personal information will be collected or saved within the logging data. The data you upload to visualize (your research data) remains on your computer and is not saved anywhere else. In other words, no-one else can see your data unless you personally share it with someone else </p>
-            
-                    <p>If you agree to allow the logging</p>
-            
-                    <ul>
-                        <li>You will activate the (bookmarks) feature and will be able to bookmark your progress, write your own work notes, and caegories them based on their type</li>
-                        <li>Your interactions will anonymous be logged for improvement purposes</li>
-                        <li>Contact us by email to book a consultation with our visualization experts. You will be provided with a copy of the consent form and a questionnaire, and a session to be booked for you to discuss your questions.</li>
-                    </ul>
-            
-                        <p>You can turn logging OFF at any time by disabling the bookmark tool.</p>
-            
-                        Once bookmark is disbaled no more logging will be captured. Nothing will be sent to the server.</p>
-            
-                    <p>You will be able to enable bookmark tool again and enjoy the visualizations&rsquo; export feature if you wish.</p>
-            
-                    <p>The data we gather from your visits to the Vistorian are de-identified and contains no personal information.&nbsp;if you wish this data to be removed from the server please send a personal email to vistorian@ed.ac.uk</p>
-            
-                        <p>Thank you for agreeing to participate in our research.</p>
-                        <p><b>The Vistorian Team</b></p>
-                    
-                    <!-- Modal footer -->
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="turnLoggingOff()">Disable</button>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="turnOnLogging()">Enable Bookmark Tool</button>
-                    </div>
-                    
-                    </div>
-                </div>
-                </div>
-                
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h1 class="modal-title">Enabling Vistorian Bookmarks Tool</h1>
+                <button type="button" class="close" data-dismiss="modal" onclick="turnLoggingOff()">×</button>
             </div>
+            
+            <!-- Modal body -->
+            <div class="modal-body">
+                <h3>Vistorian Logging Consent Form</h3>
+    
+            <p>By clicking the (Enable Bookmarks Tool) button you will be agreeing to the terms and conditions and turning ON the logging process. The Vistorian logs your activity anonymously(e.g. the fact that a user(you) created a node link diagram or a matrix, or used filters, or the fact that you uploaded a new file). This allows us to understand how Vistorian is used and to improve it.</p>
+    
+            <p>This Logging data will be saved on a secure server which is accessible only by the Vistorian team. No personal information will be collected or saved within the logging data. The data you upload to visualize (your research data) remains on your computer and is not saved anywhere else. In other words, no-one else can see your data unless you personally share it with someone else </p>
+    
+            <p>If you agree to allow the logging</p>
+    
+            <ul>
+                <li>You will activate the (bookmarks) feature and will be able to bookmark your progress, write your own work notes, and caegories them based on their type</li>
+                <li>Your interactions will anonymous be logged for improvement purposes</li>
+                <li>Contact us by email to book a consultation with our visualization experts. You will be provided with a copy of the consent form and a questionnaire, and a session to be booked for you to discuss your questions.</li>
+            </ul>
+    
+                <p>You can turn logging OFF at any time by disabling the bookmark tool.</p>
+    
+                Once bookmark is disbaled no more logging will be captured. Nothing will be sent to the server.</p>
+    
+            <p>You will be able to enable bookmark tool again and enjoy the visualizations&rsquo; export feature if you wish.</p>
+    
+            <p>The data we gather from your visits to the Vistorian are de-identified and contains no personal information.&nbsp;if you wish this data to be removed from the server please send a personal email to vistorian@ed.ac.uk</p>
+    
+                <p>Thank you for agreeing to participate in our research.</p>
+                <p><b>The Vistorian Team</b></p>
+            
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="turnLoggingOff()">Disable</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="turnOnLogging()">Enable Bookmark Tool</button>
+            </div>
+            
+            </div>
+        </div>
+        </div>
+        
+    </div>
 
 
 </body>

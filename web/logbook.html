@@ -11,6 +11,8 @@
 
 
         <script type="text/javascript">
+            const monthNames = ["January", "February", "March", "April", "May", "June",
+                                 "July", "August", "September", "October", "November", "December"];
             class bookmark{
                 constructor(id,createdOn,title){
                     this.id=id;
@@ -98,14 +100,49 @@
                 }
                 newDiv.id="div_log_"+currentCounterValue;
 
+                 // create inner collapsible div
+                 var newContentDiv=document.createElement("div");
+                newContentDiv.id=currentCounterValue;
+                newContentDiv.setAttribute("class","content");
+                var timeLabelHeader=document.createElement("label");
+                timeLabelHeader.innerHTML="Date/Time Created: &nbsp;&nbsp;&nbsp; ";
+                timeLabelHeader.style="font-weight: bold;float:left;";
+               
+                var timeLabel=document.createElement("label");
+
+                var btn_dateTime=document.createElement("span");
+                btn_dateTime.id="btn_dateTime"+currentCounterValue;
+
+                if (dateCreated==""){
+                    var today = new Date();
+                    var date = today.getDate() +'-'+ monthNames[today.getMonth()] +'-'+ today.getFullYear();
+                    var time = today.getHours() + ":" + today.getMinutes();// + ":" + today.getSeconds();
+                    timeLabel.innerHTML=date+ "  "+time;
+                    btn_dateTime.innerHTML=date+ "  "+time;
+                }
+                else{
+                    timeLabel.innerHTML=dateCreated;
+                    btn_dateTime.innerHTML=dateCreated;
+                }
  
                 //create log collapsible title
                 var headerButton=document.createElement("button");
+                var btn_title=document.createElement("span");
+                btn_title.id="btn_title_"+currentCounterValue;
+
                 if (title!="")
-                    headerButton.innerHTML=title;
+                    btn_title.innerHTML=title;
+                   // headerButton.innerHTML=btn_title.innerHTML + "<br/> " + btn_dateTime.innerHTML;
                 else
-                    headerButton.innerHTML="Bookmark " + currentCounterValue +" : ";
+                   // headerButton.innerHTML="Bookmark " + currentCounterValue +" : " +"<br/> " + date+ "&nbsp;&nbsp;"+time;
+                    btn_title.innerHTML="Bookmark " + currentCounterValue +" : ";;
+
+                headerButton.appendChild(btn_title);
+                headerButton.appendChild(document.createElement("br"));
+                headerButton.appendChild(btn_dateTime);
+            
                 headerButton.setAttribute("class","collapsible");
+                
                 headerButton.addEventListener("click", function() {
                     this.classList.toggle("active");
                     var content = this.nextElementSibling;
@@ -118,37 +155,21 @@
  
                 newDiv.appendChild(headerButton);
 
-                // create inner collapsible div
-                var newContentDiv=document.createElement("div");
-                newContentDiv.id=currentCounterValue;
-                newContentDiv.setAttribute("class","content");
-                var timeLabelHeader=document.createElement("label");
-                timeLabelHeader.innerHTML="Date/Time Created:  ";
-                timeLabelHeader.style="font-weight: bold;";
-                newContentDiv.appendChild(timeLabelHeader);
-                var timeLabel=document.createElement("label");
-                if (dateCreated==""){
-                    var today = new Date();
-                    var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-                    var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-                    timeLabel.innerHTML=date+'  '+time;
-                }
-                else{
-                    timeLabel.innerHTML= dateCreated;
-                }
-                timeLabel.setAttribute("data-inline",true);
 
-                newContentDiv.appendChild(timeLabel);
+                // newContentDiv.appendChild(timeLabelHeader);
+                // newContentDiv.appendChild(timeLabel);
                 var lbl_title=document.createElement("label");
-                lbl_title.innerText="Bookmark Title:"
-                lbl_title.style="font-weight: bold;";
+                lbl_title.innerText="Bookmark Label:"
+                lbl_title.style="font-weight: bold;float:left;";
 
                 var newTitle=document.createElement("input");
                 newTitle.type="text";
                 newTitle.id="txt_title_"+currentCounterValue;
-                newTitle.placeholder="Enter Bookmark title here ..";
+                newTitle.placeholder="Update bookmark label here ..";
                 newTitle.addEventListener('keyup', function() {
-                    this.parentElement.parentElement.getElementsByClassName("collapsible")[0].innerHTML=this.value;
+                    document.getElementById(btn_title.id).innerHTML=this.value;
+
+                  //  this.parentElement.parentElement.getElementsByClassName("collapsible")[0].innerHTML=this.value;
                     //bookmarksJSONFile[locateLogObj(bookmarksJSONFile,this.parentElement.id)].updateBookmark(this.parentElement.getElementsByTagName("input")[0].value,this.parentElement.getElementsByTagName("textarea")[0].value,flagTypes[this.parentElement.getElementsByTagName("select")[0].selectedIndex]);
                     bookmarksJSONFile[locateLogObj(bookmarksJSONFile,this.parentElement.id)].updateBookmarkTitle(this.value);
                     updateLocalStorage();
@@ -160,29 +181,12 @@
                 newContentDiv.appendChild(newTitle);
                 newContentDiv.appendChild(document.createElement("br"));
 
-                var newNote=document.createElement("textarea");
-                newNote.id="txt_note_"+currentCounterValue;
-                if (note!="")
-                    newNote.value=note;
-                newNote.placeholder="Enter your notes here ..";
-                newNote.addEventListener('keyup', function() {
-                    bookmarksJSONFile[locateLogObj(bookmarksJSONFile,this.parentElement.id)].updateBookmarkNotes(this.value);
-                    updateLocalStorage();
-                });
-                var notesLabel=document.createElement("label");
-                notesLabel.innerText="Bookmark Notes:";
-                notesLabel.style="font-weight: bold;";
-                notesLabel.htmlFor=newNote.id;
                 
-                newContentDiv.appendChild(notesLabel);
-
-                newContentDiv.appendChild(newNote);
-                newContentDiv.appendChild(document.createElement("br"));
 
                 // Add bookmark type (purpose)
                 var flagTypes=["Review Data Quality","Test a particular hypothesis","Compare different visualizations","Retrieve specific details","Repeat analysis with new data"];
                 var bmTypeLabel=document.createElement("label");
-                bmTypeLabel.innerText="Choose Bookmark Type: ";
+                bmTypeLabel.innerText="Characterize your current activity: ";
                 bmTypeLabel.style="font-weight: bold;";
                 newContentDiv.appendChild(bmTypeLabel);
                 
@@ -191,11 +195,14 @@
                 bmType.style="font-style: italic; ";
                 if (selectedType!="")
                     bmType.innerText=selectedType;
+                bmType.style.display="none";
                 newContentDiv.appendChild(bmType);
                 
-                var generalPBtns=["Analyze Data","Learn","Demo to others","Test & Explore Vistorian"];
+                var generalPBtns=["Analyze Data","Learn","Demo to others","Test & Explore Vistorian","Report an Issue"];
                 var btn= document.createElement("input");
                 btn.type="button";
+                btn.name="menuButton_"+currentCounterValue;
+                btn.classList.add("menuButton"); 
                 btn.style=" display: inline-block;";
                 btn.value=generalPBtns[0];
 
@@ -204,6 +211,12 @@
                     document.getElementById(bmType.id).innerText=this.value;
                     frmChk.style.display="block";
                     txt_otherType.style.display="none";
+                    document.getElementsByName(this.name).forEach((btn) => {
+                            if(btn == this) 
+                                btn.style.backgroundColor= "#FF7F50"; 
+                            else 
+                                btn.style.backgroundColor= "#bbb"; 
+                             });
                     document.getElementById(newContentDiv.id).style.maxHeight=document.getElementById(newContentDiv.id).scrollHeight + "px";
                     bookmarksJSONFile[locateLogObj(bookmarksJSONFile,this.parentElement.id)].updateBookmarkType(document.getElementById(bmType.id).innerText);
                     updateLocalStorage();
@@ -213,10 +226,18 @@
                 for (var i=1;i<generalPBtns.length;i++){
                    var btn= document.createElement("input");
                    btn.type="button";
+                   btn.classList.add("menuButton"); 
                    btn.style=" display: inline-block;";
+                   btn.name="menuButton_"+currentCounterValue;
                    btn.value=generalPBtns[i];
                    btn.addEventListener('click', function() {
                         document.getElementById(bmType.id).innerText=this.value;
+                        document.getElementsByName(this.name).forEach((btn) => {
+                            if(btn == this) 
+                                btn.style.backgroundColor= "#FF7F50"; 
+                            else 
+                                btn.style.backgroundColor= "#bbb"; 
+                             });
                         txt_otherType.style.display="none";
                         frmChk.style.display="none";
                         bookmarksJSONFile[locateLogObj(bookmarksJSONFile,this.parentElement.id)].updateBookmarkType(document.getElementById(bmType.id).innerText);
@@ -227,9 +248,18 @@
                 btn= document.createElement("input");
                 btn.type="button";
                 btn.value="Other";
+                btn.classList.add("menuButton"); 
+                btn.name="menuButton_"+currentCounterValue;
                 btn.addEventListener('click', function() {
                         if (document.getElementById(bmType.id).innerText.length==0)
                             document.getElementById(bmType.id).innerText=this.value;
+                        
+                        document.getElementsByName(this.name).forEach((btn) => {
+                            if(btn == this) 
+                                btn.style.backgroundColor= "#FF7F50"; 
+                            else 
+                                btn.style.backgroundColor= "#bbb"; 
+                             });
                         if (txt_otherType.style.display=="none"){
                             txt_otherType.style.display="inline-block";
                             document.getElementById(newContentDiv.id).style.maxHeight=document.getElementById(newContentDiv.id).scrollHeight + "px";
@@ -238,8 +268,14 @@
                         updateLocalStorage();   
                 });
                 newContentDiv.appendChild(btn);
+                document.getElementsByName(btn.name).forEach((bmT) => {
+                    alert(bmT.value + " " + selectedType);
+                    if(bmT.value == selectedType)
+                        bmT.style.backgroundColor= "#FF7F50"; 
+                });
+                
                 var txt_otherType=document.createElement("textarea");
-                txt_otherType.placeholder="Explian other type here ..";
+                txt_otherType.placeholder="Explian other type here .. Please don't add personal information";
                 if (bmType.innerText==generalPBtns[generalPBtns.length-1])
                     txt_otherType.style.display="block";
                 else
@@ -255,11 +291,13 @@
                 });
                 newContentDiv.appendChild(txt_otherType);
                 
+
                 
                 var frmChk=document.createElement("form");
                 frmChk.action="#";
-                if (bmType.innerText==generalPBtns[0])
+                if (bmType.innerText==generalPBtns[0]){
                     frmChk.style.display="block";
+                }
                 else
                     frmChk.style.display="none";
                 newContentDiv.appendChild(frmChk);
@@ -267,7 +305,7 @@
                 logFlag.name="fs_logType_"+currentCounterValue;
                 var selectHeader=document.createElement('legend');
                 selectHeader.style="font-weight: bold;";
-                selectHeader.innerText="Please choose analysis type: ";
+                selectHeader.innerText="Characterize your analysis: ";
                 logFlag.appendChild(selectHeader);
                  for(var i = 0; i < flagTypes.length; i++) {
                     var optChk=document.createElement("input");
@@ -294,7 +332,25 @@
                 frmChk.appendChild(logFlag);
                 newContentDiv.appendChild(frmChk);
                 
+                var newNote=document.createElement("textarea");
+                newNote.id="txt_note_"+currentCounterValue;
+                newNote.rows=5;
+                if (note!="")
+                    newNote.value=note;
+                newNote.placeholder="Enter your notes here ..";
+                newNote.addEventListener('keyup', function() {
+                    bookmarksJSONFile[locateLogObj(bookmarksJSONFile,this.parentElement.id)].updateBookmarkNotes(this.value);
+                    updateLocalStorage();
+                });
+                var notesLabel=document.createElement("label");
+                notesLabel.innerText="Notes:";
+                notesLabel.style="font-weight: bold;";
+                notesLabel.htmlFor=newNote.id;
                 
+                newContentDiv.appendChild(notesLabel);
+
+                newContentDiv.appendChild(newNote);
+               
                
 
                 //Add buttons (Restore State|Delete)
@@ -311,7 +367,7 @@
                 
                 var deleteButton = document.createElement("input");
                 deleteButton.type = "button";
-                deleteButton.value="Delete";
+                deleteButton.value="Delete Bookmark";
                 //deleteButton.style="display:block;";
                 
                 deleteButton.addEventListener('click', function() {
@@ -326,11 +382,14 @@
                 newContentDiv.appendChild(deleteButton);
                 newContentDiv.appendChild(document.createElement("br"));
 
-
+                if (title!="")
+                {
+                    newContentDiv.style.height=   newContentDiv.scrollHeight +"px";
+                }
                 newDiv.appendChild(newContentDiv);
                 logs.appendChild(newDiv);
 
-                var newBookmark=new bookmark(currentCounterValue,timeLabel.innerHTML,headerButton.innerHTML);
+                var newBookmark=new bookmark(currentCounterValue,btn_dateTime.innerHTML,btn_title.innerHTML);
                 bookmarksJSONFile.push(newBookmark);
 
             }
@@ -357,12 +416,20 @@
     <body id="capture" onload="initializeJSON();">
        
         <div id="logbook_container" data-role="page">
+            <div>
+                <form action="#">
+                    <input type="radio" id="allBM" name="bmTypeSelection" value="all" checked>
+                    <label for="allBM">Show all bookmarks</label>
+                    <input type="radio" id="specificBM" name="bmTypeSelection" value="specific">
+                    <label for="specificBM">Show only for this visualization </label><br>
+                </form>
+            </div>
+            <div id="logbook_header"  class="hd_div" >
 
-            <div id="logbook_header" data-role="header">
-                <label style="font-weight: bold;">  Vistorian Bookmarks </label>
-                <input type="button" id="btn_save" value="Save" onclick="updateLocalStorage();">
-                <input type="button" id="addNewBookmark" value="Add New " onclick="AddNewLog(0,'','','','',[]);">
+                <button  id="addNewBookmark" value="Add New" class="hd_btn"  onclick="AddNewLog(0,'','','','',[]);">Add New</button>
+                <button  id="btn_save" value="Save" class="hd_btn"  onclick="updateLocalStorage();">Save Bookmarks</button>
 
+          
             </div>
             <div id="logs" data-role="main" class="ui-content">
 
@@ -370,7 +437,7 @@
             <div>
                <!-- <button onclick="generatePDF()">Export as a PDF</button>
                 <button onclick="takeScreenShot()">Take Screenshot</button> -->
-
+                <p><strong><italic>P.S. Don't add personal information in the other type</italic></strong></p>
                 <button onclick="location.href='mailto:vistorian@inria.fr?subject=(Vistorian)Consultation Request&body=Hi, kindly I would like to arrange a 10-minutes meeting to consult about my data\'s visualization. Thank you.'">Email Us & Consult an Expert</button>
                 <button onclick="location.href='mailto:vistorian@inria.fr?subject=(Vistorian)Report Technical Bug&body=Please help me in the following technical problem:\n'">Report a Technical Bug</button>
             </div>
