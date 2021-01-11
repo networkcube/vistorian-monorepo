@@ -21,6 +21,7 @@
                     this.note="";
                     this.type="";
                     this.analysisOpts=[];
+                    
                 }
                 updateBookmark(title,note,type){
                     this.title=title;
@@ -47,6 +48,55 @@
                 }
                 
                 
+            }
+            class nodeLinkBookmark extends bookmark{
+                constructor(networkType,id,createdOn,title,linkOpacity,nodeOpacity,nodeSize,edgeGap,linkWidth,labellingType,startTime,endTime){
+                    super(id,createdOn,title);
+                    this.networkType=networkType;
+                    this.linkOpacity=linkOpacity;
+                    this.nodeOpacity=nodeOpacity;
+                    this.nodeSize=nodeSize;
+                    this.edgeGap=edgeGap;
+                    this.linkWidth=linkWidth;
+                    this.labellingType=labellingType;
+                    this.timeSliderStart=startTime;
+                    this.timeSliderEnd=endTime;
+
+                }
+            }
+            class matrixBookmark extends bookmark{
+                constructor(networkType,id,createdOn,title,zoom,labellingType,startTime,endTime){
+                    super(id,createdOn,title);
+                    this.networkType=networkType;
+                    this.zoom=zoom;
+                    this.labellingType=labellingType;
+                    this.timeSliderStart=startTime;
+                    this.timeSliderEnd=endTime;
+
+                }
+            }
+            class timeArchsBookmark extends bookmark{
+                constructor(networkType,id,createdOn,title,labellingType,startTime,endTime){
+                    super(id,createdOn,title);
+                    this.networkType=networkType;
+                    this.labellingType=labellingType;
+                    this.timeSliderStart=startTime;
+                    this.timeSliderEnd=endTime;
+
+                }
+            }
+            class  mapBookmark extends bookmark{
+                constructor(networkType,id,createdOn,title,nodeOverlap,linkOpacity,opacityOfPositionlessNodes,labellingType,startTime,endTime){
+                    super(id,createdOn,title);
+                    this.networkType=networkType;
+                    this.nodeOverlap=nodeOverlap;
+                    this.linkOpacity=linkOpacity;
+                    this.opacityOfPositionlessNodes=opacityOfPositionlessNodes;
+                    this.labellingType=labellingType;
+                    this.timeSliderStart=startTime;
+                    this.timeSliderEnd=endTime;
+
+                }
             }
             function checkExistance(no,lstOpts){
 
@@ -382,10 +432,10 @@
                 newContentDiv.appendChild(deleteButton);
                 newContentDiv.appendChild(document.createElement("br"));
 
-                if (title!="")
+                /* if (title!="")
                 {
                     newContentDiv.style.height=   newContentDiv.scrollHeight +"px";
-                }
+                } */
                 newDiv.appendChild(newContentDiv);
                 logs.appendChild(newDiv);
 
@@ -437,9 +487,8 @@
             <div>
                <!-- <button onclick="generatePDF()">Export as a PDF</button>
                 <button onclick="takeScreenShot()">Take Screenshot</button> -->
-                <p><strong><italic>P.S. Don't add personal information in the other type</italic></strong></p>
-                <button onclick="location.href='mailto:vistorian@inria.fr?subject=(Vistorian)Consultation Request&body=Hi, kindly I would like to arrange a 10-minutes meeting to consult about my data\'s visualization. Thank you.'">Email Us & Consult an Expert</button>
-                <button onclick="location.href='mailto:vistorian@inria.fr?subject=(Vistorian)Report Technical Bug&body=Please help me in the following technical problem:\n'">Report a Technical Bug</button>
+                <button onclick="location.href='mailto:vistorian@inria.fr?subject=(Vistorian)Consultation Request&body=Hi, kindly I would like to arrange a 10-minutes meeting to consult about my data\'s visualization. Thank you.';trace.event('com_3', document.location.pathname, 'bookmark_tool', 'consult_team');">Email Us & Consult an Expert</button>
+                <button onclick="location.href='mailto:vistorian@inria.fr?subject=(Vistorian)Report Technical Bug&body=Please help me in the following technical problem:\n';trace.event('com_4', document.location.pathname, 'bookmark_tool', 'ReportTechBug');">Report a Technical Bug</button>
             </div>
 
 

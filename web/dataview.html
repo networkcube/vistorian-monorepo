@@ -45,7 +45,7 @@
                     <h6><strong>Try Bookmarks now!</strong> </h6>
                 </p>
                 <div class="onoffswitch"> 
-                    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="consentOnoffswitch" data-toggle="modal" data-target="#myModal" tabindex="0" > 
+                    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="consentOnoffswitch" data-toggle="modal" data-target="#myModal" tabindex="0" onchange="trace.event('log_5', 'Bookmark_Consent_Display', 'Consent_button', this.checked)" > 
                     <label class="onoffswitch-label" for="consentOnoffswitch">
                         <span class="onoffswitch-inner"></span>
                         <span class="onoffswitch-switch"></span>
@@ -255,7 +255,7 @@
             <button type="button" class="close"  onclick="minimizeBookmarks();">&nbsp;&nbsp;<i class="fa fa-window-minimize" style="font-size:12px"></i></button>
         </div>
     
-        <iframe id="myFrame" src="logbook.html" ></iframe>
+        <iframe id="myFrame" src="logbook.html" style="position: sticky;"></iframe>
         </div>
     
             <div class="container">

@@ -53,7 +53,7 @@ function turnLoggingOff(){
 }
 function turnOnLogging(){
     localStorage.setItem("acceptLogging", 'true');
-    trace.event('log_5', 'start logging', 'webpage', document.location.pathname);
+    trace.event('log_9', 'start logging', 'webpage', document.location.pathname);
     var bookmarksTool = document.getElementById("mydiv"); 
     bookmarksTool.style.display = "block";
 }
@@ -64,23 +64,28 @@ function checkLogStatus(){
         turnOnLogging();
     }
 }
-var toolbarMHeight,toolbarMWidth,toolbarTop,toolbarRight;
+var toolbarMHeight,toolbarMWidth,toolbarTop,toolbarLeft,bookmarkMinimized=false;
 function minimizeBookmarks(){
-  
-  toolbarMHeight=document.getElementById("mydiv").style.maxHeight;
-  toolbarMWidth=document.getElementById("mydiv").style.maxWidth;
-  toolbarTop=document.getElementById("mydiv").style.top;
-  toolbarRight=document.getElementById("mydiv").style.right;
-  document.getElementById("mydiv").style.top=(parseInt(screen.outerHeight)-parseInt(document.getElementById("mydiv").style.maxHeight)) +"px";
-  document.getElementById("myFrame").style.display = "none";
-  document.getElementById("mydiv").style.maxHeight = document.getElementById("mydivheader").scrollHeight +"px";
+  if (!bookmarkMinimized){
+    toolbarMHeight=document.getElementById("mydiv").offsetHeight;
+    toolbarMWidth=document.getElementById("mydiv").offsetWidth;
+    toolbarTop=document.getElementById("mydiv").offsetTop;
+    toolbarLeft=document.getElementById("mydiv").offsetLeft;
+    document.getElementById("mydiv").style.top="0px";//(parseInt(screen.outerHeight)-parseInt(document.getElementById("mydiv").style.maxHeight)) +"px";
+   // document.getElementById("mydiv").style.left=(parseInt(document.getElementById("mydiv").offsetWidth)-parseInt(screenX)) +"px";
+    document.getElementById("myFrame").style.display = "none";
+    document.getElementById("mydiv").style.maxHeight = document.getElementById("mydivheader").scrollHeight +"px";
+    bookmarkMinimized=true;
+  }
 }
 function maxmizeBookmarks(){
-  
-  document.getElementById("mydiv").style.maxHeight = toolbarMHeight;
-  document.getElementById("mydiv").style.maxWidth=toolbarMWidth;
-  document.getElementById("mydiv").style.top=toolbarTop;
-  document.getElementById("mydiv").style.right=toolbarRight;
-  document.getElementById("myFrame").style.display = "Block";
+  if (bookmarkMinimized){
+    document.getElementById("mydiv").style.maxHeight = toolbarMHeight +"px";
+    document.getElementById("mydiv").style.maxWidth=toolbarMWidth+"px";
+    document.getElementById("mydiv").style.top=toolbarTop+"px";
+    document.getElementById("mydiv").style.left=toolbarLeft+"px";
+    document.getElementById("myFrame").style.display = "Block";
+    bookmarkMinimized=false;
+  }
 
 }
