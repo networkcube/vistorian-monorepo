@@ -4,6 +4,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="logbook_s.css">
         <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+        <script type="text/javascript" src="../static/traces/trace.js"></script>
         <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
         <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
         <script src="https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js"></script>
@@ -120,9 +121,10 @@
                 visBM = localStorage.getItem("vistorianBookmarks");
                 logs = JSON.parse(visBM);
                 var i;
-                if (typeof logs !== "undefined" && logs.length!=0){
-                    for ( i=0;i<logs.length;i++){
-                        AddNewLog(logs[i].id,logs[i].createdOn,logs[i].title,logs[i].note,logs[i].type,logs[i].analysisOpts);
+                if (typeof logs !== "undefined" && logs!==null){
+                    if (logs.length!=0 )
+                        for ( i=0;i<logs.length;i++){
+                            AddNewLog(logs[i].id,logs[i].createdOn,logs[i].title,logs[i].note,logs[i].type,logs[i].analysisOpts);
                     }
                     counter=logs[i-1].id;
                 }

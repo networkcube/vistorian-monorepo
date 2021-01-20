@@ -1,3 +1,7 @@
+div {
+  margin: 10px ;
+}
+
 .hd_div {
   display: flex;
   justify-content: space-between;
@@ -62,9 +66,7 @@ input[type='text'],select,textarea {
     background-color: #f1f1f1;
   }
 
-  div {
-    margin: 10px ;
-  }
+ 
 .menuButton{
     background-color:#bbb;
     border-radius:15px;

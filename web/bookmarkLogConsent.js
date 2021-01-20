@@ -42,7 +42,7 @@ function dragElement(elmnt) {
 }
 
 function turnLoggingOff(){
-    localStorage.setItem("acceptLogging", '');
+    localStorage.setItem("acceptLogging", 'false');
     trace.event('log_10', 'stop logging', 'webpage', document.location.pathname);
     var checkBox = document.getElementById("consentOnoffswitch");
     checkBox.checked=false;
@@ -51,6 +51,7 @@ function turnLoggingOff(){
     bookmarksTool.style.display = "none";
 
 }
+
 function turnOnLogging(){
     localStorage.setItem("acceptLogging", 'true');
     trace.event('log_9', 'start logging', 'webpage', document.location.pathname);
