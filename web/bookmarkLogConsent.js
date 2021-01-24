@@ -47,7 +47,7 @@ function turnLoggingOff(){
     var checkBox = document.getElementById("consentOnoffswitch");
     checkBox.checked=false;
     var bookmarksTool = document.getElementById("mydiv");
-
+    document.getElementById('myModal').style.display = "none";
     bookmarksTool.style.display = "none";
 
 }
@@ -57,6 +57,7 @@ function turnOnLogging(){
     trace.event('log_9', 'start logging', 'webpage', document.location.pathname);
     var bookmarksTool = document.getElementById("mydiv"); 
     bookmarksTool.style.display = "block";
+    document.getElementById('myModal').style.display = "none";
 }
 function checkLogStatus(){
     if (localStorage.getItem("acceptLogging")){
@@ -89,4 +90,16 @@ function maxmizeBookmarks(){
     bookmarkMinimized=false;
   }
 
+
+
+}
+function toggleConsntModel(){
+  if (document.getElementById('consentOnoffswitch').checked){
+    if (document.getElementById('chk_dontShowConsent').checked)
+      turnOnLogging();
+    else
+        document.getElementById('myModal').style.display = "block";
+  }
+  else
+    turnLoggingOff();
 }

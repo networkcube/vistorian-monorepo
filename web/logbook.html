@@ -14,15 +14,27 @@
         <script type="text/javascript">
             const monthNames = ["January", "February", "March", "April", "May", "June",
                                  "July", "August", "September", "October", "November", "December"];
+
+            var networkName=window.parent.location.search;
+            if (networkName.indexOf('&')>-1){
+                networkName=window.parent.location.search.split('&')[1].split('=')[1];
+            }
+            var viewType=window.parent.location.pathname;
+            if ((viewType.length!=0) && (typeof viewType !== 'undefined')){
+                viewType=window.parent.location.pathname.split('/',3)[2].split('.')[0];
+            }   
+
             class bookmark{
-                constructor(id,createdOn,title){
+                constructor(id,createdOn,title,viewType,datasetID){
                     this.id=id;
                     this.createdOn=createdOn;
                     this.title=title;
                     this.note="";
                     this.type="";
                     this.analysisOpts=[];
-                    
+                    this.viewType=viewType;
+                    this.networkDataset=datasetID;
+                    this.controlsValues=[];
                 }
                 updateBookmark(title,note,type){
                     this.title=title;
@@ -50,53 +62,45 @@
                 
                 
             }
-            class nodeLinkBookmark extends bookmark{
-                constructor(networkType,id,createdOn,title,linkOpacity,nodeOpacity,nodeSize,edgeGap,linkWidth,labellingType,startTime,endTime){
-                    super(id,createdOn,title);
+            // Holds values of each network's controls
+            class networkControls {
+                constructor(networkType,startTime,endTime){
                     this.networkType=networkType;
+                    this.timeSliderStart=startTime;
+                    this.timeSliderEnd=endTime;
+                }
+            }
+
+            class nodeLinkControls extends networkControls{
+                constructor(networkType,startTime,endTime,linkOpacity,nodeOpacity,nodeSize,edgeGap,linkWidth,labellingType){
+                    super(networkType,startTime,endTime);
                     this.linkOpacity=linkOpacity;
                     this.nodeOpacity=nodeOpacity;
                     this.nodeSize=nodeSize;
                     this.edgeGap=edgeGap;
                     this.linkWidth=linkWidth;
                     this.labellingType=labellingType;
-                    this.timeSliderStart=startTime;
-                    this.timeSliderEnd=endTime;
-
                 }
             }
-            class matrixBookmark extends bookmark{
-                constructor(networkType,id,createdOn,title,zoom,labellingType,startTime,endTime){
-                    super(id,createdOn,title);
-                    this.networkType=networkType;
+            class matrixControls extends networkControls{
+                constructor(networkType,startTime,endTime,zoom,labellingType){
+                    super(networkType,startTime,endTime);
                     this.zoom=zoom;
                     this.labellingType=labellingType;
-                    this.timeSliderStart=startTime;
-                    this.timeSliderEnd=endTime;
-
                 }
             }
-            class timeArchsBookmark extends bookmark{
-                constructor(networkType,id,createdOn,title,labellingType,startTime,endTime){
-                    super(id,createdOn,title);
-                    this.networkType=networkType;
+            class timeArchsControls extends networkControls{
+                constructor(networkType,startTime,endTime,labellingType){
+                    super(networkType,startTime,endTime);
                     this.labellingType=labellingType;
-                    this.timeSliderStart=startTime;
-                    this.timeSliderEnd=endTime;
-
                 }
             }
-            class  mapBookmark extends bookmark{
-                constructor(networkType,id,createdOn,title,nodeOverlap,linkOpacity,opacityOfPositionlessNodes,labellingType,startTime,endTime){
-                    super(id,createdOn,title);
-                    this.networkType=networkType;
+            class  mapControls extends networkControls{
+                constructor(networkType,startTime,endTime,nodeOverlap,linkOpacity,opacityOfPositionlessNodes){
+                    super(networkType,startTime,endTime);
                     this.nodeOverlap=nodeOverlap;
                     this.linkOpacity=linkOpacity;
                     this.opacityOfPositionlessNodes=opacityOfPositionlessNodes;
-                    this.labellingType=labellingType;
-                    this.timeSliderStart=startTime;
-                    this.timeSliderEnd=endTime;
-
                 }
             }
             function checkExistance(no,lstOpts){
@@ -134,10 +138,11 @@
                 bookmarksJSON = JSON.stringify(bookmarksJSONFile);
                 localStorage.setItem("vistorianBookmarks", bookmarksJSON);
             }
-            function updateHeader()
-            {
+
+            function updateHeader(){
                 this.parentElement.parentElement.getElementsByClassName("collapsible")[0].innerHTML=this.value;
             }
+
             function AddNewLog(id,dateCreated,title,note,selectedType,analysisOptions){
                  var logs=document.getElementById("logs");
                 //Create new log div
@@ -408,14 +413,17 @@
                 //Add buttons (Restore State|Delete)
                 newContentDiv.appendChild(document.createElement("br"));
                 newContentDiv.appendChild(document.createElement("br"));
-                var restoreButton = document.createElement("input");
-                restoreButton.type = "button";
-                restoreButton.value="Restore Visualization State";
-                restoreButton.addEventListener('click', function() {
-                    
 
-                });
-                newContentDiv.appendChild(restoreButton);
+                if (viewType!= "" || viewType!= "index"  || viewType!= "dataview" ){
+                    var restoreButton = document.createElement("input");
+                    restoreButton.type = "button";
+                    restoreButton.value="Restore Visualization State";
+                    restoreButton.addEventListener('click', function() {
+
+                     });
+                    newContentDiv.appendChild(restoreButton);
+                }
+
                 
                 var deleteButton = document.createElement("input");
                 deleteButton.type = "button";
@@ -442,6 +450,49 @@
                 logs.appendChild(newDiv);
 
                 var newBookmark=new bookmark(currentCounterValue,btn_dateTime.innerHTML,btn_title.innerHTML);
+
+                switch (viewType){
+
+                    case "dataview":
+                    break;
+                    case "nodelink":
+                        let startTime=window.parent.document.getElementById('sliderKnobMin').cx;
+                        let endTime=window.parent.document.getElementById('sliderKnobMax').cx;
+                        let cntrls=window.parent.document.getelem('#sliderKnob');
+                        let linkOpacity=cntrls[0].cx;
+                        let nodeOpacity=cntrls[1].cx;
+                        let nodeSize=cntrls[2].cx;
+                        let edgeGap=cntrls[3].cx;
+                        let linkWidth=cntrls[4].cx;
+                        let labellingType=window.parent.document.getElementById('selection-input_Labeling').value;
+                        newBookmark.controlsValues.push(new  nodeLinkControls(viewType,startTime,endTime,linkOpacity,nodeOpacity,nodeSize,edgeGap,linkWidth,labellingType));
+                        break;
+/*                     case "matrix":
+                        newBookmark.controlsValues.push(new  matrixControls(viewType));
+                        break;
+                    case "dynamicego":
+                        newBookmark.controlsValues.push(new  timeArchsControls(viewType));
+                        break;
+                    case "map":
+                        newBookmark.controlsValues.push(new  mapControls(viewType));
+                        break;
+                    case "mat-nl":
+                        newBookmark.controlsValues.push(new  nodeLinkControls(viewType));
+                        newBookmark.controlsValues.push(new  matrixControls(viewType));
+                        break;
+                    case "tileview":
+                        newBookmark.controlsValues.push(new  nodeLinkControls(viewType));
+                        newBookmark.controlsValues.push(new  matrixControls(viewType));
+                        newBookmark.controlsValues.push(new  timeArchsControls(viewType));
+                        newBookmark.controlsValues.push(new  mapControls(viewType));
+                        break;
+                    case "": case "index":
+                        break;
+                    default:
+                        //alert to be deleted - just for testing purposes
+                        window.alert("Path error bookmark"); */
+                }
+                
                 bookmarksJSONFile.push(newBookmark);
 
             }

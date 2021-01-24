@@ -45,7 +45,7 @@
                     <h6><strong>Try Bookmarks now!</strong> </h6>
                 </p>
                 <div class="onoffswitch"> 
-                    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="consentOnoffswitch" data-toggle="modal" data-target="#myModal" tabindex="0" onchange="trace.event('log_5', 'Bookmark_Consent_Display', 'Consent_button', this.checked)" > 
+                    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="consentOnoffswitch"  tabindex="0" onchange="trace.event('log_5', 'Bookmark_Consent_Display', 'Consent_button', this.checked);toggleConsntModel();" > 
                     <label class="onoffswitch-label" for="consentOnoffswitch">
                         <span class="onoffswitch-inner"></span>
                         <span class="onoffswitch-switch"></span>
@@ -273,36 +273,40 @@
             </div>
             
             <!-- Modal body -->
-            <div class="modal-body">
+            <div class="modal-body" style="text-align: justify;">
                 <h3>Vistorian Logging Consent Form</h3>
-    
-            <p>By clicking the (Enable Bookmarks Tool) button you will be agreeing to the terms and conditions and turning ON the logging process. The Vistorian logs your activity anonymously(e.g. the fact that a user(you) created a node link diagram or a matrix, or used filters, or the fact that you uploaded a new file). This allows us to understand how Vistorian is used and to improve it.</p>
-    
-            <p>This Logging data will be saved on a secure server which is accessible only by the Vistorian team. No personal information will be collected or saved within the logging data. The data you upload to visualize (your research data) remains on your computer and is not saved anywhere else. In other words, no-one else can see your data unless you personally share it with someone else </p>
-    
-            <p>If you agree to allow the logging</p>
-    
-            <ul>
-                <li>You will activate the (bookmarks) feature and will be able to bookmark your progress, write your own work notes, and caegories them based on their type</li>
-                <li>Your interactions will anonymous be logged for improvement purposes</li>
-                <li>Contact us by email to book a consultation with our visualization experts. You will be provided with a copy of the consent form and a questionnaire, and a session to be booked for you to discuss your questions.</li>
-            </ul>
-    
-                <p>You can turn logging OFF at any time by disabling the bookmark tool.</p>
-    
-                Once bookmark is disbaled no more logging will be captured. Nothing will be sent to the server.</p>
-    
-            <p>You will be able to enable bookmark tool again and enjoy the visualizations&rsquo; export feature if you wish.</p>
-    
-            <p>The data we gather from your visits to the Vistorian are de-identified and contains no personal information.&nbsp;if you wish this data to be removed from the server please send a personal email to vistorian@ed.ac.uk</p>
-    
+                <br>   
+
+                <p>The bookmark feature allows you to capture and restore the state of your exploration at any time and to leave notes with each bookmark. </p>
+                <p>The Vistorian is a research prototype to build better visualizations for multivariate networks, and it is essential that we understand how people use the many interaction and visualization features of the Vistorian. By enabling the bookmark function, you will be agreeing to the terms and conditions below and enable anonymous logging of  your interactions.</p>
+                <p>For more information about our research and publications visit our <a href="https://github.com/alkadi-mh/vistorian-web/wiki/Vistorian-Activity-Logging-Study">wiki</a> and you can learn more about Vistorian by clicking <a href="https://github.com/networkcube/vistorian/wiki">here</a>. To send questions, feedback or suggestions for improvement email us at: <a href="mailto:vistorian@inria.fr">vistorian@inria.fr</a> </p>
+                <p>If you agree to be logged, we will  anonymously log how you use the Vistorian, such as the fact that you have opened a node link diagram or a matrix visualization; the fact that you have used an interactive filter on your data, or the fact that you have uploaded of a new data file. For the list of the events being logged see: wiki . The anonymous logged events will be saved on a secure server which is accessible only by the Vistorian team.</p>
+                <p>To relate logged events to the same user, the Vistorian will create a unique random ID for you in your browser cache, independent from your IP address and other potentially identifiable personal information. No cookies are used and emptying your browser cache will erase your ID. </p>
+                <p>No personal information will be collected or saved within the logging data. For example we do not log or transmit any of your research data onto our server. I.e., the data you explore remains only on your computer and no information about these data or pictures of the visualizations you create will be logged.</p>
+                <p><ul>If you agree to your interactions being logged:
+                <li>You will activate the bookmarks feature and will be able to bookmark your visualizations, write your own work notes.</li>
+                <li>Interactions will anonymously be logged for improvement purposes and our research.</li> 
+                <li>You can also contact us by email to book a consultation with our visualization experts to help you with the Vistorian. </li>
+                </ul> </p>
+                You can stop the logging at any time by turning OFF the bookmark feature. </p>
+                If you wish your data to be removed from the server please email vistorian@inria.fr. Please include the URL of your last Vistorian session -which includes your ID.</p>
+
+                    
                 <p>Thank you for agreeing to participate in our research.</p>
                 <p><b>The Vistorian Team</b></p>
             </div>
             <!-- Modal footer -->
             <div class="modal-footer">
+               
+                <label for="chk_dontShowConsent">  <input type="checkbox" id="chk_dontShowConsent"> Don't show consent-approval again.</label>
+                <a href="/static/logging_consent/Vistorian Tracing Consent form .pdf" download> <button type="button" class="btn btn-link">Download Consent</button></a>
+
+                <div >  
                 <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="turnLoggingOff()">Disable</button>
                 <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="turnOnLogging()">Enable Bookmark Tool</button>
+                </div>
+                    
+                    
             </div>
             
             
