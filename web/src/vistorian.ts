@@ -25,6 +25,8 @@ head.append("<link href='https://fonts.googleapis.com/css?family=Comfortaa' rel=
 head.append("<link href='https://fonts.googleapis.com/css?family=Caveat' rel='stylesheet' type='text/css'>")
 head.append("<link href='https://fonts.googleapis.com/css?family=IM+Fell+English' rel='stylesheet' type='text/css'>")
 
+
+
 function append(url: string) {
     var script: any = document.createElement('script');
     script.type = 'text/javascript';
@@ -283,8 +285,7 @@ export function setHeader(elementId: String, datasetname: String) {
     var dataname: any = $('\
         <p style="margin:5px;background-color:#eeeeee;border-radius:2px;padding-left:10px;padding:5px;"><b>Data:</b> '+ datasetname + '</h2>')
     $('#' + elementId).append(dataname);
-    $('#' + elementId).load('../web/try3.html')
-
+ 
     //$('#' + elementId).append('')
     //$('#' + elementId).append('')
     //$('#' + elementId).append('')
@@ -294,6 +295,7 @@ export function setHeader(elementId: String, datasetname: String) {
     // VS: Clicks on Return to DataView
     $('#' + elementId).append('<a href="../web/dataview.html?session=' + vars['session'] + '&datasetName' + vars['datasetName'] + '" style="margin:5px;padding-left:5px;" onclick="trace.event(\'system\', \'ts_ReturnDV\', \'CCC\', \'DDD\');" target="_blank">Return to Dataview</a>');
     $('#' + elementId).append('<br/><br/>');
+
 }
 
 

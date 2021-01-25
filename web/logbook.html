@@ -128,11 +128,81 @@
                 if (typeof logs !== "undefined" && logs!==null){
                     if (logs.length!=0 )
                         for ( i=0;i<logs.length;i++){
-                            AddNewLog(logs[i].id,logs[i].createdOn,logs[i].title,logs[i].note,logs[i].type,logs[i].analysisOpts);
+                            AddNewLog(logs[i].id,logs[i].createdOn,logs[i].title,logs[i].note,logs[i].type,logs[i].analysisOpts,logs[i].viewType,logs[i].networkDataset);
                     }
                     counter=logs[i-1].id;
                 }
                
+            }
+
+            function changeBookmarksView(typeChosen){
+                var i;
+                var displayVal;
+                var bkmElements;
+                //Check fo dataview bookmarks 
+                bkmElements=document.getElementsByClassName("dataview");      
+                if  ((typeChosen=="all") ||(typeChosen=="dataview") )
+                    displayVal="block";
+                else
+                    displayVal="none";
+                for (i = 0; i < bkmElements.length; i++) 
+                        bkmElements[i].style.display = displayVal;
+
+                 //Check fo nodelink bookmarks                  
+                bkmElements=document.getElementsByClassName("nodelink");      
+                if  ((typeChosen=="all") ||(typeChosen=="nodelink") )
+                    displayVal="block";
+                else
+                    displayVal="none";
+                for (i = 0; i < bkmElements.length; i++) 
+                        bkmElements[i].style.display = displayVal;
+
+
+                //Check fo map bookmarks       
+                bkmElements=document.getElementsByClassName("map");      
+                if  ((typeChosen=="all") ||(typeChosen=="map") )
+                    displayVal="block";
+                else
+                    displayVal="none";
+                for (i = 0; i < bkmElements.length; i++) 
+                    bkmElements[i].style.display = displayVal;
+                    
+                //Check fo matrix bookmarks  
+                bkmElements=document.getElementsByClassName("matrix");      
+                if  ((typeChosen=="all") ||(typeChosen=="matrix") )
+                    displayVal="block";
+                else
+                    displayVal="none";
+                for (i = 0; i < bkmElements.length; i++) 
+                    bkmElements[i].style.display = displayVal;
+          
+                //Check fo dynamicego bookmarks  
+                bkmElements=document.getElementsByClassName("dynamicego");      
+                if  ((typeChosen=="all") ||(typeChosen=="dynamicego") )
+                    displayVal="block";
+                else
+                    displayVal="none";
+                for (i = 0; i < bkmElements.length; i++) 
+                        bkmElements[i].style.display = displayVal;
+
+                //Check fo mat-nl bookmarks       
+                bkmElements=document.getElementsByClassName("mat-nl");      
+                if  ((typeChosen=="all") ||(typeChosen=="mat-nl") )
+                    displayVal="block";
+                else
+                    displayVal="none";
+                for (i = 0; i < bkmElements.length; i++) 
+                        bkmElements[i].style.display = displayVal;
+                    
+                //Check fo tileview bookmarks  
+                bkmElements=document.getElementsByClassName("tileview");      
+                if  ((typeChosen=="all") ||(typeChosen=="tileview") )
+                    displayVal="block";
+                else
+                    displayVal="none";
+                for (i = 0; i < bkmElements.length; i++) 
+                        bkmElements[i].style.display = displayVal;          
+ 
             }
             function updateLocalStorage(){
                 bookmarksJSON = JSON.stringify(bookmarksJSONFile);
@@ -143,7 +213,7 @@
                 this.parentElement.parentElement.getElementsByClassName("collapsible")[0].innerHTML=this.value;
             }
 
-            function AddNewLog(id,dateCreated,title,note,selectedType,analysisOptions){
+            function AddNewLog(id,dateCreated,title,note,selectedType,analysisOptions,networkType,networkDataset){
                  var logs=document.getElementById("logs");
                 //Create new log div
                 var newDiv=document.createElement("div");
@@ -151,11 +221,14 @@
                 if (id==0){
                     counter++;
                     currentCounterValue=counter;
+                    newDiv.className=viewType;
                 }
                 else{
                     currentCounterValue=id;
+                    newDiv.className=networkType
                 }
                 newDiv.id="div_log_"+currentCounterValue;
+                
 
                  // create inner collapsible div
                  var newContentDiv=document.createElement("div");
@@ -413,8 +486,8 @@
                 //Add buttons (Restore State|Delete)
                 newContentDiv.appendChild(document.createElement("br"));
                 newContentDiv.appendChild(document.createElement("br"));
-
-                if (viewType!= "" || viewType!= "index"  || viewType!= "dataview" ){
+                //Hide restore-state button for non-visualization pages
+                if (newDiv.className!= "dataview" ){
                     var restoreButton = document.createElement("input");
                     restoreButton.type = "button";
                     restoreButton.value="Restore Visualization State";
@@ -449,24 +522,26 @@
                 newDiv.appendChild(newContentDiv);
                 logs.appendChild(newDiv);
 
-                var newBookmark=new bookmark(currentCounterValue,btn_dateTime.innerHTML,btn_title.innerHTML);
-
+                var newBookmark=new bookmark(currentCounterValue,btn_dateTime.innerHTML,btn_title.innerHTML,newDiv.className,networkName);
+                var visIframe=window.parent.document.getElementsByTagName("iframe")[1];
+                //window.alert(visIframe[0].src + " ---- " +visIframe[1].src + " ---- " + visIframe[2].src);
                 switch (viewType){
 
                     case "dataview":
                     break;
                     case "nodelink":
-                        let startTime=window.parent.document.getElementById('sliderKnobMin').cx;
-                        let endTime=window.parent.document.getElementById('sliderKnobMax').cx;
-                        let cntrls=window.parent.document.getelem('#sliderKnob');
-                        let linkOpacity=cntrls[0].cx;
-                        let nodeOpacity=cntrls[1].cx;
-                        let nodeSize=cntrls[2].cx;
-                        let edgeGap=cntrls[3].cx;
-                        let linkWidth=cntrls[4].cx;
-                        let labellingType=window.parent.document.getElementById('selection-input_Labeling').value;
+                        let startTime=visIframe.contentWindow.document.getElementById("sliderKnobMin").getAttribute('cx');
+                        let endTime=visIframe.contentWindow.document.getElementById('sliderKnobMax').getAttribute('cx');
+                        let cntrls=visIframe.contentWindow.document.getElementsByTagName('circle');
+                        let linkOpacity=cntrls[0].getAttribute('cx');
+                        let nodeOpacity=cntrls[1].getAttribute('cx');
+                        let nodeSize=cntrls[2].getAttribute('cx');
+                        let edgeGap=cntrls[3].getAttribute('cx');
+                        let linkWidth=cntrls[4].getAttribute('cx');
+                        let labellingType=visIframe.contentWindow.document.getElementById('selection-input_Labeling').value;
                         newBookmark.controlsValues.push(new  nodeLinkControls(viewType,startTime,endTime,linkOpacity,nodeOpacity,nodeSize,edgeGap,linkWidth,labellingType));
                         break;
+                        
 /*                     case "matrix":
                         newBookmark.controlsValues.push(new  matrixControls(viewType));
                         break;
@@ -521,15 +596,15 @@
         <div id="logbook_container" data-role="page">
             <div>
                 <form action="#">
-                    <input type="radio" id="allBM" name="bmTypeSelection" value="all" checked>
+                    <input type="radio" id="allBM" name="bmTypeSelection" value="all" onchange="changeBookmarksView('all');" checked >
                     <label for="allBM">Show all bookmarks</label>
-                    <input type="radio" id="specificBM" name="bmTypeSelection" value="specific">
-                    <label for="specificBM">Show only for this visualization </label><br>
+                    <input type="radio" id="specificBM" name="bmTypeSelection" value="specific" onchange="changeBookmarksView(viewType);">
+                    <label for="specificBM">Show bookmarks only of current visualization </label><br>
                 </form>
             </div>
             <div id="logbook_header"  class="hd_div" >
 
-                <button  id="addNewBookmark" value="Add New" class="hd_btn"  onclick="AddNewLog(0,'','','','',[]);">Add New</button>
+                <button  id="addNewBookmark" value="Add New" class="hd_btn"  onclick="AddNewLog(0,'','','','',[],viewType,networkName);">Add New</button>
                 <button  id="btn_save" value="Save" class="hd_btn"  onclick="updateLocalStorage();">Save Bookmarks</button>
 
           
