@@ -119,7 +119,7 @@
                         
                     return i;
             }
-
+ 
             
             function initializeJSON(){
                 visBM = localStorage.getItem("vistorianBookmarks");
@@ -399,7 +399,6 @@
                 });
                 newContentDiv.appendChild(btn);
                 document.getElementsByName(btn.name).forEach((bmT) => {
-                    alert(bmT.value + " " + selectedType);
                     if(bmT.value == selectedType)
                         bmT.style.backgroundColor= "#FF7F50"; 
                 });
@@ -542,30 +541,91 @@
                         newBookmark.controlsValues.push(new  nodeLinkControls(viewType,startTime,endTime,linkOpacity,nodeOpacity,nodeSize,edgeGap,linkWidth,labellingType));
                         break;
                         
-/*                     case "matrix":
-                        newBookmark.controlsValues.push(new  matrixControls(viewType));
+                     case "matrix":
+                        let matrixStartTime=visIframe.contentWindow.document.getElementById("sliderKnobMin").getAttribute('cx');
+                        let matrixEndTime=visIframe.contentWindow.document.getElementById('sliderKnobMax').getAttribute('cx');
+                        let matrixZoomVal=visIframe.contentWindow.document.getElementById('cellSizeBox').value;
+                        let matrixLabellingType=visIframe.contentWindow.document.getElementById('labelOrdering').value;
+                        newBookmark.controlsValues.push(new  matrixControls(viewType,matrixStartTime,matrixEndTime,matrixZoomVal,matrixLabellingType));
                         break;
                     case "dynamicego":
-                        newBookmark.controlsValues.push(new  timeArchsControls(viewType));
+                        let dyStartTime=visIframe.contentWindow.document.getElementById("sliderKnobMin").getAttribute('cx');
+                        let dyEndTime=visIframe.contentWindow.document.getElementById('sliderKnobMax').getAttribute('cx');
+                        let dyLabellingType=visIframe.contentWindow.document.getElementById('labelOrdering').value;
+                        newBookmark.controlsValues.push(new  timeArchsControls(viewType,dyStartTime,dyEndTime,dyLabellingType));
                         break;
                     case "map":
-                        newBookmark.controlsValues.push(new  mapControls(viewType));
+                        let mapStartTime=visIframe.contentWindow.document.getElementById("sliderKnobMin").getAttribute('cx');
+                        let mapEndTime=visIframe.contentWindow.document.getElementById('sliderKnobMax').getAttribute('cx');
+                        let mapCntrls=visIframe.contentWindow.document.getElementsByTagName('circle');
+                        let mapNodeOverlap=mapCntrls[0].getAttribute('cx');
+                        let mapLinkOpacity=mapCntrls[1].getAttribute('cx');
+                        let mapOpacityOfPositionlessNodes=mapCntrls[2].getAttribute('cx');
+                        newBookmark.controlsValues.push(new  mapControls(viewType,mapStartTime,mapEndTime,mapNodeOverlap,mapLinkOpacity,mapOpacityOfPositionlessNodes));
                         break;
-                    case "mat-nl":
-                        newBookmark.controlsValues.push(new  nodeLinkControls(viewType));
-                        newBookmark.controlsValues.push(new  matrixControls(viewType));
+ /*                    case "mat-nl":
+                        let startTime=visIframe.contentWindow.document.getElementById("sliderKnobMin").getAttribute('cx');
+                        let endTime=visIframe.contentWindow.document.getElementById('sliderKnobMax').getAttribute('cx');
+                        let cntrls=visIframe.contentWindow.document.getElementsByTagName('circle');
+                        let linkOpacity=cntrls[0].getAttribute('cx');
+                        let nodeOpacity=cntrls[1].getAttribute('cx');
+                        let nodeSize=cntrls[2].getAttribute('cx');
+                        let edgeGap=cntrls[3].getAttribute('cx');
+                        let linkWidth=cntrls[4].getAttribute('cx');
+                        let labellingType=visIframe.contentWindow.document.getElementById('selection-input_Labeling').value;
+                        newBookmark.controlsValues.push(new  nodeLinkControls(viewType,startTime,endTime,linkOpacity,nodeOpacity,nodeSize,edgeGap,linkWidth,labellingType));
+
+                        var visIframe2_matnl=window.parent.document.getElementsByTagName("iframe")[2];
+
+                        let matrixStartTime=visIframe2_matnl.contentWindow.document.getElementById("sliderKnobMin").getAttribute('cx');
+                        let matrixEndTime=visIframe2_matnl.contentWindow.document.getElementById('sliderKnobMax').getAttribute('cx');
+                        let matrixZoomVal=visIframe2_matnl.contentWindow.document.getElementById('cellSizeBox').value;
+                        let matrixLabellingType=visIframe2_matnl.contentWindow.document.getElementById('labelOrdering').value;
+                        newBookmark.controlsValues.push(new  matrixControls(viewType,matrixStartTime,matrixEndTime,matrixZoomVal,matrixLabellingType));
+
                         break;
                     case "tileview":
-                        newBookmark.controlsValues.push(new  nodeLinkControls(viewType));
-                        newBookmark.controlsValues.push(new  matrixControls(viewType));
-                        newBookmark.controlsValues.push(new  timeArchsControls(viewType));
-                        newBookmark.controlsValues.push(new  mapControls(viewType));
+                        let startTime=visIframe.contentWindow.document.getElementById("sliderKnobMin").getAttribute('cx');
+                        let endTime=visIframe.contentWindow.document.getElementById('sliderKnobMax').getAttribute('cx');
+                        let cntrls=visIframe.contentWindow.document.getElementsByTagName('circle');
+                        let linkOpacity=cntrls[0].getAttribute('cx');
+                        let nodeOpacity=cntrls[1].getAttribute('cx');
+                        let nodeSize=cntrls[2].getAttribute('cx');
+                        let edgeGap=cntrls[3].getAttribute('cx');
+                        let linkWidth=cntrls[4].getAttribute('cx');
+                        let labellingType=visIframe.contentWindow.document.getElementById('selection-input_Labeling').value;
+                        newBookmark.controlsValues.push(new  nodeLinkControls(viewType,startTime,endTime,linkOpacity,nodeOpacity,nodeSize,edgeGap,linkWidth,labellingType));
+                       
+                       
+                        var visIframe2=window.parent.document.getElementsByTagName("iframe")[2];
+                        let matrixStartTime=visIframe2.contentWindow.document.getElementById("sliderKnobMin").getAttribute('cx');
+                        let matrixEndTime=visIframe2.contentWindow.document.getElementById('sliderKnobMax').getAttribute('cx');
+                        let matrixZoomVal=visIframe2.contentWindow.document.getElementById('cellSizeBox').value;
+                        let matrixLabellingType=visIframe2.contentWindow.document.getElementById('labelOrdering').value;
+                        newBookmark.controlsValues.push(new  matrixControls(viewType,matrixStartTime,matrixEndTime,matrixZoomVal,matrixLabellingType));
+
+                        var visIframe3=window.parent.document.getElementsByTagName("iframe")[3];
+                        let dyStartTime=visIframe3.contentWindow.document.getElementById("sliderKnobMin").getAttribute('cx');
+                        let dyEndTime=visIframe3.contentWindow.document.getElementById('sliderKnobMax').getAttribute('cx');
+                        let dyLabellingType=visIframe3.contentWindow.document.getElementById('labelOrdering').value;
+                        newBookmark.controlsValues.push(new  timeArchsControls(viewType,dyStartTime,dyEndTime,dyLabellingType));
+
+
+                        var visIframe4=window.parent.document.getElementsByTagName("iframe")[4];
+                        let mapStartTime=visIframe4.contentWindow.document.getElementById("sliderKnobMin").getAttribute('cx');
+                        let mapEndTime=visIframe4.contentWindow.document.getElementById('sliderKnobMax').getAttribute('cx');
+                        let mapCntrls=visIframe4.contentWindow.document.getElementsByTagName('circle');
+                        let mapNodeOverlap=mapCntrls[0].getAttribute('cx');
+                        let mapLinkOpacity=mapCntrls[1].getAttribute('cx');
+                        let mapOpacityOfPositionlessNodes=mapCntrls[2].getAttribute('cx');
+                        newBookmark.controlsValues.push(new  mapControls(viewType,mapStartTime,mapEndTime,mapNodeOverlap,mapLinkOpacity,mapOpacityOfPositionlessNodes));
+
+
                         break;
-                    case "": case "index":
-                        break;
+ */
                     default:
                         //alert to be deleted - just for testing purposes
-                        window.alert("Path error bookmark"); */
+                        console.log("Unable to classify bookmark type"); 
                 }
                 
                 bookmarksJSONFile.push(newBookmark);
@@ -586,12 +646,13 @@
                     doc.save('vistorian_bookmarks.pdf');
             }
             function takeScreenShot() {
-                 
+                
             }
+            
             
         </script>
     </head>
-    <body id="capture" onload="initializeJSON();">
+    <body id="capture" onload="initializeJSON();" onerror="trace.event('err', event + ' ' + source + lineno, error, document.location.pathname);">
        
         <div id="logbook_container" data-role="page">
             <div>
@@ -621,6 +682,7 @@
 
 
         </div>
+
 
     </body>
 

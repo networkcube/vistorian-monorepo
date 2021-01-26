@@ -19,11 +19,18 @@
         <script src="../node_modules/jstorage/jstorage.js"></script>
         <script src="../node_modules/vistorian-core/lib/vistorian-core.js"></script>
         <script src="../lib/vistorian-vis.js"></script>
-
+        <link rel="stylesheet" href="bookmarkLogConsent.css">
+        <script src='bookmarkLogConsent.js'></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
     </head>
     <title>Matrix + Node Link</title>
 
-<body>
+<body onload="trace.event('log_2', 'load', 'webpage', document.location.pathname);checkLogStatus();dragElement(document.getElementById('mydiv'));" onerror="trace.event('err', event + ' ' + source + lineno, error, document.location.pathname);" onbeforeunload="trace.event('log_11', 'close', 'webpage', document.location.pathname);">
 
     <!-- VS: Call to trace_test_130529 -->
     <script type="text/javascript" src="../static/traces/trace_test_130529.js"></script>
@@ -33,6 +40,20 @@
             <tr>
                 <td>
                     <div id="logoFrame"></div>
+                    <div id="consentFormBK" style="align-items: center;">
+                        <p >
+                            <h6><strong>Try Bookmarks now!</strong> </h6>
+                        </p>
+                        <div class="onoffswitch"> 
+                            <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="consentOnoffswitch"  tabindex="0" onchange="trace.event('log_5', 'Bookmark_Consent_Display', 'Consent_button', this.checked);toggleConsntModel();" > 
+                            <label class="onoffswitch-label" for="consentOnoffswitch">
+                                <span class="onoffswitch-inner"></span>
+                                <span class="onoffswitch-switch"></span>
+                            </label>
+                         
+                        </div>
+                    </div>
+                    <br>
                     <div id="bookmarkFrame"></div>
                 </td>
                 <td id="nodelinkVisFrame"></td>
@@ -89,6 +110,70 @@
 
         });
     </script>
+              <div id="mydiv" >
+                <div id="mydivheader" ><strong> Bookmarks</strong> (Click header to move)
+                    <button type="button" class="close"  onclick="turnLoggingOff()">&nbsp;×&nbsp;</button>
+                    <button type="button" class="close"  onclick="maxmizeBookmarks();">&nbsp;&nbsp;<i class="fa fa-window-maximize" style="font-size:12px"></i></button>
+                    <button type="button" class="close"  onclick="minimizeBookmarks();">&nbsp;&nbsp;<i class="fa fa-window-minimize" style="font-size:12px"></i></button>
+                </div>
+                <iframe id="myFrame" src="logbook.html" ></iframe>
+            </div>
+        
+            <div class="container">
+                
+            <!-- The Modal -->
+            <div class="modal" id="myModal">
+                <div class="modal-dialog modal-dialog-scrollable">
+                    <div class="modal-content">
+                
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h1 class="modal-title">Enabling Vistorian Bookmarks Tool</h1>
+                        <button type="button" class="close" data-dismiss="modal" onclick="turnLoggingOff()">×</button>
+                    </div>
+                
+                    <!-- Modal body -->
+                    <div class="modal-body" style="text-align: justify;">
+                        <h3>Vistorian Logging Consent Form</h3>
+                        <br>   
+        
+                        <p>The bookmark feature allows you to capture and restore the state of your exploration at any time and to leave notes with each bookmark. </p>
+                        <p>The Vistorian is a research prototype to build better visualizations for multivariate networks, and it is essential that we understand how people use the many interaction and visualization features of the Vistorian. By enabling the bookmark function, you will be agreeing to the terms and conditions below and enable anonymous logging of  your interactions.</p>
+                        <p>For more information about our research and publications visit our <a href="https://github.com/alkadi-mh/vistorian-web/wiki/Vistorian-Activity-Logging-Study">wiki</a> and you can learn more about Vistorian by clicking <a href="https://github.com/networkcube/vistorian/wiki">here</a>. To send questions, feedback or suggestions for improvement email us at: <a href="mailto:vistorian@inria.fr">vistorian@inria.fr</a> </p>
+                        <p>If you agree to be logged, we will  anonymously log how you use the Vistorian, such as the fact that you have opened a node link diagram or a matrix visualization; the fact that you have used an interactive filter on your data, or the fact that you have uploaded of a new data file. For the list of the events being logged see: wiki . The anonymous logged events will be saved on a secure server which is accessible only by the Vistorian team.</p>
+                        <p>To relate logged events to the same user, the Vistorian will create a unique random ID for you in your browser cache, independent from your IP address and other potentially identifiable personal information. No cookies are used and emptying your browser cache will erase your ID. </p>
+                        <p>No personal information will be collected or saved within the logging data. For example we do not log or transmit any of your research data onto our server. I.e., the data you explore remains only on your computer and no information about these data or pictures of the visualizations you create will be logged.</p>
+                        <p><ul>If you agree to your interactions being logged:
+                        <li>You will activate the bookmarks feature and will be able to bookmark your visualizations, write your own work notes.</li>
+                        <li>Interactions will anonymously be logged for improvement purposes and our research.</li> 
+                        <li>You can also contact us by email to book a consultation with our visualization experts to help you with the Vistorian. </li>
+                        </ul> </p>
+                        You can stop the logging at any time by turning OFF the bookmark feature. </p>
+                        If you wish your data to be removed from the server please email vistorian@inria.fr. Please include the URL of your last Vistorian session -which includes your ID.</p>
+        
+                            
+                        <p>Thank you for agreeing to participate in our research.</p>
+                        <p><b>The Vistorian Team</b></p>
+                    </div>
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                    
+                        <label for="chk_dontShowConsent">  <input type="checkbox" id="chk_dontShowConsent"> Don't show consent-approval again.</label>
+                        <a href="/static/logging_consent/Vistorian Tracing Consent form .pdf" download> <button type="button" class="btn btn-link">Download Consent</button></a>
+        
+                        <div >  
+                            <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="turnLoggingOff()">Disable</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="turnOnLogging()">Enable Bookmark Tool</button>
+                        </div>
+                            
+                            
+                    </div>
+                
+                
+                </div>
+            </div>
+            
+        </div>
 </body>
 
 </html>

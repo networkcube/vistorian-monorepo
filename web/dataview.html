@@ -27,9 +27,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+   
 </head>
 
-<body onload="trace.event('log', 'start', 'webpage', document.location.pathname);checkLogStatus();dragElement(document.getElementById('mydiv'));">
+<body onload="trace.event('log', 'start', 'webpage', document.location.pathname);checkLogStatus();dragElement(document.getElementById('mydiv'));" onerror="trace.event('err', event + ' ' + source + lineno, error, document.location.pathname);" onbeforeunload="trace.event('log_11', 'close', 'webpage', document.location.pathname);">
     <!-- VS: Call to trace_test_130529 -->
     <script type="text/javascript" src="../static/traces/trace_test_130529.js"></script>
 
