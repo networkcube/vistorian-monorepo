@@ -78,6 +78,7 @@ function minimizeBookmarks(){
     document.getElementById("myFrame").style.display = "none";
     document.getElementById("mydiv").style.maxHeight = document.getElementById("mydivheader").scrollHeight +"px";
     bookmarkMinimized=true;
+    trace.event('bkm_8', ' bookmark window ', 'minimized', document.parent.location.pathname);
   }
 }
 function maxmizeBookmarks(){
@@ -88,6 +89,8 @@ function maxmizeBookmarks(){
     document.getElementById("mydiv").style.left=toolbarLeft+"px";
     document.getElementById("myFrame").style.display = "Block";
     bookmarkMinimized=false;
+    trace.event('bkm_8', ' bookmark window ', 'maximized', document.parent.location.pathname);
+
   }
 
 
@@ -104,3 +107,37 @@ function toggleConsntModel(){
     turnLoggingOff();
 }
 
+
+$(function () {
+  $("body").on("click", ".feedback_active", function (e) {
+    $(".feedback .thanks").hide();
+    $(".feedback .form").hide();
+    $(".feedback a").show();
+    $(".feedback_active").hide();
+    e.preventDefault();
+  });
+  $(".menuButton").on("click", function (e) {
+    if ($(this).css("background-color") == "rgb(187, 187, 187)")
+      $(this).css("background-color", "#FF7F50");
+    else $(this).css("background-color", "#bbb");
+  });
+
+  $(".feedback a").on("click", function (e) {
+    $("body").prepend("<div class='feedback_active'></div>");
+    $(".feedback .form").show();
+    $(".feedback .form textarea").focus();
+    $(".feedback a").hide();
+    e.preventDefault();
+  });
+
+  $(".form form").on("submit", function (e) {
+    $(".feedback .thanks").show();
+    $(".menuButton").css("background-color", "#bbb");
+    $(".feedback .form").hide();
+
+    setTimeout(function () {
+      $(".feedback textarea").val("");
+    }, 100);
+    e.preventDefault();
+  });
+});

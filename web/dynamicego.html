@@ -170,6 +170,33 @@
             </div>
             
         </div>
+        <div class="feedback">
+            <a href="#"><span>👋</span></a>
+            <div class="form">
+              <form>
+                <h6>How can you describe your expirence? </h6>
+                <div class="form-group">
+                  <input type="button" class="menuButton" id="AnalyzeData" value="Analyzing Data" >
+       <input type="button" class="menuButton" id="Learn" value="Learning" onclick="trace.event('log_14', 'general_feedback', this.value, document.location.pathname);">
+       <input type="button" class="menuButton" id="DemotoOthers" value="Demoing" onclick="trace.event('log_14', 'general_feedback', this.value, document.location.pathname);">
+       <input type="button" class="menuButton" id="exploreVis" value="Exploring" onclick="trace.event('log_14', 'general_feedback', this.value, document.location.pathname);">
+       <input type="button" class="menuButton" id="ReportIssue" value="Reporting an Issue" onclick="trace.event('log_14', 'general_feedback', this.value, document.location.pathname);">
+       <input type="button" class="menuButton" id="AskForHelp" value="Asking for help" onclick="trace.event('log_14', 'general_feedback', this.value, document.location.pathname);">
+       <input type="button" class="menuButton" id="eurekaMoment" value="Eureka! " onclick="trace.event('log_14', 'general_feedback', this.value, document.location.pathname);">
+
+       eureka moment    
+       <textarea name="message" id="feedback_text" cols="30" rows="10" placeholder="Send us your feedback!"autofocus></textarea>
+                  
+                </div>
+                <button type="submit" class="btn btn-primary btn-sm btn-block" onclick="trace.event('log_15', 'general_feedback', document.getElementById('feedback_text').value, document.location.pathname);">
+                  Send it!
+                </button>
+              </form>
+            </div>
+            <div class="thanks">
+              Feedback sent! Thank you for helping us!
+            </div>
+          </div>
 </body>
 
 </html>
