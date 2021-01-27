@@ -207,8 +207,14 @@
             function updateLocalStorage(){
                 bookmarksJSON = JSON.stringify(bookmarksJSONFile);
                 localStorage.setItem("vistorianBookmarks", bookmarksJSON);
+                document.getElementById('lbl_changesState').style.backgroundColor="snow";
+                document.getElementById('lbl_changesState').innerText='All changes saved';trace.event('bkm_2', ' updates/changes', 'saved', window.parent.location.pathname);
             }
+            function updatesNotSaved(){
+                document.getElementById('lbl_changesState').innerText="Changes have not been saved yet. Click Save button";
+                document.getElementById('lbl_changesState').style.backgroundColor="lightyellow";
 
+            }
             function updateHeader(){
                 this.parentElement.parentElement.getElementsByClassName("collapsible")[0].innerHTML=this.value;
             }
@@ -344,7 +350,7 @@
                     document.getElementsByName(this.name).forEach((btn) => {
                             if(btn == this) {
                                 btn.style.backgroundColor= "#FF7F50"; 
-                                trace.event('bkm_3', ' bookmark type specified', this.value, document.parent.location.pathname);
+                                trace.event('bkm_3', ' bookmark type specified', this.value, window.parent.location.pathname);
                             }
                                 
                             else 
@@ -368,7 +374,7 @@
                         document.getElementsByName(this.name).forEach((btn) => {
                             if(btn == this) {
                                 btn.style.backgroundColor= "#FF7F50"; 
-                                trace.event('bkm_3', ' bookmark type specified', this.value, document.parent.location.pathname);
+                                trace.event('bkm_3', ' bookmark type specified', this.value, window.parent.location.pathname);
                             }
                             else 
                                 btn.style.backgroundColor= "#bbb"; 
@@ -392,7 +398,7 @@
                         document.getElementsByName(this.name).forEach((btn) => {
                             if(btn == this) {
                                 btn.style.backgroundColor= "#FF7F50"; 
-                                trace.event('bkm_3', ' bookmark type specified', this.value, document.parent.location.pathname);
+                                trace.event('bkm_3', ' bookmark type specified', this.value, window.parent.location.pathname);
                             }
                             else 
                                 btn.style.backgroundColor= "#bbb"; 
@@ -420,7 +426,7 @@
                 
                 txt_otherType.addEventListener('keyup', function() {
                     document.getElementById(bmType.id).innerText=this.value;
-                    trace.event('bkm_3', ' bookmark type specified', 'Other: ' + this.value, document.parent.location.pathname);
+                    trace.event('bkm_3', ' bookmark type specified', 'Other: ' + this.value, window.parent.location.pathname);
                     if (this.value.length==0)
                         document.getElementById(bmType.id).innerText="Other"; 
                     bookmarksJSONFile[locateLogObj(bookmarksJSONFile,this.parentElement.id)].updateBookmarkType(document.getElementById(bmType.id).innerText);
@@ -455,7 +461,7 @@
                     optChk.checked=checkExistance(optChk.value,analysisOptions);
 
                     optChk.addEventListener('click', function() {
-                        trace.event('bkm_6', ' bookmark analysis type selected', this.value, document.parent.location.pathname);
+                        trace.event('bkm_6', ' bookmark analysis type selected', this.value, window.parent.location.pathname);
                         bookmarksJSONFile[locateLogObj(bookmarksJSONFile,this.name.charAt(this.name.length-1))].updateBookmarkAnalysisType(document.getElementsByName(this.name));
                         updateLocalStorage();
                     });
@@ -499,7 +505,7 @@
                     restoreButton.type = "button";
                     restoreButton.value="Restore Visualization State";
                     restoreButton.addEventListener('click', function() {
-                        trace.event('bkm_5', ' bookmark stated', 'restoreted', document.parent.location.pathname);
+                        trace.event('bkm_5', ' bookmark stated', 'restoreted', window.parent.location.pathname);
 
                      });
                     newContentDiv.appendChild(restoreButton);
@@ -515,7 +521,7 @@
                     if (confirm('Are you sure you want to Delete?')){
                         this.parentElement.parentElement.remove();
                         bookmarksJSONFile.splice(locateLogObj(bookmarksJSONFile,this.parentElement.id),1);
-                        trace.event('bkm_4', ' bookmark ', 'deleted', document.parent.location.pathname);
+                        trace.event('bkm_4', ' bookmark ', 'deleted', window.parent.location.pathname);
                         updateLocalStorage();
                     }
                     //logFileJSON.push();
@@ -667,16 +673,20 @@
         <div id="logbook_container" data-role="page">
             <div>
                 <form action="#">
-                    <input type="radio" id="allBM" name="bmTypeSelection" value="all" onchange="changeBookmarksView('all');trace.event('bkm_7', ' show all bookmarks (view)', 'selected', document.parent.location.pathname);" checked >
+                    <input type="radio" id="allBM" name="bmTypeSelection" value="all" onchange="changeBookmarksView('all');trace.event('bkm_7', ' show all bookmarks (view)', 'selected', window.parent.location.pathname);" checked >
                     <label for="allBM">Show all bookmarks</label>
-                    <input type="radio" id="specificBM" name="bmTypeSelection" value="specific" onchange="changeBookmarksView(viewType);trace.event('bkm_7', ' show current view bookmarks', 'selected', document.parent.location.pathname);">
+                    <input type="radio" id="specificBM" name="bmTypeSelection" value="specific" onchange="changeBookmarksView(viewType);trace.event('bkm_7', ' show current view bookmarks', 'selected', window.parent.location.pathname);">
                     <label for="specificBM">Show bookmarks only of current visualization </label><br>
                 </form>
             </div>
-            <div id="logbook_header"  class="hd_div" >
-
-                <button  id="addNewBookmark" value="Add New" class="hd_btn"  onclick="AddNewLog(0,'','','','',[],viewType,networkName);trace.event('bkm_1', ' new bookmark', 'created', document.parent.location.pathname);">Add New</button>
-                <button  id="btn_save" value="Save" class="hd_btn"  onclick="updateLocalStorage();trace.event('bkm_2', ' updates/changes', 'saved', document.parent.location.pathname);">Save Bookmarks</button>
+            <div>
+                <label id="lbl_changesState" style="background-color:snow;align-items: center;text-align: center;font-weight: bold;"></label>
+                <br>
+            </div>
+            <div id="logbook_header"  class="hd_div" >  
+                
+                <button  id="addNewBookmark" value="Add New" class="hd_btn"  onclick="AddNewLog(0,'','','','',[],viewType,networkName);trace.event('bkm_1', ' new bookmark', 'created', window.parent.location.pathname);updatesNotSaved();">Add New</button>
+                <button  id="btn_save" value="Save" class="hd_btn"  onclick="updateLocalStorage();">Save Bookmarks</button>
 
           
             </div>
@@ -686,8 +696,8 @@
             <div>
                <!-- <button onclick="generatePDF()">Export as a PDF</button>
                 <button onclick="takeScreenShot()">Take Screenshot</button> -->
-                <button onclick="location.href='mailto:vistorian@inria.fr?subject=(Vistorian)Consultation Request&body=Hi, kindly I would like to arrange a 10-minutes meeting to consult about my data\'s visualization. Thank you.';trace.event('com_3', document.parent.location.pathname, 'bookmark_tool', 'consult_team');">Email Us & Consult an Expert</button>
-                <button onclick="location.href='mailto:vistorian@inria.fr?subject=(Vistorian)Report Technical Bug&body=Please help me in the following technical problem:\n';trace.event('com_4', document.parent.location.pathname, 'bookmark_tool', 'ReportTechBug');">Report a Technical Bug</button>
+                <button onclick="location.href='mailto:vistorian@inria.fr?subject=(Vistorian)Consultation Request&body=Hi, kindly I would like to arrange a 10-minutes meeting to consult about my data\'s visualization. Thank you.';trace.event('com_3', window.parent.location.pathname, 'bookmark_tool', 'consult_team');">Email Us & Consult an Expert</button>
+                <button onclick="location.href='mailto:vistorian@inria.fr?subject=(Vistorian)Report Technical Bug&body=Please help me in the following technical problem:\n';trace.event('com_4', window.parent.location.pathname, 'bookmark_tool', 'ReportTechBug');">Report a Technical Bug</button>
             </div>
 
 
