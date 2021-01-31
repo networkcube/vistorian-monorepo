@@ -77,6 +77,8 @@ linkWeightScale.domain([
 ]);
 
 messenger.setDefaultEventListener(updateEvent);
+messenger.addEventListener(messenger.MESSAGE_SET_STATE, setStateHandler);
+
 
 
 // MENU
@@ -301,8 +303,8 @@ function init() {
         .attr('d', (n: dynamicgraph.Node) => d3.svg.symbol().type(getNodeShape(n))())
         .attr('class', 'nodes')
         .style('fill', (n: dynamicgraph.Node) => getNodeColor(n)) 
-        .attr('onclick','\'vis_29\',document.location.pathname,\'Node\',\'Click\'')
-        .attr('onmouseover','\'vis_30\',document.location.pathname,\'Node\',\'Mouse Over\'')
+        .attr('onclick','trace.event(\'vis_29\',document.location.pathname,\'Node\',\'Click\')')
+        .attr('onmouseover','trace.event(\'vis_30\',document.location.pathname,\'Node\',\'Mouse Over\')')
         .on('mouseover', mouseOverNode)
         .on('mouseout', mouseOutNode)
         .on('click', (d: any) => {
@@ -351,8 +353,8 @@ function init() {
         .append('path')
         // .attr("marker-end", "url(#triangle)")
         .attr('d', (d: any) => lineFunction(d.path))
-        .attr('onclick','\'vis_31\',document.location.pathname,\'Link\',\'Click\'')
-        .attr('onmouseover','\'vis_32\',document.location.pathname,\'Link\',\'Mouse Over\'')
+        .attr('onclick','trace.event(\'vis_31\',document.location.pathname,\'Link\',\'Click\')')
+        .attr('onmouseover','trace.event(\'vis_32\',document.location.pathname,\'Link\',\'Mouse Over\')')
         .style('opacity', LINK_OPACITY)
         .on('mouseover', (d: any, i: any) => {
             messenger.highlight('set', <utils.ElementCompound>{ links: [d] })
@@ -512,6 +514,55 @@ function mouseOutNode(n: any) {
 /////////////////
 //// UPDATES ////
 /////////////////
+
+
+function setStateHandler(m: messenger.SetStateMessage){
+    
+    var state: messenger.NodeLinkControls = m.state as messenger.NodeLinkControls;    
+    // unpack / query that state object
+    // e.g., var params = state.params.
+    // set the parameters below:...
+        // this.edgeGap=edgeGap;
+        // this.labellingType=labellingType;
+    
+    // set pan
+   // this.panOffsetLocal = // [0,0];
+//    this.panOffsetGlobal = // [0, 0];
+
+    // set zoom
+//    this.globalZoom = // 1;
+
+  //  updateLayout();
+   // svg.attr("transform", "translate(" + (panOffsetGlobal[0] + panOffsetLocal[0]) + ',' + (panOffsetGlobal[1] + panOffsetLocal[1]) + ")");
+
+
+    LABELING_STRATEGY = state.labellingType;
+    updateLabelVisibility();
+
+    // set node size
+    NODE_SIZE = state.nodeSize;
+    updateNodeSize();
+
+    // set node opacity
+    NODE_OPACITY = state.nodeOpacity;
+    updateNodes();
+
+    // set linkwidh
+    LINK_WIDTH = state.linkWidth;
+
+    // set link opacity
+    LINK_OPACITY = state.linkOpacity;
+    updateLinks();
+
+
+    // set time (start/end)
+ // messenger.timeRange(state.timeSliderStart, state.timeSliderEnd, null, false);
+
+//    timeSlider.set(state.timeSliderStart, state.timeSliderEnd);
+ //   updateLinks();
+  //  updateNodes();
+
+}
 
 function timeChangedHandler(m: messenger.TimeRangeMessage) {
 
