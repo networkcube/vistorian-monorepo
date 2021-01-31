@@ -8,7 +8,7 @@ export {
     dataview,
     storage,
     utils,
-    vistorian,
+    vistorian  
 };
 
 const version = pkg.version;

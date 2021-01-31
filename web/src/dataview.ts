@@ -429,7 +429,7 @@ export function showTable(table: vistorian.VTable, elementName: string, isLocati
     tHead.append(tr);
 
     for (var c = 0; c < data[0].length; c++) {
-        var td = $('<th></th>').addClass('th').attr('contenteditable', 'false').attr('onclick','trace.event(\'dat_16\',\'data view\',\'column\',\'Sorted\')')
+        var td = $('<th></th>').addClass('th').attr('contenteditable', 'false').attr('onclick','trace.event(\'dat_16\',\'data view\',\'column\',\'Sorted\')');
         tr.append(td);
         td.html(data[0][c]);
     }
@@ -461,7 +461,7 @@ export function showTable(table: vistorian.VTable, elementName: string, isLocati
             if(isLocationTable && data[0][c] == "Geoname"){
                 td = $('<td></td>').attr('contenteditable', 'false');
             }else{
-                td = $('<td onchange=trace.event(\'dat_10\', \'data view\',\'' + elementName +' table \', \'cell edited\' )></td>').attr('contenteditable', 'true');
+                td = $('<td onchange="trace.event(\'dat_10\', \'data view\',\'' + elementName +' table \', \'cell edited\' )"></td>').attr('contenteditable', 'true');
             }
             td.data('row', r);
             td.data('column', c);

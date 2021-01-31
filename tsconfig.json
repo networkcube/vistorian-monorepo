@@ -16,6 +16,7 @@
     "web/src/dataview.ts",
     "web/src/storage.ts",
     "web/src/utils.ts",
-    "web/src/vistorian.ts"
+    "web/src/vistorian.ts",
+  
   ]
 }

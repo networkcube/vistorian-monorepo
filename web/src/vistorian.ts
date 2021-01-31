@@ -293,7 +293,7 @@ export function setHeader(elementId: String, datasetname: String) {
     var vars: any = utils.getUrlVars();
 
     // VS: Clicks on Return to DataView
-    $('#' + elementId).append('<a href="../web/dataview.html?session=' + vars['session'] + '&datasetName' + vars['datasetName'] + '" style="margin:5px;padding-left:5px;" onclick="trace.event(\'system\', \'ts_ReturnDV\', \'CCC\', \'DDD\');" target="_blank">Return to Dataview</a>');
+    $('#' + elementId).append('<a href="../web/dataview.html?session=' + vars['session'] + '&datasetName' + vars['datasetName'] + '" style="margin:5px;padding-left:5px;" onclick="trace.event(\'log_4\', document.location.pathname, \'Return to Data View Button\', \'Clicked\');" target="_blank">Return to Dataview</a>');
     $('#' + elementId).append('<br/><br/>');
 
 }

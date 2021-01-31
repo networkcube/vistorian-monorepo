@@ -35,7 +35,7 @@
     </head>
     <title>Dynamic Ego Network</title>
 
-<body onload="trace.event('log_2', 'load', 'webpage', document.location.pathname);checkLogStatus();dragElement(document.getElementById('mydiv'));" onerror="trace.event('err', event + ' ' + source + lineno, error, document.location.pathname);" onbeforeunload="trace.event('log_11', 'close', 'webpage', document.location.pathname);">
+<body onload="trace.event('log_2', 'load', 'webpage', document.location.pathname);checkLogStatus();dragElement(document.getElementById('mydiv'));" onerror="trace.event('err', event + ' ' + source + ' '+lineno, error, document.location.pathname);" onbeforeunload="trace.event('log_11', 'close', 'webpage', document.location.pathname);">
 
     <!-- VS: Call to trace_test_130529 -->
     <script type="text/javascript" src="../static/traces/trace_test_130529.js"></script>
@@ -155,7 +155,7 @@
                     <div class="modal-footer">
                     
                         <label for="chk_dontShowConsent">  <input type="checkbox" id="chk_dontShowConsent"> Don't show consent-approval again.</label>
-                        <a href="/static/logging_consent/Vistorian Tracing Consent form .pdf" download> <button type="button" class="btn btn-link">Download Consent</button></a>
+                        <a href="/static/logging_consent/Vistorian Tracing Consent form .pdf" download> <button type="button" class="btn btn-link" onclick="trace.event('log_7', 'consent', 'downloaded', document.location.pathname);">Download Consent</button></a>
         
                         <div >  
                             <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="turnLoggingOff()">Disable</button>
@@ -176,15 +176,14 @@
               <form>
                 <h6>How can you describe your expirence? </h6>
                 <div class="form-group">
-                  <input type="button" class="menuButton" id="AnalyzeData" value="Analyzing Data" >
-       <input type="button" class="menuButton" id="Learn" value="Learning" onclick="trace.event('log_14', 'general_feedback', this.value, document.location.pathname);">
-       <input type="button" class="menuButton" id="DemotoOthers" value="Demoing" onclick="trace.event('log_14', 'general_feedback', this.value, document.location.pathname);">
-       <input type="button" class="menuButton" id="exploreVis" value="Exploring" onclick="trace.event('log_14', 'general_feedback', this.value, document.location.pathname);">
-       <input type="button" class="menuButton" id="ReportIssue" value="Reporting an Issue" onclick="trace.event('log_14', 'general_feedback', this.value, document.location.pathname);">
-       <input type="button" class="menuButton" id="AskForHelp" value="Asking for help" onclick="trace.event('log_14', 'general_feedback', this.value, document.location.pathname);">
-       <input type="button" class="menuButton" id="eurekaMoment" value="Eureka! " onclick="trace.event('log_14', 'general_feedback', this.value, document.location.pathname);">
-
-       eureka moment    
+                    <input type="button" class="menuButtonGadget" id="AnalyzeData" value="Analyzing Data" onclick="trace.event('log_14', 'general_feedback', this.value, document.location.pathname);">
+                    <input type="button" class="menuButtonGadget" id="Learn" value="Learning" onclick="trace.event('log_14', 'general_feedback', this.value, document.location.pathname);">
+                    <input type="button" class="menuButtonGadget" id="DemotoOthers" value="Demoing" onclick="trace.event('log_14', 'general_feedback', this.value, document.location.pathname);">
+                    <input type="button" class="menuButtonGadget" id="exploreVis" value="Exploring" onclick="trace.event('log_14', 'general_feedback', this.value, document.location.pathname);">
+                    <input type="button" class="menuButtonGadget" id="ReportIssue" value="Reporting an Issue" onclick="trace.event('log_14', 'general_feedback', this.value, document.location.pathname);">
+                    <input type="button" class="menuButtonGadget" id="AskForHelp" value="Asking for help" onclick="trace.event('log_14', 'general_feedback', this.value, document.location.pathname);">
+                    <input type="button" class="menuButtonGadget" id="eurekaMoment" value="Eureka! " onclick="trace.event('log_14', 'general_feedback', this.value, document.location.pathname);">
+    
        <textarea name="message" id="feedback_text" cols="30" rows="10" placeholder="Send us your feedback!"autofocus></textarea>
                   
                 </div>

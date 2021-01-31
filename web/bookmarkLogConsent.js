@@ -78,7 +78,7 @@ function minimizeBookmarks(){
     document.getElementById("myFrame").style.display = "none";
     document.getElementById("mydiv").style.maxHeight = document.getElementById("mydivheader").scrollHeight +"px";
     bookmarkMinimized=true;
-    trace.event('bkm_8', ' bookmark window ', 'minimized', document.parent.location.pathname);
+    trace.event('bkm_8', ' bookmark window ', 'minimized', window.parent.location.pathname);
   }
 }
 function maxmizeBookmarks(){
@@ -89,7 +89,7 @@ function maxmizeBookmarks(){
     document.getElementById("mydiv").style.left=toolbarLeft+"px";
     document.getElementById("myFrame").style.display = "Block";
     bookmarkMinimized=false;
-    trace.event('bkm_8', ' bookmark window ', 'maximized', document.parent.location.pathname);
+    trace.event('bkm_8', ' bookmark window ', 'maximized', window.parent.location.pathname);
 
   }
 
@@ -100,8 +100,11 @@ function toggleConsntModel(){
   if (document.getElementById('consentOnoffswitch').checked){
     if (document.getElementById('chk_dontShowConsent').checked)
       turnOnLogging();
-    else
+    else{
         document.getElementById('myModal').style.display = "block";
+        trace.event('log_5', ' Consent Form ', 'Displayed', window.parent.location.pathname);
+
+    }
   }
   else
     turnLoggingOff();
@@ -116,7 +119,7 @@ $(function () {
     $(".feedback_active").hide();
     e.preventDefault();
   });
-  $(".menuButton").on("click", function (e) {
+  $(".menuButtonGadget").on("click", function (e) {
     if ($(this).css("background-color") == "rgb(187, 187, 187)")
       $(this).css("background-color", "#FF7F50");
     else $(this).css("background-color", "#bbb");
@@ -132,7 +135,7 @@ $(function () {
 
   $(".form form").on("submit", function (e) {
     $(".feedback .thanks").show();
-    $(".menuButton").css("background-color", "#bbb");
+    $(".menuButtonGadget").css("background-color", "#bbb");
     $(".feedback .form").hide();
 
     setTimeout(function () {
