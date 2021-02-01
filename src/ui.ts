@@ -60,7 +60,10 @@ export class RadioButton {
             .attr('stroke', this.color)
             .attr('stroke-width', 1)
             .attr('cx', this.RADIUS * 2)
-            .attr('cy', 0);
+            .attr('cy', 0)
+            .attr('oninput','trace.event(\'vis_4\',document.location.pathname,this.parentElement.previousElementSibling.innerHTML ,\'cx\' + this.getAttribute(\'cx\'))')
+            .attr('onmouseup','trace.event(\'vis_4\',document.location.pathname,this.parentElement.previousElementSibling.innerHTML ,\'cx\' + this.getAttribute(\'cx\'))');
+
 
 
         if (this.text) {

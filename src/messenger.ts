@@ -15,6 +15,7 @@ export var MESSAGE_SELECTION_SET_COLORING_VISIBILITY = 'selectionColoring';
 export var MESSAGE_SELECTION_FILTER = 'selectionFilter';
 export var MESSAGE_SELECTION_PRIORITY = 'selectionPriority'
 export var MESSAGE_SEARCH_RESULT = 'searchResult';
+export var MESSAGE_SET_STATE= 'SET_STATE';
 
 var MESSENGER_PROPAGATE: boolean = true;
 
@@ -30,7 +31,8 @@ var MESSAGE_HANDLERS: string[] = [
     MESSAGE_SELECTION_FILTER,
     MESSAGE_SELECTION_PRIORITY,
     MESSAGE_SEARCH_RESULT,
-    MESSAGE_SELECTION_COLORING
+    MESSAGE_SELECTION_COLORING,
+    MESSAGE_SET_STATE
 ]
 
 
@@ -147,6 +149,7 @@ export class HighlightMessage extends Message {
         this.idCompound = idCompound != undefined ? idCompound : new IDCompound(); // WHAT HAPPEND IF IT IS UNDEFINED??
     }
 }
+
 
 
 // SELECTION MESSAGES
@@ -341,7 +344,6 @@ class SelectionColorMessage extends Message {
 
 /// SEARCH SELECTION
 
-
 export function search(term: string, type?: string) {
 
     var idCompound: IDCompound = searchForTerm(term, getDynamicGraph(), type);
@@ -358,12 +360,88 @@ export class SearchResultMessage extends Message {
     }
 }
 
+export class NetworkControls {
+    networkType: string;
+    timeSliderStart: number;
+    timeSliderEnd: number;
+    constructor(networkType:string,startTime:number,endTime:number){
+        this.networkType=networkType;
+        this.timeSliderStart=startTime;
+        this.timeSliderEnd=endTime;
+    }
+}
+
+export class NodeLinkControls extends NetworkControls{
+        linkOpacity: number;
+        nodeOpacity: number;
+        nodeSize: number;
+        edgeGap: number;
+        linkWidth: number;
+        labellingType: number;
+    constructor(networkType:string,startTime:number,endTime:number,linkOpacity:number,nodeOpacity:number,nodeSize:number,edgeGap:number,linkWidth:number,labellingType:number){
+        super(networkType,startTime,endTime);
+        this.linkOpacity=linkOpacity;
+        this.nodeOpacity=nodeOpacity;
+        this.nodeSize=nodeSize;
+        this.edgeGap=edgeGap;
+        this.linkWidth=linkWidth;
+        this.labellingType=labellingType;
+    }
+}
+export class MatrixControls extends NetworkControls{
+    labellingType: number;
+    zoom:number;
+    constructor(networkType: string,startTime:number,endTime:number,zoom:number,labellingType:number){
+        super(networkType,startTime,endTime);
+        this.zoom=zoom;
+        this.labellingType=labellingType;
+    }
+}
+export class TimeArchsControls extends NetworkControls{
+    labellingType: number;
+    constructor(networkType: string,startTime:number,endTime:number,labellingType:number){
+        super(networkType,startTime,endTime);
+        this.labellingType=labellingType;
+    }
+}
+export class MapControls extends NetworkControls{
+    nodeOverlap: number;
+    linkOpacity: number;
+    opacityOfPositionlessNodes: number;
+    constructor(networkType: string,startTime:number,endTime:number,nodeOverlap:number,linkOpacity:number,opacityOfPositionlessNodes:number){
+        super(networkType,startTime,endTime);
+        this.nodeOverlap=nodeOverlap;
+        this.linkOpacity=linkOpacity;
+        this.opacityOfPositionlessNodes=opacityOfPositionlessNodes;
+    }
+}
+
+// SET STATE MESSAGE
+
+export class SetStateMessage extends Message {
+    state: NetworkControls; // this is the state with all the parameters to set the view to. 
+
+    constructor(state: NetworkControls) {
+        super(MESSAGE_SET_STATE);
+        this.state = state;
+    }
+}
+
+export function setState(state: NetworkControls) {
+    // is called from anywhere in vistorian by calling 
+    // networkcube.setState(myState);
+    distributeMessage(new SetStateMessage(state), true);
+}
 
 
 
 
 
-// INTERNAL FUNCTIONS ////////////////////////
+
+
+////////////////////////
+// INTERNAL FUNCTIONS //
+////////////////////////
 
 var MESSAGE_KEY: string = 'networkcube_message';
 localStorage[MESSAGE_KEY] = undefined;
@@ -407,7 +485,6 @@ function processMessage(m: Message) {
 
     if ((messageHandler as any)[m.type]) {
         // for messages with handlers
-
         if (m.type == MESSAGE_HIGHLIGHT) {
             var m2: HighlightMessage = <HighlightMessage>m;
             graph.highlight(m2.action, m2.idCompound);
@@ -489,4 +566,3 @@ function callHandler(message: Message) {
         (messageHandler as any)[message.type](message);
     }
 }
-

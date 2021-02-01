@@ -154,6 +154,8 @@ export class RangeSlider {
             .attr("cx", this.LEFT)
             .attr("cy", this.TOP + this.BAR_WIDTH)
             .attr("fill", "#777")
+            .attr('onchange','trace.event(\'vis_27\',document.location.pathname,\'Time Sliden Min\',\'cx\' + this.getAttribute(\'cx\'))')
+            .attr('onmouseup','trace.event(\'vis_27\',document.location.pathname,\'Time Sliden Min\',\'cx\' + this.getAttribute(\'cx\'))')
             .call(this.drag);
 
         this.circleMax = this.g.append("circle")
@@ -162,6 +164,8 @@ export class RangeSlider {
             .attr("cx", this.width - this.RIGHT)
             .attr("cy", this.TOP + this.BAR_WIDTH)
             .attr("fill", "#777")
+            .attr('onchange','trace.event(\'vis_28\',document.location.pathname,\'Time Sliden Max\',\'cx\' + this.getAttribute(\'cx\'))')
+            .attr('onmouseup','trace.event(\'vis_28\',document.location.pathname,\'Time Sliden Max\',\'cx\' + this.getAttribute(\'cx\'))')
             .call(this.drag);
     }
 

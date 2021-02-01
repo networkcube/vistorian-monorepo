@@ -130,7 +130,10 @@ export class SmartSlider {
                 .attr('width', 0)
                 .style('fill', '#bbb')
                 .call(this.drag)
-                .attr('id', 'bar0');
+                .attr('id', 'bar0')
+                .attr('onmouseup','trace.event(\'vis_43\',document.location.pathname,\'Time Slider\',\'x\' + this.getAttribute(\'x\') + \'width\' + this.getAttribute(\'width\'))')
+                .attr('oninput','trace.event(\'vis_43\',document.location.pathname,\'Time Slider\',\'x\' + this.getAttribute(\'x\') + \'width\' + this.getAttribute(\'width\'))');
+    
             this.bar1 = this.g.append('rect')
                 .attr('x', this.RIGHT)
                 .attr('y', this.TOP)
@@ -138,7 +141,10 @@ export class SmartSlider {
                 .attr('width', 0)
                 .style('fill', '#bbb')
                 .call(this.drag)
-                .attr('id', 'bar1');
+                .attr('id', 'bar1')
+                .attr('onmouseup','trace.event(\'vis_43\',document.location.pathname,\'Time Slider\',\'x\' + this.getAttribute(\'x\') + \'width\' + this.getAttribute(\'width\'))')
+                .attr('oninput','trace.event(\'vis_43\',document.location.pathname,\'Time Slider\',\'x\' + this.getAttribute(\'x\') + \'width\' + this.getAttribute(\'width\'))');
+
         } else {
             this.bar0 = this.g.append('rect')
                 .attr('x', this.LEFT)
@@ -147,7 +153,10 @@ export class SmartSlider {
                 .attr('width', this.width - this.RIGHT - this.LEFT)
                 .style('fill', '#bbb')
                 .call(this.drag)
-                .attr('id', 'bar0');
+                .attr('id', 'bar0')
+                .attr('onmouseup','trace.event(\'vis_43\',document.location.pathname,\'Time Slider\',\'x\' + this.getAttribute(\'x\') + \'width\' + this.getAttribute(\'width\'))')
+                .attr('oninput','trace.event(\'vis_43\',document.location.pathname,\'Time Slider\',\'x\' + this.getAttribute(\'x\') + \'width\' + this.getAttribute(\'width\'))');
+
             this.bar1 = null;
         }
 
@@ -157,6 +166,9 @@ export class SmartSlider {
             .attr("cx", this.LEFT)
             .attr("cy", this.TOP + this.BAR_WIDTH)
             .attr("fill", "#777")
+            .attr('onchange','trace.event(\'vis_27\',document.location.pathname,\'Time Sliden Min\',\'cx\' + this.getAttribute(\'cx\'))')
+            .attr('onmouseup','trace.event(\'vis_27\',document.location.pathname,\'Time Sliden Min\',\'cx\' + this.getAttribute(\'cx\'))')
+            .attr('oninput','trace.event(\'vis_27\',document.location.pathname,\'Time Sliden Min\',\'cx\' + this.getAttribute(\'cx\'))')
             .call(this.drag);
 
         this.circleMax = this.g.append("circle")
@@ -165,6 +177,9 @@ export class SmartSlider {
             .attr("cx", this.width - this.RIGHT)
             .attr("cy", this.TOP + this.BAR_WIDTH)
             .attr("fill", "#777")
+            .attr('onchange','trace.event(\'vis_28\',document.location.pathname,\'Time Sliden Max\',\'cx\' + this.getAttribute(\'cx\'))')
+            .attr('onmouseup','trace.event(\'vis_28\',document.location.pathname,\'Time Sliden Max\',\'cx\' + this.getAttribute(\'cx\'))')
+            .attr('oninput','trace.event(\'vis_28\',document.location.pathname,\'Time Sliden Max\',\'cx\' + this.getAttribute(\'cx\'))')
             .call(this.drag);
 
         // this.circleSingle = this.g
