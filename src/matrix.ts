@@ -56,12 +56,12 @@ class MatrixMenu {
     this.elem.append(
       `Zoom:  <input id="cellSizeBox" type="range" 
       name="cellSizeBox" min="3" max="20" 
-      value="` + this.matrix.cellSize + '"/>');
+      value="` + this.matrix.cellSize + '" onchange="trace.event(\'vis_34\',\'Matrix\',\'Zoom Range\',this.value)"/>');
     $('#cellSizeBox').change(this.updateCellSize);
     this.elem.append('<br/>');
     this.elem.append('<label>Label ordering:</label>');
     let orderingMenu = $("#networkcube-matrix-menu")
-      .append('<select id="labelOrdering"></select>')
+      .append('<select id="labelOrdering" onchange="trace.event(\'vis_35\',\'Matrix\',\'labelingType\',this.value)"></select>')
 
     // VS: Clicks on Manual
     $("#networkcube-matrix-menu")
@@ -74,7 +74,7 @@ class MatrixMenu {
     $('#labelOrdering').append('<option value="degree">Node degree</option>');
     $('#labelOrdering').append('<option value="similarity">Similarity</option>');
 
-    this.elem.append('<input value="Re-run" id="reorderBtn" type="button"/>');
+    this.elem.append('<input value="Re-run" id="reorderBtn" type="button" onclick="trace.event(\'vis_36\',\'Matrix\',\'Rerun Button\',\'Clicked\')"/>');
     $('#reorderBtn').click(this.reorderHandler);
   }
   updateCellSize() {

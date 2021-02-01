@@ -6,14 +6,23 @@
     var _sending = null;
     var sessionId;
     var starting = true;
-    var debug = false;
+	var debug = false;
+	var loggingEnabled=false;
 
 	const storageType=sessionStorage;
-	const LoggingPhase='Starting';
+	const LoggingPhase='acceptLogging';
+	const SessionLogId='SessionLogId';
 
-	const UpdateLoggingStorage=() => storageType.setItem(LoggingPhase,true);
-	const StartedLogging=() => storageType.getItem(LoggingPhase);
-	UpdateLoggingStorage();
+	function SetLoggingStatus(val) {
+		localStorage.setItem(LoggingPhase, val);
+		
+
+	}
+	function UpdateLoggingStatus()  {
+		loggingEnabled= Boolean(localStorage.getItem(LoggingPhase));
+	
+	};
+	UpdateLoggingStatus();
 
     trace = {version: "0.3"};
 
@@ -34,6 +43,7 @@
     };
 
     var uuid = function() {
+		if (!(localStorage.getItem(SessionLogId))){
 			var uuid = "", i, random;
 			for (i = 0; i < 32; i++) {
 	    	random = Math.random() * 16 | 0;
@@ -43,7 +53,12 @@
 	    	}
 			uuid += (i == 12 ? 4 : (i == 16 ? (random & 3 | 8) : random)).toString(16);
 		}
-		
+		localStorage.setItem(SessionLogId, uuid);
+		}
+		else{
+			uuid=localStorage.getItem(SessionLogId);
+		}
+			
 	return uuid;
     };
 
@@ -114,33 +129,36 @@
     }
 
     function traceEvent(cat, action, label, value) {
-	if (starting) {
-	//if (StartedLogging()) {
-	//	storageType.setItem(LoggingPhase,false);
 		
-		starting = false;
-		_sending = [];
-		traceEvent("log_1", "Vistorian Trace", "Session", "Start");
-	    traceEvent("_trace", "document.location", "href", document.location.href);
-	    traceEvent("_trace", "browser", "userAgent", navigator.userAgent);
-	    traceEvent("_trace", "screen", "size", "w:"+screen.width+";h:"+screen.height);
-	    traceEvent("_trace", "window", "innerSize", "w:"+window.innerWidth+";h:"+window.innerHeight);
-	    _sending = null;
-	}
+		if (Boolean(localStorage.getItem(LoggingPhase))){
+			if (starting) {
+			//if (StartedLogging()) {
+			//	storageType.setItem(LoggingPhase,false);
+		
+			starting = false;
+			_sending = [];
+			traceEvent("log_1", "Vistorian Trace", "Session", "Start");
+			traceEvent("_trace", "document.location", "href", localStorage.getItem(SessionLogId));
+			traceEvent("_trace", "browser", "userAgent", navigator.userAgent);
+			traceEvent("_trace", "screen", "size", "w:"+screen.width+";h:"+screen.height);
+			traceEvent("_trace", "window", "innerSize", "w:"+window.innerWidth+";h:"+window.innerHeight);
+			_sending = null;
+		}
 
-	if (debug) {
-	    window.console && console.log("Track["+cat+","+action+","+label+"]");
-	}
-	var ts = Date.now();
-	_traceq.push({"session": sessionId,
-		      "ts": ts,
-		      "cat": cat,
-		      "action": action,
-		      "label": label,
-		      "value": value});
-	if (_sending == null)
-	    sendLogs();
-	return trace;
+		if (debug) {
+			window.console && console.log("Track["+cat+","+action+","+label+"]");
+		}
+		var ts = Date.now();
+		_traceq.push({"session": sessionId,
+				"ts": ts,
+				"cat": cat,
+				"action": action,
+				"label": label,
+				"value": value});
+		if (_sending == null)
+			sendLogs();
+		return trace;
+		}
     }
 
     //    console.log("Trace initialized with sessionId=%s", sessionId);
