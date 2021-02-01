@@ -33,7 +33,7 @@
         "Jean-Daniel Fekete <Jean-Daniel.Fekete@inria.fr",
         "Alexandra Ibarra Cuesta"
     ],
-    "homepage": "https://github.com/alkadi-mh/vistorian-web_tr#readme",
+    "homepage": "https://github.com/alkadi-mh/vistorian-web#readme",
     "bundledDependencies": [
         "jquery",
         "jstorage",
