@@ -114,7 +114,7 @@ var timeline: tline.Timeline = new tline.Timeline(webgl, dgraph, TABLE_PADDING_L
 window.addEventListener("mousewheel", mouseWheelHandler, false);
 
 $('#menu').append('\
-            <select id="labelOrdering">\
+            <select id="labelOrdering" onchange=trace.event(\'vis_37\',\'DynamicEgo\',\'labelingType\',this.value)">\
                 <option value="data">As appear in table</option>\
                 <option value="alphanumerical">Alphanumerical</option>\
                 <option value="degree">Number of connections</option>\
