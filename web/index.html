@@ -11,6 +11,7 @@
 	<script src="../node_modules/moment/moment.js"></script>
 	<script src="../node_modules/lz-string/libs/lz-string.js"></script>
 	<script src="./static/science.js"></script>
+    <script type="text/javascript" src="./static/traces/trace.js"></script>
 
 	<script> var exports = {}; </script>
 	<script src="../node_modules/vistorian-core/lib/vistorian-core.js"></script>
@@ -22,11 +23,11 @@
 
 	<div id="searchDiv">
 		<input id="searchField" type="text" name="searchInput" value="Search ..."
-			onfocus="if (this.value == 'Search ...') {this.value = '';}" width="100%" />
+			onfocus="if (this.value == 'Search ...') {this.value = '';}" onblur="trace.event('vis_10', 'Bookmark', 'search textbook', 'search term entered')" width="100%" />
 		</br>
-		<input id="searchButton" type="button" name="searchButton" value="Find" onclick="startSearch()" />
+		<input id="searchButton" type="button" name="searchButton" value="Find" onclick="startSearch();trace.event('vis_11', 'Bookmark', 'search button', 'Vis Nodes')" />
 		<input id="clearButton" type="button" name="clearButton" value="Clear Search"
-			onclick="clearSearchSelection()" />
+			onclick="clearSearchSelection();trace.event('vis_12', 'Bookmark', 'Clear search button', 'Vis Nodes')" />
 		<ul id="searchResults">
 		</ul>
 	</div>

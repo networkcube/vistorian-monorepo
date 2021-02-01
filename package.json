@@ -26,13 +26,13 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/networkcube/vistorian-bookmarkbrowser.git"
+        "url": "git+https://ithub.com/alkadi-mh/vistorian-bookmarkbrowser_tr.git"
     },
     "collaborators": [
         "Jean-Daniel Fekete <Jean-Daniel.Fekete@inria.fr",
         "Alexandra Ibarra Cuesta"
     ],
-    "homepage": "https://github.com/networkcube/networkcube#readme",
+    "homepage": "https://github.com/alkadi-mh/vistorian-bookmarkbrowser_tr#readme",
     "bundledDependencies": [
         "jquery",
         "lz-string",

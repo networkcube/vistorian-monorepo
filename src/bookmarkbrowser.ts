@@ -48,6 +48,7 @@ export function createSelectionCategory(name: string, type: string) {
 		.datum(type)
 		.attr('type', 'button')
 		.attr('value', '+')
+		.attr('onclick','trace.event(\'vis_13\',document.location.pathname,\'add \' ,\'' + type + '\')')
 		.on('click', function (d: string) { createSelection(d) })
 
 }
@@ -270,6 +271,7 @@ export function updateList(type: string, name: string) {
 		.attr('class', 'icon_eye icon')
 		.attr('xlink:href', 'eye-visible.png')
 		.attr('x', 130 + (RECT_SIZE + GAP_ICONS) * i++)
+		.attr('onclick','trace.event(\'vis_14\',document.location.pathname,\'' +name + '\' , this.getAttribute(\'href\'))')
 		.on('click', function (d: datamanager.Selection, i: any) {
 			messenger.filterSelection(d, !d.filter);
 		})
