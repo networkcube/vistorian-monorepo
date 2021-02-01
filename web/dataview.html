@@ -98,7 +98,7 @@
                     <div id="networkInfoDiv">
                         <h2>Network
                             <input id="saveNetworkButton" class="tableMenuButton" type="button" value="Save Network"
-                                onclick="window.exports.networkcube.dataview.saveCurrentNetwork(false);trace.event('dat_17', 'data view', 'network', 'saved')"" />
+                                onclick="window.exports.networkcube.dataview.saveCurrentNetwork(false);trace.event('dat_17', 'data view', 'network', 'saved')" />
                             <input id="deleteNetworkButton" class="tableMenuButton" type="button" value="Delete Network"
                                 onclick="window.exports.networkcube.dataview.deleteCurrentNetwork();trace.event('dat_6', 'data view', 'network', 'deleted')" />
                         </h2>
@@ -185,7 +185,7 @@
 
                 <div id="individualTables" style="display:none;">
                     <div id="tableInfoDiv">
-                        <input id="deleteTableButton" type="button" value="Delete" onclick="window.exports.networkcube.dataview.deleteCurrentTable()" />
+                        <input id="deleteTableButton" type="button" value="Delete" onclick="window.exports.networkcube.dataview.deleteCurrentTable();" />
                         </p>
                     </div>
                     <div id="individualTable"></div>
@@ -210,6 +210,7 @@
     <script type="text/javascript" charset="utf8" src="DataTables-1.10.7/media/js/jquery.dataTables.js"></script>
     <script src="../node_modules/jstorage/jstorage.js"></script>
     
+       
     <script> var exports = {}; </script>
     <script src="../lib/vistorian-vis.js"></script>
 

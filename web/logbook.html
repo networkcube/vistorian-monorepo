@@ -10,7 +10,6 @@
         <script src="https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.1.1/jspdf.umd.min.js"></script>
         <script> var exports = {}; </script>
-        <script src="../node_modules/vistorian-core/lib/vistorian-core.js"></script>
         <script src="../lib/vistorian-vis.js"></script>
 
 
@@ -20,13 +19,13 @@
             const monthNames = ["January", "February", "March", "April", "May", "June",
                                  "July", "August", "September", "October", "November", "December"];
 
-            var networkName=window.parent.location.search;
-            if (networkName.indexOf('&')>-1){
-                networkName=window.parent.location.search.split('&')[1].split('=')[1];
-            }
             var viewType=window.parent.location.pathname;
             if ((viewType.length!=0) && (typeof viewType !== 'undefined')){
                 viewType=window.parent.location.pathname.split('/',3)[2].split('.')[0];
+            }
+            var networkName=window.parent.location.search;
+            if(networkName.indexOf('&')>-1){
+                networkName=window.parent.location.search.split('&')[1].split('=')[1];
             }   
 
             class bookmark{
@@ -54,6 +53,9 @@
                 }
                 updateBookmarkType(BkType){
                     this.type=BkType;
+                }
+                updateBookmarkDataset(dataset){
+                    this.networkDataset=dataset;
                 }
                 updateBookmarkAnalysisType(chkbx_AnalysisGroup){
                     this.analysisOpts=[];
@@ -229,6 +231,7 @@
                 //Create new log div
                 var newDiv=document.createElement("div");
                 var currentCounterValue;
+                //set div ID and network type
                 if (id==0){
                     counter++;
                     currentCounterValue=counter;
@@ -242,6 +245,7 @@
                 
 
                  // create inner collapsible div
+                 //set bookmark date
                  var newContentDiv=document.createElement("div");
                 newContentDiv.id=currentCounterValue;
                 newContentDiv.setAttribute("class","content");
@@ -273,9 +277,7 @@
 
                 if (title!="")
                     btn_title.innerHTML=title;
-                   // headerButton.innerHTML=btn_title.innerHTML + "<br/> " + btn_dateTime.innerHTML;
                 else
-                   // headerButton.innerHTML="Bookmark " + currentCounterValue +" : " +"<br/> " + date+ "&nbsp;&nbsp;"+time;
                     btn_title.innerHTML="Bookmark " + currentCounterValue +" : ";;
 
                 headerButton.appendChild(btn_title);
@@ -296,9 +298,7 @@
  
                 newDiv.appendChild(headerButton);
 
-
-                // newContentDiv.appendChild(timeLabelHeader);
-                // newContentDiv.appendChild(timeLabel);
+                //set the title update container
                 var lbl_title=document.createElement("label");
                 lbl_title.innerText="Bookmark Label:"
                 lbl_title.style="font-weight: bold;float:left;";
@@ -309,9 +309,6 @@
                 newTitle.placeholder="Update bookmark label here ..";
                 newTitle.addEventListener('keyup', function() {
                     document.getElementById(btn_title.id).innerHTML=this.value;
-
-                  //  this.parentElement.parentElement.getElementsByClassName("collapsible")[0].innerHTML=this.value;
-                    //bookmarksJSONFile[locateLogObj(bookmarksJSONFile,this.parentElement.id)].updateBookmark(this.parentElement.getElementsByTagName("input")[0].value,this.parentElement.getElementsByTagName("textarea")[0].value,flagTypes[this.parentElement.getElementsByTagName("select")[0].selectedIndex]);
                     bookmarksJSONFile[locateLogObj(bookmarksJSONFile,this.parentElement.id)].updateBookmarkTitle(this.value);
                     updateLocalStorage();
                 });
@@ -340,12 +337,18 @@
                 newContentDiv.appendChild(bmType);
                 
                 var generalPBtns=["Analyze Data","Learn","Demo to others","Test & Explore Vistorian","Report an Issue"];
+                // Add "analyze data" with its sub-types
                 var btn= document.createElement("input");
                 btn.type="button";
                 btn.name="menuButton_"+currentCounterValue;
                 btn.classList.add("menuButton"); 
                 btn.style=" display: inline-block;";
                 btn.value=generalPBtns[0];
+                if (selectedType!=""){
+                    if (btn.value==selectedType)
+                        btn.style.backgroundColor= "#FF7F50"; 
+                }
+                    
 
                 
                 btn.addEventListener('click', function() {
@@ -367,6 +370,7 @@
 
                 });
                    newContentDiv.appendChild(btn);
+                //Add rest of the types except (Other) type
                 for (var i=1;i<generalPBtns.length;i++){
                    var btn= document.createElement("input");
                    btn.type="button";
@@ -374,6 +378,10 @@
                    btn.style=" display: inline-block;";
                    btn.name="menuButton_"+currentCounterValue;
                    btn.value=generalPBtns[i];
+                   if (selectedType!=""){
+                    if (btn.value==selectedType)
+                        btn.style.backgroundColor= "#FF7F50"; 
+                    }
                    btn.addEventListener('click', function() {
                         document.getElementById(bmType.id).innerText=this.value;
                         document.getElementsByName(this.name).forEach((btn) => {
@@ -396,6 +404,26 @@
                 btn.value="Other";
                 btn.classList.add("menuButton"); 
                 btn.name="menuButton_"+currentCounterValue;
+                //create other type textarea
+                var txt_otherType=document.createElement("textarea");
+                var otherType=true;
+                if (selectedType!=""){
+                    for (var i=0;i<generalPBtns.length;i++)
+                    if (generalPBtns[i]==selectedType){
+                        otherType=false;
+                        break;
+                    }
+                }
+                else{
+                    txt_otherType.placeholder="Explian other type here .. Please don't add personal information";
+                    otherType=false;
+
+                }
+
+                if (otherType ){
+                    btn.style.backgroundColor= "#FF7F50";
+                    txt_otherType.innerText=selectedType;
+                }
                 btn.addEventListener('click', function() {
                         if (document.getElementById(bmType.id).innerText.length==0)
                             document.getElementById(bmType.id).innerText=this.value;
@@ -416,24 +444,19 @@
                         updateLocalStorage();   
                 });
                 newContentDiv.appendChild(btn);
-                document.getElementsByName(btn.name).forEach((bmT) => {
-                    if(bmT.value == selectedType)
-                        bmT.style.backgroundColor= "#FF7F50"; 
-                });
+
                 
-                var txt_otherType=document.createElement("textarea");
-                txt_otherType.placeholder="Explian other type here .. Please don't add personal information";
                 if (bmType.innerText==generalPBtns[generalPBtns.length-1])
                     txt_otherType.style.display="block";
                 else
                     txt_otherType.style.display="none";
-                
+
                 
                 txt_otherType.addEventListener('keyup', function() {
-                    document.getElementById(bmType.id).innerText=this.value;
+                    document.getElementById(bmType.id).innerText=  this.value;
                     trace.event('bkm_3', ' bookmark type specified', 'Other: ' + this.value, window.parent.location.pathname);
                     if (this.value.length==0)
-                        document.getElementById(bmType.id).innerText="Other"; 
+                        document.getElementById(bmType.id).innerText="Other:"; 
                     bookmarksJSONFile[locateLogObj(bookmarksJSONFile,this.parentElement.id)].updateBookmarkType(document.getElementById(bmType.id).innerText);
                     updateLocalStorage();
                 });
@@ -511,7 +534,7 @@
                     restoreButton.value="Restore Visualization State";
                     restoreButton.addEventListener('click', function() {
                         trace.event('bkm_5', ' bookmark stated', 'restoreted', window.parent.location.pathname);
-                        window.parent.exports.networkcube.vistorian.setState(bookmarksJSONFile[locateLogObj(bookmarksJSONFile,this.parentElement.id)].controlsValues);
+                       // window.parent.exports.networkcube.vistorian.setState(bookmarksJSONFile[locateLogObj(bookmarksJSONFile,this.parentElement.id)].controlsValues);
 
                      });
                     newContentDiv.appendChild(restoreButton);
@@ -546,110 +569,115 @@
                 var newBookmark=new bookmark(currentCounterValue,btn_dateTime.innerHTML,btn_title.innerHTML,newDiv.className,networkName);
                 var visIframe=window.parent.document.getElementsByTagName("iframe")[1];
                 //window.alert(visIframe[0].src + " ---- " +visIframe[1].src + " ---- " + visIframe[2].src);
-                switch (viewType){
+                if (title==""){// or if (id==0) as new entry
+                    switch (viewType){
 
-                    case "dataview":
-                    break;
-                    case "nodelink":
-                        let startTime=visIframe.contentWindow.document.getElementById("sliderKnobMin").getAttribute('cx');
-                        let endTime=visIframe.contentWindow.document.getElementById('sliderKnobMax').getAttribute('cx');
-                        let cntrls=visIframe.contentWindow.document.getElementsByTagName('circle');
-                        let linkOpacity=cntrls[0].getAttribute('cx');
-                        let nodeOpacity=cntrls[1].getAttribute('cx');
-                        let nodeSize=cntrls[2].getAttribute('cx');
-                        let edgeGap=cntrls[3].getAttribute('cx');
-                        let linkWidth=cntrls[4].getAttribute('cx');
-                        let labellingType=visIframe.contentWindow.document.getElementById('selection-input_Labeling').value;
-                        newBookmark.controlsValues.push(new  nodeLinkControls(viewType,startTime,endTime,linkOpacity,nodeOpacity,nodeSize,edgeGap,linkWidth,labellingType));
-                        break;
+                        case "dataview":
+                            networkName=window.parent.document.getElementById('networknameInput').value;
+                            break;
+                        case "nodelink":
+                            let startTime=visIframe.contentWindow.document.getElementById("sliderKnobMin").getAttribute('cx');
+                            let endTime=visIframe.contentWindow.document.getElementById('sliderKnobMax').getAttribute('cx');
+                            let cntrls=visIframe.contentWindow.document.getElementsByTagName('circle');
+                            let linkOpacity=cntrls[0].getAttribute('cx');
+                            let nodeOpacity=cntrls[1].getAttribute('cx');
+                            let nodeSize=cntrls[2].getAttribute('cx');
+                            let edgeGap=cntrls[3].getAttribute('cx');
+                            let linkWidth=cntrls[4].getAttribute('cx');
+                            let labellingType=visIframe.contentWindow.document.getElementById('selection-input_Labeling').value;
+                            newBookmark.controlsValues.push(new  nodeLinkControls(viewType,startTime,endTime,linkOpacity,nodeOpacity,nodeSize,edgeGap,linkWidth,labellingType));
+                            break;
+                            
+                        case "matrix":
+                            let matrixStartTime=visIframe.contentWindow.document.getElementById("sliderKnobMin").getAttribute('cx');
+                            let matrixEndTime=visIframe.contentWindow.document.getElementById('sliderKnobMax').getAttribute('cx');
+                            let matrixZoomVal=visIframe.contentWindow.document.getElementById('cellSizeBox').value;
+                            let matrixLabellingType=visIframe.contentWindow.document.getElementById('labelOrdering').value;
+                            newBookmark.controlsValues.push(new  matrixControls(viewType,matrixStartTime,matrixEndTime,matrixZoomVal,matrixLabellingType));
+                            break;
+                        case "dynamicego":
+                            let dyStartTime=visIframe.contentWindow.document.getElementById("sliderKnobMin").getAttribute('cx');
+                            let dyEndTime=visIframe.contentWindow.document.getElementById('sliderKnobMax').getAttribute('cx');
+                            let dyLabellingType=visIframe.contentWindow.document.getElementById('labelOrdering').value;
+                            newBookmark.controlsValues.push(new  timeArchsControls(viewType,dyStartTime,dyEndTime,dyLabellingType));
+                            break;
+                        case "map":
+                            let mapStartTime=visIframe.contentWindow.document.getElementById("sliderKnobMin").getAttribute('cx');
+                            let mapEndTime=visIframe.contentWindow.document.getElementById('sliderKnobMax').getAttribute('cx');
+                            let mapCntrls=visIframe.contentWindow.document.getElementsByTagName('circle');
+                            let mapNodeOverlap=mapCntrls[0].getAttribute('cx');
+                            let mapLinkOpacity=mapCntrls[1].getAttribute('cx');
+                            let mapOpacityOfPositionlessNodes=mapCntrls[2].getAttribute('cx');
+                            newBookmark.controlsValues.push(new  mapControls(viewType,mapStartTime,mapEndTime,mapNodeOverlap,mapLinkOpacity,mapOpacityOfPositionlessNodes));
+                            break;
+    /*                    case "mat-nl":
+                            let startTime=visIframe.contentWindow.document.getElementById("sliderKnobMin").getAttribute('cx');
+                            let endTime=visIframe.contentWindow.document.getElementById('sliderKnobMax').getAttribute('cx');
+                            let cntrls=visIframe.contentWindow.document.getElementsByTagName('circle');
+                            let linkOpacity=cntrls[0].getAttribute('cx');
+                            let nodeOpacity=cntrls[1].getAttribute('cx');
+                            let nodeSize=cntrls[2].getAttribute('cx');
+                            let edgeGap=cntrls[3].getAttribute('cx');
+                            let linkWidth=cntrls[4].getAttribute('cx');
+                            let labellingType=visIframe.contentWindow.document.getElementById('selection-input_Labeling').value;
+                            newBookmark.controlsValues.push(new  nodeLinkControls(viewType,startTime,endTime,linkOpacity,nodeOpacity,nodeSize,edgeGap,linkWidth,labellingType));
+
+                            var visIframe2_matnl=window.parent.document.getElementsByTagName("iframe")[2];
+
+                            let matrixStartTime=visIframe2_matnl.contentWindow.document.getElementById("sliderKnobMin").getAttribute('cx');
+                            let matrixEndTime=visIframe2_matnl.contentWindow.document.getElementById('sliderKnobMax').getAttribute('cx');
+                            let matrixZoomVal=visIframe2_matnl.contentWindow.document.getElementById('cellSizeBox').value;
+                            let matrixLabellingType=visIframe2_matnl.contentWindow.document.getElementById('labelOrdering').value;
+                            newBookmark.controlsValues.push(new  matrixControls(viewType,matrixStartTime,matrixEndTime,matrixZoomVal,matrixLabellingType));
+
+                            break;
+                        case "tileview":
+                            let startTime=visIframe.contentWindow.document.getElementById("sliderKnobMin").getAttribute('cx');
+                            let endTime=visIframe.contentWindow.document.getElementById('sliderKnobMax').getAttribute('cx');
+                            let cntrls=visIframe.contentWindow.document.getElementsByTagName('circle');
+                            let linkOpacity=cntrls[0].getAttribute('cx');
+                            let nodeOpacity=cntrls[1].getAttribute('cx');
+                            let nodeSize=cntrls[2].getAttribute('cx');
+                            let edgeGap=cntrls[3].getAttribute('cx');
+                            let linkWidth=cntrls[4].getAttribute('cx');
+                            let labellingType=visIframe.contentWindow.document.getElementById('selection-input_Labeling').value;
+                            newBookmark.controlsValues.push(new  nodeLinkControls(viewType,startTime,endTime,linkOpacity,nodeOpacity,nodeSize,edgeGap,linkWidth,labellingType));
                         
-                     case "matrix":
-                        let matrixStartTime=visIframe.contentWindow.document.getElementById("sliderKnobMin").getAttribute('cx');
-                        let matrixEndTime=visIframe.contentWindow.document.getElementById('sliderKnobMax').getAttribute('cx');
-                        let matrixZoomVal=visIframe.contentWindow.document.getElementById('cellSizeBox').value;
-                        let matrixLabellingType=visIframe.contentWindow.document.getElementById('labelOrdering').value;
-                        newBookmark.controlsValues.push(new  matrixControls(viewType,matrixStartTime,matrixEndTime,matrixZoomVal,matrixLabellingType));
-                        break;
-                    case "dynamicego":
-                        let dyStartTime=visIframe.contentWindow.document.getElementById("sliderKnobMin").getAttribute('cx');
-                        let dyEndTime=visIframe.contentWindow.document.getElementById('sliderKnobMax').getAttribute('cx');
-                        let dyLabellingType=visIframe.contentWindow.document.getElementById('labelOrdering').value;
-                        newBookmark.controlsValues.push(new  timeArchsControls(viewType,dyStartTime,dyEndTime,dyLabellingType));
-                        break;
-                    case "map":
-                        let mapStartTime=visIframe.contentWindow.document.getElementById("sliderKnobMin").getAttribute('cx');
-                        let mapEndTime=visIframe.contentWindow.document.getElementById('sliderKnobMax').getAttribute('cx');
-                        let mapCntrls=visIframe.contentWindow.document.getElementsByTagName('circle');
-                        let mapNodeOverlap=mapCntrls[0].getAttribute('cx');
-                        let mapLinkOpacity=mapCntrls[1].getAttribute('cx');
-                        let mapOpacityOfPositionlessNodes=mapCntrls[2].getAttribute('cx');
-                        newBookmark.controlsValues.push(new  mapControls(viewType,mapStartTime,mapEndTime,mapNodeOverlap,mapLinkOpacity,mapOpacityOfPositionlessNodes));
-                        break;
- /*                    case "mat-nl":
-                        let startTime=visIframe.contentWindow.document.getElementById("sliderKnobMin").getAttribute('cx');
-                        let endTime=visIframe.contentWindow.document.getElementById('sliderKnobMax').getAttribute('cx');
-                        let cntrls=visIframe.contentWindow.document.getElementsByTagName('circle');
-                        let linkOpacity=cntrls[0].getAttribute('cx');
-                        let nodeOpacity=cntrls[1].getAttribute('cx');
-                        let nodeSize=cntrls[2].getAttribute('cx');
-                        let edgeGap=cntrls[3].getAttribute('cx');
-                        let linkWidth=cntrls[4].getAttribute('cx');
-                        let labellingType=visIframe.contentWindow.document.getElementById('selection-input_Labeling').value;
-                        newBookmark.controlsValues.push(new  nodeLinkControls(viewType,startTime,endTime,linkOpacity,nodeOpacity,nodeSize,edgeGap,linkWidth,labellingType));
+                        
+                            var visIframe2=window.parent.document.getElementsByTagName("iframe")[2];
+                            let matrixStartTime=visIframe2.contentWindow.document.getElementById("sliderKnobMin").getAttribute('cx');
+                            let matrixEndTime=visIframe2.contentWindow.document.getElementById('sliderKnobMax').getAttribute('cx');
+                            let matrixZoomVal=visIframe2.contentWindow.document.getElementById('cellSizeBox').value;
+                            let matrixLabellingType=visIframe2.contentWindow.document.getElementById('labelOrdering').value;
+                            newBookmark.controlsValues.push(new  matrixControls(viewType,matrixStartTime,matrixEndTime,matrixZoomVal,matrixLabellingType));
 
-                        var visIframe2_matnl=window.parent.document.getElementsByTagName("iframe")[2];
-
-                        let matrixStartTime=visIframe2_matnl.contentWindow.document.getElementById("sliderKnobMin").getAttribute('cx');
-                        let matrixEndTime=visIframe2_matnl.contentWindow.document.getElementById('sliderKnobMax').getAttribute('cx');
-                        let matrixZoomVal=visIframe2_matnl.contentWindow.document.getElementById('cellSizeBox').value;
-                        let matrixLabellingType=visIframe2_matnl.contentWindow.document.getElementById('labelOrdering').value;
-                        newBookmark.controlsValues.push(new  matrixControls(viewType,matrixStartTime,matrixEndTime,matrixZoomVal,matrixLabellingType));
-
-                        break;
-                    case "tileview":
-                        let startTime=visIframe.contentWindow.document.getElementById("sliderKnobMin").getAttribute('cx');
-                        let endTime=visIframe.contentWindow.document.getElementById('sliderKnobMax').getAttribute('cx');
-                        let cntrls=visIframe.contentWindow.document.getElementsByTagName('circle');
-                        let linkOpacity=cntrls[0].getAttribute('cx');
-                        let nodeOpacity=cntrls[1].getAttribute('cx');
-                        let nodeSize=cntrls[2].getAttribute('cx');
-                        let edgeGap=cntrls[3].getAttribute('cx');
-                        let linkWidth=cntrls[4].getAttribute('cx');
-                        let labellingType=visIframe.contentWindow.document.getElementById('selection-input_Labeling').value;
-                        newBookmark.controlsValues.push(new  nodeLinkControls(viewType,startTime,endTime,linkOpacity,nodeOpacity,nodeSize,edgeGap,linkWidth,labellingType));
-                       
-                       
-                        var visIframe2=window.parent.document.getElementsByTagName("iframe")[2];
-                        let matrixStartTime=visIframe2.contentWindow.document.getElementById("sliderKnobMin").getAttribute('cx');
-                        let matrixEndTime=visIframe2.contentWindow.document.getElementById('sliderKnobMax').getAttribute('cx');
-                        let matrixZoomVal=visIframe2.contentWindow.document.getElementById('cellSizeBox').value;
-                        let matrixLabellingType=visIframe2.contentWindow.document.getElementById('labelOrdering').value;
-                        newBookmark.controlsValues.push(new  matrixControls(viewType,matrixStartTime,matrixEndTime,matrixZoomVal,matrixLabellingType));
-
-                        var visIframe3=window.parent.document.getElementsByTagName("iframe")[3];
-                        let dyStartTime=visIframe3.contentWindow.document.getElementById("sliderKnobMin").getAttribute('cx');
-                        let dyEndTime=visIframe3.contentWindow.document.getElementById('sliderKnobMax').getAttribute('cx');
-                        let dyLabellingType=visIframe3.contentWindow.document.getElementById('labelOrdering').value;
-                        newBookmark.controlsValues.push(new  timeArchsControls(viewType,dyStartTime,dyEndTime,dyLabellingType));
+                            var visIframe3=window.parent.document.getElementsByTagName("iframe")[3];
+                            let dyStartTime=visIframe3.contentWindow.document.getElementById("sliderKnobMin").getAttribute('cx');
+                            let dyEndTime=visIframe3.contentWindow.document.getElementById('sliderKnobMax').getAttribute('cx');
+                            let dyLabellingType=visIframe3.contentWindow.document.getElementById('labelOrdering').value;
+                            newBookmark.controlsValues.push(new  timeArchsControls(viewType,dyStartTime,dyEndTime,dyLabellingType));
 
 
-                        var visIframe4=window.parent.document.getElementsByTagName("iframe")[4];
-                        let mapStartTime=visIframe4.contentWindow.document.getElementById("sliderKnobMin").getAttribute('cx');
-                        let mapEndTime=visIframe4.contentWindow.document.getElementById('sliderKnobMax').getAttribute('cx');
-                        let mapCntrls=visIframe4.contentWindow.document.getElementsByTagName('circle');
-                        let mapNodeOverlap=mapCntrls[0].getAttribute('cx');
-                        let mapLinkOpacity=mapCntrls[1].getAttribute('cx');
-                        let mapOpacityOfPositionlessNodes=mapCntrls[2].getAttribute('cx');
-                        newBookmark.controlsValues.push(new  mapControls(viewType,mapStartTime,mapEndTime,mapNodeOverlap,mapLinkOpacity,mapOpacityOfPositionlessNodes));
+                            var visIframe4=window.parent.document.getElementsByTagName("iframe")[4];
+                            let mapStartTime=visIframe4.contentWindow.document.getElementById("sliderKnobMin").getAttribute('cx');
+                            let mapEndTime=visIframe4.contentWindow.document.getElementById('sliderKnobMax').getAttribute('cx');
+                            let mapCntrls=visIframe4.contentWindow.document.getElementsByTagName('circle');
+                            let mapNodeOverlap=mapCntrls[0].getAttribute('cx');
+                            let mapLinkOpacity=mapCntrls[1].getAttribute('cx');
+                            let mapOpacityOfPositionlessNodes=mapCntrls[2].getAttribute('cx');
+                            newBookmark.controlsValues.push(new  mapControls(viewType,mapStartTime,mapEndTime,mapNodeOverlap,mapLinkOpacity,mapOpacityOfPositionlessNodes));
 
 
-                        break;
- */
-                    default:
-                        //alert to be deleted - just for testing purposes
-                        console.log("Unable to classify bookmark type"); 
+                            break;
+    */
+                        default:
+                            //alert to be deleted - just for testing purposes
+                            console.log("Unable to classify bookmark type"); 
+                    }
                 }
-                
+                else
+
+                newBookmark.updateBookmarkDataset(networkName);
                 bookmarksJSONFile.push(newBookmark);
 
             }
