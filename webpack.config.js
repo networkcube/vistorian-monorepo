@@ -37,6 +37,12 @@ module.exports = {
     },
     devServer: {
         contentBase: './',
-        port:8081        
+        port:8081,  
+        headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Headers': '*',
+            'Access-Control-Allow-Methods': '*',
+        },    
     },
+      
 };
