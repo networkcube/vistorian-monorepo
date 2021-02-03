@@ -1071,9 +1071,9 @@ export function updateEntryToLocationTableOSM(index: number, geoname: string, lo
         fullGeoNames.push(geoname);
         var xhr: any = $.ajax({
             url: "https://nominatim.openstreetmap.org/search",
-          //  headers: {  'Access-Control-Allow-Origin': '*' , 'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT, DELETE'},
+            headers: {  'Access-Control-Allow-Origin': '*' , 'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT, DELETE'},
             data: {format: "json", limit: "1", q: geoname.split(',')[0].trim()},
-            dataType: 'jsonp'
+            dataType: 'json'
         })
             .done(function (data: any, text: any, XMLHttpRequest: any) {
                 var entry: any;
