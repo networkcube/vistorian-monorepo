@@ -83,3 +83,19 @@ input[type='text'],select,textarea {
     margin-left: 5px;
 
 }
+
+.menuButtonGadget {
+  background-color: #bbb;
+  border-radius: 15px;
+  border: none;
+  display: inline-block;
+  cursor: pointer;
+  color: #fff;
+  font-size: 14px;
+  font-weight: normal;
+  padding-top: 0px;
+  padding-right: 6px;
+  padding-bottom: 0px;
+  padding-left: 6px;
+  margin-left: 5px;
+}

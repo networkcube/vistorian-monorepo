@@ -34,7 +34,7 @@
     </head>
     <title>Tile view</title>
 
-<body onload="trace.event('log_2', 'load', 'webpage', document.location.pathname);checkLogStatus();dragElement(document.getElementById('mydiv'));" onerror="trace.event('err', event + ' ' + source + lineno, error, document.location.pathname);" onbeforeunload="trace.event('log_11', 'close', 'webpage', document.location.pathname);">
+<body onload="trace.event('log_2', 'load', 'webpage', document.location.pathname);checkLogStatus();dragElement(document.getElementById('mydiv'));" onerror="trace.event('err', event + ' ' + source + lineno, error, document.location.pathname);" onbeforeunload="trace.event('log_12', 'close', 'webpage', document.location.pathname);">
 
     <!-- VS: Call to trace_test_130529 -->
     <script type="text/javascript" src="../static/traces/trace_test_130529.js"></script>
@@ -80,7 +80,7 @@
         <a class="footer" href="https://go.microsoft.com/fwlink/?LinkId=521839" title="privacy">Privacy & Cookies</a> |
         <a class="footer" href="https://go.microsoft.com/fwlink/?LinkID=760869" title="terms of use">Terms Of Use</a> |
         <a class="footer" href="http://go.microsoft.com/fwlink/?LinkId=506942" title="trademarks">Trademarks</a>
-        © <script>document.write(new Date().getFullYear())</script> Microsoft <img src="../static/logos/logo-microsoft.png" height="20px"> © <script>document.write(new Date().getFullYear());</script> INRIA <img
+        © <script>document.write(new Date().getFullYear())</script> Microsoft <img src="../static/logos/logo-microsoft.png" height="20px"> © <script>(document.write(new Date().getFullYear()));</script> INRIA <img
             src="../static/logos/logo-inria.png" height="20px">
     </div>
     <script>
@@ -207,17 +207,19 @@
               <form>
                 <h6>How can you describe your expirence? </h6>
                 <div class="form-group">
-                    <input type="button" class="menuButtonGadget" id="AnalyzeData" value="Analyzing Data" onclick="trace.event('log_14', 'general_feedback', this.value, document.location.pathname);">
-                    <input type="button" class="menuButtonGadget" id="Learn" value="Learning" onclick="trace.event('log_14', 'general_feedback', this.value, document.location.pathname);">
-                    <input type="button" class="menuButtonGadget" id="DemotoOthers" value="Demoing" onclick="trace.event('log_14', 'general_feedback', this.value, document.location.pathname);">
-                    <input type="button" class="menuButtonGadget" id="exploreVis" value="Exploring" onclick="trace.event('log_14', 'general_feedback', this.value, document.location.pathname);">
-                    <input type="button" class="menuButtonGadget" id="ReportIssue" value="Reporting an Issue" onclick="trace.event('log_14', 'general_feedback', this.value, document.location.pathname);">
-                    <input type="button" class="menuButtonGadget" id="AskForHelp" value="Asking for help" onclick="trace.event('log_14', 'general_feedback', this.value, document.location.pathname);">
-                    <input type="button" class="menuButtonGadget" id="eurekaMoment" value="Eureka! " onclick="trace.event('log_14', 'general_feedback', this.value, document.location.pathname);">
-          <textarea name="message" id="feedback_text" cols="30" rows="10" placeholder="Send us your feedback!"autofocus></textarea>
+                    <input type="button" class="menuButtonGadget" id="AnalyzeData" value="Analyzing Data" >
+                    <input type="button" class="menuButtonGadget" id="Learn" value="Learning" >
+                    <input type="button" class="menuButtonGadget" id="DemotoOthers" value="Demoing" >
+                    <input type="button" class="menuButtonGadget" id="exploreVis" value="Exploring" >
+                    <input type="button" class="menuButtonGadget" id="ReportIssue" value="Reporting an Issue" >
+                    <input type="button" class="menuButtonGadget" id="AskForHelp" value="Asking for help" >
+                    <input type="button" class="menuButtonGadget" id="eurekaMoment" value="Eureka! ">
+    
+      
+                    <textarea name="message" id="feedback_text" cols="30" rows="10" placeholder="Send us your feedback!"autofocus></textarea>
                   
                 </div>
-                <button type="submit" class="btn btn-primary btn-sm btn-block" onclick="trace.event('log_15', 'general_feedback', document.getElementById('feedback_text').value, document.location.pathname);">
+                <button type="submit" class="btn btn-primary btn-sm btn-block" onclick="LoggingGeneralFeedback();">
                   Send it!
                 </button>
               </form>
@@ -226,6 +228,69 @@
               Feedback sent! Thank you for helping us!
             </div>
           </div>
+
+          <!-- Feedback Modal -->
+ <div class="modal fade show" id="popupFeedbackForm" >
+    <div class="modal-dialog modal-dialog-scrollable">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Let us know: How are you using Vistorian? </h5>
+          <button type="button" class="close" data-dismiss="modal" onclick="userActivityThrottler();resetFeedbackForm();trace.event('log_15', 'general_feedback_popupForm', document.getElementById('feedback_text').value, document.location.pathname);">&times;</button>
+        </div>
+        <div class="modal-body">
+          <form style="font-size: 14px;" id="FeedbackFormElements">
+            <div style="margin: 5px;">
+                <h6 style="font-weight: bold;font-style: italic;"><u>How can you charactarize your current activity?</u></h6>
+
+                <input type="button" class="feedbackMenuButton" style="margin: 2px;" id="btn_AnalyzeData" value="Analyzing Data" onclick="displaySubOptions(this);">
+                <input type="button" class="feedbackMenuButton" style="margin: 2px;" id="btn_Learn" value="Learning" onclick="displaySubOptions(this);">
+                <input type="button" class="feedbackMenuButton" style="margin: 2px;" id="btn_DemotoOthers" value="Demoing" onclick="displaySubOptions(this);">
+                <input type="button" class="feedbackMenuButton" style="margin: 2px;" id="btn_exploreVis" value="Exploring" onclick="displaySubOptions(this);">
+                <input type="button" class="feedbackMenuButton" style="margin: 2px;" id="btn_ReportIssue" value="Reporting an Issue" onclick="displaySubOptions(this);">
+                <input type="button" class="feedbackMenuButton" style="margin: 2px;" id="btn_AskForHelp" value="Asking for help" onclick="displaySubOptions(this);">
+                <input type="button" class="feedbackMenuButton" style="margin: 2px;" id="btn_eurekaMoment" value="Eureka!" onclick="displaySubOptions(this);">
+                <input type="button" class="feedbackMenuButton" style="margin: 2px;" id="btn_other" value="Other" onclick="displaySubOptions(this);">
+                <br/>
+                <div id="OtherType_div" style="display: none; align-items: center;margin: 10px;">
+                    <strong>Specify other usage: </strong> <input type="tex" id="txt_other" cols="60" placeholder="Explian other type here .. Please don't add personal information";>
+                </div>
+                <br/>
+                <div id="checkboxes_group_div" style="display: none; align-items: center;margin: 10px;">
+                    <h6 style="font-weight: bold;font-style: italic;"><u> What kind of analysis are you performing?</u></h6>
+
+                    <label for="chk_0"><input type="checkbox" name="chks_feebackForm" id="chk_0" value="0"> Review Data Quality</label><br>
+                    <label for="chk_1"><input type="checkbox" name="chks_feebackForm" id="chk_1" value="1"> Test a particular hypothesis</label><br>
+                    <label for="chk_2"><input type="checkbox" name="chks_feebackForm" id="chk_2" value="2"> Compare different visualizations</label><br>
+                    <label for="chk_3"><input type="checkbox" name="chks_feebackForm" id="chk_3" value="3"> Test & Explore Vistorian</label><br>
+                    <label for="chk_4"><input type="checkbox" name="chks_feebackForm" id="chk_4" value="4"> Retrieve specific details</label><br>
+                    <label for="chk_5"><input type="checkbox" name="chks_feebackForm" id="chk_5" value="5"> Repeat analysis with new data</label><br>
+
+                </div>
+                <div id="writtenFeedback" style="margin: 5px;">
+                     <textarea name="message" id="feedback_text_popup" cols="40" rows="5" placeholder="Write your feedback!"autofocus></textarea>
+                </div>
+            </div>
+         
+     
+          </form>
+        </div>
+        <div class="modal-footer"> 
+            <div style="float: left;">         
+            <label for="chk_hidePopupW"><input type="checkbox" id="chk_hidePopupW" value="1">Don't show this form again.</label><br>
+            </div>
+            <div>
+           <button type="button" class="btn btn-default" data-dismiss="modal" onclick="disablingFeedbackPopup(document.getElementById('chk_hidePopupW'));trace.event('log_16', 'general_feedback_popupForm', 'feedback form hidden', document.location.pathname);">Hide this form</button>   
+
+           <button type="button" class="btn btn-default" data-dismiss="modal" onclick="LoggingFeedback();disablingFeedbackPopup(document.getElementById('chk_hidePopupW'));">Submit my feedback</button>
+        </div>
+        </div>
+      </div>
+      
+    </div>
+  </div> 
+
 </body>
 
 </html>
