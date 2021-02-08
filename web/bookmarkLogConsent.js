@@ -161,21 +161,25 @@ activateActivityTracker();
 
 //register the interactions' events with the function responsible
 function activateActivityTracker() {
-  window.addEventListener("mousemove", userActivityThrottler);
-  window.addEventListener("click", userActivityThrottler);
-  window.addEventListener("scroll", userActivityThrottler);
-  window.addEventListener("keydown", userActivityThrottler);
-  window.addEventListener("resize", userActivityThrottler);
- window.addEventListener("beforeunload", inactiveUserAction);
- 
+  if (!  (localStorage.getItem("stopFeedbackPopup"))){
+    window.addEventListener("mousemove", userActivityThrottler);
+    window.addEventListener("click", userActivityThrottler);
+    window.addEventListener("scroll", userActivityThrottler);
+    window.addEventListener("keydown", userActivityThrottler);
+    window.addEventListener("resize", userActivityThrottler);
+    window.addEventListener("beforeunload", inactiveUserAction);
+  
+  }
 }
+
+
 function  deactivateActivityTracker() {
   window.removeEventListener("mousemove", userActivityThrottler);
   window.removeEventListener("click", userActivityThrottler);
   window.removeEventListener("scroll", userActivityThrottler);
   window.removeEventListener("keydown", userActivityThrottler);
   window.removeEventListener("resize", userActivityThrottler);
- // window.removeEventListener("onbeforeunload", inactiveUserAction);
+  window.removeEventListener("beforeunload", inactiveUserAction);
 }
 
 //When the user interacts with the APP
@@ -190,7 +194,6 @@ function resetUserActivityTimeout() {
 
 function inactiveUserAction() {
   isInactive = true;//isActive=false
-  
  document.getElementById('popupFeedbackForm').style.display="block";
  trace.event('log_13', 'no activity detected', 'current web page', window.location.pathname);
 
@@ -217,10 +220,10 @@ function disablingFeedbackPopup(chk){
     localStorage.setItem("stopFeedbackPopup", "true");
   
 
-  if (localStorage.getItem("stopFeedbackPopup")==true){
-    deactivateActivityTracker();
+  if (localStorage.getItem("stopFeedbackPopup")){
     clearTimeout(userActivityTimeout);
     clearTimeout(userActivityThrottlerTimeout);
+    deactivateActivityTracker();
   }
   else
     userActivityThrottler();
@@ -334,5 +337,10 @@ function resetFeedbackForm(){
     document.getElementById("OtherType_div").style.display="none"; 
 
     document.getElementById('popupFeedbackForm').style.display='none';
+  
+}
+
+function refreshBookmarkToolbar(){
+  document.getElementById('myFrame').src=document.getElementById('myFrame').src;
   
 }
