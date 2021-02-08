@@ -9,6 +9,7 @@
         <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
         <script src="https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.1.1/jspdf.umd.min.js"></script>
+        <script src='bookmarkLogConsent.js'></script>
         <script> var exports = {}; </script>
         <script src="../lib/vistorian-vis.js"></script>
 
@@ -66,7 +67,9 @@
                             
                     }
                 }
-                
+                printBk(){
+                    return (this.title + " " + this.notes + " " + this.type + " " +this.viewType + " " +this.viewType + " " + this.analysisOpts.forEach(function(a){ return a;}) + this.controlsValues.toString());
+                }
                 
             }
             // Holds values of each network's controls
@@ -123,10 +126,15 @@
             function locateLogObj(logs,elementId){
                 for (var i=0;i<logs.length;i++)
                     if (logs[i].id==elementId)
-                        
-                    return i;
+                        return i;
             }
- 
+            function printBookmarks(state){
+                var bks=state;
+                console.log(bks);
+                for (var i=0;i<bookmarksJSONFile.length;i++)
+                console.log( bookmarksJSONFile[i].printBk());
+                //(bks);
+            }
             
             function initializeJSON(){
                 visBM = localStorage.getItem("vistorianBookmarks");
@@ -139,7 +147,6 @@
                     }
                     counter=logs[i-1].id;
                 }
-               
             }
 
             function changeBookmarksView(typeChosen){
@@ -224,6 +231,15 @@
             }
             function updateHeader(){
                 this.parentElement.parentElement.getElementsByClassName("collapsible")[0].innerHTML=this.value;
+            }
+
+            function refreshBookmarks(){
+               /*  var bksContainer=document.getElementById("logs");
+                while (bksContainer.firstChild) {
+                    bksContainer.removeChild(bksContainer.firstChild);
+                }
+                initializeJSON(); */
+ //               location.reload();
             }
 
             function AddNewLog(id,dateCreated,title,note,selectedType,analysisOptions,networkType,networkDataset){
@@ -365,8 +381,7 @@
                              });
                     document.getElementById(newContentDiv.id).style.maxHeight=document.getElementById(newContentDiv.id).scrollHeight + "px";
                     bookmarksJSONFile[locateLogObj(bookmarksJSONFile,this.parentElement.id)].updateBookmarkType(document.getElementById(bmType.id).innerText);
-                    updateLocalStorage();
-
+                    updatesNotSaved();
                 });
                    newContentDiv.appendChild(btn);
                 //Add rest of the types except (Other) type
@@ -394,7 +409,8 @@
                         txt_otherType.style.display="none";
                         frmChk.style.display="none";
                         bookmarksJSONFile[locateLogObj(bookmarksJSONFile,this.parentElement.id)].updateBookmarkType(document.getElementById(bmType.id).innerText);
-                        updateLocalStorage();
+                        updatesNotSaved();
+                        // updateLocalStorage();
                    });
                    newContentDiv.appendChild(btn);
                 }
@@ -440,7 +456,8 @@
                             document.getElementById(newContentDiv.id).style.maxHeight=document.getElementById(newContentDiv.id).scrollHeight + "px";
                         }
                         bookmarksJSONFile[locateLogObj(bookmarksJSONFile,this.parentElement.id)].updateBookmarkType(document.getElementById(bmType.id).innerText);
-                        updateLocalStorage();   
+                        updatesNotSaved();updatesNotSaved()
+                        //updateLocalStorage();   
                 });
                 newContentDiv.appendChild(btn);
 
@@ -457,7 +474,8 @@
                     if (this.value.length==0)
                         document.getElementById(bmType.id).innerText="Other:"; 
                     bookmarksJSONFile[locateLogObj(bookmarksJSONFile,this.parentElement.id)].updateBookmarkType(document.getElementById(bmType.id).innerText);
-                    updateLocalStorage();
+                    updatesNotSaved();
+                    // updateLocalStorage();
                 });
                 newContentDiv.appendChild(txt_otherType);
                 
@@ -490,7 +508,8 @@
                     optChk.addEventListener('click', function() {
                         trace.event('bkm_6', ' bookmark analysis type selected', this.value, window.parent.location.pathname);
                         bookmarksJSONFile[locateLogObj(bookmarksJSONFile,this.name.charAt(this.name.length-1))].updateBookmarkAnalysisType(document.getElementsByName(this.name));
-                        updateLocalStorage();
+                        updatesNotSaved();
+                        //updateLocalStorage();
                     });
                     var opt = document.createElement('label');
                     opt.innerHTML = flagTypes[i];
@@ -507,10 +526,12 @@
                 newNote.rows=5;
                 if (note!="")
                     newNote.value=note;
+                
                 newNote.placeholder="Enter your notes here ..";
                 newNote.addEventListener('keyup', function() {
+
                     bookmarksJSONFile[locateLogObj(bookmarksJSONFile,this.parentElement.id)].updateBookmarkNotes(this.value);
-                    updateLocalStorage();
+                    updatesNotSaved();
                 });
                 var notesLabel=document.createElement("label");
                 notesLabel.innerText="Notes:";
@@ -701,7 +722,7 @@
             
         </script>
     </head>
-    <body id="capture" onload="initializeJSON();" onerror="trace.event('err', event + ' ' + source + lineno, error, document.location.pathname);">
+    <body id="capture" onload="initializeJSON();" onerror="trace.event('err', event + ' ' + source + lineno, error, document.location.pathname);" onfocus="refreshBookmarks();">
        
         <div id="logbook_container" data-role="page">
             <div>

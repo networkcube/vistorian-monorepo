@@ -35,7 +35,7 @@
     </head>
     <title>Node link</title>
 
-<body onload="trace.event('log_2', 'load', 'webpage', document.location.pathname);checkLogStatus();dragElement(document.getElementById('mydiv'));" onerror="trace.event('err', event + ' ' + source + lineno, error, document.location.pathname);" onbeforeunload="trace.event('log_12', 'close', 'webpage', document.location.pathname);" >
+<body onload="trace.event('log_2', 'load', 'webpage', document.location.pathname);checkLogStatus();dragElement(document.getElementById('mydiv'));" onerror="trace.event('err', event + ' ' + source + lineno, error, document.location.pathname);" onbeforeunload="trace.event('log_12', 'close', 'webpage', document.location.pathname);" onfocus="refreshBookmarkToolbar();">
     <!-- VS: Call to trace_test_130529 -->
     
     <script type="text/javascript" src="../static/traces/trace_test_130529.js"></script>
