@@ -6,9 +6,8 @@
         <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
         <script type="text/javascript" src="../static/traces/trace.js"></script>
         <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
         <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
-        <script src="https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.1.1/jspdf.umd.min.js"></script>
         <script src='bookmarkLogConsent.js'></script>
         <script> var exports = {}; </script>
         <script src="../lib/vistorian-vis.js"></script>
@@ -17,6 +16,7 @@
 
 
         <script type="text/javascript">
+            
             const monthNames = ["January", "February", "March", "April", "May", "June",
                                  "July", "August", "September", "October", "November", "December"];
 
@@ -29,8 +29,8 @@
                 networkName=window.parent.location.search.split('&')[1].split('=')[1];
             }   
 
-            class bookmark{
-                constructor(id,createdOn,title,viewType,datasetID){
+            class Bookmark{
+                constructor(id,createdOn,title,viewType,networkDataset,controlsValues){
                     this.id=id;
                     this.createdOn=createdOn;
                     this.title=title;
@@ -38,9 +38,10 @@
                     this.type="";
                     this.analysisOpts=[];
                     this.viewType=viewType;
-                    this.networkDataset=datasetID;
-                    this.controlsValues=[];
+                    this.networkDataset=networkDataset;
+                    this.controlsValues=controlsValues;
                 }
+               
                 updateBookmark(title,note,type){
                     this.title=title;
                     this.note=note;
@@ -49,14 +50,14 @@
                 updateBookmarkTitle(title){
                     this.title=title;
                 }
-                updateBookmarkNotes(notes){
-                    this.note=notes;
+                updateBookmarkNotes(note){
+                    this.note=note;
                 }
-                updateBookmarkType(BkType){
-                    this.type=BkType;
+                updateBookmarkType(type){
+                    this.type=type;
                 }
-                updateBookmarkDataset(dataset){
-                    this.networkDataset=dataset;
+                updateBookmarkDataset(networkDataset){
+                    this.networkDataset=networkDataset;
                 }
                 updateBookmarkAnalysisType(chkbx_AnalysisGroup){
                     this.analysisOpts=[];
@@ -68,10 +69,19 @@
                     }
                 }
                 printBk(){
-                    return (this.title + " " + this.notes + " " + this.type + " " +this.viewType + " " +this.viewType + " " + this.analysisOpts.forEach(function(a){ return a;}) + this.controlsValues.toString());
+                    return ("title: " + this.title + " notes: " + this.note + " Type: " + this.type + " View" +this.viewType + " DS " +this.networkDataset + " " + this.analysisOpts.forEach(function(a){ return a;}) + this.controlsValues.toString());
                 }
                 
             }
+            function updateBookmarkAnalysisTypeGeneral(bookmark,chkbx_AnalysisGroup){
+                bookmark.analysisOpts=[];
+                    for (var i=0;i<chkbx_AnalysisGroup.length;i++){
+                        if (chkbx_AnalysisGroup[i].checked){
+                            bookmark.analysisOpts.push(i);
+                        }
+                            
+                    }
+                }
             // Holds values of each network's controls
             class networkControls {
                 constructor(networkType,startTime,endTime){
@@ -122,32 +132,37 @@
                     
             }
             var counter=0;
-            var bookmarksJSONFile=[];
+            //var bookmarksJSONFile=[];
+            var generalPBtns=["Analyze Data","Learn","Demo to others","Test & Explore Vistorian","Report an Issue"];
+
             function locateLogObj(logs,elementId){
                 for (var i=0;i<logs.length;i++)
                     if (logs[i].id==elementId)
                         return i;
             }
             function printBookmarks(state){
+                let userBks = JSON.parse(localStorage.getItem("vistorianBookmarks")) || [];
+
                 var bks=state;
                 console.log(bks);
-                for (var i=0;i<bookmarksJSONFile.length;i++)
-                console.log( bookmarksJSONFile[i].printBk());
-                //(bks);
+                for (var i=0;i<userBks.length;i++)
+                    console.log( userBks[i].printBk());
+
             }
-            
-            function initializeJSON(){
-                visBM = localStorage.getItem("vistorianBookmarks");
-                logs = JSON.parse(visBM);
+        
+             function initializeJSON(){
+                let bks=localStorage.getItem("vistorianBookmarks");
+                let userBks = JSON.parse(bks )|| [];
                 var i;
-                if (typeof logs !== "undefined" && logs!==null){
-                    if (logs.length!=0 )
-                        for ( i=0;i<logs.length;i++){
-                            AddNewLog(logs[i].id,logs[i].createdOn,logs[i].title,logs[i].note,logs[i].type,logs[i].analysisOpts,logs[i].viewType,logs[i].networkDataset);
-                    }
-                    counter=logs[i-1].id;
+                if (bks && typeof userBks !== "undefined" && userBks!==null && userBks.length!=0){
+                        for ( i=0;i<userBks.length;i++)
+                            AddNewLog(userBks[i].id,userBks[i].createdOn,userBks[i].title,userBks[i].note,userBks[i].type,userBks[i].analysisOpts,userBks[i].viewType,userBks[i].networkDataset);
+                    
+                    counter=userBks[i-1].id;
                 }
-            }
+                else
+                    document.getElementById('lbl_changesState').innerText='No bookmarks yet!';
+            } 
 
             function changeBookmarksView(typeChosen){
                 var i;
@@ -218,11 +233,11 @@
                         bkmElements[i].style.display = displayVal;          
  
             }
-            function updateLocalStorage(){
-                bookmarksJSON = JSON.stringify(bookmarksJSONFile);
-                localStorage.setItem("vistorianBookmarks", bookmarksJSON);
+            function updateLocalStorage(bookmarksArray){
+
+                localStorage.setItem("vistorianBookmarks", JSON.stringify(bookmarksArray));
                 document.getElementById('lbl_changesState').style.backgroundColor="snow";
-                document.getElementById('lbl_changesState').innerText='All changes saved';
+                document.getElementById('lbl_changesState').innerText='All changes have been saved';
             }
             function updatesNotSaved(){
                 document.getElementById('lbl_changesState').innerText="Changes have not been saved yet. Click Save button";
@@ -233,16 +248,11 @@
                 this.parentElement.parentElement.getElementsByClassName("collapsible")[0].innerHTML=this.value;
             }
 
-            function refreshBookmarks(){
-               /*  var bksContainer=document.getElementById("logs");
-                while (bksContainer.firstChild) {
-                    bksContainer.removeChild(bksContainer.firstChild);
-                }
-                initializeJSON(); */
- //               location.reload();
-            }
+            
 
             function AddNewLog(id,dateCreated,title,note,selectedType,analysisOptions,networkType,networkDataset){
+                 let userBookmarks = JSON.parse(localStorage.getItem("vistorianBookmarks")) || [];
+
                  var logs=document.getElementById("logs");
                 //Create new log div
                 var newDiv=document.createElement("div");
@@ -269,7 +279,7 @@
                 timeLabelHeader.innerHTML="Date/Time Created: &nbsp;&nbsp;&nbsp; ";
                 timeLabelHeader.style="font-weight: bold;float:left;";
                
-                var timeLabel=document.createElement("label");
+            //    var timeLabel=document.createElement("label");
 
                 var btn_dateTime=document.createElement("span");
                 btn_dateTime.id="btn_dateTime"+currentCounterValue;
@@ -278,11 +288,11 @@
                     var today = new Date();
                     var date = today.getDate() +'-'+ monthNames[today.getMonth()] +'-'+ today.getFullYear();
                     var time = today.getHours() + ":" + today.getMinutes();// + ":" + today.getSeconds();
-                    timeLabel.innerHTML=date+ "  "+time;
+            //        timeLabel.innerHTML=date+ "  "+time;
                     btn_dateTime.innerHTML=date+ "  "+time;
                 }
                 else{
-                    timeLabel.innerHTML=dateCreated;
+            //        timeLabel.innerHTML=dateCreated;
                     btn_dateTime.innerHTML=dateCreated;
                 }
  
@@ -324,9 +334,10 @@
                 newTitle.id="txt_title_"+currentCounterValue;
                 newTitle.placeholder="Update bookmark label here ..";
                 newTitle.addEventListener('keyup', function() {
+                    let userBks = JSON.parse(localStorage.getItem("vistorianBookmarks")) || [];
                     document.getElementById(btn_title.id).innerHTML=this.value;
-                    bookmarksJSONFile[locateLogObj(bookmarksJSONFile,this.parentElement.id)].updateBookmarkTitle(this.value);
-                    updateLocalStorage();
+                    userBks[locateLogObj(userBks,this.parentElement.id)].title=this.value;
+                    updateLocalStorage(userBks);
                 });
 
                 lbl_title.htmlFor=newTitle.id;
@@ -352,7 +363,6 @@
                 bmType.style.display="none";
                 newContentDiv.appendChild(bmType);
                 
-                var generalPBtns=["Analyze Data","Learn","Demo to others","Test & Explore Vistorian","Report an Issue"];
                 // Add "analyze data" with its sub-types
                 var btn= document.createElement("input");
                 btn.type="button";
@@ -367,10 +377,13 @@
                     
                 
                 btn.addEventListener('click', function() {
+                    let userBks = JSON.parse(localStorage.getItem("vistorianBookmarks")) || [];
+
                     document.getElementById(bmType.id).innerText=this.value;
                     frmChk.style.display="block";
                     txt_otherType.style.display="none";
                     document.getElementsByName(this.name).forEach((btn) => {
+
                             if(btn == this) {
                                 btn.style.backgroundColor= "#FF7F50"; 
                                 trace.event('bkm_3', ' bookmark type specified', this.value, window.parent.location.pathname);
@@ -380,7 +393,9 @@
                                 btn.style.backgroundColor= "#bbb"; 
                              });
                     document.getElementById(newContentDiv.id).style.maxHeight=document.getElementById(newContentDiv.id).scrollHeight + "px";
-                    bookmarksJSONFile[locateLogObj(bookmarksJSONFile,this.parentElement.id)].updateBookmarkType(document.getElementById(bmType.id).innerText);
+                    userBks[locateLogObj(userBks,this.parentElement.id)].type=document.getElementById(bmType.id).innerText;
+                    updateLocalStorage(userBks);
+
                     updatesNotSaved();
                 });
                    newContentDiv.appendChild(btn);
@@ -397,8 +412,11 @@
                         btn.style.backgroundColor= "#FF7F50"; 
                     }
                    btn.addEventListener('click', function() {
+                    let userBks = JSON.parse(localStorage.getItem("vistorianBookmarks")) || [];
+
                         document.getElementById(bmType.id).innerText=this.value;
                         document.getElementsByName(this.name).forEach((btn) => {
+
                             if(btn == this) {
                                 btn.style.backgroundColor= "#FF7F50"; 
                                 trace.event('bkm_3', ' bookmark type specified', this.value, window.parent.location.pathname);
@@ -408,9 +426,9 @@
                              });
                         txt_otherType.style.display="none";
                         frmChk.style.display="none";
-                        bookmarksJSONFile[locateLogObj(bookmarksJSONFile,this.parentElement.id)].updateBookmarkType(document.getElementById(bmType.id).innerText);
+                        userBks[locateLogObj(userBks,this.parentElement.id)].type=document.getElementById(bmType.id).innerText;
                         updatesNotSaved();
-                        // updateLocalStorage();
+                        updateLocalStorage(userBks);
                    });
                    newContentDiv.appendChild(btn);
                 }
@@ -421,6 +439,7 @@
                 btn.name="menuButton_"+currentCounterValue;
                 //create other type textarea
                 var txt_otherType=document.createElement("textarea");
+                txt_otherType.id="txt_otherType_"+currentCounterValue;
                 var otherType=true;
                 if (selectedType!=""){
                     for (var i=0;i<generalPBtns.length;i++)
@@ -442,8 +461,10 @@
                 btn.addEventListener('click', function() {
                         if (document.getElementById(bmType.id).innerText.length==0)
                             document.getElementById(bmType.id).innerText=this.value;
-                        
+                        let userBks = JSON.parse(localStorage.getItem("vistorianBookmarks")) || [];
+
                         document.getElementsByName(this.name).forEach((btn) => {
+
                             if(btn == this) {
                                 btn.style.backgroundColor= "#FF7F50"; 
                                 trace.event('bkm_3', ' bookmark type specified', this.value, window.parent.location.pathname);
@@ -455,9 +476,10 @@
                             txt_otherType.style.display="inline-block";
                             document.getElementById(newContentDiv.id).style.maxHeight=document.getElementById(newContentDiv.id).scrollHeight + "px";
                         }
-                        bookmarksJSONFile[locateLogObj(bookmarksJSONFile,this.parentElement.id)].updateBookmarkType(document.getElementById(bmType.id).innerText);
-                        updatesNotSaved();updatesNotSaved()
-                        //updateLocalStorage();   
+                        userBks[locateLogObj(userBks,this.parentElement.id)].type=document.getElementById(bmType.id).innerText;
+                        updatesNotSaved(); 
+                        updateLocalStorage(userBks);
+  
                 });
                 newContentDiv.appendChild(btn);
 
@@ -469,19 +491,22 @@
 
                 
                 txt_otherType.addEventListener('keyup', function() {
+                    // let userBks = JSON.parse(localStorage.getItem("vistorianBookmarks")) || [];
+
                     document.getElementById(bmType.id).innerText=  this.value;
                     trace.event('bkm_3', ' bookmark type specified', 'Other: ' + this.value, window.parent.location.pathname);
-                    if (this.value.length==0)
-                        document.getElementById(bmType.id).innerText="Other:"; 
-                    bookmarksJSONFile[locateLogObj(bookmarksJSONFile,this.parentElement.id)].updateBookmarkType(document.getElementById(bmType.id).innerText);
+                    // if (this.value.length==0)
+                    //     document.getElementById(bmType.id).innerText="Other:"; 
+                    //     userBks[locateLogObj(userBks,this.parentElement.id)].type=document.getElementById(bmType.id).innerText;
                     updatesNotSaved();
-                    // updateLocalStorage();
+                    // updateLocalStorage(userBks);
                 });
                 newContentDiv.appendChild(txt_otherType);
                 
 
                 
                 var frmChk=document.createElement("form");
+                frmChk.id="frmcheck_"+ +currentCounterValue;
                 frmChk.action="#";
                 if (bmType.innerText==generalPBtns[0]){
                     frmChk.style.display="block";
@@ -506,10 +531,15 @@
                     optChk.checked=checkExistance(optChk.value,analysisOptions);
 
                     optChk.addEventListener('click', function() {
+                   //     let userBks = JSON.parse(localStorage.getItem("vistorianBookmarks")) || [];
+
                         trace.event('bkm_6', ' bookmark analysis type selected', this.value, window.parent.location.pathname);
-                        bookmarksJSONFile[locateLogObj(bookmarksJSONFile,this.name.charAt(this.name.length-1))].updateBookmarkAnalysisType(document.getElementsByName(this.name));
+                        if (document.getElementById(txt_otherType.id).value.length==0)
+                            document.getElementById(bmType.id).innerText="Other:"; 
+/*                         let bkIndex=locateLogObj(userBks,this.name.charAt(this.name.length-1));
+                        updateBookmarkAnalysisTypeGeneral(userBks[bkIndex],document.getElementsByName(this.name)); */
                         updatesNotSaved();
-                        //updateLocalStorage();
+                        //updateLocalStorage(userBks);
                     });
                     var opt = document.createElement('label');
                     opt.innerHTML = flagTypes[i];
@@ -523,16 +553,22 @@
                 
                 var newNote=document.createElement("textarea");
                 newNote.id="txt_note_"+currentCounterValue;
+
                 newNote.rows=5;
                 if (note!="")
-                    newNote.value=note;
+                    newNote.innerText=note;
+                   // newNote.innerHTML=note;
+
                 
                 newNote.placeholder="Enter your notes here ..";
-                newNote.addEventListener('keyup', function() {
-
+            
+               /*  newNote.addEventListener('keyup', function(event) {
+                    
                     bookmarksJSONFile[locateLogObj(bookmarksJSONFile,this.parentElement.id)].updateBookmarkNotes(this.value);
+                    updateLocalStorage(bookmarksJSONFile);
                     updatesNotSaved();
-                });
+                    return false; 
+                }); */
                 var notesLabel=document.createElement("label");
                 notesLabel.innerText="Notes:";
                 notesLabel.style="font-weight: bold;";
@@ -560,23 +596,69 @@
                     newContentDiv.appendChild(restoreButton);
                 }
 
-                
+                // Delete button: deletes the current bookmark
                 var deleteButton = document.createElement("input");
                 deleteButton.type = "button";
                 deleteButton.value="Delete Bookmark";
-                //deleteButton.style="display:block;";
                 
                 deleteButton.addEventListener('click', function() {
+                    let userBks = JSON.parse(localStorage.getItem("vistorianBookmarks")) || [];
+
                     if (confirm('Are you sure you want to Delete?')){
                         this.parentElement.parentElement.remove();
-                        bookmarksJSONFile.splice(locateLogObj(bookmarksJSONFile,this.parentElement.id),1);
+                        userBks.splice(locateLogObj(userBks,this.parentElement.id),1);
                         trace.event('bkm_4', ' bookmark ', 'deleted', window.parent.location.pathname);
-                        updateLocalStorage();
+                        updateLocalStorage(userBks);
                     }
                     //logFileJSON.push();
+                    if (userBks.length==0)
+                        document.getElementById('lbl_changesState').innerText='No bookmarks yet!';
+
 
                 });
                 newContentDiv.appendChild(deleteButton);
+
+                // Save button: Saves the current bookmark's updates
+                var saveButton = document.createElement("input");
+                saveButton.type = "button";
+                saveButton.value="Save Changes";
+                
+                saveButton.addEventListener('click', function() {
+                     //   bookmarksJSONFile=JSON.parse(localStorage.getItem("vistorianBookmarks") || "[]");
+                       
+                        var bkFile=JSON.parse(localStorage.getItem("vistorianBookmarks")) || [];
+
+                        var updatedNotes=this.parentElement.getElementsByTagName("textarea")[1];
+
+                        var bkIndex=locateLogObj(bkFile,this.parentElement.id);
+
+                       // var currentBookmark;
+                       // currentBookmark=;
+                        bkFile[bkIndex].note=updatedNotes.value;
+
+                        updateBookmarkAnalysisTypeGeneral(bkFile[bkIndex],document.getElementsByName("chkGroup_"+bkFile[bkIndex].id));
+
+
+                        //if (document.getElementById("txt_otherType_"+bkFile[bkIndex].id).value.length==0)
+                            //document.getElementById("lbl_type_"+bkFile[bkIndex].id).innerText="Other:"; 
+                        if (document.getElementById("lbl_type_"+bkFile[bkIndex].id).innerText.length==0)
+                            alert("You did not specify the type of your bookmark!")
+                        bkFile[locateLogObj(bkFile,this.parentElement.id)].type=document.getElementById("lbl_type_"+bkFile[bkIndex].id).innerText;
+
+                        //currentBookmark.updateBookmarkType(document.getElementById('lbl_type_'+x.id).value);
+                        //currentBookmark.updateBookmarkAnalysisType(currentBookmark)
+                       // (bookmarksJSONFile[bkIndex]).updateBookmarkNotes(updatedNotes.value);
+
+                       // lsBookmarks[locateLogObj(lsBookmarks,this.parentElement.id)].updateBookmarkNotes(updatedNotes.value);
+                    //    localStorage.setItem("vistorianBookmarks", JSON.stringify(bookmarksJSONFile));
+
+                      //  trace.event('bkm_4', ' bookmark ', 'deleted', window.parent.location.pathname);
+                      updateLocalStorage(bkFile);
+                      trace.event('bkm_2', ' updates/changes', 'saved by user', window.parent.location.pathname);
+                      return false;
+                });
+                newContentDiv.appendChild(saveButton);
+
                 newContentDiv.appendChild(document.createElement("br"));
 
                 /* if (title!="")
@@ -585,11 +667,10 @@
                 } */
                 newDiv.appendChild(newContentDiv);
                 logs.appendChild(newDiv);
-
-                var newBookmark=new bookmark(currentCounterValue,btn_dateTime.innerHTML,btn_title.innerHTML,newDiv.className,networkName);
+                
                 var visIframe=window.parent.document.getElementsByTagName("iframe")[1];
-                //window.alert(visIframe[0].src + " ---- " +visIframe[1].src + " ---- " + visIframe[2].src);
-                if (title==""){// or if (id==0) as new entry
+                 var visControls=[];
+                if (id==0){
                     switch (viewType){
 
                         case "dataview":
@@ -605,7 +686,7 @@
                             let edgeGap=cntrls[3].getAttribute('cx');
                             let linkWidth=cntrls[4].getAttribute('cx');
                             let labellingType=visIframe.contentWindow.document.getElementById('selection-input_Labeling').value;
-                            newBookmark.controlsValues.push(new  nodeLinkControls(viewType,startTime,endTime,linkOpacity,nodeOpacity,nodeSize,edgeGap,linkWidth,labellingType));
+                            visControls.push(new  nodeLinkControls(viewType,startTime,endTime,linkOpacity,nodeOpacity,nodeSize,edgeGap,linkWidth,labellingType));
                             break;
                             
                         case "matrix":
@@ -613,13 +694,13 @@
                             let matrixEndTime=visIframe.contentWindow.document.getElementById('sliderKnobMax').getAttribute('cx');
                             let matrixZoomVal=visIframe.contentWindow.document.getElementById('cellSizeBox').value;
                             let matrixLabellingType=visIframe.contentWindow.document.getElementById('labelOrdering').value;
-                            newBookmark.controlsValues.push(new  matrixControls(viewType,matrixStartTime,matrixEndTime,matrixZoomVal,matrixLabellingType));
+                            visControls.push(new  matrixControls(viewType,matrixStartTime,matrixEndTime,matrixZoomVal,matrixLabellingType));
                             break;
                         case "dynamicego":
                             let dyStartTime=visIframe.contentWindow.document.getElementById("sliderKnobMin").getAttribute('cx');
                             let dyEndTime=visIframe.contentWindow.document.getElementById('sliderKnobMax').getAttribute('cx');
                             let dyLabellingType=visIframe.contentWindow.document.getElementById('labelOrdering').value;
-                            newBookmark.controlsValues.push(new  timeArchsControls(viewType,dyStartTime,dyEndTime,dyLabellingType));
+                            visControls.push(new  timeArchsControls(viewType,dyStartTime,dyEndTime,dyLabellingType));
                             break;
                         case "map":
                             let mapStartTime=visIframe.contentWindow.document.getElementById("sliderKnobMin").getAttribute('cx');
@@ -628,7 +709,7 @@
                             let mapNodeOverlap=mapCntrls[0].getAttribute('cx');
                             let mapLinkOpacity=mapCntrls[1].getAttribute('cx');
                             let mapOpacityOfPositionlessNodes=mapCntrls[2].getAttribute('cx');
-                            newBookmark.controlsValues.push(new  mapControls(viewType,mapStartTime,mapEndTime,mapNodeOverlap,mapLinkOpacity,mapOpacityOfPositionlessNodes));
+                            visControls.push(new  mapControls(viewType,mapStartTime,mapEndTime,mapNodeOverlap,mapLinkOpacity,mapOpacityOfPositionlessNodes));
                             break;
     /*                    case "mat-nl":
                             let startTime=visIframe.contentWindow.document.getElementById("sliderKnobMin").getAttribute('cx');
@@ -691,29 +772,23 @@
                             break;
     */
                         default:
-                            //alert to be deleted - just for testing purposes
                             console.log("Unable to classify bookmark type"); 
                     }
                 }
-                else
+               /*  else
+                    newBookmark.updateBookmarkDataset(networkName); */
+                var newBookmark;
+                if (id==0){
+                    newBookmark=new Bookmark(currentCounterValue,btn_dateTime.innerHTML,btn_title.innerHTML,newDiv.className,networkName,visControls);
+                    userBookmarks.push(newBookmark);
+                }
 
-                newBookmark.updateBookmarkDataset(networkName);
-                bookmarksJSONFile.push(newBookmark);
+                
+                updateLocalStorage(userBookmarks);
 
             }
             function generatePDF(){
-                var pdfMake = require('pdfmake/build/pdfmake.js');
-                var pdfFonts = require('pdfmake/build/vfs_fonts.js');
-                pdfMake.vfs = pdfFonts.pdfMake.vfs; 
-                var doc = new jsPDF();
-                bookmarksJSONFile.forEach(function(bookmark, i){
-                    doc.text(20, 10 + (i * 10), 
-                        "Title: " + bookmark.title + 
-                        "Date/Time Created: " + bookmark.dateCreated +
-                        "Note: " + bookmark.note + 
-                        "Type: " + bookmark.type );
-                    });
-                    doc.save('vistorian_bookmarks.pdf');
+              
             }
             function takeScreenShot() {
                 
@@ -722,7 +797,8 @@
             
         </script>
     </head>
-    <body id="capture" onload="initializeJSON();" onerror="trace.event('err', event + ' ' + source + lineno, error, document.location.pathname);" onfocus="refreshBookmarks();">
+    <body id="capture" onload="initializeJSON();" onerror="trace.event('err', event + ' ' + source + lineno, error, document.location.pathname);" > 
+    <!-- onfocus="refreshBookmarks();"> -->
        
         <div id="logbook_container" data-role="page">
             <div>
@@ -740,7 +816,7 @@
             <div id="logbook_header"  class="hd_div" >  
                 
                 <button  id="addNewBookmark" value="Add New" class="hd_btn"  onclick="AddNewLog(0,'','','','',[],viewType,networkName);trace.event('bkm_1', ' new bookmark', 'created', window.parent.location.pathname);updatesNotSaved();">Add New</button>
-                <button  id="btn_save" value="Save" class="hd_btn"  onclick="updateLocalStorage();trace.event('bkm_2', ' updates/changes', 'saved by user', window.parent.location.pathname);">Save Bookmarks</button>
+                <!-- <button  id="btn_save" value="Save" class="hd_btn"  onclick="updateLocalStorage( (JSON.parse(localStorage.getItem('vistorianBookmarks')) || []));trace.event('bkm_2', ' updates/changes', 'saved by user', window.parent.location.pathname);">Save Bookmarks</button> -->
 
           
             </div>
@@ -750,8 +826,8 @@
             <div>
                <!-- <button onclick="generatePDF()">Export as a PDF</button>
                 <button onclick="takeScreenShot()">Take Screenshot</button> -->
-                <button onclick="location.href='mailto:vistorian@inria.fr?subject=(Vistorian)Consultation Request&body=Hi, kindly I would like to arrange a 10-minutes meeting to consult about my data\'s visualization. Thank you.';trace.event('com_3', window.parent.location.pathname, 'bookmark_tool', 'consult_team');">Email Us & Consult an Expert</button>
-                <button onclick="location.href='mailto:vistorian@inria.fr?subject=(Vistorian)Report Technical Bug&body=Please help me in the following technical problem:\n';trace.event('com_4', window.parent.location.pathname, 'bookmark_tool', 'ReportTechBug');">Report a Technical Bug</button>
+                <button onclick="location.href='mailto:vistorian@inria.fr?subject=[Vistorian] Consultation Request&body=Hi, kindly I would like to arrange a 10-minutes meeting to consult about my data\'s visualization. Thank you.';trace.event('com_3', window.parent.location.pathname, 'bookmark_tool', 'consult_team');">Email Us & Consult an Expert</button>
+                <button onclick="location.href='mailto:vistorian@inria.fr?subject=[Vistorian] Report Technical Bug &body=Hello,\n I am facing a technical problem and would like your help, my session ID is (' + localStorage.getItem('SessionLogId') + '). The description of my problem is :\n';trace.event('com_4', window.parent.location.pathname, 'bookmark_tool', 'ReportTechBug');">Report a Technical Bug</button>
             </div>
 
 

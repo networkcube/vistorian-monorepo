@@ -1,4 +1,6 @@
-
+window.onload = (event) => {
+  console.log('page is fully loaded');
+};
                 
 function dragElement(elmnt) {
   var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
@@ -149,8 +151,8 @@ $(function () {
 // Detecting inactive users and nudging them 
 // Credit (with modification): https://css-tricks.com/detecting-inactive-users/ 
 
-const INACTIVE_USER_TIME_THRESHOLD = 15000; //300000 = 4 minutes
-const USER_ACTIVITY_THROTTLER_TIME = 15000 ; // 60000= 1 minute throttler
+const INACTIVE_USER_TIME_THRESHOLD = 300000; //300000 = 4 minutes
+const USER_ACTIVITY_THROTTLER_TIME = 120000 ; // 60000= 1 minute throttler
 
 let userActivityTimeout = null;
 let userActivityThrottlerTimeout = null;
@@ -343,4 +345,66 @@ function resetFeedbackForm(){
 function refreshBookmarkToolbar(){
   document.getElementById('myFrame').src=document.getElementById('myFrame').src;
   
+}
+
+function checkOptionExistance(noFetched,opts){
+
+  for (var i=0; i<opts.length ; i++)
+      if (parseInt(noFetched)===parseInt(opts[i]))
+          return true;
+  return false;
+      
+}
+var generalPBtns=["Analyze Data","Learn","Demo to others","Test & Explore Vistorian","Report an Issue"];
+
+function refreshBookmarks(){
+  var bkFrame=document.getElementById("myFrame");
+  var bkFrameDoc = bkFrame.contentDocument;
+ // var bksContainer=bkFrameDoc.getElementById("logs");
+  var visBookmarks = localStorage.getItem("vistorianBookmarks");
+  var  visBookmarksArray = JSON.parse(visBookmarks);
+  var i,id;
+  if (visBookmarks){
+
+ // if (typeof visBookmarksArray !== "undefined" && visBookmarksArray!==null && visBookmarksArray.length!=0){
+          for ( i=0;i<visBookmarksArray.length;i++){
+              id=visBookmarksArray[i].id;
+              bkFrameDoc.getElementById("btn_dateTime"+id).innerHTML=visBookmarksArray[i].createdOn;
+              bkFrameDoc.getElementById("btn_title_"+id).innerHTML=visBookmarksArray[i].title;
+              bkFrameDoc.getElementById("lbl_type_"+id).innerHTML=visBookmarksArray[i].type;
+              bkFrameDoc.getElementById("txt_note_"+id).innerText=visBookmarksArray[i].note;
+
+              var divBtns=bkFrameDoc.getElementsByName("menuButton_"+id);
+              var checkOtherType=true;
+              for(var j=0;j<divBtns.length;j++){
+                  if(divBtns[j].value == visBookmarksArray[i].type)
+                      divBtns[j].style.backgroundColor= "#FF7F50"; 
+                  else 
+                      divBtns[j].style.backgroundColor= "#bbb"; 
+
+                  var frmChk=bkFrameDoc.getElementById("frmcheck_"+id);
+                  if (visBookmarksArray[i].type=="Analyze Data"){
+                      frmChk.style.display="block";
+                      for (var cntr=0;cntr<visBookmarksArray[i].analysisOpts.length;cntr++)
+                          bkFrameDoc.getElementsByName("chkGroup_"+id)[cntr].checked=checkOptionExistance(cntr,visBookmarksArray[i].analysisOpts);
+                    }
+                  else
+                      frmChk.style.display="none";
+                    
+              }
+              for (var m=0;m<generalPBtns.length;m++)
+                if (visBookmarksArray[i].type== generalPBtns[m]){
+                  checkOtherType=false;
+                  break;
+                }
+                
+              if (checkOtherType)
+                  bkFrameDoc.getElementById("txt_otherType_"+id).style.display="inline-block";
+              else
+                bkFrameDoc.getElementById("txt_otherType_"+id).style.display="none";
+
+          }
+        }
+        document.getElementById('myFrame').src=document.getElementById('myFrame').src;
+
 }
