@@ -21,6 +21,7 @@
         <script> var exports = {}; </script>
         <script src="../node_modules/vistorian-core/lib/vistorian-core.js"></script>
         <script src="../lib/vistorian-vis.js"></script>
+        <script src="../node_modules/vistorian-nodelink/lib/index.js"></script>
 
 
         <link rel="stylesheet" href="bookmarkLogConsent.css">
@@ -31,33 +32,39 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
         <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-
+        
+<script type="text/javascript">
+    function restoreNodeLinkState(obj){
+        window.vc.messenger.setState (obj);
+    }
+</script>
     </head>
     <title>Node link</title>
 
 <body onload="trace.event('log_2', 'load', 'webpage', document.location.pathname);checkLogStatus();dragElement(document.getElementById('mydiv'));" onfocus="refreshBookmarks();" onerror="trace.event('err', event + ' ' + source + lineno, error, document.location.pathname);" onbeforeunload="trace.event('log_12', 'close', 'webpage', document.location.pathname);">
-<!-- </body> onfocus="refreshBookmarkToolbar();">
- -->    <!-- VS: Call to trace_test_130529 -->
+    <!-- VS: Call to trace_test_130529 -->
     
     <script type="text/javascript" src="../static/traces/trace_test_130529.js"></script>
     <table>
         <tr>
             <td width="220px">
                 <div id="logoFrame"></div>
-                <div id="consentFormBK" style="align-items: center;">
-                    <div>
-                        <h6><strong> VistorianLab!</strong> <i class="fa fa-flask" aria-hidden="true" style="font-size: 2.5em;"></i>
-                        </h6>
-                        <div class="onoffswitch" > 
-                        
-                        <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="consentOnoffswitch"  tabindex="0" onchange="trace.event('log_5', 'Bookmark_Consent_Display', 'Consent_button', this.checked);toggleConsntModel();" > 
-                        <label class="onoffswitch-label" for="consentOnoffswitch">
-                            <span class="onoffswitch-inner"></span>
-                            <span class="onoffswitch-switch"></span>
-                        </label>
-                    </div>
+                <div id="consentFormBK" style=" display:flex;align-items:center;border-style: ridge; padding: 8px;">
+                    <img src="../static/logos/VistorianLabLogo.png" width="40px" height="40px">
+
+                    <strong> VistorianLab!&nbsp;&nbsp;</strong>
+
+                    <div class="onoffswitch" > 
+                    
+                    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="consentOnoffswitch"  tabindex="0" onchange="trace.event('log_5', 'Bookmark_Consent_Display', 'Consent_button', this.checked);toggleConsntModel();" > 
+                    <label class="onoffswitch-label" for="consentOnoffswitch">
+                        <span class="onoffswitch-inner"></span>
+                        <span class="onoffswitch-switch"></span>
+                    </label>
+                
                     </div>
                 </div>
+        
                 <br>
                 <div width="220" id="bookmarkFrame"></div>
             </td>
@@ -240,7 +247,7 @@
                     <!-- Modal footer -->
                     <div class="modal-footer">
                     
-                        <label for="chk_dontShowConsent">  <input type="checkbox" id="chk_dontShowConsent"> Don't show consent-approval again.</label>
+                        <label for="chk_dontShowConsent">  <input type="checkbox" id="chk_dontShowConsent"> Don't show consent-approval form again.</label>
                         <a href="/static/logging_consent/Vistorian Tracing Consent form .pdf" download> <button type="button" class="btn btn-link" onclick="trace.event('log_7', 'consent', 'downloaded', document.location.pathname);">Download this Consent Form for your records</button></a>
         
                         <div >  
@@ -292,7 +299,7 @@
       <!-- Modal content-->
       <div class="modal-content">
         <div class="modal-header">
-            <h5 class="modal-title">Let us know: How are you using Vistorian? </h5>
+            <h1 class="modal-title">Let us know: How are you using Vistorian? </h1>
           <button type="button" class="close" data-dismiss="modal" onclick="userActivityThrottler();resetFeedbackForm();trace.event('log_15', 'general_feedback_popupForm', document.getElementById('feedback_text').value, document.location.pathname);">&times;</button>
         </div>
         <div class="modal-body">

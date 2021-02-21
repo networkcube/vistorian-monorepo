@@ -9,13 +9,20 @@
 
         <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
         <script src='bookmarkLogConsent.js'></script>
+
+        <script src="../d3.js"></script>
+        <script src="../node_modules/jquery/dist/jquery.js" type="text/javascript"></script>
+        <script src="../node_modules/jstorage/jstorage.js"></script>
         <script> var exports = {}; </script>
+        <script src="../node_modules/vistorian-core/lib/vistorian-core.js"></script>
         <script src="../lib/vistorian-vis.js"></script>
+        <script src="../node_modules/vistorian-nodelink/lib/index.js"></script>
 
 
 
 
         <script type="text/javascript">
+        
             
             const monthNames = ["January", "February", "March", "April", "May", "June",
                                  "July", "August", "September", "October", "November", "December"];
@@ -440,24 +447,30 @@
                 //create other type textarea
                 var txt_otherType=document.createElement("textarea");
                 txt_otherType.id="txt_otherType_"+currentCounterValue;
+                txt_otherType.placeholder="Explian other type here .. Please don't add personal information";
                 var otherType=true;
                 if (selectedType!=""){
                     for (var i=0;i<generalPBtns.length;i++)
-                    if (generalPBtns[i]==selectedType){
-                        otherType=false;
-                        break;
+                        if (generalPBtns[i]==selectedType){
+                            otherType=false;
+                            break;
                     }
                 }
-                else{
+              /*   else{
                     txt_otherType.placeholder="Explian other type here .. Please don't add personal information";
                     otherType=false;
 
                 }
-
-                if (otherType ){
+ */
+                if ( !otherType || id==0 ){
+                    txt_otherType.style.display="none";
+                }
+                else{
                     btn.style.backgroundColor= "#FF7F50";
                     txt_otherType.innerText=selectedType;
-                }
+                    txt_otherType.style.display="block";
+                  }
+
                 btn.addEventListener('click', function() {
                         if (document.getElementById(bmType.id).innerText.length==0)
                             document.getElementById(bmType.id).innerText=this.value;
@@ -473,7 +486,7 @@
                                 btn.style.backgroundColor= "#bbb"; 
                              });
                         if (txt_otherType.style.display=="none"){
-                            txt_otherType.style.display="inline-block";
+                            txt_otherType.style.display="block";
                             document.getElementById(newContentDiv.id).style.maxHeight=document.getElementById(newContentDiv.id).scrollHeight + "px";
                         }
                         userBks[locateLogObj(userBks,this.parentElement.id)].type=document.getElementById(bmType.id).innerText;
@@ -483,11 +496,9 @@
                 });
                 newContentDiv.appendChild(btn);
 
-                
+/*                 
                 if (bmType.innerText==generalPBtns[generalPBtns.length-1])
-                    txt_otherType.style.display="block";
-                else
-                    txt_otherType.style.display="none";
+                else */
 
                 
                 txt_otherType.addEventListener('keyup', function() {
@@ -589,7 +600,12 @@
                     restoreButton.type = "button";
                     restoreButton.value="Restore Visualization State";
                     restoreButton.addEventListener('click', function() {
+                        var bkFile=JSON.parse(localStorage.getItem("vistorianBookmarks")) || [];
+                        var bkIndex=locateLogObj(bkFile,this.parentElement.id);
+
                         trace.event('bkm_5', ' bookmark stated', 'restoreted', window.parent.location.pathname);
+                        window.parent
+                        window.vc.messenger.setState(bkFile[bkIndex].controlsValues[0]);
                        // window.parent.exports.networkcube.vistorian.setState(bookmarksJSONFile[locateLogObj(bookmarksJSONFile,this.parentElement.id)].controlsValues);
 
                      });

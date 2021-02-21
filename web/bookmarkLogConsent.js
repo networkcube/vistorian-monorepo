@@ -381,27 +381,32 @@ function refreshBookmarks(){
                       divBtns[j].style.backgroundColor= "#FF7F50"; 
                   else 
                       divBtns[j].style.backgroundColor= "#bbb"; 
-
-                  var frmChk=bkFrameDoc.getElementById("frmcheck_"+id);
-                  if (visBookmarksArray[i].type=="Analyze Data"){
-                      frmChk.style.display="block";
-                      for (var cntr=0;cntr<visBookmarksArray[i].analysisOpts.length;cntr++)
-                          bkFrameDoc.getElementsByName("chkGroup_"+id)[cntr].checked=checkOptionExistance(cntr,visBookmarksArray[i].analysisOpts);
-                    }
-                  else
-                      frmChk.style.display="none";
-                    
               }
-              for (var m=0;m<generalPBtns.length;m++)
-                if (visBookmarksArray[i].type== generalPBtns[m]){
-                  checkOtherType=false;
-                  break;
+
+              var frmChk=bkFrameDoc.getElementById("frmcheck_"+id);
+              if (visBookmarksArray[i].type=="Analyze Data"){
+                  frmChk.style.display="block";
+                  for (var cntr=0;cntr<visBookmarksArray[i].analysisOpts.length;cntr++)
+                      bkFrameDoc.getElementsByName("chkGroup_"+id)[cntr].checked=checkOptionExistance(cntr,visBookmarksArray[i].analysisOpts);
                 }
-                
-              if (checkOtherType)
-                  bkFrameDoc.getElementById("txt_otherType_"+id).style.display="inline-block";
               else
-                bkFrameDoc.getElementById("txt_otherType_"+id).style.display="none";
+                  frmChk.style.display="none";
+                    
+              
+                for (var m=0;m<generalPBtns.length;m++){
+                  if (visBookmarksArray[i].type== generalPBtns[m]){
+                    checkOtherType=false;
+                    break;
+                  }
+                
+                }
+                var txt_OtherTypeCont=bkFrameDoc.getElementById("txt_otherType_"+id);
+                if (checkOtherType){
+                  txt_OtherTypeCont.setAttribute("style","display:block;visibility: visible;");
+                    //bkFrameDoc.getElementsByName("menuButton_"+id)[divBtns.length-1].style.backgroundColor= "#FF7F50"; 
+                }
+                else
+                  txt_OtherTypeCont.style.display="none";
 
           }
         }

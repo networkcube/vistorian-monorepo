@@ -44,19 +44,6 @@
                     This is your data view. Below you find a list of visualizations and the
                     networks currently in your browser.
                 </p>
-                <div>
-                    <h6><strong> VistorianLab!</strong> <i class="fa fa-flask" aria-hidden="true" style="font-size: 2.5em;"></i>
-                    </h6>
-                    <div class="onoffswitch" > 
-                    
-                    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="consentOnoffswitch"  tabindex="0" onchange="trace.event('log_5', 'Bookmark_Consent_Display', 'Consent_button', this.checked);toggleConsntModel();" > 
-                    <label class="onoffswitch-label" for="consentOnoffswitch">
-                        <span class="onoffswitch-inner"></span>
-                        <span class="onoffswitch-switch"></span>
-                    </label>
-                </div>
-                </div>
-
             </td>
             <td>
                 <div id="visualizationListDiv">
@@ -66,6 +53,24 @@
         </tr>
         <tr>
             <td id="lists">
+                <!-- <h6><strong> VistorianLab!</strong> <i class="fa fa-flask" aria-hidden="true" style="font-size: 2.5em;"></i></h6> -->
+
+                <div id="consentFormBK" style=" display:flex;align-items:center;border-style: ridge; padding: 8px;">
+                    <img src="../static/logos/VistorianLabLogo.png" width="40px" height="40px">
+
+                    <strong> VistorianLab!&nbsp;&nbsp;</strong>
+
+                    <div class="onoffswitch" > 
+                    
+                    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="consentOnoffswitch"  tabindex="0" onchange="trace.event('log_5', 'Bookmark_Consent_Display', 'Consent_button', this.checked);toggleConsntModel();" > 
+                    <label class="onoffswitch-label" for="consentOnoffswitch">
+                        <span class="onoffswitch-inner"></span>
+                        <span class="onoffswitch-switch"></span>
+                    </label>
+                
+                    </div>
+                </div>
+            <p></p>
 
                 <div id="networkListDiv">
                     <h2>
@@ -219,9 +224,10 @@
     <script> var exports = {}; </script>
     <script src="../lib/vistorian-vis.js"></script>
 
+
     <!-- VER ESTO -->
     <script>
-
+      
 
         // Hack to make upload button look nice: 
         // from: http://tympanus.net/codrops/2015/09/15/styling-customizing-file-inputs-smart-way/
@@ -385,7 +391,7 @@
             <!-- Modal footer -->
             <div class="modal-footer">
                
-                <label for="chk_dontShowConsent">  <input type="checkbox" id="chk_dontShowConsent"> Don't show consent-approval again.</label>
+                <label for="chk_dontShowConsent">  <input type="checkbox" id="chk_dontShowConsent"> Don't show consent-approval form again.</label>
                 <a href="/static/logging_consent/Vistorian Tracing Consent form .pdf" download> <button type="button" class="btn btn-link" onclick="trace.event('log_7', 'consent', 'downloaded', document.location.pathname);">Download this Consent Form for your records</button></a>
 
                 <div >  
@@ -406,7 +412,7 @@
         <a href="#"><span>👋</span></a>
         <div class="form" style="background-color: white;">
           <form>
-            <h6>Tell us how you use the vistorian in this moment </h6>
+            <h6 class="modal-title">Tell us how you use the vistorian in this moment </h6>
             <div class="form-group">
                 <input type="button" class="menuButtonGadget" id="AnalyzeData" value="Analyzing Data" >
                 <input type="button" class="menuButtonGadget" id="Learn" value="Learning" >
@@ -437,7 +443,7 @@
       <!-- Modal content-->
       <div class="modal-content">
         <div class="modal-header">
-            <h5 class="modal-title">Let us know: How are you using Vistorian? </h5>
+            <h1 class="modal-title">Let us know: How are you using Vistorian? </h1>
           <button type="button" class="close" data-dismiss="modal" onclick="userActivityThrottler();resetFeedbackForm();trace.event('log_15', 'general_feedback_popupForm', 'closed', document.location.pathname);">&times;</button>
         </div>
         <div class="modal-body">
@@ -482,9 +488,9 @@
             <label for="chk_hidePopupW"><input type="checkbox" id="chk_hidePopupW" value="1">Don't show this form again.</label><br>
             </div>
             <div>
-           <button type="button" class="btn btn-default" data-dismiss="modal" onclick="disablingFeedbackPopup(document.getElementById('chk_hidePopupW'));trace.event('log_16', 'general_feedback_popupForm', 'feedback form hidden', document.location.pathname);">Hide this form</button>   
+           <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="disablingFeedbackPopup(document.getElementById('chk_hidePopupW'));trace.event('log_16', 'general_feedback_popupForm', 'feedback form hidden', document.location.pathname);">Hide this form</button>   
 
-           <button type="button" class="btn btn-default" data-dismiss="modal" onclick="LoggingFeedback();disablingFeedbackPopup(document.getElementById('chk_hidePopupW'));">Submit my feedback</button>
+           <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="LoggingFeedback();disablingFeedbackPopup(document.getElementById('chk_hidePopupW'));">Submit my feedback</button>
         </div>
         </div>
       </div>
