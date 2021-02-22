@@ -522,8 +522,7 @@ function setStateHandler(m: messenger.SetStateMessage){
     // unpack / query that state object
     // e.g., var params = state.params.
     // set the parameters below:...
-        // this.edgeGap=edgeGap;
-        // this.labellingType=labellingType;
+
     
     // set pan
    // this.panOffsetLocal = // [0,0];
@@ -535,32 +534,35 @@ function setStateHandler(m: messenger.SetStateMessage){
   //  updateLayout();
    // svg.attr("transform", "translate(" + (panOffsetGlobal[0] + panOffsetLocal[0]) + ',' + (panOffsetGlobal[1] + panOffsetLocal[1]) + ")");
 
-
-    LABELING_STRATEGY = state.labellingType;
-    updateLabelVisibility();
-
-    // set node size
-    NODE_SIZE = state.nodeSize;
-    updateNodeSize();
+    // set link opacity
+    LINK_OPACITY = state.linkOpacity;
+    updateLinks();
 
     // set node opacity
     NODE_OPACITY = state.nodeOpacity;
     updateNodes();
 
+    // set node size
+    NODE_SIZE = state.nodeSize;
+    updateNodeSize();
+
+    LINK_GAP = state.edgeGap;
+    updateLayout();
+
     // set linkwidh
     LINK_WIDTH = state.linkWidth;
-
-    // set link opacity
-    LINK_OPACITY = state.linkOpacity;
     updateLinks();
 
+    LABELING_STRATEGY = state.labellingType;
+    updateLabelVisibility();
 
     // set time (start/end)
- // messenger.timeRange(state.timeSliderStart, state.timeSliderEnd, null, false);
+ 
 
-//    timeSlider.set(state.timeSliderStart, state.timeSliderEnd);
- //   updateLinks();
-  //  updateNodes();
+  messenger.timeRange(state.timeSliderStart, state.timeSliderEnd, times[0], false);
+
+    updateLinks();
+    updateNodes();
 
 }
 
