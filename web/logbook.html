@@ -456,12 +456,7 @@
                             break;
                     }
                 }
-              /*   else{
-                    txt_otherType.placeholder="Explian other type here .. Please don't add personal information";
-                    otherType=false;
-
-                }
- */
+        
                 if ( !otherType || id==0 ){
                     txt_otherType.style.display="none";
                 }
@@ -604,7 +599,7 @@
                         var bkIndex=locateLogObj(bkFile,this.parentElement.id);
 
                         trace.event('bkm_5', ' bookmark stated', 'restoreted', window.parent.location.pathname);
-                        window.parent
+                      
                         window.vc.messenger.setState(bkFile[bkIndex].controlsValues[0]);
                        // window.parent.exports.networkcube.vistorian.setState(bookmarksJSONFile[locateLogObj(bookmarksJSONFile,this.parentElement.id)].controlsValues);
 
