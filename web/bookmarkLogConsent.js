@@ -484,10 +484,10 @@ function populateNewBookmark(){
       }
   }
 }
-  if (chosentType.length==0){
+  /* if (chosentType.length==0){
     alert("You did not specify the type of your bookmark!");
     return;
-  }
+  } */
   //add general feedback
   notesText= window.document.getElementById('feedback_text_popup').value;
 
