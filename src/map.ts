@@ -123,6 +123,10 @@ var f: any;
 var F: number = 1000;
 
 
+messenger.addEventListener(messenger.MESSAGE_SET_STATE, setStateHandler);
+messenger.addEventListener(messenger.MESSAGE_GET_STATE, getStateHandler);
+
+
 // STYLING MAP
 function init() {
     var mapOptions: any = {
@@ -1254,3 +1258,35 @@ function getTextWidth(s: string) {
 
 
 $(document).ready(function () { init(); })
+
+function setStateHandler(m: messenger.SetStateMessage){
+    
+    var state: messenger.MapControls = m.state as messenger.MapControls;    
+    // unpack / query that state object
+
+    OVERLAP_FRACTION = state.nodeOverlap;
+    updateNodePositions();
+
+    INNER_OPACITY = state.linkOpacity;
+    updateLinks();
+
+    NODE_UNPOSITIONED_OPACITY = state.opacityOfPositionlessNodes;
+    updateNodes();
+    
+    time_start=state.timeSliderStart;
+    time_end=state.timeSliderEnd;
+
+    // set time (start/end)
+    messenger.timeRange(state.timeSliderStart, state.timeSliderEnd, times[0], true);
+
+
+}
+
+function getStateHandler( m: messenger.GetStateMessage){
+    if (m.viewType=="map"){
+
+        var mapNetwork: messenger.NetworkControls=new messenger.MapControls("map",time_start.unixTime(),time_end.unixTime(),OVERLAP_FRACTION,INNER_OPACITY,NODE_UNPOSITIONED_OPACITY);
+        messenger.stateCreated(mapNetwork,m.bookmarkIndex,m.viewType,m.isNewBookmark);
+}
+
+}
