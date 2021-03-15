@@ -60,6 +60,7 @@ function turnOnLogging(){
     var bookmarksTool = document.getElementById("mydiv"); 
     bookmarksTool.style.display = "block";
     document.getElementById('myModal').style.display = "none";
+    
 }
 
 function checkLogStatus(){
@@ -151,59 +152,85 @@ $(function () {
 // Detecting inactive users and nudging them 
 // Credit (with modification): https://css-tricks.com/detecting-inactive-users/ 
 
-const INACTIVE_USER_TIME_THRESHOLD = 300000; //300000 = 4 minutes
-const USER_ACTIVITY_THROTTLER_TIME = 120000 ; // 60000= 1 minute throttler
+const INACTIVE_USER_TIME_THRESHOLD = 300000; //300000 = 5 minutes
+// const USER_ACTIVITY_THROTTLER_TIME = 120000 ; // 60000= 1 minute throttler
 
 let userActivityTimeout = null;
-let userActivityThrottlerTimeout = null;
-let isInactive = false;
+// let userActivityThrottlerTimeout = null;
+// let isInactive = false;
 
 activateActivityTracker();
 
 
 //register the interactions' events with the function responsible
 function activateActivityTracker() {
-  if (!  (localStorage.getItem("stopFeedbackPopup"))){
-    window.addEventListener("mousemove", userActivityThrottler);
-    window.addEventListener("click", userActivityThrottler);
-    window.addEventListener("scroll", userActivityThrottler);
-    window.addEventListener("keydown", userActivityThrottler);
-    window.addEventListener("resize", userActivityThrottler);
+ // if (!  (localStorage.getItem("stopFeedbackPopup"))){
+    window.addEventListener("mousemove", userActivityTracker);//userActivityThrottler);
+    window.addEventListener("mousedown", userActivityTracker);
+    window.addEventListener("click", userActivityTracker);
+    window.addEventListener("scroll", userActivityTracker);
+    window.addEventListener("keypress", userActivityTracker);
+    window.addEventListener("resize", userActivityTracker);
     window.addEventListener("beforeunload", inactiveUserAction);
   
-  }
+ // }
 }
 
 
 function  deactivateActivityTracker() {
-  window.removeEventListener("mousemove", userActivityThrottler);
-  window.removeEventListener("click", userActivityThrottler);
-  window.removeEventListener("scroll", userActivityThrottler);
-  window.removeEventListener("keydown", userActivityThrottler);
-  window.removeEventListener("resize", userActivityThrottler);
+  window.removeEventListener("mousemove", userActivityTracker);
+  window.removeEventListener("mousedown", userActivityTracker);
+  window.removeEventListener("click", userActivityTracker);
+  window.removeEventListener("scroll", userActivityTracker);
+  window.removeEventListener("keypress", userActivityTracker);
+  window.removeEventListener("resize", userActivityTracker);
   window.removeEventListener("beforeunload", inactiveUserAction);
 }
 
-//When the user interacts with the APP
-function resetUserActivityTimeout() {
+function userActivityTracker(){
+  clearTimeout(userActivityTimeout);
+  userActivityTimeout = setTimeout(checkDispalyOfInactivity, INACTIVE_USER_TIME_THRESHOLD);
+}
+
+function checkDispalyOfInactivity(){
+  var nowTime=new Date();
+  var lastLoggedActvityTime=localStorage.getItem("userInactivityloggedTime");
+  if (nowTime-lastLoggedActvityTime>=INACTIVE_USER_TIME_THRESHOLD)
+    inactiveUserAction();
+
+}
+/* function resetUserActivityTimeout() {
+  //When the user interacts with the APP
+
   clearTimeout(userActivityTimeout);
 
   userActivityTimeout = setTimeout(() => {
     userActivityThrottler();
     inactiveUserAction();
   }, INACTIVE_USER_TIME_THRESHOLD);
-}
+} */
 
 function inactiveUserAction() {
-  isInactive = true;//isActive=false
- document.getElementById('popupFeedbackForm').style.display="block";
- trace.event('log_13', 'no activity detected', 'current web page', window.location.pathname);
+   // isInactive = true;//isActive=false
+    var urlTxt=window.location.pathname;
+    urlTxt=urlTxt.substring(urlTxt.lastIndexOf("/")+1,urlTxt.indexOf("."));
+    if (urlTxt=="logbook" || urlTxt=="dataview" || urlTxt!=localStorage.getItem("currentPageInFocus"))
+        return;
+    var popupElement;
+    if (!window.document.getElementById("popupFeedbackForm"))
+      popupElement=window.parent.document.getElementById("popupFeedbackForm");
+    else 
+      popupElement=window.document.getElementById("popupFeedbackForm");
 
 
+    popupElement.setAttribute("style","display:block");
+    //set timer timestamp to check cross all site webpages
+    localStorage.setItem("userInactivityloggedTime",(new Date().getTime()));
+    trace.event('log_13', 'no activity detected', 'current web page', window.location.pathname);
 }
 
 
-function userActivityThrottler() {
+/* function userActivityThrottler() {
   if (isInactive) {
     isInactive = false; //isActive=true
     resetUserActivityTimeout();
@@ -215,20 +242,22 @@ function userActivityThrottler() {
       clearTimeout(userActivityThrottlerTimeout);
     }, USER_ACTIVITY_THROTTLER_TIME);
   }
-}
+} */
+//function disablingFeedbackPopup(chk){
 
-function disablingFeedbackPopup(chk){
-  if (chk.checked)
+
+function disablingFeedbackPopup(){
+  /* if (chk.checked)
     localStorage.setItem("stopFeedbackPopup", "true");
-  
+   
 
   if (localStorage.getItem("stopFeedbackPopup")){
     clearTimeout(userActivityTimeout);
     clearTimeout(userActivityThrottlerTimeout);
     deactivateActivityTracker();
   }
-  else
-    userActivityThrottler();
+  else*/
+ // userActivityThrottler();
 
   resetFeedbackForm();
 }
@@ -241,7 +270,7 @@ function displaySubOptions(clickedButton){
       else 
           btns[i].style.backgroundColor= "#bbb"; 
   }
-  if (clickedButton.value=="Analyzing Data")
+  if (clickedButton.value=="Analyze Data")
       document.getElementById("checkboxes_group_div").style.display="inline-block";
   else
       document.getElementById("checkboxes_group_div").style.display="none";
@@ -325,20 +354,20 @@ function LoggingFeedback(){
 
 function resetFeedbackForm(){
   let btns=document.getElementsByClassName('feedbackMenuButton');
-    for (var i=0;i<btns.length;i++)
-      btns[i].style.backgroundColor="#bbb";
+  for (var i=0;i<btns.length;i++)
+    btns[i].style.backgroundColor="#bbb";
   
   let chks=document.getElementsByName('chks_feebackForm');
       for (var i=0;i<chks.length;i++)
         chks[i].checked=false;
+
   document.getElementById("checkboxes_group_div").style.display="none";
+  document.getElementById("txt_other").value="";
+  document.getElementById("txt_title").value="";
+  document.getElementById("feedback_text_popup").value="";
+  document.getElementById("OtherType_div").style.display="none"; 
 
-
-    document.getElementById('txt_other').value="";
-    document.getElementById('feedback_text_popup').value="";
-    document.getElementById("OtherType_div").style.display="none"; 
-
-    document.getElementById('popupFeedbackForm').style.display='none';
+  document.getElementById('popupFeedbackForm').style.display="none";
   
 }
 
@@ -355,11 +384,17 @@ function checkOptionExistance(noFetched,opts){
   return false;
       
 }
-var generalPBtns=["Analyze Data","Learn","Demo to others","Test & Explore Vistorian","Report an Issue"];
+var generalPBtns=["Analyze Data","Learn","Demo to others","Test & Explore Vistorian","Discuss Findings","Report an Issue"];
 
 function refreshBookmarks(){
+
   var bkFrame=document.getElementById("myFrame");
-  var bkFrameDoc = bkFrame.contentDocument;
+  var bkFrameDoc;
+  if (bkFrame)
+      bkFrameDoc=(bkFrame.contentDocument || bkFrame.contentWindow.document);
+  else
+      bkFrameDoc=document;
+
  // var bksContainer=bkFrameDoc.getElementById("logs");
   var visBookmarks = localStorage.getItem("vistorianBookmarks");
   var  visBookmarksArray = JSON.parse(visBookmarks);
@@ -410,6 +445,57 @@ function refreshBookmarks(){
 
           }
         }
+      if (bkFrameDoc!=document)
         document.getElementById('myFrame').src=document.getElementById('myFrame').src;
+        
+  bkFrame=document.getElementById("myFrame");
+
+  if (bkFrame)
+    bkFrame=bkFrame.contentWindow;
+  else 
+    bkFrame=window;
+
+  localStorage.setItem("currentPageInFocus",bkFrame.viewType);
+}
+
+function populateNewBookmark(){
+  let btns=window.document.getElementsByClassName('feedbackMenuButton');
+
+  let titleText=document.getElementById("txt_title").value;
+  let chosentType="",notesText="";
+  let analysisOps=[];
+  for (var i=0;i<btns.length;i++){
+  //Set main type of usage
+  if (btns[i].style.backgroundColor=="rgb(255, 127, 80)"){
+      chosentType= btns[i].value;
+      trace.event('log_14', 'general feedback - bookmark type', btns[i].value, window.location.pathname);
+      //Set analysis type - if selected-
+      if (btns[i].value=="Analyze Data"){
+          let chks=document.getElementsByName('chks_feebackForm');
+          for (var j=0;j<chks.length;j++){
+              if (chks[j].checked)
+                  analysisOps.push( chks[j].value);
+              }
+      }
+      
+      //check if type was other
+      if (btns[i].value=="Other"){
+          chosentType= window.document.getElementById('txt_other').value;
+      }
+  }
+}
+  if (chosentType.length==0){
+    alert("You did not specify the type of your bookmark!");
+    return;
+  }
+  //add general feedback
+  notesText= window.document.getElementById('feedback_text_popup').value;
+
+  var bkFrame=document.getElementById("myFrame").contentWindow;
+
+  bkFrame.AddNewLog(0,'',titleText,notesText,chosentType,analysisOps,bkFrame.viewType,bkFrame.networkName);
+
+    resetFeedbackForm();
+    
 
 }

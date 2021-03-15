@@ -48,6 +48,7 @@ input[type='text'],select,textarea {
   
   .collapsible:after {
     content: '\002B';
+    /* content: "\2212"; */
     color: white;
     font-weight: bold;
     float: right;
@@ -56,6 +57,7 @@ input[type='text'],select,textarea {
   
   .active:after {
     content: "\2212";
+    /* content: '\002B'; */
   }
   
   .content {
@@ -63,6 +65,21 @@ input[type='text'],select,textarea {
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.2s ease-out;
+    background-color: #f1f1f1;
+  }
+  .headerDiv{
+    background-color: #777;
+    color: white;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+  }
+  .contentDiv{
+    padding: 0 18px;
     background-color: #f1f1f1;
   }
 
@@ -98,4 +115,40 @@ input[type='text'],select,textarea {
   padding-bottom: 0px;
   padding-left: 6px;
   margin-left: 5px;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 150%;
+  left: 50%;
+  margin-left: -60px;
+}
+
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: black transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
 }
