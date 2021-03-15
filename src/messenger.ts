@@ -16,6 +16,8 @@ export var MESSAGE_SELECTION_FILTER = 'selectionFilter';
 export var MESSAGE_SELECTION_PRIORITY = 'selectionPriority'
 export var MESSAGE_SEARCH_RESULT = 'searchResult';
 export var MESSAGE_SET_STATE= 'SET_STATE';
+export var MESSAGE_GET_STATE= 'GET_STATE';
+export var MESSAGE_STATE_CREATED= 'STATE_CREATED';
 
 var MESSENGER_PROPAGATE: boolean = true;
 
@@ -32,7 +34,9 @@ var MESSAGE_HANDLERS: string[] = [
     MESSAGE_SELECTION_PRIORITY,
     MESSAGE_SEARCH_RESULT,
     MESSAGE_SELECTION_COLORING,
-    MESSAGE_SET_STATE
+    MESSAGE_SET_STATE,
+    MESSAGE_GET_STATE,
+    MESSAGE_STATE_CREATED
 ]
 
 
@@ -230,6 +234,8 @@ export class CreateSelectionMessage extends Message {
 }
 
 
+
+
 // SET CURRENT SELECTION
 
 
@@ -364,22 +370,30 @@ export class NetworkControls {
     networkType: string;
     timeSliderStart: number;
     timeSliderEnd: number;
+
     constructor(networkType:string,startTime:number,endTime:number){
         this.networkType=networkType;
         this.timeSliderStart=startTime;
         this.timeSliderEnd=endTime;
+
     }
 }
 
 export class NodeLinkControls extends NetworkControls{
-        linkOpacity: number;
-        nodeOpacity: number;
-        nodeSize: number;
-        edgeGap: number;
-        linkWidth: number;
-        labellingType: number;
-    constructor(networkType:string,startTime:number,endTime:number,linkOpacity:number,nodeOpacity:number,nodeSize:number,edgeGap:number,linkWidth:number,labellingType:number){
+    globalZoom: number;
+    panOffsetLocal: number[] ;
+    panOffsetGlobal: number[];
+    linkOpacity: number;
+    nodeOpacity: number;
+    nodeSize: number;
+    edgeGap: number;
+    linkWidth: number;
+    labellingType: number;
+    constructor(networkType:string,startTime:number,endTime:number,globalZoom:number,panOffsetLocal: number[],panOffsetGlobal: number[],linkOpacity:number,nodeOpacity:number,nodeSize:number,edgeGap:number,linkWidth:number,labellingType:number){
         super(networkType,startTime,endTime);
+        this.globalZoom=globalZoom;
+        this.panOffsetGlobal=panOffsetGlobal;
+        this.panOffsetLocal=panOffsetLocal;
         this.linkOpacity=linkOpacity;
         this.nodeOpacity=nodeOpacity;
         this.nodeSize=nodeSize;
@@ -389,26 +403,38 @@ export class NodeLinkControls extends NetworkControls{
     }
 }
 export class MatrixControls extends NetworkControls{
-    labellingType: number;
+    labellingType: string;
     zoom:number;
-    constructor(networkType: string,startTime:number,endTime:number,zoom:number,labellingType:number){
+    constructor(networkType:string,startTime:number,endTime:number,zoom:number,labellingType:string){
         super(networkType,startTime,endTime);
         this.zoom=zoom;
         this.labellingType=labellingType;
     }
 }
 export class TimeArchsControls extends NetworkControls{
-    labellingType: number;
-    constructor(networkType: string,startTime:number,endTime:number,labellingType:number){
+    labellingType: string;
+    /* webglState:any;
+    camera_position_x:number;
+    camera_position_y:number;
+    camera_position_z:number; */
+
+    constructor(networkType:string,startTime:number,endTime:number,labellingType:string){
+    //,webglState:any,camera_position_x:number,camera_position_y:number,camera_position_z:number){
         super(networkType,startTime,endTime);
         this.labellingType=labellingType;
+       /*  this.webglState=webglState;
+        this.camera_position_x=camera_position_x;
+        this.camera_position_y=camera_position_z;
+        this.camera_position_z=camera_position_z;
+ */
     }
+    
 }
 export class MapControls extends NetworkControls{
     nodeOverlap: number;
     linkOpacity: number;
     opacityOfPositionlessNodes: number;
-    constructor(networkType: string,startTime:number,endTime:number,nodeOverlap:number,linkOpacity:number,opacityOfPositionlessNodes:number){
+    constructor(networkType:string,startTime:number,endTime:number,nodeOverlap:number,linkOpacity:number,opacityOfPositionlessNodes:number){
         super(networkType,startTime,endTime);
         this.nodeOverlap=nodeOverlap;
         this.linkOpacity=linkOpacity;
@@ -429,15 +455,52 @@ export class SetStateMessage extends Message {
 
 export function setState(state: NetworkControls) {
     // is called from anywhere in vistorian by calling 
-    // networkcube.setState(myState);
+    // window.vc.messenger.setState(myState);
     distributeMessage(new SetStateMessage(state), true);
 }
 
+// GET STATE MESSAGE
 
 
+export class GetStateMessage extends Message {
+    bookmarkIndex: number;
+    viewType: string;
+    isNewBookmark:boolean;
+    constructor(bookmarkIndex: number,viewType: string,isNewBookmark:boolean){
+        super(MESSAGE_GET_STATE);
+        this.bookmarkIndex=bookmarkIndex;
+        this.viewType=viewType;
+        this.isNewBookmark=isNewBookmark;
+    } 
+}
+
+export function getState(bookmarkIndex: number,viewType:string,isNewBookmark:boolean){
+    // is called from anywhere in vistorian by calling 
+    // window.vc.messenger.getState(bookmarkIndex);
+
+   distributeMessage(new GetStateMessage(bookmarkIndex,viewType,isNewBookmark), true);
+}
 
 
+export class StateCreatedMessage extends Message{
+    state: NetworkControls;
+    bookmarkIndex: number;
+    viewType: string;
+    isNewBookmark:boolean;
+    constructor(state: NetworkControls,bookmarkIndex: number,viewType: string,isNewBookmark:boolean) {
+        super(MESSAGE_STATE_CREATED)
+        this.state = state;
+        this.bookmarkIndex=bookmarkIndex;
+        this.viewType=viewType;
+        this.isNewBookmark=isNewBookmark;
+    }
+}
 
+export function stateCreated(state: NetworkControls,bookmarkIndex: number,viewType: string,isNewBookmark:boolean){
+    // State created : to set the state after getting it from the selected network
+
+    distributeMessage(new StateCreatedMessage(state,bookmarkIndex,viewType,isNewBookmark), true);
+}
 
 ////////////////////////
 // INTERNAL FUNCTIONS //
@@ -555,6 +618,10 @@ function processMessage(m: Message) {
                                                         m12Selection.color = m12.color;
                                                     } // ELSE ??
                                                 }
+                                                else
+                                                    if (m.type == MESSAGE_GET_STATE || m.type == MESSAGE_SET_STATE || m.type == MESSAGE_STATE_CREATED){
+                                                        // this type is a state message. no adjustments on the graph necessary.
+                                                    }
 
         callHandler(m);
     }
