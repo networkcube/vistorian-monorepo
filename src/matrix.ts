@@ -14,6 +14,8 @@ import * as glutils from 'vistorian-core/src/glutils';
 const COLOR_HIGHLIGHT = 0x000000;
 const COLOR_SELECTION = 0xff0000;
 
+
+
 class NMargin {
   left: number;
   top: number;
@@ -43,6 +45,8 @@ interface Cell {
   row: number;
   col: number;
 }
+
+
 
 class MatrixMenu {
   private elem: JQuery;
@@ -1261,5 +1265,57 @@ matrix.setCellLabel(cellLabel);
 matrix.setOverview(matrixOverview);
 matrix.setVis(matrixVis);
 messenger.addEventListener('timeRange', matrix.timeRangeHandler);
+messenger.addEventListener(messenger.MESSAGE_SET_STATE, setStateHandler);
+messenger.addEventListener(messenger.MESSAGE_GET_STATE, getStateHandler);
 
 
+/////////////////
+//// UPDATES ////
+/////////////////
+
+
+function setStateHandler(m: messenger.SetStateMessage){
+    
+  var state: messenger.MatrixControls = m.state as messenger.MatrixControls;    
+  // unpack / query that state object
+  // e.g., var params = state.params.
+  // set the parameters below:...  
+  
+  // set cell size (zoom)
+  matrix.updateCellSize(state.zoom);
+  
+
+  // set labelling type
+  matrix.reorderWorker(state.labellingType);
+
+  // set time (start/end)
+   messenger.timeRange(state.timeSliderStart, state.timeSliderEnd, matrix.startTime, true);
+//timeSlider.set(state.timeSliderStart, state.timeSliderEnd);
+
+   // camera
+/*  webgl=state.webglState;
+    webgl.camera.position.x=state.camer_position_x ;
+    webgl.camera.position.y=state.camer_position_y  ;
+    webgl.camera.position.z=state.camer_position_z  ;
+ */
+  
+
+}
+
+
+function getStateHandler( m: messenger.GetStateMessage){
+  if (m.viewType=="matrix" ){
+
+    /*         var webglState=webgl;
+        var camer_position_x=webgl.camera.position.x;
+        var camer_position_y=webgl.camera.position.y;
+        var camer_position_z=webgl.camera.position.z; */
+        let zoomValue: any = $('#cellSizeBox').val();
+        let orderType: any = $('#labelOrdering').val();
+
+        //matrix.cellSize
+      var matrixNetwork: messenger.NetworkControls=new messenger.MatrixControls("matrix",matrix.startTime.unixTime(),matrix.endTime.unixTime(),zoomValue,orderType);
+      messenger.stateCreated(matrixNetwork,m.bookmarkIndex,m.viewType,m.isNewBookmark);
+
+  }
+}
