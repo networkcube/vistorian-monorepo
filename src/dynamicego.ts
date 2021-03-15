@@ -16,6 +16,8 @@ import * as timeslider from 'vistorian-core/src/timeslider';
 var dgraph: dynamicgraph.DynamicGraph = main.getDynamicGraph();
 messenger.setDefaultEventListener(updateEventHandler);
 messenger.addEventListener('timeRange', timeRangeHandler);
+messenger.addEventListener(messenger.MESSAGE_SET_STATE, setStateHandler);
+messenger.addEventListener(messenger.MESSAGE_GET_STATE, getStateHandler);
 
 var nodes: dynamicgraph.Node[] = dgraph.nodes().toArray();
 var links: dynamicgraph.Link[] = dgraph.links().toArray();
@@ -562,3 +564,37 @@ export function showEgoNetwork(n: dynamicgraph.Node) {
 
 }
 
+function setStateHandler(m: messenger.SetStateMessage){
+    
+    var state: messenger.TimeArchsControls = m.state as messenger.TimeArchsControls;    
+    // unpack / query that state object
+
+    LABEL_ORDER=state.labellingType;
+    updateGlobalOrder();
+
+    startUnix=state.timeSliderStart;
+    endUnix=state.timeSliderEnd;
+
+    // set time (start/end)
+    messenger.timeRange(state.timeSliderStart, state.timeSliderEnd, times[0], true);
+
+   // camera
+   /*  webgl=state.webglState;
+    webgl.camera.position.x=state.camera_position_x ;
+    webgl.camera.position.y=state.camera_position_y  ;
+    webgl.camera.position.z=state.camera_position_z  ; */
+ 
+}
+
+function getStateHandler( m: messenger.GetStateMessage){
+    if (m.viewType=="dynamicego"){
+        /* var webglState=webgl;
+        var camera_position_x=webgl.camera.position.x;
+        var camera_position_y=webgl.camera.position.y;
+        var camera_position_z=webgl.camera.position.z; */
+        var dyEgoNetwork: messenger.NetworkControls=new messenger.TimeArchsControls("dynamicego",startUnix,endUnix,LABEL_ORDER);//,webglState,camera_position_x,camera_position_y,camera_position_z);
+        messenger.stateCreated(dyEgoNetwork,m.bookmarkIndex,m.viewType,m.isNewBookmark);
+
+    }
+
+}
