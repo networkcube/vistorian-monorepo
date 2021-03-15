@@ -78,6 +78,7 @@ linkWeightScale.domain([
 
 messenger.setDefaultEventListener(updateEvent);
 messenger.addEventListener(messenger.MESSAGE_SET_STATE, setStateHandler);
+messenger.addEventListener(messenger.MESSAGE_GET_STATE, getStateHandler);
 
 
 
@@ -524,16 +525,6 @@ function setStateHandler(m: messenger.SetStateMessage){
     // set the parameters below:...
 
     
-    // set pan
-   // this.panOffsetLocal = // [0,0];
-//    this.panOffsetGlobal = // [0, 0];
-
-    // set zoom
-//    this.globalZoom = // 1;
-
-  //  updateLayout();
-   // svg.attr("transform", "translate(" + (panOffsetGlobal[0] + panOffsetLocal[0]) + ',' + (panOffsetGlobal[1] + panOffsetLocal[1]) + ")");
-
     // set link opacity
     LINK_OPACITY = state.linkOpacity;
     updateLinks();
@@ -557,13 +548,59 @@ function setStateHandler(m: messenger.SetStateMessage){
     updateLabelVisibility();
 
     // set time (start/end)
- 
-
-  messenger.timeRange(state.timeSliderStart, state.timeSliderEnd, times[0], false);
-
+     messenger.timeRange(state.timeSliderStart, state.timeSliderEnd, times[0], true);
+  //timeSlider.set(state.timeSliderStart, state.timeSliderEnd);
     updateLinks();
     updateNodes();
 
+    // set pan
+    panOffsetLocal=state.panOffsetLocal;
+    panOffsetGlobal =state.panOffsetGlobal;
+
+    //set zoom
+    globalZoom = state.globalZoom;
+
+    updateLayout();
+    // svg.attr("transform", "translate(" + (panOffsetGlobal[0] + panOffsetLocal[0]) + ',' + (panOffsetGlobal[1] + panOffsetLocal[1]) + ")");
+
+
+}
+
+
+function getStateHandler( m: messenger.GetStateMessage){
+    
+    if (m.viewType=="nodelink" ){
+        var nlNetwor: messenger.NetworkControls;
+        nlNetwor=new messenger.NodeLinkControls("nodelink",time_start.unixTime(),time_end.unixTime(),globalZoom,panOffsetLocal,panOffsetGlobal,LINK_OPACITY,NODE_OPACITY,NODE_SIZE,LINK_GAP,LINK_WIDTH,LABELING_STRATEGY);
+      //  var states=JSON.parse(localStorage.getItem("currentCapturedStates") || "[]" ) ;
+    //    states.push(nlNetwor);
+       /*  if (m.bookmarkIndex>-1){
+            var bookmarksArray=JSON.parse(localStorage.getItem("vistorianBookmarks") || "[]");
+            bookmarksArray[m.bookmarkIndex].controlsValues[0]=nlNetwor;
+            localStorage.setItem("vistorianBookmarks", JSON.stringify(bookmarksArray))
+        }
+        else{
+           states.push(nlNetwor); 
+           localStorage.setItem("currentCapturedStates", JSON.stringify(states));
+    
+       // localStorage.setItem("currentCapturedStates", JSON.stringify(nlNetwor));
+    }
+        messenger.stateCreated(nlNetwor,m.bookmarkIndex);
+    
+    } */
+ //   var isNew=(m.bookmarkIndex<0?true:false);
+ //   localStorage.setItem("currentCapturedStates", JSON.stringify(nlNetwor));
+    messenger.stateCreated(nlNetwor,m.bookmarkIndex,m.viewType,m.isNewBookmark);
+   // messenger.stateCreated(nlNetwor,m.bookmarkIndex,m.viewType,isNew);
+
+    }
+
+}
+
+export function reteriveNodelinkState():messenger.NodeLinkControls{
+    var nlNetwor: messenger.NodeLinkControls=new messenger.NodeLinkControls("nodelink",time_start.unixTime(),time_end.unixTime(),globalZoom,panOffsetLocal,panOffsetGlobal,LINK_OPACITY,NODE_OPACITY,NODE_SIZE,LINK_GAP,LINK_WIDTH,LABELING_STRATEGY);
+
+ return (nlNetwor);
 }
 
 function timeChangedHandler(m: messenger.TimeRangeMessage) {
