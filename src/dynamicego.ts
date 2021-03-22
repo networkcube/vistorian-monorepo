@@ -592,7 +592,8 @@ function getStateHandler( m: messenger.GetStateMessage){
         var camera_position_x=webgl.camera.position.x;
         var camera_position_y=webgl.camera.position.y;
         var camera_position_z=webgl.camera.position.z; */
-        var dyEgoNetwork: messenger.NetworkControls=new messenger.TimeArchsControls("dynamicego",startUnix,endUnix,LABEL_ORDER);//,webglState,camera_position_x,camera_position_y,camera_position_z);
+        var dyEgoNetwork: messenger.NetworkControls=new messenger.TimeArchsControls("dynamicego",startUnix,endUnix,LABEL_ORDER);
+        //,webglState,camera_position_x,camera_position_y,camera_position_z);
         messenger.stateCreated(dyEgoNetwork,m.bookmarkIndex,m.viewType,m.isNewBookmark);
 
     }
