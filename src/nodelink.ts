@@ -542,8 +542,10 @@ function setStateHandler(m: messenger.SetStateMessage){
 
     // set linkwidh
     LINK_WIDTH = state.linkWidth;
+    linkWeightScale.range([0, LINK_WIDTH]);
     updateLinks();
 
+    
     LABELING_STRATEGY = state.labellingType;
     updateLabelVisibility();
 
@@ -597,11 +599,7 @@ function getStateHandler( m: messenger.GetStateMessage){
 
 }
 
-export function reteriveNodelinkState():messenger.NodeLinkControls{
-    var nlNetwor: messenger.NodeLinkControls=new messenger.NodeLinkControls("nodelink",time_start.unixTime(),time_end.unixTime(),globalZoom,panOffsetLocal,panOffsetGlobal,LINK_OPACITY,NODE_OPACITY,NODE_SIZE,LINK_GAP,LINK_WIDTH,LABELING_STRATEGY);
 
- return (nlNetwor);
-}
 
 function timeChangedHandler(m: messenger.TimeRangeMessage) {
 
