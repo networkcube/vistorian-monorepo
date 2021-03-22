@@ -17,6 +17,7 @@
         <script src="../node_modules/vistorian-core/lib/vistorian-core.js"></script>
         <script src="../lib/vistorian-vis.js"></script>
 
+
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <script src="https://kit.fontawesome.com/303540a013.js" crossorigin="anonymous"></script>
 
@@ -131,6 +132,25 @@
                 popupForm.setAttribute("style","display:block");
 
             }
+            function exportBookmarks(){
+                var fileToExport=localStorage.getItem("vistorianBookmarks");
+                if (fileToExport){
+                    var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(fileToExport);
+                    var downloadElement = document.createElement('a');
+                    downloadElement.setAttribute("href",     dataStr     );
+                    downloadElement.setAttribute("download", "vistorian_bookmarks.json");
+                    downloadElement.click();
+                    trace.event('bkm_9', ' bookmarks file export', true , window.parent.location.pathname);
+
+                }
+                else{
+                    alert("No bookmarks yet created to be exported!");
+                    trace.event('bkm_9', ' bookmarks file export',false , window.parent.location.pathname);
+
+                }
+               
+            }
+
             // Holds values of each network's controls
             class networkControls {
                 constructor(networkType,startTime,endTime,globalZoom,panOffsetLocal,panOffsetGlobal){
@@ -223,10 +243,15 @@
                 document.getElementById("loggingSessionID").style.display="none";
             } 
             function toggleMySessionID(){
-                if (document.getElementById("loggingSessionID").style.display=="none")
+                if (document.getElementById("loggingSessionID").style.display=="none"){
                     document.getElementById("loggingSessionID").style.display="block";
-                else    
+                    trace.event('log_11', ' Session ID Button','Show' , window.parent.location.pathname);
+
+                }
+                else {
                     document.getElementById("loggingSessionID").style.display="none";
+                    trace.event('log_11', ' Session ID Button','hide' , window.parent.location.pathname);
+                }
 
             }
 
@@ -315,7 +340,33 @@
             }
 
             
+            async function readFile(event) {
+                const file = event.target.files.item(0);
+                        const data = await file.text();
+                        localStorage.setItem("vistorianBookmarks",data);
+                        initializeJSON();
+            }
+            function importBookmarks(){
+                var fileImported=document.createElement("input");
+                fileImported.type="file";
+                fileImported.id="jsonFile";
+                fileImported.accept=".json";
+                fileImported.onchange = (event) => {
+                    readFile(event);
+                }
+                
+                var importStatus=false;
+                if (confirm('Are you sure you want to import the selected file? This will overwrite existing bookmarks')){
+                    
+                    fileImported.click(); 
 
+                    importStatus=true;                 
+                }
+                trace.event('bkm_10', ' bookmark file imported',importStatus , window.parent.location.pathname);
+
+
+            }
+ 
             function AddNewLog(id,dateCreated,title,note,selectedType,analysisOptions,networkType,networkDataset){
                  let userBookmarks = JSON.parse(localStorage.getItem("vistorianBookmarks")) || [];
 
@@ -396,8 +447,14 @@
                         trace.event('bkm_5', ' bookmark stated', 'restoreted', window.parent.location.pathname);
                       
                         window.vc.messenger.setState(bkFile[bkIndex].controlsValues[0]);
-                       // window.parent.exports.networkcube.vistorian.setState(bookmarksJSONFile[locateLogObj(bookmarksJSONFile,this.parentElement.id)].controlsValues);
+                        var content = this.parentElement.parentElement.nextElementSibling;
+                        headerButton.classList.toggle("active");
+                        if (content.style.maxHeight!=null){
+                            content.style.maxHeight = content.scrollHeight + "px";
 
+                        } else {
+                            content.style.maxHeight = null;
+                        } 
                      });
                      lowerContainer.appendChild(restoreStateIcon);
 
@@ -441,6 +498,36 @@
                 newContentDiv.appendChild(lbl_title);
                 newContentDiv.appendChild(newTitle);
                 newContentDiv.appendChild(document.createElement("br"));
+
+                var newNote=document.createElement("textarea");
+                newNote.id="txt_note_"+currentCounterValue;
+
+                newNote.rows=5;
+                
+                   // newNote.innerHTML=note;
+
+                
+                newNote.placeholder="Enter your notes here ..";
+                if (note!="")
+                    newNote.innerText=note;
+            
+               /*  newNote.addEventListener('keyup', function(event) {
+                    
+                    bookmarksJSONFile[locateLogObj(bookmarksJSONFile,this.parentElement.id)].updateBookmarkNotes(this.value);
+                    updateLocalStorage(bookmarksJSONFile);
+                    updatesNotSaved();
+                    return false; 
+                }); */
+                var notesLabel=document.createElement("label");
+                notesLabel.innerText="Notes:";
+                notesLabel.style="font-weight: bold;";
+                notesLabel.htmlFor=newNote.id;
+                
+                newContentDiv.appendChild(notesLabel);
+
+                newContentDiv.appendChild(newNote);
+               
+               
 
                 
 
@@ -647,36 +734,6 @@
                 frmChk.appendChild(logFlag);
                 newContentDiv.appendChild(frmChk);
                 
-                var newNote=document.createElement("textarea");
-                newNote.id="txt_note_"+currentCounterValue;
-
-                newNote.rows=5;
-                
-                   // newNote.innerHTML=note;
-
-                
-                newNote.placeholder="Enter your notes here ..";
-                if (note!="")
-                    newNote.innerText=note;
-            
-               /*  newNote.addEventListener('keyup', function(event) {
-                    
-                    bookmarksJSONFile[locateLogObj(bookmarksJSONFile,this.parentElement.id)].updateBookmarkNotes(this.value);
-                    updateLocalStorage(bookmarksJSONFile);
-                    updatesNotSaved();
-                    return false; 
-                }); */
-                var notesLabel=document.createElement("label");
-                notesLabel.innerText="Notes:";
-                notesLabel.style="font-weight: bold;";
-                notesLabel.htmlFor=newNote.id;
-                
-                newContentDiv.appendChild(notesLabel);
-
-                newContentDiv.appendChild(newNote);
-               
-               
-
                 //Add buttons (Restore State|Delete)
                 newContentDiv.appendChild(document.createElement("br"));
                 newContentDiv.appendChild(document.createElement("br"));
@@ -831,18 +888,12 @@
                
 
             }
-            function generatePDF(){
-              
-            }
-            function takeScreenShot() {
-                
-            }
             
             
         </script>
     </head>
     <!-- onerror="trace.event('err', event + ' ' + source + lineno, error, document.location.pathname);"  -->
-    <body id="capture" onload="initializeJSON();"  onfocus="refreshBookmarks();"> -->
+    <body id="capture" onload="initializeJSON();"  onfocus="refreshBookmarks();"> 
        
         <div id="logbook_container" data-role="page">
             <div>
@@ -860,7 +911,7 @@
             <div id="logbook_header"  class="hd_div" >  
                 
                 <!-- AddNewLog(0,'','','','',[],viewType,networkName); without bookmarkpopup pane -->
-                <button  id="addNewBookmark" value="Add New" class="hd_btn"  onclick="showBookmarkPopup();trace.event('bkm_1', ' new bookmark', 'created', window.parent.location.pathname);">Add New</button>
+                <button  id="addNewBookmark" value="Add New" class="hd_btn"  onclick="showBookmarkPopup();trace.event('bkm_1', ' new bookmark button', 'clicked', window.parent.location.pathname);">Add New</button>
                 <!-- <button  id="btn_save" value="Save" class="hd_btn"  onclick="updateLocalStorage( (JSON.parse(localStorage.getItem('vistorianBookmarks')) || []));trace.event('bkm_2', ' updates/changes', 'saved by user', window.parent.location.pathname);">Save Bookmarks</button> -->
 
           
@@ -869,10 +920,16 @@
 
             </div>
             <div>
-               <!-- <button onclick="generatePDF()">Export as a PDF</button>
-                <button onclick="takeScreenShot()">Take Screenshot</button> -->
+              
                 <button onclick="location.href='mailto:vistorian@inria.fr?subject=[Vistorian] Consultation Request&body=Hi, kindly I would like to arrange a 10-minutes meeting to consult about my data\'s visualization. Thank you.';trace.event('com_3', window.parent.location.pathname, 'bookmark_tool', 'consult_team');">Email Us & Consult an Expert</button>
                 <button onclick="location.href='mailto:vistorian@inria.fr?subject=[Vistorian] Report Technical Bug &body=Hello,\n I am facing a technical problem and would like to request your help. The description of my problem is :\n';trace.event('com_4', window.parent.location.pathname, 'bookmark_tool', 'ReportTechBug');">Report a Technical Bug</button>
+                <div style="float:right">
+                <button  onclick="exportBookmarks();trace.event('bkm_9', window.parent.location.pathname, 'bookmark_tool', 'Bookmarks File Exported');">Export Bookmarks</button>
+            </div>
+            <div style="float:left">
+
+                <button   onclick="importBookmarks();trace.event('bkm_10', window.parent.location.pathname, 'bookmark_tool', 'Bookmarks File Imported');">Import Bookmarks</button>
+            </div>
                 <button onclick="toggleMySessionID()">Show/Hide My Session ID</button>
                 <label id="loggingSessionID" style="align-items: center;text-align: center;; border-style:outset;padding: 5px;"></label>
             </div>

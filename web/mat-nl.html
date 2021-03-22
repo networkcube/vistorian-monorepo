@@ -27,6 +27,11 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
         <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+        <script>
+            $.get("logging_models.html", function(result){ 
+                $("body").append(result);
+            });
+        </script>  
     </head>
     <title>Matrix + Node Link</title>
 
@@ -120,238 +125,33 @@
                     <button type="button" class="close"  onclick="minimizeBookmarks();">&nbsp;&nbsp;<i class="fa fa-window-minimize" style="font-size:12px"></i></button>
                 </div>
                 <iframe id="myFrame" src="logbook.html" ></iframe>
-            </div>
-        
-            <div class="container">
-                
-            <!-- The Modal -->
-            <div class="modal" id="myModal">
-                <div class="modal-dialog modal-dialog-scrollable">
-                    <div class="modal-content">
-                
-                    <!-- Modal Header -->
-                    <div class="modal-header">
-                        <h1 class="modal-title">Enabling Vistorian Labs Consent Form</h1>
-                        <button type="button" class="close" data-dismiss="modal" onclick="turnLoggingOff()">×</button>
-                    </div>
-                
-                    <!-- Modal body -->
-                    <div class="modal-body" style="text-align: justify;">
-                        <p dir="ltr"><span>The Vistorian is a research prototype to build better visualizations for multivariate networks. Enabling </span><span>VistorianLabs</span><span> gives you access to novel features we are currently testing and to be a more of help with the Vistorian through our team.&nbsp;</span></p>
-<p dir="ltr"><span>To inform our research and improve The Vistorian, it is essential that we understand how people use visualizations and interactive features in the Vistorian. When enabling VistorianLabs, we gather anonymous interaction data to understand how users use The Vistorian and its interactive features. At no point will any private and identifiable information or data be forwarded to our side.&nbsp;</span></p>
-<p dir="ltr"><span>By enabling the Vistorian Lab, you consent to the terms and conditions below and enable anonymous logging of your interactions for our research purposes as detailed below. You can disable and enable VistorianLabs at any point.</span></p>
-<p dir="ltr"><span>WHAT DOES VISTORIAN-LABS OFFER</span></p>
-<ul style="list-style-type:disc">
-<li dir="ltr">
-<p dir="ltr"><span>Create bookmarks that capture your current state of analysis.&nbsp;</span></p>
-</li>
-<li dir="ltr">
-<p dir="ltr"><span>Add comments to bookmarks</span></p>
-</li>
-<li dir="ltr">
-<p dir="ltr"><span>Return to any bookmark any time you want&nbsp;</span></p>
-</li>
-<li dir="ltr">
-<p dir="ltr"><span>Get in touch with us easily to help you with the Vistorian.</span></p>
-</li>
-<li dir="ltr">
-<p dir="ltr"><span>You can contact us by email to book a consultation with our visualization experts to help you with the Vistorian.&nbsp;</span></p>
-</li>
-</ul >
-<p dir="ltr"><span>You can find more information about book marks and VistorianLabs features here: </span><a href="https://github.com/alkadi-mh/vistorian-web/wiki/Vistorian-Activity-Logging-Study"><span>wiki</span></a><span>.</span></p>
-<p dir="ltr"><span>WHAT ARE WE LOGGING</span></p>
-<p dir="ltr"><span>Only if VistorianLabs is enabled, we will anonymously log how you use specific features in the Vistorian, such as:</span></p>
-<ul style="list-style-type:disc">
-<li dir="ltr">
-<p dir="ltr"><span>Which visualizations you use</span></p>
-</li>
-<li dir="ltr">
-<p dir="ltr"><span>Which visualization features you use (e.g., search, filter, pan, zoom, etc.)</span></p>
-</li>
-<li dir="ltr">
-<p dir="ltr"><span>How long you you stay on each visualization</span></p>
-</li>
-<li dir="ltr">
-<p dir="ltr"><span>How often you visit The Vistorian.</span></p>
-</li>
-</ul>
-<p dir="ltr"><span>For a comprehensive list of each logged event see our </span><a href="https://github.com/alkadi-mh/vistorian-web/wiki/Vistorian-Activity-Logging-Study"><span>wiki</span></a><span>.&nbsp;</span></p>
-<p dir="ltr"><span>Each logged event will store:&nbsp;</span></p>
-<ul style="list-style-type:disc">
-<li dir="ltr">
-<p dir="ltr"><span>Time and date of the event,</span></p>
-</li>
-<li dir="ltr">
-<p dir="ltr"><span>Type of event (hover a node, move the time slider, visit matrix visualization, etc.),&nbsp;</span></p>
-</li>
-<li dir="ltr">
-<p dir="ltr"><span>An anonymous ID (found in the in the URL: e.g., session=1591290293452). This ID is a random generated number, independent from your IP or other specific user data. You can delete and reset that ID by refreshing your browser cache. The ID is stored in your browser, not in any cookie.&nbsp;</span></p>
-</li>
-</ul>
-<p dir="ltr"><span>The anonymous logged events will be saved on a secure server which is accessible only by the Vistorian team. They help us to understand which features in Vistorian are most used, which ones are not used, and help us to improve these features as well as our instructions and tutorials.&nbsp;</span></p>
-<p dir="ltr"><span>WHAT ARE WE *NOT* LOGGING</span></p>
-<p dir="ltr"><span>We do not log any data beyond the above stated. For example:&nbsp;</span></p>
-<ul style="list-style-type:disc">
-<li dir="ltr">
-<p dir="ltr"><span>We do not log the data you visualize in the Vistorian&nbsp;</span></p>
-</li>
-<li dir="ltr">
-<p dir="ltr"><span>We do not log the position of your mouse on screen</span></p>
-</li>
-<li dir="ltr">
-<p dir="ltr"><span>We do not screencast your screen or take screenshots.</span></p>
-</li>
-<li dir="ltr">
-<p dir="ltr"><span>We do not access your camera, keyboard or any other device.</span></p>
-</li>
-<li dir="ltr">
-<p dir="ltr"><span>We do not log any other open tabs or windows in your browser or computer</span></p>
-</li>
-<li dir="ltr">
-<p dir="ltr"><span>We do not store or install any software, cookies, or other files or programs on your computer. The Vistorian runs entirely in your browser.&nbsp;</span></p>
-</li>
-</ul>
-<p dir="ltr"><span>SUMMARY</span></p>
-<p dir="ltr"><span>By activating VistorianLabs,&nbsp;</span></p>
-<ul style="list-style-type:disc">
-<li dir="ltr">
-<p dir="ltr"><span>You will activate the bookmarks feature and will be able to bookmark your visualizations, write your own work notes.</span></p>
-</li>
-<li dir="ltr">
-<p dir="ltr"><span>Your interactions will anonymously be logged for improvement purposes and our research.</span></p>
-</li>
-<li dir="ltr">
-<p dir="ltr"><span>You can contact us by email to book a consultation with our visualization experts to help you with the Vistorian.&nbsp;</span></p>
-</li>
-</ul>
-<p dir="ltr"><span>You can stop the logging at any time by turning OFF the bookmark feature.&nbsp;</span></p>
-<p dir="ltr"><span>If you wish your data to be removed from the server please email </span><a href="mailto:vistorian@inria.fr"><span>vistorian@inria.fr</span></a><span>. Please include the session ID of your last Vistorian session. This can be found in the email template generated by clicking Email Us/Report a Technical Bug button(s).&nbsp;</span></p>
-<p dir="ltr"><span>Thank you for agreeing to participate in our research.</span></p>
-<p dir="ltr"><span>For more information about our research and publications visit our </span><a href="https://github.com/alkadi-mh/vistorian-web/wiki/Vistorian-Activity-Logging-Study"><span>wiki</span></a><span> and you can learn more about Vistorian </span><a href="https://github.com/networkcube/vistorian/wiki"><span>here</span></a><span>. To send questions, feedback or suggestions for improvement email us at: </span><a href="mailto:vistorian@inria.fr"><span>vistorian@inria.fr</span></a></p>
-<p dir="ltr"><span>The Vistorian Team</span></p>
-<p dir="ltr"><span>---------------------------</span></p>
-<p dir="ltr"><span>University of Edinburgh, UK</span></p>
-<p dir="ltr"><span>Inria, FR</span></p>
-<p dir="ltr"><span>University of Maryland, MD</span></p>
-<p dir="ltr"><span>IQS School of Management, ES</span></p>
-<p><span>&nbsp;</span></p>
-
-                    </div>
-                    <!-- Modal footer -->
-                    <div class="modal-footer">
-                    
-                        <label for="chk_dontShowConsent">  <input type="checkbox" id="chk_dontShowConsent"> Don't show consent-approval form again.</label>
-                        <a href="/static/logging_consent/Vistorian Tracing Consent form .pdf" download> <button type="button" class="btn btn-link" onclick="trace.event('log_7', 'consent', 'downloaded', document.location.pathname);">Download this Consent Form for your records</button></a>
-        
-                        <div >  
-                            <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="turnLoggingOff()">Cancel</button>
-                            <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="turnOnLogging()">Enable Bookmarks and Logging</button>
-                        </div>
-                            
-                            
-                    </div>
-                
-                
                 </div>
-            </div>
-            
-        </div>
-        <div class="feedback">
-            <a href="#"><span>👋</span></a>
-            <div class="form" style="background-color: white;">
-                <form>
-                <h6>Tell us how you use the vistorian in this moment </h6>
-                <div class="form-group">
-                    <input type="button" class="menuButtonGadget" id="AnalyzeData" value="Analyzing Data" >
-                    <input type="button" class="menuButtonGadget" id="Learn" value="Learning" >
-                    <input type="button" class="menuButtonGadget" id="DemotoOthers" value="Demoing" >
-                    <input type="button" class="menuButtonGadget" id="exploreVis" value="Exploring" >
-                    <input type="button" class="menuButtonGadget" id="ReportIssue" value="Reporting an Issue" >
-                    <input type="button" class="menuButtonGadget" id="AskForHelp" value="Asking for help" >
-                    <input type="button" class="menuButtonGadget" id="eurekaMoment" value="Eureka! ">
-    
-      
-                    <textarea name="message" id="feedback_text" cols="30" rows="10" placeholder="Send us your feedback!"autofocus></textarea>
+                <div class="feedback">
+                    <a href="#"><span>👋</span></a>
+                    <div class="form" style="background-color: white;">
+                      <form>
+                        <h6 class="modal-title">Tell us how you use the vistorian in this moment </h6>
+                        <div class="form-group">
+                            <input type="button" class="menuButtonGadget" id="AnalyzeData" value="Analyzing Data" >
+                            <input type="button" class="menuButtonGadget" id="Learn" value="Learning" >
+                            <input type="button" class="menuButtonGadget" id="DemotoOthers" value="Demoing" >
+                            <input type="button" class="menuButtonGadget" id="exploreVis" value="Exploring" >
+                            <input type="button" class="menuButtonGadget" id="ReportIssue" value="Reporting an Issue" >
+                            <input type="button" class="menuButtonGadget" id="AskForHelp" value="Asking for help" >
+                            <input type="button" class="menuButtonGadget" id="eurekaMoment" value="Eureka! ">
                   
-                </div>
-                <button type="submit" class="btn btn-primary btn-sm btn-block" onclick="LoggingGeneralFeedback();">
-                  Send it!
-                </button>
-              </form>
-            </div>
-            <div class="thanks">
-              Feedback sent! Thank you for helping us!
-            </div>
-          </div>
-
-<!-- Feedback Modal -->
-<div class="modal fade show" id="popupFeedbackForm" >
-    <div class="modal-dialog modal-dialog-scrollable">
-    
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title" style="color:orange">Create A Bookmark & Log Your Progress! </h5>
-          <button type="button" class="close" data-dismiss="modal" onclick="resetFeedbackForm();trace.event('log_15', 'general_feedback_popupForm', 'closed', document.location.pathname);">&times;</button>
-        </div>
-        <div class="modal-body">
-          <form style="font-size: 14px;" id="FeedbackFormElements">
-            <div style="margin: 5px;">
-                <p>
-                    <h6 style="font-weight: bold;">Bookmark Label:</h6>
-                    <input type="textbox" placeholder="Update bookmark label here .." style="width:100%" id="txt_title"> 
-                </p>
-                <br>
-                <h6 style="font-weight: bold;font-style: italic;"><u>Characterize your current activity:</u>*Shared with VistorianLab*</h6>
-
-                <input type="button" class="feedbackMenuButton" style="margin: 2px;" id="btn_AnalyzeData" value="Analyze Data" onclick="displaySubOptions(this);">
-                <input type="button" class="feedbackMenuButton" style="margin: 2px;" id="btn_Learn" value="Learn" onclick="displaySubOptions(this);">
-                <input type="button" class="feedbackMenuButton" style="margin: 2px;" id="btn_DemotoOthers" value="Demo to others" onclick="displaySubOptions(this);">
-                <input type="button" class="feedbackMenuButton" style="margin: 2px;" id="btn_exploreVis" value="Test & Explore Vistorian" onclick="displaySubOptions(this);">
-                <input type="button" class="feedbackMenuButton" style="margin: 2px;" id="btn_disscussFindings" value="Discuss Findings" onclick="displaySubOptions(this);">
-
-                <input type="button" class="feedbackMenuButton" style="margin: 2px;" id="btn_ReportIssue" value="Report an Issue" onclick="displaySubOptions(this);">
-<!--                 <input type="button" class="feedbackMenuButton" style="margin: 2px;" id="btn_AskForHelp" value="Asking for help" onclick="displaySubOptions(this);">
-                <input type="button" class="feedbackMenuButton" style="margin: 2px;" id="btn_eurekaMoment" value="Eureka!" onclick="displaySubOptions(this);">
- -->                <input type="button" class="feedbackMenuButton" style="margin: 2px;" id="btn_other" value="Other" onclick="displaySubOptions(this);">
-                <br/>
-                <div id="OtherType_div" style="display: none; align-items: center;margin: 10px;">
-                    <strong>Specify other usage: </strong> <input type="tex" id="txt_other" cols="60" placeholder="Describe other type here .. Please don't add personal information";>
-                </div>
-                <br/>
-                <div id="checkboxes_group_div" style="display: none; align-items: center;margin: 10px;">
-                    <h6 style="font-weight: bold;font-style: italic;"><u> What kind of analysis are you performing?</u></h6>
-
-                    <label for="chk_0"><input type="checkbox" name="chks_feebackForm" id="chk_0" value="0"> Review Data Quality</label><br>
-                    <label for="chk_1"><input type="checkbox" name="chks_feebackForm" id="chk_1" value="1"> Test a particular hypothesis</label><br>
-                    <label for="chk_2"><input type="checkbox" name="chks_feebackForm" id="chk_2" value="2"> Compare different visualizations</label><br>
-                    <label for="chk_3"><input type="checkbox" name="chks_feebackForm" id="chk_4" value="3"> Retrieve specific details</label><br>
-                    <label for="chk_4"><input type="checkbox" name="chks_feebackForm" id="chk_5" value="4"> Repeat analysis with new data</label><br>
-
-                </div>
-                <div id="writtenFeedback" style="margin: 5px;">
-                    <h6 style="font-weight: bold;">Notes:</h6>
-                     <textarea name="message" id="feedback_text_popup" cols="40" rows="5" style="width:100%" placeholder="Enter your notes!"autofocus></textarea>
-                </div>
-            </div>
-         
-     
-          </form>
-        </div>
-        <div class="modal-footer"> 
-          <!--   <div style="float: left;">         
-            <label for="chk_hidePopupW"><input type="checkbox" id="chk_hidePopupW" value="1">Don't show this form again.</label><br>
-            </div> -->
-            <div>
-           <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="disablingFeedbackPopup();trace.event('log_16', 'general_feedback_popupForm', 'feedback form hidden', document.location.pathname);">Cancel</button>   
-
-           <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="populateNewBookmark();">Add Bookmark</button>
-        </div>
-        </div>
-      </div>
-      
-    </div>
-  </div>
+                  
+                            <textarea name="message" id="feedback_text" cols="30" rows="10" placeholder="Send us your feedback!"autofocus></textarea>
+                          
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-sm btn-block" onclick="LoggingGeneralFeedback();">
+                          Send it!
+                        </button>
+                      </form>
+                    </div>
+                    <div class="thanks">
+                      Feedback sent! Thank you for helping us!
+                    </div>
+                  </div>
 </body>
-
 </html>

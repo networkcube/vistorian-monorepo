@@ -95,7 +95,7 @@ export function loadTableList() {
             shownName = t.substring(0, 30) + '..';
         $('#tableList').append('<li>\
             <a onclick="showSingleTable(\'' + t + '\')"  class="underlined">' + shownName + '.csv</a>\
-            <img class="controlIcon" title="Delete this table." src="../static/logos/delete.png" onclick="removeTable(\''+ t + '\');trace.event(\'dat_4\',\'data view\',\'selected table\',\'deleted\')"/>\
+            <img class="controlIcon" title="Delete this table." src="../static/logos/delete.png" onclick="deleteCurrentNetworkBookmarks();window.exports.networkcube.dataview.removeTable(\''+ t + '\');trace.event(\'dat_4\',\'data view\',\'selected table\',\'deleted\')"/>\
         </li>')
     })
 }
@@ -111,8 +111,8 @@ export function loadNetworkList() {
         $('#networkList').append('\
             <li>\
                 <a onclick="window.exports.networkcube.dataview.showNetwork(\'' + network.id + '\')"  class="underlined">' + network.name + '</a>\
-                <img class="controlIcon" title="Delete this network." src="../static/logos/delete.png" onclick="removeNetwork(\''+ network.id + '\');trace.event(\'dat_4\',\'data view\',\'selected network\',\'deleted\')"/>\
-                <img class="controlIcon" title="Download this network in .vistorian format." src="../static/logos/download.png" onclick="exportNetwork(\''+ network.id + '\');trace.event(\'dat_7\',\'data view\',\'selected network\',\'downloaded\')"/>\
+                <img class="controlIcon" title="Delete this network." src="../static/logos/delete.png" onclick="window.exports.networkcube.dataview.removeNetwork(\''+ network.id + '\');trace.event(\'dat_4\',\'data view\',\'selected network\',\'deleted\')"/>\
+                <img class="controlIcon" title="Download this network in .vistorian format." src="../static/logos/download.png" onclick="window.exports.networkcube.dataview.exportNetwork(\''+ network.id + '\');trace.event(\'dat_7\',\'data view\',\'selected network\',\'downloaded\')"/>\
             </li>')
     })
 }

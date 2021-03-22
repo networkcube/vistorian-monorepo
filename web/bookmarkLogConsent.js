@@ -456,6 +456,8 @@ function refreshBookmarks(){
     bkFrame=window;
 
   localStorage.setItem("currentPageInFocus",bkFrame.viewType);
+  trace.event('log_17', 'page', 'focus', document.location.pathname);
+
 }
 
 function populateNewBookmark(){
@@ -484,10 +486,10 @@ function populateNewBookmark(){
       }
   }
 }
-  /* if (chosentType.length==0){
+  if (chosentType.length==0){
     alert("You did not specify the type of your bookmark!");
     return;
-  } */
+  }
   //add general feedback
   notesText= window.document.getElementById('feedback_text_popup').value;
 
@@ -497,5 +499,49 @@ function populateNewBookmark(){
 
     resetFeedbackForm();
     
+    trace.event('bkm_11', ' New Bookmark Created', 'Saved', window.parent.location.pathname);
+}
 
+window.onblur=(function(){
+  trace.event('log_18', 'page', 'blur', document.location.pathname);
+
+});
+
+window.addEventListener('beforeunload', (event) => {
+
+  var bkFrame=document.getElementById("myFrame");
+  var bkFrameDoc;
+  if (bkFrame)
+      bkFrameDoc=(bkFrame.contentDocument || bkFrame.contentWindow.document);
+  else
+      bkFrameDoc=document;
+  var statusText=  bkFrameDoc.getElementById('lbl_changesState').innerText;
+
+  if (statusText=="Changes have not been saved yet. Click Save button"){
+    event.returnValue = "Are you sure you want to leave?";
+  }
+});
+
+function deleteCurrentNetworkBookmarks(){
+  if (confirm('Do you want to delete all bookmarks related to the deleted network? ')){
+    var visBookmarks = localStorage.getItem("vistorianBookmarks");
+    var  visBookmarksArray = JSON.parse(visBookmarks);
+    var bkFrame=document.getElementById("myFrame");
+    let networkName;
+    if (bkFrame)
+      networkName=document.getElementById('networknameInput').value;
+    else
+      networkName=window.parent.document.getElementById('networknameInput').value;
+  
+    var i;
+    if (visBookmarks){  
+      for ( i=0;i<visBookmarksArray.length;i++)
+        if ( visBookmarksArray[i].networkDataset==networkName)
+            visBookmarksArray.splice(i,1); 
+          
+      localStorage.setItem("vistorianBookmarks", JSON.stringify(bookmarksArray))
+      refreshBookmarks();
+    }
+  
+  }
 }
