@@ -183,7 +183,7 @@ export function setLocationTable(list: any) {
 
 
 // saves/updates and normalizes current network.
-export function saveCurrentNetwork(failSilently: boolean) {
+export function saveCurrentNetwork(failSilently: boolean,saveButton?:boolean) {
 
     saveCellChanges();
 
@@ -229,11 +229,12 @@ export function saveCurrentNetwork(failSilently: boolean) {
 
         loadTableList();
         storage.saveNetwork(currentNetwork, SESSION_NAME);
-    }
 
+    }
+    if (saveButton)
+        showMessage("Network changes saved successfully", 1500);
 
     loadNetworkList();
-    showMessage("Network Saved Successfully", 2000);
 
 }
 

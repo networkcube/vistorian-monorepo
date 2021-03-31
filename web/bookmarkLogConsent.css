@@ -1,7 +1,7 @@
 #mydiv {
     position: fixed;
     top: 0px;
-    right: 0px;
+    right: 120px;
     align-self: flex-start;
     background-color: #f1f1f1;
     text-align: center;

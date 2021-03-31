@@ -59,12 +59,18 @@ function turnOnLogging(){
     trace.event('log_9', 'start logging', 'webpage', document.location.pathname);
     var bookmarksTool = document.getElementById("mydiv"); 
     bookmarksTool.style.display = "block";
+    if (localStorage.getItem("bookmarkMinimized")==="true")
+      minimizeBookmarks();
+    else
+      maxmizeBookmarks();
+        
     document.getElementById('myModal').style.display = "none";
+
     
 }
 
 function checkLogStatus(){
-    if (Boolean(localStorage.getItem("acceptLogging"))==true){
+    if (localStorage.getItem("acceptLogging")==="true"){
         var checkBox = document.getElementById("consentOnoffswitch");
         checkBox.checked=true;
         turnOnLogging();
@@ -83,6 +89,7 @@ function minimizeBookmarks(){
     document.getElementById("mydiv").style.maxHeight = document.getElementById("mydivheader").scrollHeight +"px";
     bookmarkMinimized=true;
     trace.event('bkm_8', ' bookmark window ', 'minimized', window.parent.location.pathname);
+    localStorage.setItem("bookmarkMinimized","true");
   }
 }
 function maxmizeBookmarks(){
@@ -94,6 +101,8 @@ function maxmizeBookmarks(){
     document.getElementById("myFrame").style.display = "Block";
     bookmarkMinimized=false;
     trace.event('bkm_8', ' bookmark window ', 'maximized', window.parent.location.pathname);
+    localStorage.setItem("bookmarkMinimized","false");
+
 
   }
 
@@ -286,7 +295,7 @@ function LoggingGeneralFeedback(){
   let tempLog=false;
 
   //check if the logging enabled, otherwise turn it temporarlly on for logging feedback
-  if (localStorage.getItem("acceptLogging")==false)
+  if (Boolean(localStorage.getItem("acceptLogging"))==false)
       tempLog=true;
 
   if (tempLog)
@@ -317,7 +326,7 @@ function LoggingFeedback(){
   let tempLog=false;
 
   //check if the logging enabled, otherwise turn it temporarlly on for logging feedback
-  if (localStorage.getItem("acceptLogging")==false)
+  if (Boolean(localStorage.getItem("acceptLogging"))==false)
       tempLog=true;
 
   if (tempLog)
@@ -457,6 +466,7 @@ function refreshBookmarks(){
 
   localStorage.setItem("currentPageInFocus",bkFrame.viewType);
   trace.event('log_17', 'page', 'focus', document.location.pathname);
+  checkLogStatus();
 
 }
 
