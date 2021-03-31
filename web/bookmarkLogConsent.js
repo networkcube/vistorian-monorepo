@@ -64,7 +64,7 @@ function turnOnLogging(){
 }
 
 function checkLogStatus(){
-    if (localStorage.getItem("acceptLogging")==true){
+    if (Boolean(localStorage.getItem("acceptLogging"))==true){
         var checkBox = document.getElementById("consentOnoffswitch");
         checkBox.checked=true;
         turnOnLogging();
