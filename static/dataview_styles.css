@@ -89,13 +89,14 @@ img.controlIcon{
     float:right; 
     margin-left: 10px;
     /*background-color:#E17F3E;*/
-    background-color:#bbb;
+    background-color:gray;
+    font-size:14px;
+    font-weight: bold;
     border-radius:10px;
     border: none;
     display:inline-block;
     cursor:pointer;
     color:#ffffff;
-    font-size:12px;
 }
 
 input#replaceButton{
@@ -110,14 +111,15 @@ input#replaceButton{
 }
 
 .menuButton{
-    background-color:#bbb;
+    background-color:gray;
+    font-size:14px;
+    font-weight: bold;
     border-radius:15px;
     border: none;
     display:inline-block;
     cursor:pointer;
     color:#fff;
-    font-size:12px;
-    font-weight: normal;
+
     padding-top: 0px;
     padding-right: 6px;
     padding-bottom: 0px;
