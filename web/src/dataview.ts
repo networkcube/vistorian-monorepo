@@ -233,6 +233,8 @@ export function saveCurrentNetwork(failSilently: boolean) {
 
 
     loadNetworkList();
+    showMessage("Network Saved Successfully", 2000);
+
 }
 
 export function deleteCurrentNetwork() {

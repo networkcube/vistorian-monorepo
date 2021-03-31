@@ -36,7 +36,7 @@
     </script> 
 </head>
 
-<body onload="trace.event('log', 'start', 'webpage', document.location.pathname);checkLogStatus();dragElement(document.getElementById('mydiv'));" onfocus="refreshBookmarks();" onerror="trace.event('err', event + ' ' + source + lineno, error, document.location.pathname);"  onbeforeunload="trace.event('log_12', 'close', 'webpage', document.location.pathname);">
+<body onload="trace.event('log', 'load', 'webpage', document.location.pathname);checkLogStatus();dragElement(document.getElementById('mydiv'));" onfocus="refreshBookmarks();" onerror="trace.event('err', event + ' ' + source + lineno, error, document.location.pathname);"  onbeforeunload="trace.event('log_12', 'close', 'webpage', document.location.pathname);">
 
     <!-- VS: Call to trace_test_130529 -->
     <script type="text/javascript" src="../static/traces/trace_test_130529.js"></script>
@@ -113,7 +113,7 @@
                     <div id="networkInfoDiv">
                         <h2>Network
                             <input id="saveNetworkButton" class="tableMenuButton" type="button" value="Save Network"
-                                onclick="window.exports.networkcube.dataview.saveCurrentNetwork(false);trace.event('dat_17', 'data view', 'network', 'saved')" />
+                                onclick="window.exports.networkcube.dataview.saveCurrentNetwork(false);alertrace.event('dat_17', 'data view', 'network', 'saved')" />
                             <input id="deleteNetworkButton" class="tableMenuButton" type="button" value="Delete Network"
                                 onclick="deleteCurrentNetworkBookmarks();window.exports.networkcube.dataview.deleteCurrentNetwork();trace.event('dat_6', 'data view', 'network', 'deleted')" />
                         </h2>

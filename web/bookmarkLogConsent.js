@@ -44,7 +44,7 @@ function dragElement(elmnt) {
 }
 
 function turnLoggingOff(){
-    localStorage.setItem("acceptLogging", 'false');
+    localStorage.setItem("acceptLogging", "false");
     trace.event('log_10', 'stop logging', 'webpage', document.location.pathname);
     var checkBox = document.getElementById("consentOnoffswitch");
     checkBox.checked=false;
@@ -55,7 +55,7 @@ function turnLoggingOff(){
 }
 
 function turnOnLogging(){
-    localStorage.setItem("acceptLogging", 'true');
+    localStorage.setItem("acceptLogging", "true");
     trace.event('log_9', 'start logging', 'webpage', document.location.pathname);
     var bookmarksTool = document.getElementById("mydiv"); 
     bookmarksTool.style.display = "block";
@@ -64,7 +64,7 @@ function turnOnLogging(){
 }
 
 function checkLogStatus(){
-    if (localStorage.getItem("acceptLogging")){
+    if (localStorage.getItem("acceptLogging")==true){
         var checkBox = document.getElementById("consentOnoffswitch");
         checkBox.checked=true;
         turnOnLogging();
