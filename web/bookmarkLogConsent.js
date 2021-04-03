@@ -338,7 +338,7 @@ function LoggingFeedback(){
        if (btns[i].style.backgroundColor=="#FF7F50"){
         trace.event('log_14', 'popup feedback - bookmark type', btns[i].value, window.location.pathname);
         //Set analysis type - if selected-
-        if (btns[i].value=="Analyzing Data"){
+        if (btns[i].value=="Analyze Data"){
           let chks=document.getElementsByName('chks_feebackForm');
           for (var i=0;i<chks.length;i++){
             if (chks[i].checked)

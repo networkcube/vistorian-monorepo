@@ -328,7 +328,7 @@
 
                 localStorage.setItem("vistorianBookmarks", JSON.stringify(bookmarksArray));
                 document.getElementById('lbl_changesState').style.backgroundColor="snow";
-                document.getElementById('lbl_changesState').innerText='All changes have been saved';
+                document.getElementById('lbl_changesState').innerText='Changes saved';
             }
             function updatesNotSaved(){
                 document.getElementById('lbl_changesState').innerText="Changes have not been saved yet. Click Save button";
@@ -485,7 +485,10 @@
                 var newTitle=document.createElement("input");
                 newTitle.type="text";
                 newTitle.id="txt_title_"+currentCounterValue;
-                newTitle.placeholder="Update bookmark label here ..";
+                if  (title!="")
+                    newTitle.value=title;
+                else
+                    newTitle.placeholder="Update bookmark label here ..";
                 newTitle.addEventListener('keyup', function() {
                     let userBks = JSON.parse(localStorage.getItem("vistorianBookmarks")) || [];
                     document.getElementById(btn_title.id).innerHTML=this.value;
@@ -534,7 +537,7 @@
                 // Add bookmark type (purpose)
                 var flagTypes=["Review Data Quality","Test a particular hypothesis","Compare different visualizations","Retrieve specific details","Repeat analysis with new data"];
                 var bmTypeLabel=document.createElement("label");
-                bmTypeLabel.innerText="Characterize your current activity: ";
+                bmTypeLabel.innerText="Activity: ";
                 bmTypeLabel.style="font-weight: bold;";
                 newContentDiv.appendChild(bmTypeLabel);
                 
@@ -896,22 +899,22 @@
     <body id="capture" onload="initializeJSON();"  onfocus="refreshBookmarks();"> 
        
         <div id="logbook_container" data-role="page">
-            <div>
+            <div  >
                 <form action="#">
                     <input type="radio" id="allBM" name="bmTypeSelection" value="all" onchange="changeBookmarksView('all');trace.event('bkm_7', ' show all bookmarks (view)', 'selected', window.parent.location.pathname);" checked >
-                    <label for="allBM">Show all bookmarks</label>
+                    <label style="font-weight:normal;" for="allBM">Show all bookmarks</label>
                     <input type="radio" id="specificBM" name="bmTypeSelection" value="specific" onchange="changeBookmarksView(viewType);trace.event('bkm_7', ' show current view bookmarks', 'selected', window.parent.location.pathname);">
-                    <label for="specificBM">Show bookmarks only of current visualization </label><br>
+                    <label style="font-weight:normal;" for="specificBM">Show bookmarks only of current visualization </label><br>
                 </form>
             </div>
             <div>
-                <label id="lbl_changesState" style="background-color:snow;align-items: center;text-align: center;font-weight: bold;"></label>
+                <label id="lbl_changesState" style="background-color:snow;align-items: center;text-align: center;"></label>
                 <br>
             </div>
             <div id="logbook_header"  class="hd_div" >  
                 
                 <!-- AddNewLog(0,'','','','',[],viewType,networkName); without bookmarkpopup pane -->
-                <button  id="addNewBookmark" value="Add New" class="hd_btn"  onclick="showBookmarkPopup();trace.event('bkm_1', ' new bookmark button', 'clicked', window.parent.location.pathname);">Add New</button>
+                <button  id="addNewBookmark" value="Add New" style="border: groove" class="hd_btn"  onclick="showBookmarkPopup();trace.event('bkm_1', ' new bookmark button', 'clicked', window.parent.location.pathname);">Add New</button>
                 <!-- <button  id="btn_save" value="Save" class="hd_btn"  onclick="updateLocalStorage( (JSON.parse(localStorage.getItem('vistorianBookmarks')) || []));trace.event('bkm_2', ' updates/changes', 'saved by user', window.parent.location.pathname);">Save Bookmarks</button> -->
 
           
@@ -919,18 +922,18 @@
             <div id="logs" data-role="main" class="ui-content">
 
             </div>
-            <div>
+            <div >
               
-                <button onclick="location.href='mailto:vistorian@inria.fr?subject=[Vistorian] Consultation Request&body=Hi, kindly I would like to arrange a 10-minutes meeting to consult about my data\'s visualization. Thank you.';trace.event('com_3', window.parent.location.pathname, 'bookmark_tool', 'consult_team');">Email Us & Consult an Expert</button>
-                <button onclick="location.href='mailto:vistorian@inria.fr?subject=[Vistorian] Report Technical Bug &body=Hello,\n I am facing a technical problem and would like to request your help. The description of my problem is :\n';trace.event('com_4', window.parent.location.pathname, 'bookmark_tool', 'ReportTechBug');">Report a Technical Bug</button>
+                <button style="font-weight:normal;"  onclick="location.href='mailto:vistorian@inria.fr?subject=[Vistorian] Consultation Request&body=Hi, kindly I would like to arrange a 10-minutes meeting to consult about my data\'s visualization. Thank you.';trace.event('com_3', window.parent.location.pathname, 'bookmark_tool', 'consult_team');">Email Us & Consult an Expert</button>
+                <button style="font-weight:normal;"  onclick="location.href='mailto:vistorian@inria.fr?subject=[Vistorian] Report Technical Bug &body=Hello,\n I am facing a technical problem and would like to request your help. The description of my problem is :\n';trace.event('com_4', window.parent.location.pathname, 'bookmark_tool', 'ReportTechBug');">Report a Technical Bug</button>
                 <div style="float:right">
-                <button  onclick="exportBookmarks();trace.event('bkm_9', window.parent.location.pathname, 'bookmark_tool', 'Bookmarks File Exported');">Export Bookmarks</button>
+                <button  style="font-weight:normal;"  onclick="exportBookmarks();trace.event('bkm_9', window.parent.location.pathname, 'bookmark_tool', 'Bookmarks File Exported');">Export Bookmarks</button>
             </div>
-            <div style="float:left">
+            <div style="float:left;">
 
-                <button   onclick="importBookmarks();trace.event('bkm_10', window.parent.location.pathname, 'bookmark_tool', 'Bookmarks File Imported');">Import Bookmarks</button>
+                <button  style="font-weight:normal;"   onclick="importBookmarks();trace.event('bkm_10', window.parent.location.pathname, 'bookmark_tool', 'Bookmarks File Imported');">Import Bookmarks</button>
             </div>
-                <button onclick="toggleMySessionID()">Show/Hide My Session ID</button>
+                <button style="font-weight:normal;"  onclick="toggleMySessionID()">Show/Hide My Session ID</button>
                 <label id="loggingSessionID" style="align-items: center;text-align: center;; border-style:outset;padding: 5px;"></label>
             </div>
 
