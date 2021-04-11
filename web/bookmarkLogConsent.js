@@ -72,7 +72,8 @@ function turnOnLogging(){
 function checkLogStatus(){
     if (localStorage.getItem("acceptLogging")==="true"){
         var checkBox = document.getElementById("consentOnoffswitch");
-        checkBox.checked=true;
+        if (checkBox)
+          checkBox.checked=true;
         turnOnLogging();
     }
 }
@@ -408,7 +409,7 @@ function refreshBookmarks(){
   var visBookmarks = localStorage.getItem("vistorianBookmarks");
   var  visBookmarksArray = JSON.parse(visBookmarks);
   var i,id;
-  if (visBookmarks){
+  if (visBookmarks && bkFrame){
 
  // if (typeof visBookmarksArray !== "undefined" && visBookmarksArray!==null && visBookmarksArray.length!=0){
           for ( i=0;i<visBookmarksArray.length;i++){

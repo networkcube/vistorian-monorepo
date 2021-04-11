@@ -1078,14 +1078,14 @@ export function updateEntryToLocationTableOSM(index: number, geoname: string, lo
             data: {format: "json", limit: "1", q: geoname.split(',')[0].trim()},
             dataType: 'json'
         })
-            .done(function (data: any, text: any, XMLHttpRequest: any) {
-                var entry: any;
-                var length: any;
-                var rowIndex: number = XMLHttpRequest.uniqueId + 1;
-                var userLocationLabel: any = locationTable.data[rowIndex][locationSchema.label];
+            .done(function (data, text, XMLHttpRequest) {
+                var entry;
+                var length;
+                var rowIndex = XMLHttpRequest.uniqueId + 1;
+                var userLocationLabel = locationTable.data[rowIndex][locationSchema.label];
                 if (data.length != 0) {
-                    var validResults: any[] = [];
-                    var result: any;
+                    var validResults = [];
+                    var result;
                     for (var i = 0; i < data.length; i++) {
                         entry = data[i];
                         if (entry == undefined)
@@ -1112,8 +1112,6 @@ export function updateEntryToLocationTableOSM(index: number, geoname: string, lo
                 requestsRunning--;
             });
         xhr['uniqueId'] = requestsRunning++;
-    }else{
-        requestsRunning++;
     }
 }
 

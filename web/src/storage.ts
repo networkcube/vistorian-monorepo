@@ -14,7 +14,9 @@ var SEP: string = "#";
 
 // SESSION
 export function saveSessionId(sessionid: string) {
-    $.jStorage.set("vistorian.lastSessionId", sessionid);
+    if (sessionid)
+        $.jStorage.set("vistorian.lastSessionId", sessionid);
+  
 }
 
 export function getLastSessionId(): string {
