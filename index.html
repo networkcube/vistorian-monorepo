@@ -313,9 +313,9 @@
                 $('#resumeSessionLink').attr('href', './web/dataview.html?session=' + PREVIOUS_SESSION);
                 $('#resumeSessionLink2').attr('href', './web/dataview.html?session=' + PREVIOUS_SESSION);
                 $('#resumeSessionLink3').attr('href', './web/dataview.html?session=' + PREVIOUS_SESSION);
-
+                /home/mashaelalkadi/Documents/vistorian/n
                 // Load demo data
-                $.get("https://raw.githubusercontent.com/networkcube/vistorian/master/demo/demo_scientists.vistorian",
+                $.get("https://vistorian.online/web/demo/demo_scientists.vistorian",
                     function (data) {
                         window.exports.networkcube.vistorian.importData(JSON.parse(data), 0);
                         window.exports.networkcube.vistorian.importIntoNetworkcube(JSON.parse(data), 0)
