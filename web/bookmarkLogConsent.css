@@ -187,7 +187,7 @@ body {
   margin-bottom: 2px;
 }
 
-.feedbackMenuButton, .menuButtonGadget {
+.feedbackMenuButton, .menuButtonGadget,.timeoutFeedbackMenuButton {
   background-color: #bbb;
   border-radius: 15px;
   border: none;

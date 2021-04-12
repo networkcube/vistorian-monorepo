@@ -58,13 +58,15 @@ function turnOnLogging(){
     localStorage.setItem("acceptLogging", "true");
     trace.event('log_9', 'start logging', 'webpage', document.location.pathname);
     var bookmarksTool = document.getElementById("mydiv"); 
-    bookmarksTool.style.display = "block";
+    if (bookmarksTool)
+      bookmarksTool.style.display = "block";
     if (localStorage.getItem("bookmarkMinimized")==="true")
       minimizeBookmarks();
     else
       maxmizeBookmarks();
-        
-    document.getElementById('myModal').style.display = "none";
+    var mdl=document.getElementById('myModal');
+    if (mdl)    
+      mdl.style.display = "none";
 
     
 }
@@ -227,10 +229,10 @@ function inactiveUserAction() {
     if (urlTxt=="logbook" || urlTxt=="dataview" || urlTxt!=localStorage.getItem("currentPageInFocus"))
         return;
     var popupElement;
-    if (!window.document.getElementById("popupFeedbackForm"))
-      popupElement=window.parent.document.getElementById("popupFeedbackForm");
+    if (!window.document.getElementById("timeoutPopupForm"))
+      popupElement=window.parent.document.getElementById("timeoutPopupForm");
     else 
-      popupElement=window.document.getElementById("popupFeedbackForm");
+      popupElement=window.document.getElementById("timeoutPopupForm");
 
 
     popupElement.setAttribute("style","display:block");
@@ -272,8 +274,8 @@ function disablingFeedbackPopup(){
   resetFeedbackForm();
 }
 
-function displaySubOptions(clickedButton){
-  let btns=document.getElementsByClassName('feedbackMenuButton');
+function displaySubOptions(clickedButton,classNameUsed,chksDiv,OtherDiv){
+  let btns=document.getElementsByClassName(classNameUsed);
    for (var i=0;i<btns.length;i++){
       if (clickedButton.value==btns[i].value)
           clickedButton.style.backgroundColor= "#FF7F50";                     
@@ -281,13 +283,13 @@ function displaySubOptions(clickedButton){
           btns[i].style.backgroundColor= "#bbb"; 
   }
   if (clickedButton.value=="Analyze Data")
-      document.getElementById("checkboxes_group_div").style.display="inline-block";
+      document.getElementById(chksDiv).style.display="inline-block";
   else
-      document.getElementById("checkboxes_group_div").style.display="none";
+      document.getElementById(chksDiv).style.display="none";
   if (clickedButton.value=="Other")
-      document.getElementById("OtherType_div").style.display="inline-block";
+      document.getElementById(OtherDiv).style.display="inline-block";
   else
-      document.getElementById("OtherType_div").style.display="none"; 
+      document.getElementById(OtherDiv).style.display="none"; 
 }
 
 
@@ -337,10 +339,10 @@ function LoggingFeedback(){
     for (var i=0;i<btns.length;i++){
       //Set main type of usage
        if (btns[i].style.backgroundColor=="#FF7F50"){
-        trace.event('log_14', 'popup feedback - bookmark type', btns[i].value, window.location.pathname);
+        trace.event('log_14', 'timeout popup feedback - bookmark type', btns[i].value, window.location.pathname);
         //Set analysis type - if selected-
         if (btns[i].value=="Analyze Data"){
-          let chks=document.getElementsByName('chks_feebackForm');
+          let chks=document.getElementsByName('chks_timeoutFeebackForm');
           for (var i=0;i<chks.length;i++){
             if (chks[i].checked)
                 trace.event('bkm_6', ' bookmark analysis type selected', chks[i].value, window.location.pathname);
@@ -349,10 +351,10 @@ function LoggingFeedback(){
         
         //check if type was other
         if (btns[i].value=="Other")
-          trace.event('bkm_3', ' bookmark type specified', 'Other: ' + document.getElementById('txt_other').value, window.location.pathname);
+          trace.event('bkm_3', ' bookmark type specified', 'Other: ' + document.getElementById('txt_other_timeout').value, window.location.pathname);
        }
-        //add general feedback
-        trace.event('log_15', 'feedback_popup', document.getElementById('feedback_text_popup').value, document.location.pathname);
+        //No general feedback
+       // trace.event('log_15', 'feedback_popup', document.getElementById('feedback_text_popup').value, document.location.pathname);
       }
 
 
@@ -378,6 +380,23 @@ function resetFeedbackForm(){
   document.getElementById("OtherType_div").style.display="none"; 
 
   document.getElementById('popupFeedbackForm').style.display="none";
+  
+}
+
+function resetTimeOutFeedbackForm(){
+  let btns=document.getElementsByClassName('timeoutFeedbackMenuButton');
+  for (var i=0;i<btns.length;i++)
+    btns[i].style.backgroundColor="#bbb";
+  
+  let chks=document.getElementsByName('chks_timeoutFeebackForm');
+      for (var i=0;i<chks.length;i++)
+        chks[i].checked=false;
+
+  document.getElementById("timeoutCheckboxes_group_div").style.display="none";
+  document.getElementById("txt_other_timeout").value="";
+  document.getElementById("timeoutOtherType_div").style.display="none"; 
+
+  document.getElementById('timeoutPopupForm').style.display="none";
   
 }
 

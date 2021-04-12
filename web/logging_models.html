@@ -172,15 +172,15 @@
                 <h6 style="font-weight: bold;padding:0px; margin:0px;">Characterize your current activity:</h6>
                 <div style="font-style: italic;">(*Only bookmarks types are shared with VistorianLab*)</div>
                 
-                <input type="button" class="feedbackMenuButton" style="margin: 2px;" id="btn_AnalyzeData" value="Analyze Data" onclick="displaySubOptions(this);">
-                <input type="button" class="feedbackMenuButton" style="margin: 2px;" id="btn_Learn" value="Learn" onclick="displaySubOptions(this);">
-                <input type="button" class="feedbackMenuButton" style="margin: 2px;" id="btn_DemotoOthers" value="Demo to others" onclick="displaySubOptions(this);">
-                <input type="button" class="feedbackMenuButton" style="margin: 2px;" id="btn_exploreVis" value="Test & Explore Vistorian" onclick="displaySubOptions(this);">
-                <input type="button" class="feedbackMenuButton" style="margin: 2px;" id="btn_disscussFindings" value="Discuss Findings" onclick="displaySubOptions(this);">
-                <input type="button" class="feedbackMenuButton" style="margin: 2px;" id="btn_ReportIssue" value="Report an Issue" onclick="displaySubOptions(this);">
-<!--                 <input type="button" class="feedbackMenuButton" style="margin: 2px;" id="btn_AskForHelp" value="Asking for help" onclick="displaySubOptions(this);">
-                <input type="button" class="feedbackMenuButton" style="margin: 2px;" id="btn_eurekaMoment" value="Eureka!" onclick="displaySubOptions(this);">
- -->                <input type="button" class="feedbackMenuButton" style="margin: 2px;" id="btn_other" value="Other" onclick="displaySubOptions(this);">
+                <input type="button" class="feedbackMenuButton" style="margin: 2px;" id="btn_AnalyzeData" value="Analyze Data" onclick="displaySubOptions(this,'feedbackMenuButton','checkboxes_group_div','OtherType_div');">
+                <input type="button" class="feedbackMenuButton" style="margin: 2px;" id="btn_Learn" value="Learn" onclick="displaySubOptions(this,'feedbackMenuButton','checkboxes_group_div','OtherType_div');">
+                <input type="button" class="feedbackMenuButton" style="margin: 2px;" id="btn_DemotoOthers" value="Demo to others" onclick="displaySubOptions(this,'feedbackMenuButton','checkboxes_group_div','OtherType_div');">
+                <input type="button" class="feedbackMenuButton" style="margin: 2px;" id="btn_exploreVis" value="Test & Explore Vistorian" onclick="displaySubOptions(this,'feedbackMenuButton','checkboxes_group_div','OtherType_div');">
+                <input type="button" class="feedbackMenuButton" style="margin: 2px;" id="btn_disscussFindings" value="Discuss Findings" onclick="displaySubOptions(this,'feedbackMenuButton','checkboxes_group_div','OtherType_div');">
+                <input type="button" class="feedbackMenuButton" style="margin: 2px;" id="btn_ReportIssue" value="Report an Issue" onclick="displaySubOptions(this,'feedbackMenuButton','checkboxes_group_div','OtherType_div');">
+<!--                 <input type="button" class="feedbackMenuButton" style="margin: 2px;" id="btn_AskForHelp" value="Asking for help" onclick="displaySubOptions(this,'feedbackMenuButton','checkboxes_group_div','OtherType_div');">
+                <input type="button" class="feedbackMenuButton" style="margin: 2px;" id="btn_eurekaMoment" value="Eureka!" onclick="displaySubOptions(this,'feedbackMenuButton','checkboxes_group_div','OtherType_div');">
+ -->                <input type="button" class="feedbackMenuButton" style="margin: 2px;" id="btn_other" value="Other" onclick="displaySubOptions(this,'feedbackMenuButton','checkboxes_group_div','OtherType_div');">
                 <br/>
                 <div id="OtherType_div" style="display: none; align-items: center;margin: 10px;">
                     <strong>Specify other usage: </strong> <input type="tex" id="txt_other" cols="60" placeholder="Describe other type here .. Please don't add personal information";>
@@ -217,5 +217,64 @@
     </div>
   </div>
   
+
+ <!-- Feedback Modal -->
+ <div class="modal fade show" id="timeoutPopupForm" >
+  <div class="modal-dialog modal-dialog-scrollable">
+  
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+          <h5 class="modal-title" style="color:orange">Are you still there? </h5>
+        <button type="button" class="close" data-dismiss="modal" onclick="resetTimeOutFeedbackForm();trace.event('log_15', 'timeout feedback form', 'closed', document.location.pathname);">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form style="font-size: 14px;" id="timeoutFeedbackFormElements">
+          <div style="margin: 5px;">
+
+              <h6 style="font-weight: bold;padding:0px; margin:0px;">Characterize your current activity:</h6>              
+              <input type="button" class="timeoutFeedbackMenuButton" style="margin: 2px;" id="btn_AnalyzeData_timeout" value="Analyze Data" onclick="displaySubOptions(this,'timeoutFeedbackMenuButton','timeoutCheckboxes_group_div','timeoutOtherType_div');">
+              <input type="button" class="timeoutFeedbackMenuButton" style="margin: 2px;" id="btn_Learn_timeout" value="Learn" onclick="displaySubOptions(this,'timeoutFeedbackMenuButton','timeoutCheckboxes_group_div','timeoutOtherType_div');">
+              <input type="button" class="timeoutFeedbackMenuButton" style="margin: 2px;" id="btn_exploreVis_timeout" value="Test & Explore Vistorian" onclick="displaySubOptions(this,'timeoutFeedbackMenuButton','timeoutCheckboxes_group_div','timeoutOtherType_div');">
+              <input type="button" class="timeoutFeedbackMenuButton" style="margin: 2px;" id="btn_disscussFindings_timeout" value="Discuss Findings" onclick="displaySubOptions(this,'timeoutFeedbackMenuButton','timeoutCheckboxes_group_div','timeoutOtherType_div');">
+              <input type="button" class="timeoutFeedbackMenuButton" style="margin: 2px;" id="btn_ReportIssue_timeout" value="Report an Issue" onclick="displaySubOptions(this,'timeoutFeedbackMenuButton','timeoutCheckboxes_group_div','timeoutOtherType_div');">
+<!--                 <input type="button" class="timeoutFeedbackMenuButton" style="margin: 2px;" id="btn_AskForHelp" value="Asking for help" onclick="displaySubOptions(this,'timeoutFeedbackMenuButton','timeoutCheckboxes_group_div','timeoutOtherType_div');">
+              <input type="button" class="timeoutFeedbackMenuButton" style="margin: 2px;" id="btn_eurekaMoment" value="Eureka!" onclick="displaySubOptions(this,'timeoutFeedbackMenuButton','timeoutCheckboxes_group_div','timeoutOtherType_div');">
+-->                <input type="button" class="timeoutFeedbackMenuButton" style="margin: 2px;" id="btn_other_timeout" value="Other" onclick="displaySubOptions(this,'timeoutFeedbackMenuButton','timeoutCheckboxes_group_div','timeoutOtherType_div');">
+              <br/>
+              <div id="timeoutOtherType_div" style="display: none; align-items: center;margin: 10px;">
+                  <strong>Specify other usage: </strong> <input type="tex" id="txt_other_timeout" cols="60" placeholder="Describe other type here .. Please don't add personal information";>
+              </div>
+              <br/>
+              <div id="timeoutCheckboxes_group_div" style="display: none; align-items: center;margin: 10px;">
+                  <h6 style="font-weight: bold;font-style: italic;"><u> What kind of analysis are you performing?</u></h6>
+
+                  <label for="chk_0"><input type="checkbox" name="chks_timeoutFeebackForm" id="chk_0_to" value="0"> Review Data Quality</label><br>
+                  <label for="chk_1"><input type="checkbox" name="chks_timeoutFeebackForm" id="chk_1_to" value="1"> Test a particular hypothesis</label><br>
+                  <label for="chk_2"><input type="checkbox" name="chks_timeoutFeebackForm" id="chk_2_to" value="2"> Compare different visualizations</label><br>
+                  <label for="chk_3"><input type="checkbox" name="chks_timeoutFeebackForm" id="chk_4_to" value="3"> Retrieve specific details</label><br>
+                  <label for="chk_4"><input type="checkbox" name="chks_timeoutFeebackForm" id="chk_5_to" value="4"> Repeat analysis with new data</label><br>
+
+              </div>
+              
+          </div>
+       
+   
+        </form>
+      </div>
+      <div class="modal-footer"> 
+        <!--   <div style="float: left;">         
+          <label for="chk_hidePopupW"><input type="checkbox" id="chk_hidePopupW" value="1">Don't show this form again.</label><br>
+          </div> -->
+          <div>
+         <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="resetTimeOutFeedbackForm();trace.event('log_16', 'Timeout Popup Form', 'Canceled', document.location.pathname);">Cancel</button>   
+
+         <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="LoggingFeedback();">Continue using The Vistorian</button>
+      </div>
+      </div>
+    </div>
+    
+  </div>
+</div>
     </body>
 </html>
