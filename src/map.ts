@@ -1260,7 +1260,8 @@ function getTextWidth(s: string) {
 $(document).ready(function () { init(); })
 
 function setStateHandler(m: messenger.SetStateMessage){
-    
+    if (m.viewType=="map"){
+
     var state: messenger.MapControls = m.state as messenger.MapControls;    
     // unpack / query that state object
 
@@ -1278,7 +1279,7 @@ function setStateHandler(m: messenger.SetStateMessage){
 
     // set time (start/end)
     messenger.timeRange(state.timeSliderStart, state.timeSliderEnd, times[0], true);
-
+    }
 
 }
 
@@ -1286,7 +1287,18 @@ function getStateHandler( m: messenger.GetStateMessage){
     if (m.viewType=="map"){
 
         var mapNetwork: messenger.NetworkControls=new messenger.MapControls("map",time_start.unixTime(),time_end.unixTime(),OVERLAP_FRACTION,INNER_OPACITY,NODE_UNPOSITIONED_OPACITY);
-        messenger.stateCreated(mapNetwork,m.bookmarkIndex,m.viewType,m.isNewBookmark);
+      /*   var bookmarksArray=JSON.parse(localStorage.getItem("vistorianBookmarks") || "[]");
+
+      if (m.bookmarkIndex!=bookmarksArray.length-1){
+          bookmarksArray[m.bookmarkIndex].controlsValues[3]=mapNetwork;
+      }
+      else{
+          bookmarksArray[m.bookmarkIndex].controlsValues.push(mapNetwork);
+        
+      }
+      localStorage.setItem("vistorianBookmarks", JSON.stringify(bookmarksArray)) */
+  
+    messenger.stateCreated(mapNetwork,m.bookmarkIndex,m.viewType,m.isNewBookmark,m.typeOfMultiView);
 }
 
 }
