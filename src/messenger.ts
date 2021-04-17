@@ -1,6 +1,6 @@
 import { makeIdCompound, sortByPriority, ElementCompound } from './utils'
 import { Selection } from './datamanager'
-import { Time, DynamicGraph, dgraphReplacer, dgraphReviver, IDCompound } from './dynamicgraph'
+import { Time, DynamicGraph, dgraphReplacer, dgraphReviver, IDCompound, copyTimeseriesPropsShallow } from './dynamicgraph'
 import { getDynamicGraph } from './main'
 import { searchForTerm } from './search'
 
@@ -446,17 +446,18 @@ export class MapControls extends NetworkControls{
 
 export class SetStateMessage extends Message {
     state: NetworkControls; // this is the state with all the parameters to set the view to. 
-
-    constructor(state: NetworkControls) {
+    viewType: string;
+    constructor(state: NetworkControls,viewType: string) {
         super(MESSAGE_SET_STATE);
         this.state = state;
+        this.viewType=viewType;
     }
 }
 
-export function setState(state: NetworkControls) {
+export function setState(state: NetworkControls,viewType:string) {
     // is called from anywhere in vistorian by calling 
     // window.vc.messenger.setState(myState);
-    distributeMessage(new SetStateMessage(state), true);
+    distributeMessage(new SetStateMessage(state,viewType), true);
 }
 
 // GET STATE MESSAGE
@@ -466,19 +467,21 @@ export class GetStateMessage extends Message {
     bookmarkIndex: number;
     viewType: string;
     isNewBookmark:boolean;
-    constructor(bookmarkIndex: number,viewType: string,isNewBookmark:boolean){
+    typeOfMultiView: string;
+    constructor(bookmarkIndex: number,viewType: string,isNewBookmark:boolean,typeOfMultiView: string){
         super(MESSAGE_GET_STATE);
         this.bookmarkIndex=bookmarkIndex;
         this.viewType=viewType;
         this.isNewBookmark=isNewBookmark;
+        this.typeOfMultiView=typeOfMultiView;
     } 
 }
 
-export function getState(bookmarkIndex: number,viewType:string,isNewBookmark:boolean){
+export function getState(bookmarkIndex: number,viewType:string,isNewBookmark:boolean,typeOfMultiView: string){
     // is called from anywhere in vistorian by calling 
     // window.vc.messenger.getState(bookmarkIndex);
 
-   distributeMessage(new GetStateMessage(bookmarkIndex,viewType,isNewBookmark), true);
+   distributeMessage(new GetStateMessage(bookmarkIndex,viewType,isNewBookmark,typeOfMultiView), true);
 }
 
 
@@ -487,19 +490,21 @@ export class StateCreatedMessage extends Message{
     bookmarkIndex: number;
     viewType: string;
     isNewBookmark:boolean;
-    constructor(state: NetworkControls,bookmarkIndex: number,viewType: string,isNewBookmark:boolean) {
+    typeOfMultiView: string;
+    constructor(state: NetworkControls,bookmarkIndex: number,viewType: string,isNewBookmark:boolean,typeOfMultiView: string) {
         super(MESSAGE_STATE_CREATED)
         this.state = state;
         this.bookmarkIndex=bookmarkIndex;
         this.viewType=viewType;
         this.isNewBookmark=isNewBookmark;
+        this.typeOfMultiView=typeOfMultiView;
     }
 }
 
-export function stateCreated(state: NetworkControls,bookmarkIndex: number,viewType: string,isNewBookmark:boolean){
+export function stateCreated(state: NetworkControls,bookmarkIndex: number,viewType: string,isNewBookmark:boolean,typeOfMultiView: string){
     // State created : to set the state after getting it from the selected network
 
-    distributeMessage(new StateCreatedMessage(state,bookmarkIndex,viewType,isNewBookmark), true);
+    distributeMessage(new StateCreatedMessage(state,bookmarkIndex,viewType,isNewBookmark,typeOfMultiView), true);
 }
 
 ////////////////////////
