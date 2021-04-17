@@ -518,7 +518,8 @@ function mouseOutNode(n: any) {
 
 
 function setStateHandler(m: messenger.SetStateMessage){
-    
+    if (m.viewType=="nodelink" ){
+
     var state: messenger.NodeLinkControls = m.state as messenger.NodeLinkControls;    
     // unpack / query that state object
     // e.g., var params = state.params.
@@ -564,7 +565,7 @@ function setStateHandler(m: messenger.SetStateMessage){
 
     updateLayout();
     // svg.attr("transform", "translate(" + (panOffsetGlobal[0] + panOffsetLocal[0]) + ',' + (panOffsetGlobal[1] + panOffsetLocal[1]) + ")");
-
+    }
 
 }
 
@@ -574,25 +575,28 @@ function getStateHandler( m: messenger.GetStateMessage){
     if (m.viewType=="nodelink" ){
         var nlNetwor: messenger.NetworkControls;
         nlNetwor=new messenger.NodeLinkControls("nodelink",time_start.unixTime(),time_end.unixTime(),globalZoom,panOffsetLocal,panOffsetGlobal,LINK_OPACITY,NODE_OPACITY,NODE_SIZE,LINK_GAP,LINK_WIDTH,LABELING_STRATEGY);
-      //  var states=JSON.parse(localStorage.getItem("currentCapturedStates") || "[]" ) ;
-    //    states.push(nlNetwor);
-       /*  if (m.bookmarkIndex>-1){
-            var bookmarksArray=JSON.parse(localStorage.getItem("vistorianBookmarks") || "[]");
+        messenger.stateCreated(nlNetwor,m.bookmarkIndex,m.viewType,m.isNewBookmark,m.typeOfMultiView);
+
+        //  var states=JSON.parse(localStorage.getItem("currentCapturedStates") || "[]" ) ;
+        //    states.push(nlNetwor);
+  /*       var bookmarksArray=JSON.parse(localStorage.getItem("vistorianBookmarks") || "[]");
+
+        if (m.bookmarkIndex!=bookmarksArray.length-1){
             bookmarksArray[m.bookmarkIndex].controlsValues[0]=nlNetwor;
-            localStorage.setItem("vistorianBookmarks", JSON.stringify(bookmarksArray))
+//            localStorage.setItem("vistorianBookmarks", JSON.stringify(bookmarksArray))
         }
         else{
-           states.push(nlNetwor); 
-           localStorage.setItem("currentCapturedStates", JSON.stringify(states));
+            bookmarksArray[m.bookmarkIndex].controlsValues.push(nlNetwor);
+           //states.push(nlNetwor); 
+           //localStorage.setItem("currentCapturedStates", JSON.stringify(states));
     
-       // localStorage.setItem("currentCapturedStates", JSON.stringify(nlNetwor));
-    }
-        messenger.stateCreated(nlNetwor,m.bookmarkIndex);
-    
-    } */
+        // localStorage.setItem("currentCapturedStates", JSON.stringify(nlNetwor));
+        }
+        //messenger.stateCreated(nlNetwor,m.bookmarkIndex);
+        localStorage.setItem("vistorianBookmarks", JSON.stringify(bookmarksArray))
+     */
  //   var isNew=(m.bookmarkIndex<0?true:false);
  //   localStorage.setItem("currentCapturedStates", JSON.stringify(nlNetwor));
-    messenger.stateCreated(nlNetwor,m.bookmarkIndex,m.viewType,m.isNewBookmark);
    // messenger.stateCreated(nlNetwor,m.bookmarkIndex,m.viewType,isNew);
 
     }
