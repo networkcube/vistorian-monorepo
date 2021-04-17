@@ -565,7 +565,8 @@ export function showEgoNetwork(n: dynamicgraph.Node) {
 }
 
 function setStateHandler(m: messenger.SetStateMessage){
-    
+    if (m.viewType=="dynamicego"){
+
     var state: messenger.TimeArchsControls = m.state as messenger.TimeArchsControls;    
     // unpack / query that state object
 
@@ -583,7 +584,7 @@ function setStateHandler(m: messenger.SetStateMessage){
     webgl.camera.position.x=state.camera_position_x ;
     webgl.camera.position.y=state.camera_position_y  ;
     webgl.camera.position.z=state.camera_position_z  ; */
- 
+    }
 }
 
 function getStateHandler( m: messenger.GetStateMessage){
@@ -594,7 +595,17 @@ function getStateHandler( m: messenger.GetStateMessage){
         var camera_position_z=webgl.camera.position.z; */
         var dyEgoNetwork: messenger.NetworkControls=new messenger.TimeArchsControls("dynamicego",startUnix,endUnix,LABEL_ORDER);
         //,webglState,camera_position_x,camera_position_y,camera_position_z);
-        messenger.stateCreated(dyEgoNetwork,m.bookmarkIndex,m.viewType,m.isNewBookmark);
+/*         var bookmarksArray=JSON.parse(localStorage.getItem("vistorianBookmarks") || "[]");
+
+        if (m.bookmarkIndex!=bookmarksArray.length-1){
+            bookmarksArray[m.bookmarkIndex].controlsValues[2]=dyEgoNetwork;
+        }
+        else{
+            bookmarksArray[m.bookmarkIndex].controlsValues.push(dyEgoNetwork);
+          
+        }
+        localStorage.setItem("vistorianBookmarks", JSON.stringify(bookmarksArray)) */
+       messenger.stateCreated(dyEgoNetwork,m.bookmarkIndex,m.viewType,m.isNewBookmark,m.typeOfMultiView);
 
     }
 
