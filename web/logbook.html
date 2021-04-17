@@ -44,37 +44,47 @@
 
             window.vc.messenger.addEventListener("STATE_CREATED",stateCreatedHandler);
 
+            // Stores the captured state in the array of bookmarks
             function stateCreatedHandler(m){
 
                 let bookmarksArray=JSON.parse(localStorage.getItem("vistorianBookmarks") || "[]");
-                if (m.isNewBookmark){
+                if (Boolean(m.isNewBookmark)){
                 
                         bookmarksArray[bookmarksArray.length-1].controlsValues.push(m.state);
                 }
                 else{   
-                    if (m.viewType==bookmarksArray[m.bookmarkIndex].viewType || m.viewType=="nodelink")
+                    if (m.state.networkType==bookmarksArray[m.bookmarkIndex].viewType || m.state.networkType=="nodelink")
                         bookmarksArray[m.bookmarkIndex].controlsValues[0]=m.state;
                     else 
-                        if  (m.viewType=="matrix") 
+                        if  (m.state.networkType=="matrix") //                        if  (m.viewType=="matrix") 
+
                             bookmarksArray[m.bookmarkIndex].controlsValues[1]=m.state;
 
                         else 
-                            if( m.viewType=="dynamicego") 
+                            if( m.state.networkType=="dynamicego") 
                                 bookmarksArray[m.bookmarkIndex].controlsValues[2]=m.state;
 
                             else 
-                                if( m.viewType=="map") 
+                                if( m.state.networkType=="map") 
                                     bookmarksArray[m.bookmarkIndex].controlsValues[3]=m.state;
 
                 }
                 
                 localStorage.setItem("vistorianBookmarks", JSON.stringify(bookmarksArray))
 
+                if ((m.typeOfMultiView=="mat-nl" || m.typeOfMultiView=="tileview") && m.state.networkType=="nodelink" )
+                    window.vc.messenger.getState(m.bookmarkIndex,"matrix",m.isNewBookmark,m.typeOfMultiView);
+                else  if (m.typeOfMultiView=="tileview" && m.state.networkType=="matrix" )
+                    window.vc.messenger.getState(m.bookmarkIndex,"dynamicego",m.isNewBookmark,m.typeOfMultiView);
+                else  if (m.typeOfMultiView=="tileview" && m.state.networkType=="dynamicego" )
+                    window.vc.messenger.getState(m.bookmarkIndex,"map",m.isNewBookmark,m.typeOfMultiView);
+
+
 
             }
 
             class Bookmark{
-                constructor(id,createdOn,title,viewType,networkDataset,controlsValues){
+                constructor(id,createdOn,title,viewType,networkDataset,controlsValues,visControls){
                     this.id=id;
                     this.createdOn=createdOn;
                     this.title=title;
@@ -84,6 +94,7 @@
                     this.viewType=viewType;
                     this.networkDataset=networkDataset;
                     this.controlsValues=controlsValues;
+                    this.visNetworkControl=visControls;
                 }
                
                 updateBookmark(title,note,type){
@@ -366,6 +377,89 @@
 
 
             }
+            function captureControlsValues(){
+                                //Create/Update an object to hold the controls' values of the network
+                var visIframe=window.parent.document.getElementsByTagName("iframe")[1];
+                visControls=[];
+                if (viewType== "nodelink" || viewType== "mat-nl" || viewType== "tileview"){
+                    let startTime=visIframe.contentWindow.document.getElementById("sliderKnobMin").getAttribute('cx');
+                    let endTime=visIframe.contentWindow.document.getElementById('sliderKnobMax').getAttribute('cx');
+                    let cntrls=visIframe.contentWindow.document.getElementsByTagName('circle');
+                    let linkOpacity=cntrls[0].getAttribute('cx');
+                    let nodeOpacity=cntrls[1].getAttribute('cx');
+                    let nodeSize=cntrls[2].getAttribute('cx');
+                    let edgeGap=cntrls[3].getAttribute('cx');
+                    let linkWidth=cntrls[4].getAttribute('cx');
+                    let labellingType=visIframe.contentWindow.document.getElementById('selection-input_Labeling').selectedIndex;
+                    visControls.push(new  nodeLinkControls(viewType,startTime,endTime,linkOpacity,nodeOpacity,nodeSize,edgeGap,linkWidth,labellingType));
+                }
+                if (viewType== "matrix" || viewType== "mat-nl" || viewType== "tileview"){
+                    if (viewType== "mat-nl" || viewType== "tileview")
+                        visIframe=window.parent.document.getElementsByTagName("iframe")[2];
+                    let matrixStartTime=visIframe.contentWindow.document.getElementById("sliderKnobMin").getAttribute('cx');
+                    let matrixEndTime=visIframe.contentWindow.document.getElementById('sliderKnobMax').getAttribute('cx');
+                    let matrixZoomVal=visIframe.contentWindow.document.getElementById('cellSizeBox').value;
+                    let matrixLabellingType=visIframe.contentWindow.document.getElementById('labelOrdering').selectedIndex;
+                    visControls.push(new  matrixControls(viewType,matrixStartTime,matrixEndTime,matrixZoomVal,matrixLabellingType));
+                }
+                if (viewType== "dynamicego" || viewType== "tileview"){
+                    if ( viewType== "tileview")
+                        visIframe=window.parent.document.getElementsByTagName("iframe")[3];
+                    let dyStartTime=visIframe.contentWindow.document.getElementById("sliderKnobMin").getAttribute('cx');
+                    let dyEndTime=visIframe.contentWindow.document.getElementById('sliderKnobMax').getAttribute('cx');
+                    let dyLabellingType=visIframe.contentWindow.document.getElementById('labelOrdering').selectedIndex;
+                    visControls.push(new  timeArchsControls(viewType,dyStartTime,dyEndTime,dyLabellingType));
+                }
+                if (viewType== "map" || viewType== "tileview"){
+                    if ( viewType== "tileview")
+                        visIframe=window.parent.document.getElementsByTagName("iframe")[4];
+                    let mapStartTime=visIframe.contentWindow.document.getElementById("sliderKnobMin").getAttribute('cx');
+                    let mapEndTime=visIframe.contentWindow.document.getElementById('sliderKnobMax').getAttribute('cx');
+                    let mapCntrls=visIframe.contentWindow.document.getElementsByTagName('circle');
+                    let mapNodeOverlap=mapCntrls[0].getAttribute('cx');
+                    let mapLinkOpacity=mapCntrls[1].getAttribute('cx');
+                    let mapOpacityOfPositionlessNodes=mapCntrls[2].getAttribute('cx');
+                    visControls.push(new  mapControls(viewType,mapStartTime,mapEndTime,mapNodeOverlap,mapLinkOpacity,mapOpacityOfPositionlessNodes));
+            
+                    
+                }
+                return visControls;
+
+            }
+            function nodeLinkRestore(bkFile,bkIndex,iframeIndex,controlsObjectIndex){
+                            var visIframe=window.parent.document.getElementsByTagName("iframe")[iframeIndex];
+                            let nodelinkObj=bkFile[bkIndex].visNetworkControl[controlsObjectIndex];
+                            let cntrls=visIframe.contentWindow.document.getElementsByTagName('circle');
+                            if (cntrls){
+                                cntrls[0].setAttribute('cx',nodelinkObj.linkOpacity);
+                                cntrls[1].setAttribute('cx',nodelinkObj.nodeOpacity);
+                                cntrls[2].setAttribute('cx',nodelinkObj.nodeSize);
+                                cntrls[3].setAttribute('cx',nodelinkObj.edgeGap);
+                                cntrls[4].setAttribute('cx',nodelinkObj.linkWidth);
+                                visIframe.contentWindow.document.getElementById('selection-input_Labeling').selectedIndex=nodelinkObj.labellingType;
+                            }
+                        }
+            function matrixRestore(bkFile,bkIndex,iframeIndex,controlsObjectIndex){
+                var visIframe=window.parent.document.getElementsByTagName("iframe")[iframeIndex];
+                let matrixObj=bkFile[bkIndex].visNetworkControl[controlsObjectIndex];
+                visIframe.contentWindow.document.getElementById('labelOrdering').selectedIndex=matrixObj.labellingType;
+                visIframe.contentWindow.document.getElementById('cellSizeBox').value=matrixObj.zoom;
+            }
+            function dynamicegoRestore(bkFile,bkIndex,iframeIndex,controlsObjectIndex){
+                var visIframe=window.parent.document.getElementsByTagName("iframe")[iframeIndex];
+                let dyEObj=bkFile[bkIndex].visNetworkControl[controlsObjectIndex];
+                visIframe.contentWindow.document.getElementById('labelOrdering').selectedIndex=dyEObj.labellingType;
+
+            }   
+            function mapRestore(bkFile,bkIndex,iframeIndex,controlsObjectIndex){
+                var visIframe=window.parent.document.getElementsByTagName("iframe")[iframeIndex];
+                let mapObj=bkFile[bkIndex].visNetworkControl[controlsObjectIndex];
+                let mapCntrls=visIframe.contentWindow.document.getElementsByTagName('circle');
+                let mapNodeOverlap=mapCntrls[0].setAttribute('cx',mapObj.nodeOverlap);
+                let mapLinkOpacity=mapCntrls[1].setAttribute('cx',mapObj.linkOpacity);
+                let mapOpacityOfPositionlessNodes=mapCntrls[2].setAttribute('cx',mapObj.opacityOfPositionlessNodes);
+
+            } 
  
             function AddNewLog(id,dateCreated,title,note,selectedType,analysisOptions,networkType,networkDataset){
                  let userBookmarks = JSON.parse(localStorage.getItem("vistorianBookmarks")) || [];
@@ -437,16 +531,16 @@
                 lowerContainer.appendChild(btn_bookmarkViewType);
 
               //  lowerContainer.style="display:flex;";
-              if (viewType!= "dataview" ){
-                var restoreStateIcon=document.createElement("i");
-                restoreStateIcon.className="fa fa-refresh";
-               restoreStateIcon.addEventListener('click', function() {
+                if (viewType!= "dataview" ){
+                    var restoreStateIcon=document.createElement("i");
+                    restoreStateIcon.className="fa fa-refresh";
+                    restoreStateIcon.addEventListener('click', function() {
                         var bkFile=JSON.parse(localStorage.getItem("vistorianBookmarks")) || [];
                         var bkIndex=locateLogObj(bkFile,newContentDiv.id);//this.parentElement.id);
 
                         trace.event('bkm_5', ' bookmark stated', 'restoreted', window.parent.location.pathname);
-                      
-                        window.vc.messenger.setState(bkFile[bkIndex].controlsValues[0]);
+                        
+                        window.vc.messenger.setState(bkFile[bkIndex].controlsValues[0],bkFile[bkIndex].viewType);
                         var content = this.parentElement.parentElement.nextElementSibling;
                         headerButton.classList.toggle("active");
                         if (content.style.maxHeight!=null){
@@ -455,7 +549,35 @@
                         } else {
                             content.style.maxHeight = null;
                         } 
-                     });
+                        switch (bkFile[bkIndex].viewType){
+                            case "nodelink":
+                                nodeLinkRestore(bkFile,bkIndex,1,0);
+                                break;
+                            case "matrix":
+                                matrixRestore(bkFile,bkIndex,1,0);
+                                
+                                break;
+                            case "dynamicego":
+                                dynamicegoRestore(bkFile,bkIndex,1,0)                           
+                                break;
+                            case "map":
+                                mapRestore(bkFile,bkIndex,1,0);
+                                break;
+                            case "mat-nl":case "tileview":
+                                window.vc.messenger.setState(bkFile[bkIndex].controlsValues[0],"nodelink");
+                                nodeLinkRestore(bkFile,bkIndex,1,0);
+                                window.vc.messenger.setState(bkFile[bkIndex].controlsValues[1],"matrix");
+                                matrixRestore(bkFile,bkIndex,2,1); 
+
+                                if (bkFile[bkIndex].viewType=="tileview"){
+                                    window.vc.messenger.setState(bkFile[bkIndex].controlsValues[2],"dynamicego");
+                                    dynamicegoRestore(bkFile,bkIndex,3,2)
+                                    window.vc.messenger.setState(bkFile[bkIndex].controlsValues[3],"map");
+                                    mapRestore(bkFile,bkIndex,4,3);
+                                }
+                        }
+
+                        });
                      lowerContainer.appendChild(restoreStateIcon);
 
                 }
@@ -794,23 +916,26 @@
                         var bkIndex=locateLogObj(bkFile,this.parentElement.id);
 
                         if (viewType!="dataview" && bkFile[bkIndex].viewType==viewType){//not to override the state of a visualization incorrectly with a mismatching type or absence of state
-                           
+                           //Create an object to hold the state of the network
                             switch (viewType){
                                 case "nodelink":case "matrix": case "map": case "dynamicego":
-                                    window.vc.messenger.getState(bkIndex,viewType,false);
+                                    window.vc.messenger.getState(bkIndex,viewType,false,"");
                                     break;
                                 case "mat-nl":
-                                    window.vc.messenger.getState(bkIndex,"nodelink",false);
-                                    window.vc.messenger.getState(bkIndex,"matrix",false);
+                                    window.vc.messenger.getState(bkIndex,"nodelink",false,"mat-nl");
+
+                                   // window.vc.messenger.getState(bkIndex,"matrix",false);
+
                                     break;
-                                case "tile": 
-                                    window.vc.messenger.getState(bkIndex,"nodelink",false);
-                                    window.vc.messenger.getState(bkIndex,"matrix",false);
-                                    window.vc.messenger.getState(bkIndex,"dynamicego",false);
-                                    window.vc.messenger.getState(bkIndex,"map",false);
+                                case "tileview": 
+                                    window.vc.messenger.getState(bkIndex,"nodelink",false,"tileview");
+                                    //window.vc.messenger.getState(bkIndex,"matrix",false);
+                                    //window.vc.messenger.getState(bkIndex,"dynamicego",false);
+                                    //window.vc.messenger.getState(bkIndex,"map",false);
                                     break;
                             }
-
+                            
+                            bkFile[bkIndex].visNetworkControl=captureControlsValues();
                         }
                         
 
@@ -851,14 +976,11 @@
                 newDiv.appendChild(newContentDiv);
                 logs.prepend(newDiv);
                 
-                var visIframe=window.parent.document.getElementsByTagName("iframe")[1];
-                 var visControls=[];
-                
-               /*  else
+                               /*  else
                     newBookmark.updateBookmarkDataset(networkName); */
                 var newBookmark;
                 if (id==0){
-                    newBookmark=new Bookmark(currentCounterValue,btn_dateTime.innerHTML,btn_title.innerHTML,newDiv.className,networkName,visControls);
+                    newBookmark=new Bookmark(currentCounterValue,btn_dateTime.innerHTML,btn_title.innerHTML,newDiv.className,networkName,[],[]);
                     newBookmark.note=newNote.value;
                     newBookmark.analysisOpts=analysisOptions;  
                     newBookmark.updateBookmarkType(selectedType);
@@ -869,21 +991,21 @@
                             networkName=window.parent.document.getElementById('networknameInput').value;
                             break;
                         case "nodelink":case "matrix":case "dynamicego":case "map": 
-                            window.vc.messenger.getState(currentCounterValue-1,viewType,true);
+                            window.vc.messenger.getState(currentCounterValue-1,viewType,true,"");
                             break;
                         case "mat-nl": // location= index of 0(nodelink)//1(matrix) in the visControls
-                            window.vc.messenger.getState(currentCounterValue-1,"nodelink",true);
-                            window.vc.messenger.getState(currentCounterValue-1,"matrix",true);
+                            window.vc.messenger.getState(currentCounterValue-1,"nodelink",true,"mat-nl");
+
+                            // window.vc.messenger.getState(currentCounterValue-1,"matrix",true);
                             break;
                         case "tileview": // location= index of 0(nodelink)//1(matrix)//2(DynamicEgo)//3(Map) in the visControls
-                            window.vc.messenger.getState(currentCounterValue-1,"nodelink",true);
-
-                            window.vc.messenger.getState(currentCounterValue-1,"matrix",true);
-
-                            window.vc.messenger.getState(currentCounterValue-1,"dynamicego",true);
-
-                            window.vc.messenger.getState(currentCounterValue-1,"map",true);
+                            window.vc.messenger.getState(currentCounterValue-1,"nodelink",true,"tileview");
+                            // window.vc.messenger.getState(currentCounterValue-1,"matrix",true);
+                            // window.vc.messenger.getState(currentCounterValue-1,"dynamicego",true);
+                            // window.vc.messenger.getState(currentCounterValue-1,"map",true);
                     }
+                    userBookmarks[userBookmarks.length-1].visNetworkControl=captureControlsValues();
+
                     
                 }
 

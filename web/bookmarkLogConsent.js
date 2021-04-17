@@ -361,6 +361,8 @@ function LoggingFeedback(){
 
   if (tempLog)
     localStorage.setItem("acceptLogging", "false");
+    document.getElementById('timeoutPopupForm').style.display="none";
+
 
 }
 
