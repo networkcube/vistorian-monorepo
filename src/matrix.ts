@@ -1275,30 +1275,33 @@ messenger.addEventListener(messenger.MESSAGE_GET_STATE, getStateHandler);
 
 
 function setStateHandler(m: messenger.SetStateMessage){
+  if (m.viewType=="matrix" ){
+ 
+    var state: messenger.MatrixControls = m.state as messenger.MatrixControls;    
+    // unpack / query that state object
+    // e.g., var params = state.params.
+    // set the parameters below:...  
     
-  var state: messenger.MatrixControls = m.state as messenger.MatrixControls;    
-  // unpack / query that state object
-  // e.g., var params = state.params.
-  // set the parameters below:...  
-  
-  // set cell size (zoom)
-  matrix.updateCellSize(state.zoom);
-  
+   
+    
 
-  // set labelling type
-  matrix.reorderWorker(state.labellingType);
+    // set labelling type
+    matrix.reorderWorker(state.labellingType);
 
-  // set time (start/end)
-   messenger.timeRange(state.timeSliderStart, state.timeSliderEnd, matrix.startTime, true);
-//timeSlider.set(state.timeSliderStart, state.timeSliderEnd);
+     // set cell size (zoom)
+    matrix.updateCellSize(state.zoom);
 
-   // camera
-/*  webgl=state.webglState;
-    webgl.camera.position.x=state.camer_position_x ;
-    webgl.camera.position.y=state.camer_position_y  ;
-    webgl.camera.position.z=state.camer_position_z  ;
- */
-  
+    // set time (start/end)
+    messenger.timeRange(state.timeSliderStart, state.timeSliderEnd, matrix.startTime, true);
+  //timeSlider.set(state.timeSliderStart, state.timeSliderEnd);
+
+    // camera
+  /*  webgl=state.webglState;
+      webgl.camera.position.x=state.camer_position_x ;
+      webgl.camera.position.y=state.camer_position_y  ;
+      webgl.camera.position.z=state.camer_position_z  ;
+  */
+  }
 
 }
 
@@ -1315,7 +1318,19 @@ function getStateHandler( m: messenger.GetStateMessage){
 
         //matrix.cellSize
       var matrixNetwork: messenger.NetworkControls=new messenger.MatrixControls("matrix",matrix.startTime.unixTime(),matrix.endTime.unixTime(),zoomValue,orderType);
-      messenger.stateCreated(matrixNetwork,m.bookmarkIndex,m.viewType,m.isNewBookmark);
+      
+/*       var bookmarksArray=JSON.parse(localStorage.getItem("vistorianBookmarks") || "[]");
+
+      if (m.bookmarkIndex!=bookmarksArray.length-1){
+          bookmarksArray[m.bookmarkIndex].controlsValues[1]=matrixNetwork;
+      }
+      else{
+          bookmarksArray[m.bookmarkIndex].controlsValues.push(matrixNetwork);
+        
+      }
+      localStorage.setItem("vistorianBookmarks", JSON.stringify(bookmarksArray)) */
+  
+       messenger.stateCreated(matrixNetwork,m.bookmarkIndex,m.viewType,m.isNewBookmark,m.typeOfMultiView);
 
   }
 }
