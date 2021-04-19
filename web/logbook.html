@@ -5,6 +5,7 @@
         <link rel="stylesheet" href="logbook_s.css">
         <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
         <script type="text/javascript" src="../static/traces/trace.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mousetrap/1.5.0/mousetrap.min.js"></script>
         <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
 
         <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
@@ -26,7 +27,6 @@
 
         <script type="text/javascript">
      
-
         
             
             const monthNames = ["January", "February", "March", "April", "May", "June",
@@ -232,6 +232,14 @@
                     console.log( userBks[i].printBk());
 
             }
+            function clearBookmarks(){
+                if (confirm('Are you sure you want to delete all bookmarks?')){
+
+                    localStorage.removeItem("vistorianBookmarks")
+                    initializeJSON();
+                    window.parent.document.getElementById('myFrame').src=window.parent.document.getElementById('myFrame').src;
+                }
+            }
         
              function initializeJSON(){
                 let bks=localStorage.getItem("vistorianBookmarks");
@@ -255,7 +263,7 @@
             } 
             function toggleMySessionID(){
                 if (document.getElementById("loggingSessionID").style.display=="none"){
-                    document.getElementById("loggingSessionID").style.display="block";
+                    document.getElementById("loggingSessionID").style.display="inline-block";
                     trace.event('log_11', ' Session ID Button','Show' , window.parent.location.pathname);
 
                 }
@@ -367,12 +375,24 @@
                 }
                 
                 var importStatus=false;
-                if (confirm('Are you sure you want to import the selected file? This will overwrite existing bookmarks')){
-                    
-                    fileImported.click(); 
 
-                    importStatus=true;                 
+                let userBookmarks = JSON.parse(localStorage.getItem("vistorianBookmarks")) || [];
+
+                if (userBookmarks && userBookmarks.length>0){
+                
+                    if (confirm('Are you sure you want to import the selected file? This will overwrite existing bookmarks')){
+                        
+                        fileImported.click(); 
+
+                        importStatus=true;                 
+                    }
                 }
+                else{
+                        fileImported.click(); 
+
+                        importStatus=true;                 
+                    }
+                
                 trace.event('bkm_10', ' bookmark file imported',importStatus , window.parent.location.pathname);
 
 
@@ -1014,14 +1034,17 @@
 
             }
             
+
             
         </script>
     </head>
     <!-- onerror="trace.event('err', event + ' ' + source + lineno, error, document.location.pathname);"  -->
     <body id="capture" onload="initializeJSON();"  onfocus="refreshBookmarks();"> 
        
-        <div id="logbook_container" data-role="page">
-            <div  >
+        <div id="logbook_container" data-role="page" >
+            
+            <div >
+                
                 <form action="#">
                     <input type="radio" id="allBM" name="bmTypeSelection" value="all" onchange="changeBookmarksView('all');trace.event('bkm_7', ' show all bookmarks (view)', 'selected', window.parent.location.pathname);" checked >
                     <label style="font-weight:normal;" for="allBM">Show all bookmarks</label>
@@ -1036,7 +1059,7 @@
             <div id="logbook_header"  class="hd_div" >  
                 
                 <!-- AddNewLog(0,'','','','',[],viewType,networkName); without bookmarkpopup pane -->
-                <button  id="addNewBookmark" value="Add New" style="border: groove" class="hd_btn"  onclick="showBookmarkPopup();trace.event('bkm_1', ' new bookmark button', 'clicked', window.parent.location.pathname);">Add New</button>
+                <button  id="addNewBookmark" value="Add New" style="border: groove" class="hd_btn"  onclick="showBookmarkPopup();trace.event('bkm_1', ' new bookmark button', 'clicked', window.parent.location.pathname);"><u>A</u>dd New</button>
                 <!-- <button  id="btn_save" value="Save" class="hd_btn"  onclick="updateLocalStorage( (JSON.parse(localStorage.getItem('vistorianBookmarks')) || []));trace.event('bkm_2', ' updates/changes', 'saved by user', window.parent.location.pathname);">Save Bookmarks</button> -->
 
           
@@ -1046,22 +1069,82 @@
             </div>
             <div >
               
-                <button style="font-weight:normal;"  onclick="location.href='mailto:vistorian@inria.fr?subject=[Vistorian] Consultation Request&body=Hi, kindly I would like to arrange a 10-minutes meeting to consult about my data\'s visualization. Thank you.';trace.event('com_3', window.parent.location.pathname, 'bookmark_tool', 'consult_team');">Email Us & Consult an Expert</button>
-                <button style="font-weight:normal;"  onclick="location.href='mailto:vistorian@inria.fr?subject=[Vistorian] Report Technical Bug &body=Hello,\n I am facing a technical problem and would like to request your help. The description of my problem is :\n';trace.event('com_4', window.parent.location.pathname, 'bookmark_tool', 'ReportTechBug');">Report a Technical Bug</button>
+                <button style="font-weight:normal;"  id="btn_contactUs" onclick="location.href='mailto:vistorian@inria.fr?subject=[Vistorian] Consultation Request&body=Hi, kindly I would like to arrange a 10-minutes meeting to consult about my data\'s visualization. Thank you.';trace.event('com_3', window.parent.location.pathname, 'bookmark_tool', 'consult_team');"><u>E</u>mail Us & Consult an Expert</button>
+                <button style="font-weight:normal;"  id="btn_reportIssue" onclick="location.href='mailto:vistorian@inria.fr?subject=[Vistorian] Report Technical Bug &body=Hello,\n I am facing a technical problem and would like to request your help. The description of my problem is :\n';trace.event('com_4', window.parent.location.pathname, 'bookmark_tool', 'ReportTechBug');">Report a Technical B<u>u</u>g</button>
                 <div style="float:right">
-                <button  style="font-weight:normal;"  onclick="exportBookmarks();trace.event('bkm_9', window.parent.location.pathname, 'bookmark_tool', 'Bookmarks File Exported');">Export Bookmarks</button>
+                    <button  style="font-weight:normal;" id="btn_exportBookmarks"  onclick="exportBookmarks();trace.event('bkm_9', window.parent.location.pathname, 'bookmark_tool', 'Bookmarks File Exported');">E<u>x</u>port Bookmarks</button>
+                    <button style="font-weight:normal;" id="btn_showHideSessionID" onclick="toggleMySessionID()">Show/<u>H</u>ide My Session ID</button>
+    
+                </div>
+                <div style="float:left;">
+                    <button  style="font-weight:normal;"  id="btn_importBookmarks"  onclick="importBookmarks();trace.event('bkm_10', window.parent.location.pathname, 'bookmark_tool', 'Bookmarks File Imported');"><u>I</u>mport Bookmarks</button>
+
+                    <button  style="font-weight:normal;" id="btn_clearBookmarks"  onclick="clearBookmarks();trace.event('bkm_10', window.parent.location.pathname, 'bookmark_tool', 'Bookmarks File Cleared');"><u>C</u>lear Bookmarks</button>
+
+                </div>
+
             </div>
-            <div style="float:left;">
 
-                <button  style="font-weight:normal;"   onclick="importBookmarks();trace.event('bkm_10', window.parent.location.pathname, 'bookmark_tool', 'Bookmarks File Imported');">Import Bookmarks</button>
-            </div>
-                <button style="font-weight:normal;"  onclick="toggleMySessionID()">Show/Hide My Session ID</button>
-                <label id="loggingSessionID" style="align-items: center;text-align: center;; border-style:outset;padding: 5px;"></label>
-            </div>
+            <div style="display: inline-block;">
+                <label id="loggingSessionID" style=" align-items: center;text-align: center; border-style:outset;padding: 5px;"></label>
+            </div>            
 
-
-        </div>
-
+        </div>  
+        <script>
+                var parentDoc = window.parent.document;
+                // Add New Bookmark
+                Mousetrap(parentDoc).bind('ctrl+shift+a', function() {
+                    if (viewType!="dataview")
+                        document.getElementById('addNewBookmark').click();
+                });
+                Mousetrap.bind('ctrl+shift+a', function() {
+                    if (viewType!="dataview")
+                        document.getElementById('addNewBookmark').click();
+                });
+                //Clear Bookmarks
+                Mousetrap(parentDoc).bind('ctrl+shift+c', function() {
+                    document.getElementById('btn_clearBookmarks').click();
+                });
+                Mousetrap.bind('ctrl+shift+c', function() {
+                    document.getElementById('btn_clearBookmarks').click();
+                });
+                // Import Bookmarks
+                Mousetrap(parentDoc).bind('ctrl+shift+i', function() {
+                    document.getElementById('btn_importBookmarks').click();
+                });
+                Mousetrap.bind('ctrl+shift+i', function() {
+                    document.getElementById('btn_importBookmarks').click();
+                });
+                // Export Bookmarks
+                Mousetrap(parentDoc).bind('ctrl+shift+x', function() {
+                    document.getElementById('btn_exportBookmarks').click();
+                });
+                Mousetrap.bind('ctrl+shift+x', function() {
+                    document.getElementById('btn_exportBookmarks').click();
+                
+                });
+                // Email us
+                Mousetrap(parentDoc).bind('ctrl+shift+e', function() {
+                    document.getElementById('btn_contactUs').click();
+                });
+                Mousetrap.bind('ctrl+shift+e', function() {
+                    document.getElementById('btn_contactUs').click();
+                });
+                // Report an Issue
+                Mousetrap(parentDoc).bind('ctrl+shift+u', function() {
+                    document.getElementById('btn_reportIssue').click();
+                });
+                Mousetrap.bind('ctrl+shift+u', function() {
+                    document.getElementById('btn_reportIssue').click();
+                });
+                // Show/Hide Session ID
+                Mousetrap(parentDoc).bind('ctrl+shift+h', function() {
+                    document.getElementById('btn_showHideSessionID').click();
+                });
+                Mousetrap.bind('ctrl+shift+h', function() {
+                    document.getElementById('btn_showHideSessionID').click();
+                });
+        </script>
 
     </body>
 
