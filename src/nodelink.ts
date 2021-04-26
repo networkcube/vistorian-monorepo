@@ -202,7 +202,7 @@ var svg: any = d3.select('#visSvg')
             deltaPixels = 0;
         }
 
-        var globalZoom = 1 + deltaPixels / 1000;
+        var globalZoom = 1 - deltaPixels / 1000;
         var mouse = [(d3.event).x - panOffsetGlobal[0], (d3.event).y - panOffsetGlobal[1]];
         var d: any, n: any;
         for (var i = 0; i < nodes.length; i++) {
