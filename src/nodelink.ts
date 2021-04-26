@@ -187,7 +187,7 @@ var svg: any = d3.select('#visSvg')
         (<any>d3.event).preventDefault();
         (<any>d3.event).stopPropagation();
 
-        // The WheelEvent had a deltMode attribute, which specifies unit for the delta values
+        // The WheelEvent has a deltaMode attribute, which specifies unit for the delta values
         // https://www.w3.org/TR/uievents/#idl-wheelevent
         // It seems that Chrome provides values in pixels, whereas Firefox provides values in lines.
         const deltaMode = (<any>d3.event).deltaMode;
