@@ -186,7 +186,23 @@ var svg: any = d3.select('#visSvg')
         // zoom
         (<any>d3.event).preventDefault();
         (<any>d3.event).stopPropagation();
-        var globalZoom = 1 + (<any>d3.event).wheelDelta / 1000;
+
+        // The WheelEvent had a deltMode attribute, which specifies unit for the delta values
+        // https://www.w3.org/TR/uievents/#idl-wheelevent
+        // It seems that Chrome provides values in pixels, whereas Firefox provides values in lines.
+        const deltaMode = (<any>d3.event).deltaMode;
+        const deltaY = (<any>d3.event).deltaY;
+        let deltaPixels = 0;
+        if (deltaMode === 1) {
+            deltaPixels = deltaY * 16;
+        } else if (deltaMode === 0) {
+            deltaPixels = deltaY;
+        } else {
+            console.log(`Encountered wheel event with unexpected deltaMode (${deltaMode}))`);
+            deltaPixels = 0;
+        }
+
+        var globalZoom = 1 + deltaPixels / 1000;
         var mouse = [(d3.event).x - panOffsetGlobal[0], (d3.event).y - panOffsetGlobal[1]];
         var d: any, n: any;
         for (var i = 0; i < nodes.length; i++) {
