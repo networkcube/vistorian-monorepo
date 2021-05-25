@@ -153,3 +153,6 @@ input[type='text'],select,textarea {
   visibility: visible;
 }
 
+.ui-btn .ui-corner-all .ui-btn-inherit .ui-btn-icon-left .ui-radio-off, .ui-radio .ui-btn-icon-left .ui-icon{
+ border-style: none;
+}

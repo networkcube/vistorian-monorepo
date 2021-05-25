@@ -275,6 +275,7 @@
             }
 
             function changeBookmarksView(typeChosen){
+                refreshBookmarks();
                 var i;
                 var displayVal;
                 var bkmElements;
@@ -1045,11 +1046,11 @@
             
             <div >
                 
-                <form action="#">
+                <form action="#">Show:
                     <input type="radio" id="allBM" name="bmTypeSelection" value="all" onchange="changeBookmarksView('all');trace.event('bkm_7', ' show all bookmarks (view)', 'selected', window.parent.location.pathname);" checked >
-                    <label style="font-weight:normal;" for="allBM">Show all bookmarks</label>
+                    <label style="font-weight:normal;" for="allBM">All bookmarks</label>
                     <input type="radio" id="specificBM" name="bmTypeSelection" value="specific" onchange="changeBookmarksView(viewType);trace.event('bkm_7', ' show current view bookmarks', 'selected', window.parent.location.pathname);">
-                    <label style="font-weight:normal;" for="specificBM">Show bookmarks only of current visualization </label><br>
+                    <label style="font-weight:normal;" for="specificBM">Only bookmarks of current visualization </label><br>
                 </form>
             </div>
             <div>

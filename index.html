@@ -85,6 +85,11 @@
                     <a href="http://github.com/networkcube/networkcube" target="_blank" onclick="trace.event('com_1', 'index', 'github', 'click')"><img src="./static/logos/favourite15.png"
                             class="menuicon" />Github</a>
                 </li>
+                
+                <li>
+                    <a href="https://github.com/alkadi-mh/vistorian-web/wiki/Vistorian-Activity-Logging-Study" class="menuicon" onclick="trace.event('com_2', 'index', 'vistorinaLab study', 'click')"><img src="./static/logos/VistorianLab.png"
+                            class="menuicon" />Vistorian Lab</a>
+                </li>
                 <li>
                     <a href="mailto:benj.bach@gmail.com" class="menuicon" onclick="trace.event('com_2', 'index', 'contact', 'click')"><img src="./static/logos/chat44.png"
                             class="menuicon" />Contact</a>
@@ -282,7 +287,6 @@
                     <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0">CC BY 3.0</a>
                 </div>
             </p>
-
             <a class="footer" href="mailto:networkcube@microsoft.com" target="_top">Contact Us</a> |
             <a class="footer" href="https://go.microsoft.com/fwlink/?LinkId=521839" title="privacy">Privacy &
                 Cookies</a> |
@@ -314,7 +318,7 @@
                 $('#resumeSessionLink2').attr('href', './web/dataview.html?session=' + PREVIOUS_SESSION);
                 $('#resumeSessionLink3').attr('href', './web/dataview.html?session=' + PREVIOUS_SESSION);
                 // Load demo data
-                $.get("https://vistorian.online/web/demo/demo_scientists.vistorian",
+                $.get("https://vistorian.net/web/demo/demo_scientists.vistorian",
                     function (data) {
                         window.exports.networkcube.vistorian.importData(JSON.parse(data), 0);
                         window.exports.networkcube.vistorian.importIntoNetworkcube(JSON.parse(data), 0)
