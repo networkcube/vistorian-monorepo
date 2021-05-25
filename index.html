@@ -318,7 +318,7 @@
                 $('#resumeSessionLink2').attr('href', './web/dataview.html?session=' + PREVIOUS_SESSION);
                 $('#resumeSessionLink3').attr('href', './web/dataview.html?session=' + PREVIOUS_SESSION);
                 // Load demo data
-                $.get("https://vistorian.net/web/demo/demo_scientists.vistorian",
+                $.get("http://vistorian.net/web/demo/demo_scientists.vistorian",
                     function (data) {
                         window.exports.networkcube.vistorian.importData(JSON.parse(data), 0);
                         window.exports.networkcube.vistorian.importIntoNetworkcube(JSON.parse(data), 0)
