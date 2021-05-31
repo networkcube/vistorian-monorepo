@@ -341,7 +341,8 @@
                 else
                     displayVal="none";
                 for (i = 0; i < bkmElements.length; i++) 
-                        bkmElements[i].style.display = displayVal;          
+                        bkmElements[i].style.display = displayVal; 
+                refreshBookmarks();         
  
             }
             function updateLocalStorage(bookmarksArray){
@@ -559,7 +560,7 @@
                         var bkFile=JSON.parse(localStorage.getItem("vistorianBookmarks")) || [];
                         var bkIndex=locateLogObj(bkFile,newContentDiv.id);//this.parentElement.id);
 
-                        trace.event('bkm_5', ' bookmark stated', 'restoreted', window.parent.location.pathname);
+                        trace.event('bkm_5', ' bookmark state', 'restoreted', window.parent.location.pathname);
                         
                         window.vc.messenger.setState(bkFile[bkIndex].controlsValues[0],bkFile[bkIndex].viewType);
                         var content = this.parentElement.parentElement.nextElementSibling;
@@ -892,7 +893,7 @@
                         var bkFile=JSON.parse(localStorage.getItem("vistorianBookmarks")) || [];
                         var bkIndex=locateLogObj(bkFile,this.parentElement.id);
 
-                        trace.event('bkm_5', ' bookmark stated', 'restoreted', window.parent.location.pathname);
+                        trace.event('bkm_5', ' bookmark state', 'restoreted', window.parent.location.pathname);
                       
                         window.vc.messenger.setState(bkFile[bkIndex].controlsValues[0]);
                        // window.parent.exports.networkcube.vistorian.setState(bookmarksJSONFile[locateLogObj(bookmarksJSONFile,this.parentElement.id)].controlsValues);

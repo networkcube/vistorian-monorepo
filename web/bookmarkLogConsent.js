@@ -44,22 +44,34 @@ function dragElement(elmnt) {
 }
 
 function turnLoggingOff(){
+    var urlTxt=window.location.pathname;
+    urlTxt=urlTxt.substring(urlTxt.lastIndexOf("/")+1,urlTxt.indexOf("."));
+
     localStorage.setItem("acceptLogging", "false");
-    trace.event('log_10', 'stop logging', 'webpage', document.location.pathname);
+    trace.event('log_10', 'stop logging', 'webpage', urlTxt);
     var checkBox = document.getElementById("consentOnoffswitch");
     checkBox.checked=false;
     var bookmarksTool = document.getElementById("mydiv");
     document.getElementById('myModal').style.display = "none";
     bookmarksTool.style.display = "none";
+    var feedbackButton=document.querySelectorAll(".feedback a")[0];
+    if (feedbackButton)
+        feedbackButton.style.display = "none";  
 
 }
 
 function turnOnLogging(){
+   var urlTxt=window.location.pathname;
+    urlTxt=urlTxt.substring(urlTxt.lastIndexOf("/")+1,urlTxt.indexOf("."));
+
     localStorage.setItem("acceptLogging", "true");
-    trace.event('log_9', 'start logging', 'webpage', document.location.pathname);
+    trace.event('log_9', 'start logging', 'webpage', urlTxt);
     var bookmarksTool = document.getElementById("mydiv"); 
     if (bookmarksTool)
-      bookmarksTool.style.display = "block";
+        bookmarksTool.style.display = "block";
+    var feedbackButton=document.querySelectorAll(".feedback a")[0];
+    if (feedbackButton)
+        feedbackButton.style.display = "block";    
     if (localStorage.getItem("bookmarkMinimized")==="true")
       minimizeBookmarks();
     else
@@ -81,6 +93,9 @@ function checkLogStatus(){
 }
 var toolbarMHeight,toolbarMWidth,toolbarTop,toolbarLeft,bookmarkMinimized=false;
 function minimizeBookmarks(){
+  var parentUrlTxt=window.parent.location.pathname;
+  parentUrlTxt=parentUrlTxt.substring(parentUrlTxt.lastIndexOf("/")+1,parentUrlTxt.indexOf("."));
+
   if (!bookmarkMinimized){
     toolbarMHeight=document.getElementById("mydiv").offsetHeight;
     toolbarMWidth=document.getElementById("mydiv").offsetWidth;
@@ -91,11 +106,14 @@ function minimizeBookmarks(){
     document.getElementById("myFrame").style.display = "none";
     document.getElementById("mydiv").style.maxHeight = document.getElementById("mydivheader").scrollHeight +"px";
     bookmarkMinimized=true;
-    trace.event('bkm_8', ' bookmark window ', 'minimized', window.parent.location.pathname);
+    trace.event('bkm_8', ' bookmark window ', 'minimized', parentUrlTxt);
     localStorage.setItem("bookmarkMinimized","true");
   }
 }
 function maxmizeBookmarks(){
+  var parentUrlTxt=window.parent.location.pathname;
+  parentUrlTxt=parentUrlTxt.substring(parentUrlTxt.lastIndexOf("/")+1,parentUrlTxt.indexOf("."));
+
   if (bookmarkMinimized){
     document.getElementById("mydiv").style.maxHeight = toolbarMHeight +"px";
     document.getElementById("mydiv").style.maxWidth=toolbarMWidth+"px";
@@ -103,7 +121,7 @@ function maxmizeBookmarks(){
     document.getElementById("mydiv").style.left=toolbarLeft+"px";
     document.getElementById("myFrame").style.display = "Block";
     bookmarkMinimized=false;
-    trace.event('bkm_8', ' bookmark window ', 'maximized', window.parent.location.pathname);
+    trace.event('bkm_8', ' bookmark window ', 'maximized', parentUrlTxt);
     localStorage.setItem("bookmarkMinimized","false");
 
 
@@ -113,12 +131,15 @@ function maxmizeBookmarks(){
 
 }
 function toggleConsntModel(){
+  var parentUrlTxt=window.parent.location.pathname;
+  parentUrlTxt=parentUrlTxt.substring(parentUrlTxt.lastIndexOf("/")+1,parentUrlTxt.indexOf("."));
+
   if (document.getElementById('consentOnoffswitch').checked){
     if (document.getElementById('chk_dontShowConsent').checked)
       turnOnLogging();
     else{
         document.getElementById('myModal').style.display = "block";
-        trace.event('log_5', ' Consent Form ', 'Displayed', window.parent.location.pathname);
+        trace.event('log_5', ' Consent Form ', 'Displayed', parentUrlTxt);
 
     }
   }
@@ -226,6 +247,7 @@ function inactiveUserAction() {
    // isInactive = true;//isActive=false
     var urlTxt=window.location.pathname;
     urlTxt=urlTxt.substring(urlTxt.lastIndexOf("/")+1,urlTxt.indexOf("."));
+
     if (urlTxt=="logbook" || urlTxt=="dataview" || urlTxt!=localStorage.getItem("currentPageInFocus"))
         return;
     var popupElement;
@@ -238,7 +260,7 @@ function inactiveUserAction() {
     popupElement.setAttribute("style","display:block");
     //set timer timestamp to check cross all site webpages
     localStorage.setItem("userInactivityloggedTime",(new Date().getTime()));
-    trace.event('log_13', 'no activity detected', 'current web page', window.location.pathname);
+    trace.event('log_13', 'page', 'No activity detected', urlTxt);
 }
 
 
@@ -295,6 +317,10 @@ function displaySubOptions(clickedButton,classNameUsed,chksDiv,OtherDiv){
 
 // Logging Feedback from the general feedback gadget
 function LoggingGeneralFeedback(){
+
+  var urlTxt=window.location.pathname;
+  urlTxt=urlTxt.substring(urlTxt.lastIndexOf("/")+1,urlTxt.indexOf("."));
+
   let tempLog=false;
 
   //check if the logging enabled, otherwise turn it temporarlly on for logging feedback
@@ -308,11 +334,11 @@ function LoggingGeneralFeedback(){
     for (var i=0;i<btns.length;i++)
       //Set main type of usage
        if (btns[i].style.backgroundColor=="#FF7F50")
-        trace.event('log_14', 'general feedback - bookmark type', btns[i].value, window.location.pathname);
+        trace.event('log_14', 'general feedback - bookmark type', btns[i].value, urlTxt);
         //Set analysis type - if selected-
         
         //add general feedback
-        trace.event('log_15', 'General feedback', document.getElementById('feedback_text').value, document.location.pathname);
+        trace.event('log_15', 'General feedback', document.getElementById('feedback_text').value, urlTxt);
       
 
 
@@ -326,6 +352,10 @@ function LoggingGeneralFeedback(){
 
 // Logging Feedback from the popup questionairre
 function LoggingFeedback(){
+  var urlTxt=window.location.pathname;
+  urlTxt=urlTxt.substring(urlTxt.lastIndexOf("/")+1,urlTxt.indexOf("."));
+
+
   let tempLog=false;
 
   //check if the logging enabled, otherwise turn it temporarlly on for logging feedback
@@ -339,22 +369,22 @@ function LoggingFeedback(){
     for (var i=0;i<btns.length;i++){
       //Set main type of usage
        if (btns[i].style.backgroundColor=="#FF7F50"){
-        trace.event('log_14', 'timeout popup feedback - bookmark type', btns[i].value, window.location.pathname);
+        trace.event('log_14', 'timeout popup feedback - bookmark type', btns[i].value, urlTxt);
         //Set analysis type - if selected-
         if (btns[i].value=="Analyze Data"){
           let chks=document.getElementsByName('chks_timeoutFeebackForm');
           for (var i=0;i<chks.length;i++){
             if (chks[i].checked)
-                trace.event('bkm_6', ' bookmark analysis type selected', chks[i].value, window.location.pathname);
+                trace.event('bkm_6', ' bookmark analysis type selected', chks[i].value, urlTxt);
           }
         }
         
         //check if type was other
         if (btns[i].value=="Other")
-          trace.event('bkm_3', ' bookmark type specified', 'Other: ' + document.getElementById('txt_other_timeout').value, window.location.pathname);
+          trace.event('bkm_3', ' bookmark type specified', 'Other: ' + document.getElementById('txt_other_timeout').value, urlTxt);
        }
         //No general feedback
-       // trace.event('log_15', 'feedback_popup', document.getElementById('feedback_text_popup').value, document.location.pathname);
+       // trace.event('log_15', 'feedback_popup', document.getElementById('feedback_text_popup').value, urlTxt);
       }
 
 
@@ -418,6 +448,9 @@ function checkOptionExistance(noFetched,opts){
 var generalPBtns=["Analyze Data","Learn","Demo to others","Test & Explore Vistorian","Discuss Findings","Report an Issue"];
 
 function refreshBookmarks(){
+
+  var urlTxt=window.location.pathname;
+  urlTxt=urlTxt.substring(urlTxt.lastIndexOf("/")+1,urlTxt.indexOf("."));
 
   var bkFrame=document.getElementById("myFrame");
   var bkFrameDoc;
@@ -487,12 +520,19 @@ function refreshBookmarks(){
     bkFrame=window;
 
   localStorage.setItem("currentPageInFocus",bkFrame.viewType);
-  trace.event('log_17', 'page', 'focus', document.location.pathname);
+  trace.event('log_17', 'page', 'focus', urlTxt);
   checkLogStatus();
 
 }
 
 function populateNewBookmark(){
+
+  var urlTxt=window.location.pathname;
+  urlTxt=urlTxt.substring(urlTxt.lastIndexOf("/")+1,urlTxt.indexOf("."));
+
+  var parentUrlTxt=window.parent.location.pathname;
+  parentUrlTxt=parentUrlTxt.substring(parentUrlTxt.lastIndexOf("/")+1,parentUrlTxt.indexOf("."));
+
   let btns=window.document.getElementsByClassName('feedbackMenuButton');
 
   let titleText=document.getElementById("txt_title").value;
@@ -502,7 +542,7 @@ function populateNewBookmark(){
   //Set main type of usage
   if (btns[i].style.backgroundColor=="rgb(255, 127, 80)"){
       chosentType= btns[i].value;
-      trace.event('log_14', 'general feedback - bookmark type', btns[i].value, window.location.pathname);
+      trace.event('log_14', 'general feedback - bookmark type', btns[i].value, urlTxt);
       //Set analysis type - if selected-
       if (btns[i].value=="Analyze Data"){
           let chks=document.getElementsByName('chks_feebackForm');
@@ -530,16 +570,20 @@ function populateNewBookmark(){
   bkFrame.AddNewLog(0,'',titleText,notesText,chosentType,analysisOps,bkFrame.viewType,bkFrame.networkName);
 
     resetFeedbackForm();
+
     
-    trace.event('bkm_11', ' New Bookmark Created', 'Saved', window.parent.location.pathname);
+    trace.event('bkm_11', ' New Bookmark Created', 'Saved', parentUrlTxt);
 }
 
 window.onblur=(function(){
-  trace.event('log_18', 'page', 'blur', document.location.pathname);
+  var urlTxt=window.location.pathname;
+  urlTxt=urlTxt.substring(urlTxt.lastIndexOf("/")+1,urlTxt.indexOf("."));
+  trace.event('log_18', 'page', 'blur', urlTxt);
 
 });
 
 window.addEventListener('beforeunload', (event) => {
+  
 
   var bkFrame=document.getElementById("myFrame");
   var bkFrameDoc;

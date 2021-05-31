@@ -110,7 +110,7 @@ body {
   transition: all 3s;
 }
 .feedback a {
-  display: block;
+  display: none;
   font-size: 2em; 
   padding: 10px;
   border-radius: 50px;
