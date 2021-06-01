@@ -66,7 +66,7 @@
                 <div id="consentFormBK" style=" display:flex;align-items:center;padding: 8px;">
                     <img src="../static/logos/VistorianLabLogo.png" width="40px" height="40px">
 
-                    <strong> VistorianLab!&nbsp;&nbsp;</strong>
+                    <strong> VistorianLab&nbsp;&nbsp;</strong>
 
                     <div class="onoffswitch" > 
                     
@@ -81,24 +81,20 @@
             <p></p>
 
                 <div id="networkListDiv">
-                    <h2>
-                        Networks
-                        <input type="button" class="menuButton hastooltip" value="New" onclick="window.exports.networkcube.dataview.createNetwork();trace.event('dat_1', 'data view', 'new network', 'created')"
-                            title="Create new network from one or more tables." />
-                    </h2>
+                    <h2>Your Networks</h2>
                     <ul id="networkList" class="nointent"></ul>
+                    <input type="button" class="menuButton hastooltip" value="New" onclick="window.exports.networkcube.dataview.createNetwork();trace.event('dat_1', 'data view', 'new network', 'created')"
+                            title="Create new network from one or more tables." />
                 </div>
                 <br />
                 <div id="tableListDiv">
-                    <h2>
-                        Data Tables
-                        <input id="files" type="file" name="file" class="inputfile" value="Upload" name="files[]"
-                            data-multiple-caption="{count} files selected" multiple onchange="trace.event('dat_2_DT', 'data view', 'DataTables_FileUpload', 'new file upload')"/>
-                        <label for="files" class="menuButton hastooltip" title="Upload a new table in CSV file.">
-                            Upload
-                        </label>
-                    </h2>
+                    <h2>Your Tables</h2>
                     <ul id="tableList" class="nointent"></ul>
+                    <input id="files" type="file" name="file" class="inputfile" value="Upload" name="files[]"
+                            data-multiple-caption="{count} files selected" multiple onchange="trace.event('dat_2_DT', 'data view', 'DataTables_FileUpload', 'new file upload')"/>
+                    <label for="files" class="menuButton hastooltip" title="Upload a new table in CSV file.">
+                            Upload</label>
+        
                 </div>
 
                 <div>
@@ -114,36 +110,73 @@
                 <div id="networkTables" style="display:none;">
 
                     <div id="networkInfoDiv">
-                        <h2>Network
-                            <input id="saveNetworkButton" class="tableMenuButton" type="button" value="Save Network"
-                                onclick="window.exports.networkcube.dataview.saveCurrentNetwork(false,true);trace.event('dat_17', 'data view', 'network', 'saved')" />
-                            <input id="deleteNetworkButton" class="tableMenuButton" type="button" value="Delete Network"
-                                onclick="deleteCurrentNetworkBookmarks();window.exports.networkcube.dataview.deleteCurrentNetwork();trace.event('dat_6', 'data view', 'network', 'deleted')" />
-                        </h2>
-                        <p>Name: <input id="networknameInput" type="text" size="50" onchange="trace.event('dat_9', 'data view', 'network name', 'updated')"/>
-                        </p>
                         <p id="networkStatus"></p>
+                        <p>Network Name: 
+                            <input id="networknameInput" type="text" size="50" onchange="trace.event('dat_9', 'data view', 'network name', 'updated')" />
+                        </p>
+                        <input id="saveNetworkButton" class="menuButton" type="button" value="Save Network"
+                            onclick="window.exports.networkcube.dataview.saveCurrentNetwork(false,true);trace.event('dat_17', 'data view', 'network', 'saved')" />
+                        <input id="deleteNetworkButton" class="menuButton" type="button" value="Delete Network"
+                            onclick="deleteCurrentNetworkBookmarks();window.exports.networkcube.dataview.deleteCurrentNetwork();trace.event('dat_6', 'data view', 'network', 'deleted')" />
+                    </div>
+                    <br/>
+        
+                    <!-- Show link table here -->
+                    <div id="linkTableContainer">
+                        <div class="title">
+                            <h3>Link Table</h3>
+                            <p>A link table describes the links in a network. That means that each row describes
+                                        a link with at least a source and target. Optional attributes include time, link
+                                        type, link weight, and locations of source and target nodes while connected
+                                        through this link.
+                            </p>
+                            Select a previously uploaded link table from the list: 
+                            <select id="linktableSelect" 
+                                onchange="window.exports.networkcube.dataview.setLinkTable(this);trace.event('dat_3_LK', 'data view', 'LinkTable_select', ' LK selected')">
+                                <option value="---">---</option>
+                            </select>
+                            or <input id="linkTableUpload" 
+                                type="file" name="file" class="inputfile" value="Upload"
+                                name="files[]" data-multiple-caption="{count} files selected" 
+                                onchange="trace.event('dat_2_LK', 'data view', 'LinkTable_FileUpload', 'new LK file upload')" />
+                            <label 
+                                for="linkTableUpload" 
+                                class="menuButton hastooltip"
+                                title="Upload a new table in CSV file.">
+                                Upload new link table
+                            </label>
+                            <br/>
+                            <input id="directedNetworkCheckBox" 
+                                type="checkbox" 
+                                name="directedCheckbox" 
+                                checked
+                                onclick="window.exports.networkcube.dataview.directedCheckboxClick();trace.event('dat_12', 'data view', 'directed checkbox', this.checked)" />
+                            This network is directed, i.e, link direction from source to target node is important.
+                            <br/>
+                        </div>
+                        <div id="linkTableDiv" class="tableDiv"></div>
                     </div>
 
                     <!-- Show Node table here -->
                     <div id="nodeTableContainer">
                         <div class="title">
-                            <p>
-                                <h3>Node Table</h3>
-                                <p><i>A node table describes the nodes in the network. That means that each row in the
-                                        node table describes a node and its relations, or attributes.</i></p>
+                            <h3>Node Table</h3>
+                            <p>A node table describes the nodes in the network. That means that each row in the
+                                        node table describes a node and its relations, or attributes.
                             </p>
-                            Select a previously uploaded node table from the list: <select id="nodetableSelect"
+                            Select a previously uploaded node table from the list: 
+                            <select id="nodetableSelect"
                                 onchange="window.exports.networkcube.dataview.setNodeTable(this);trace.event('dat_3_NT', 'data view', 'NodeTable_select', ' NT selected')">
                                 <option value="---">---</option>
                             </select>
                             or <input id="nodeTableUpload" type="file" name="file" class="inputfile" value="Upload"
                                 name="files[]" data-multiple-caption="{count} files selected" onchange="trace.event('dat_2_NT', 'data view', 'NodeTable_FileUpload', 'new NT file upload')"/>
-                            <label for="nodeTableUpload" class="menuButton hastooltip"
+                            <label 
+                                for="nodeTableUpload" 
+                                class="menuButton hastooltip"
                                 title="Upload a new table in CSV file.">
                                 Upload new node table
                             </label>
-
                         </div>
 
                         <!-- Table content goes here:  -->
@@ -152,32 +185,6 @@
                         </div>
                     </div>
 
-                    <!-- Show link table here -->
-                    <div id="linkTableContainer">
-                        <div class="title">
-                            <p>
-                                <h3>Link Table</h3>
-                                <p><i>A link table describes the links in a network. That means that each row describes
-                                        a link with at least a source and target. Optional attributes include time, link
-                                        type, link weight, and locations of source and target nodes while connected
-                                        through this link.</i></p>
-                            </p>
-                            Select a previously uploaded link table from the list: <select id="linktableSelect" 
-                                onchange="window.exports.networkcube.dataview.setLinkTable(this);trace.event('dat_3_LK', 'data view', 'LinkTable_select', ' LK selected')">
-                                <option value="---">---</option>
-                            </select>
-                            or <input id="linkTableUpload" type="file" name="file" class="inputfile" value="Upload"
-                                name="files[]" data-multiple-caption="{count} files selected" onchange="trace.event('dat_2_LK', 'data view', 'LinkTable_FileUpload', 'new LK file upload')"/>
-                            <label for="linkTableUpload" class="menuButton hastooltip"
-                                title="Upload a new table in CSV file.">
-                                Upload new link table
-                            </label>
-                            <p>
-                                <input type="checkbox" name="directedCheckbox" onclick="window.exports.networkcube.dataview.directedCheckboxClick();trace.event('dat_12', 'data view', 'directed checkbox', this.checked)">Directed
-                            </p>
-                        </div>
-                        <div id="linkTableDiv" class="tableDiv"></div>
-                    </div>
 
                     <!-- Show location table here -->
                     <div id="locationTableContainer">
@@ -192,9 +199,8 @@
                                 <option value="---">---</option>
                             </select>
                             or
-                            <button class="menuButton" onclick="window.exports.networkcube.dataview.extractLocations();trace.event('dat_14', 'data view', 'extract locations', 'clicked')">Extract locations from node and link
-                                tables</button>
-                            <button class="menuButton" onclick="window.exports.networkcube.dataview.updateLocations();trace.event('dat_13', 'data view', 'update Locations coordinates', 'clicked')">Update location coordinates</button>
+                            <br/>
+                            <button class="menuButton" onclick="window.exports.networkcube.dataview.updateLocationCoordinates();trace.event('dat_13', 'data view', 'update Locations coordinates', 'clicked')">Update location coordinates</button>
                         </div>
 
                         <div id="locationTableDiv" class="tableDiv"></div>
@@ -230,7 +236,7 @@
     
        
     <script> var exports = {}; </script>
-    <script src="../lib/vistorian-vis.js"></script>
+    <script src="../lib/vistorian-web.js"></script>
     <script type="text/javascript">
        // window.exports.networkcube.storage.saveSessionId(window.vc.utils.getUrlVars()['session']);
     </script>
