@@ -193,7 +193,7 @@ let userActivityTimeout = null;
 // let userActivityThrottlerTimeout = null;
 // let isInactive = false;
 
-activateActivityTracker();
+//activateActivityTracker();
 
 
 //register the interactions' events with the function responsible
@@ -227,7 +227,7 @@ function userActivityTracker(){
 }
 
 function checkDispalyOfInactivity(){
-  var nowTime=new Date();
+  var nowTime=new Date().getTime();
   var lastLoggedActvityTime=localStorage.getItem("userInactivityloggedTime");
   if (nowTime-lastLoggedActvityTime>=INACTIVE_USER_TIME_THRESHOLD)
     inactiveUserAction();
