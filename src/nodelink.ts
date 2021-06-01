@@ -77,6 +77,9 @@ linkWeightScale.domain([
 ]);
 
 messenger.setDefaultEventListener(updateEvent);
+messenger.addEventListener(messenger.MESSAGE_SET_STATE, setStateHandler);
+messenger.addEventListener(messenger.MESSAGE_GET_STATE, getStateHandler);
+
 
 
 // MENU
@@ -108,9 +111,11 @@ makeDropdown(menuDiv, 'Labeling', ['Automatic', 'Hide All', 'Show All', 'Neighbo
     updateLabelVisibility();
 })
 
-function makeDropdown(d3parent: any, name: string, values: String[], callback: Function) {
+function makeDropdown(d3parent: any, name: string, values: String[], callback: Function) 
+{
     var s: any = d3parent.append('select')
         .attr('id', "selection-input_" + name)
+        .attr('onchange','trace.event(\'vis_9\',\'Node Link\',\'selection-input_' + name + '\',this.value)')
 
     s.append('option')
         .html('Chose ' + name + ':')
@@ -203,6 +208,7 @@ var svg: any = d3.select('#visSvg')
         }
 
         var globalZoom = 1 - deltaPixels / 1000;
+
         var mouse = [(d3.event).x - panOffsetGlobal[0], (d3.event).y - panOffsetGlobal[1]];
         var d: any, n: any;
         for (var i = 0; i < nodes.length; i++) {
@@ -315,7 +321,9 @@ function init() {
         // @ts-ignore
         .attr('d', (n: dynamicgraph.Node) => d3.svg.symbol().type(getNodeShape(n))())
         .attr('class', 'nodes')
-        .style('fill', (n: dynamicgraph.Node) => getNodeColor(n))
+        .style('fill', (n: dynamicgraph.Node) => getNodeColor(n)) 
+        .attr('onclick','trace.event(\'vis_29\',document.location.pathname,\'Node\',\'Click\')')
+        .attr('onmouseover','trace.event(\'vis_30\',document.location.pathname,\'Node\',\'Mouse Over\')')
         .on('mouseover', mouseOverNode)
         .on('mouseout', mouseOutNode)
         .on('click', (d: any) => {
@@ -364,6 +372,8 @@ function init() {
         .append('path')
         // .attr("marker-end", "url(#triangle)")
         .attr('d', (d: any) => lineFunction(d.path))
+        .attr('onclick','trace.event(\'vis_31\',document.location.pathname,\'Link\',\'Click\')')
+        .attr('onmouseover','trace.event(\'vis_32\',document.location.pathname,\'Link\',\'Mouse Over\')')
         .style('opacity', LINK_OPACITY)
         .on('mouseover', (d: any, i: any) => {
             messenger.highlight('set', <utils.ElementCompound>{ links: [d] })
@@ -523,6 +533,95 @@ function mouseOutNode(n: any) {
 /////////////////
 //// UPDATES ////
 /////////////////
+
+
+function setStateHandler(m: messenger.SetStateMessage){
+    if (m.viewType=="nodelink" ){
+
+    var state: messenger.NodeLinkControls = m.state as messenger.NodeLinkControls;    
+    // unpack / query that state object
+    // e.g., var params = state.params.
+    // set the parameters below:...
+
+    
+    // set link opacity
+    LINK_OPACITY = state.linkOpacity;
+    updateLinks();
+
+    // set node opacity
+    NODE_OPACITY = state.nodeOpacity;
+    updateNodes();
+
+    // set node size
+    NODE_SIZE = state.nodeSize;
+    updateNodeSize();
+
+    LINK_GAP = state.edgeGap;
+    updateLayout();
+
+    // set linkwidh
+    LINK_WIDTH = state.linkWidth;
+    linkWeightScale.range([0, LINK_WIDTH]);
+    updateLinks();
+
+    
+    LABELING_STRATEGY = state.labellingType;
+    updateLabelVisibility();
+
+    // set time (start/end)
+     messenger.timeRange(state.timeSliderStart, state.timeSliderEnd, times[0], true);
+  //timeSlider.set(state.timeSliderStart, state.timeSliderEnd);
+    updateLinks();
+    updateNodes();
+
+    // set pan
+    panOffsetLocal=state.panOffsetLocal;
+    panOffsetGlobal =state.panOffsetGlobal;
+
+    //set zoom
+    globalZoom = state.globalZoom;
+
+    updateLayout();
+    // svg.attr("transform", "translate(" + (panOffsetGlobal[0] + panOffsetLocal[0]) + ',' + (panOffsetGlobal[1] + panOffsetLocal[1]) + ")");
+    }
+
+}
+
+
+function getStateHandler( m: messenger.GetStateMessage){
+    
+    if (m.viewType=="nodelink" ){
+        var nlNetwor: messenger.NetworkControls;
+        nlNetwor=new messenger.NodeLinkControls("nodelink",time_start.unixTime(),time_end.unixTime(),globalZoom,panOffsetLocal,panOffsetGlobal,LINK_OPACITY,NODE_OPACITY,NODE_SIZE,LINK_GAP,LINK_WIDTH,LABELING_STRATEGY);
+        messenger.stateCreated(nlNetwor,m.bookmarkIndex,m.viewType,m.isNewBookmark,m.typeOfMultiView);
+
+        //  var states=JSON.parse(localStorage.getItem("currentCapturedStates") || "[]" ) ;
+        //    states.push(nlNetwor);
+  /*       var bookmarksArray=JSON.parse(localStorage.getItem("vistorianBookmarks") || "[]");
+
+        if (m.bookmarkIndex!=bookmarksArray.length-1){
+            bookmarksArray[m.bookmarkIndex].controlsValues[0]=nlNetwor;
+//            localStorage.setItem("vistorianBookmarks", JSON.stringify(bookmarksArray))
+        }
+        else{
+            bookmarksArray[m.bookmarkIndex].controlsValues.push(nlNetwor);
+           //states.push(nlNetwor); 
+           //localStorage.setItem("currentCapturedStates", JSON.stringify(states));
+    
+        // localStorage.setItem("currentCapturedStates", JSON.stringify(nlNetwor));
+        }
+        //messenger.stateCreated(nlNetwor,m.bookmarkIndex);
+        localStorage.setItem("vistorianBookmarks", JSON.stringify(bookmarksArray))
+     */
+ //   var isNew=(m.bookmarkIndex<0?true:false);
+ //   localStorage.setItem("currentCapturedStates", JSON.stringify(nlNetwor));
+   // messenger.stateCreated(nlNetwor,m.bookmarkIndex,m.viewType,isNew);
+
+    }
+
+}
+
+
 
 function timeChangedHandler(m: messenger.TimeRangeMessage) {
 
