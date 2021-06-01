@@ -242,6 +242,8 @@
             }
         
              function initializeJSON(){
+                var logsContainer = document.getElementById("logs");
+                logsContainer.innerHTML = "";
                 let bks=localStorage.getItem("vistorianBookmarks");
                 let userBks = JSON.parse(bks )|| [];
                 var i;
@@ -349,7 +351,7 @@
 
                 localStorage.setItem("vistorianBookmarks", JSON.stringify(bookmarksArray));
                 document.getElementById('lbl_changesState').style.backgroundColor="snow";
-                document.getElementById('lbl_changesState').innerText='Changes saved';
+                document.getElementById('lbl_changesState').innerText= "No of Bookmarks: " + bookmarksArray.length +" - Changes saved";
             }
             function updatesNotSaved(){
                 document.getElementById('lbl_changesState').innerText="Changes have not been saved yet. Click Save button";
