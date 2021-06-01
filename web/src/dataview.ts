@@ -60,7 +60,8 @@ export function init() {
 }
 
 // loads the list of available visualizations and displays them on the left
-export function loadVisualizationList() {
+export function loadVisualizationList() 
+{
     // create visualization links
     visualizations.forEach(function (v) {
         $('#visualizationList')
@@ -108,9 +109,14 @@ export function loadNetworkList() {
     var network: vistorian.Network;
     networkNames.forEach((t: any) => {
         network = storage.getNetwork(t, SESSION_NAME);
+        var networkDisplayName = network.name;
+        if (networkDisplayName.length > 18){
+            networkDisplayName = networkDisplayName.slice(0,18) + '...';
+        }
+
         $('#networkList').append('\
             <li>\
-                <a onclick="window.exports.networkcube.dataview.showNetwork(\'' + network.id + '\')"  class="underlined">' + network.name + '</a>\
+                <a onclick="window.exports.networkcube.dataview.showNetwork(\'' + network.id + '\')"  class="underlined">' + networkDisplayName+  '</a>\
                 <img class="controlIcon" title="Delete this network." src="../static/logos/delete.png" onclick="window.exports.networkcube.dataview.removeNetwork(\''+ network.id + '\');trace.event(\'dat_4\',\'data view\',\'selected network\',\'deleted\')"/>\
                 <img class="controlIcon" title="Download this network in .vistorian format." src="../static/logos/download.png" onclick="window.exports.networkcube.dataview.exportNetwork(\''+ network.id + '\');trace.event(\'dat_7\',\'data view\',\'selected network\',\'downloaded\')"/>\
             </li>')
@@ -120,7 +126,9 @@ export function loadNetworkList() {
 // VISUALIZATIONS
 
 // creates a new visualization of the passed type
-export function loadVisualization(visType: any) {
+export function loadVisualization(visType: any) 
+{
+    saveCurrentNetwork(false);
     window.open(visType + '.html?session=' + SESSION_NAME + '&datasetName=' + currentNetwork.name);
 }
 
@@ -133,7 +141,7 @@ export function createNetwork() {
 
     currentNetwork = new vistorian.Network(id);
     currentNetwork.name = 'Network-' + currentNetwork.id;
-    currentNetwork.directed = false;
+    currentNetwork.directed = true;
     storage.saveNetwork(currentNetwork, SESSION_NAME);
     showNetwork(currentNetwork.id);
 
@@ -183,8 +191,9 @@ export function setLocationTable(list: any) {
 
 
 // saves/updates and normalizes current network.
-export function saveCurrentNetwork(failSilently: boolean,saveButton?:boolean) {
-
+export function saveCurrentNetwork(failSilently: boolean,saveButton?:boolean) 
+{
+    console.log('>>>network saved')
     saveCellChanges();
 
     currentNetwork.name = $('#networknameInput').val();
@@ -406,7 +415,7 @@ export function showTable(table: vistorian.VTable, elementName: string, isLocati
     $(elementName).append(tableDiv);
 
     var tableMenu = $(elementName).prev()
-    tableMenu.find('.tableMenuButton').remove();
+    tableMenu.find('.exportButton').remove();
 
     var data = table.data
     if (data.length > DATA_TABLE_MAX_LENGTH) {
@@ -416,7 +425,7 @@ export function showTable(table: vistorian.VTable, elementName: string, isLocati
 
     // CREATE TABLE MENU    
     // export button
-    var csvExportButton = $('<button class="tableMenuButton" onclick="window.exports.networkcube.dataview.exportCurrentTableCSV(\'' + table.name + '\');trace.event(\'dat_8\', \'data view\', \'export as CSV file\',\'' + elementName +'\' )">Export as CSV</button>')
+    var csvExportButton = $('<button class="menuButton exportButton" onclick="window.exports.networkcube.dataview.exportCurrentTableCSV(\'' + table.name + '\');trace.event(\'dat_8\', \'data view\', \'export as CSV file\',\'' + elementName +'\' )">Export Table as CSV</button>')
     tableMenu.append(csvExportButton);
 
     // create table
@@ -524,8 +533,8 @@ export function showTable(table: vistorian.VTable, elementName: string, isLocati
                 switch (field) {
                     case 'source': fieldName = 'Source Node'; break;
                     case 'target': fieldName = 'Target Node'; break;
-                    case 'source_location': fieldName = 'Source Node Location'; break;
-                    case 'target_location': fieldName = 'Target Node Location'; break;
+                    case 'location_source': fieldName = 'Location Source Node'; break;
+                    case 'location_target': fieldName = 'Location Target Node'; break;
                     case 'linkType': fieldName = 'Link Type'; break;
                     case 'location': fieldName = 'Node Location'; break;
                     case 'label': fieldName = 'Node'; break;
@@ -545,7 +554,7 @@ export function showTable(table: vistorian.VTable, elementName: string, isLocati
                     option = $('<option value='+field+' class=targetField>' + fieldName + '</option>');
                 }
                 else{
-                    option = $('<option value='+field+'>' + fieldName + '</option>');
+                    option = $('<option value='+field+' class='+field+'>' + fieldName + '</option>');
                 }
 
                 select.append(option);
@@ -559,10 +568,16 @@ export function showTable(table: vistorian.VTable, elementName: string, isLocati
                     $(option).attr('selected', 'selected');
                     if (field == 'time') {
                         var val = '';
-                        if (currentNetwork.hasOwnProperty('timeFormat')) {
+                        if (currentNetwork.hasOwnProperty('timeFormat') 
+                            && currentNetwork.timeFormat != undefined
+                            && currentNetwork.timeFormat != 'undefined') 
+                            {
                             val = "value='" + currentNetwork.timeFormat + "'";
+                        }else{
+                            val = 'value=""';
                         }
-                        timeFormatInput = $('<span class="nobr"><input title="Enter a date pattern" type="text" size="12" id="timeFormatInput_' + schema.name + '" value="DD/MM/YYYY" ' + val + ' onkeyup="timeFormatChanged()"></input><a href="http://momentjs.com/docs/#/parsing/string-format/" target="_blank" title="Details of the date pattern syntax"><img src="../static/logos/help.png" class="inlineicon"/></a></span>');
+            
+                        timeFormatInput = $('<span class="nobr"><input title="Enter a date pattern" type="text" size="12" id="timeFormatInput_' + schema.name + '" ' + val + '></input><a href="http://momentjs.com/docs/#/parsing/string-format/" target="_blank" title="Details of the date pattern syntax"><img src="../static/logos/help.png" class="inlineicon"/></a></span>');
                         cell.append(timeFormatInput);
                     }
                 }
@@ -580,11 +595,6 @@ export function showTable(table: vistorian.VTable, elementName: string, isLocati
     }
 }
 
-export function timeFormatChanged() {
-    if (currentNetwork.userNodeSchema)
-        currentNetwork.timeFormat = $('#timeFormatInput_' + currentNetwork.userNodeSchema.name).val()
-    saveCurrentNetwork(false);
-}
 
 export function deleteCurrentTable() {
     storage.deleteTable(currentTable, SESSION_NAME);
@@ -805,18 +815,23 @@ export function replaceCellContents(tableId: any) {
     showMessage('Replaced ' + replaceCount + ' occurrences of ' + replace_pattern + ' with ' + replace_value + '.', 2000);
 }
 
-var directedCheckboxToggle = false;
-export function directedCheckboxClick(){
-    currentNetwork.directed = true;
-    $("input[type=checkbox]").prop("checked", !directedCheckboxToggle);
+var directedCheckboxToggle = true;
+export function directedCheckboxClick()
+{
     directedCheckboxToggle = !directedCheckboxToggle;
+
+    $("#directedNetworkCheckBox").prop("checked", directedCheckboxToggle);    
+
+    currentNetwork.directed = directedCheckboxToggle;
 
     var directionFields = document.getElementsByClassName('directionField') as HTMLCollectionOf<HTMLElement>;
     var sourceFields = document.getElementsByClassName('sourceField');
     var targetFields = document.getElementsByClassName('targetField');
+    var locSourceFields = document.getElementsByClassName('location_source');
+    var locTargetFields = document.getElementsByClassName('location_target');
 
-    if(directedCheckboxToggle){
-        currentNetwork.directed = true;
+    if(directedCheckboxToggle)
+    {
         for (var i = 0; i < directionFields.length; i ++) {
             directionFields[i].style.display = 'none';
         }
@@ -826,8 +841,14 @@ export function directedCheckboxClick(){
         for (var i = 0; i < targetFields.length; i ++) {
             targetFields[i].innerHTML = 'Target Node';
         }
-    }else{
-        currentNetwork.directed = false;
+        for (var i = 0; i < locSourceFields.length; i ++) {
+            locSourceFields[i].innerHTML = 'Location Source Node';
+        }
+        for (var i = 0; i < locTargetFields.length; i ++) {
+            locTargetFields[i].innerHTML = 'Location Source Node';
+        }
+    }else
+    {
         for (var i = 0; i < directionFields.length; i ++) {
             directionFields[i].style.display = 'block';
         }
@@ -836,6 +857,12 @@ export function directedCheckboxClick(){
         }
         for (var i = 0; i < targetFields.length; i ++) {
             targetFields[i].innerHTML = 'Node 2';
+        }
+        for (var i = 0; i < locSourceFields.length; i ++) {
+            locSourceFields[i].innerHTML = 'Location Node 1';
+        }
+        for (var i = 0; i < locTargetFields.length; i ++) {
+            locTargetFields[i].innerHTML = 'Location Node 2';
         }
     }
     saveCurrentNetwork(true);
@@ -846,6 +873,7 @@ export function directedCheckboxClick(){
 export function extractLocations() {
 
     showMessage('Extracting locations...', false);
+
 
     if (currentNetwork.userLocationTable == undefined) {
         var tableName = currentNetwork.name.replace(/ /g, "_");
@@ -913,15 +941,14 @@ export function extractLocations() {
     loadTableList();
     storage.saveNetwork(currentNetwork, SESSION_NAME);
 
-
     saveCurrentNetwork(false);
     showNetwork(currentNetwork.id);
 
     if (locationsFound > 0)
+    {
         showMessage(locationsFound + ' locations found.', 2000);
-    else {
-        updateLocations();
     }
+    updateLocationCoordinates();
 }
 
 export function createLocationEntry(name: string, rows: any[]) {
@@ -942,11 +969,13 @@ export function createLocationEntry(name: string, rows: any[]) {
 }
 
 /** Updates long/lat for geonames field in the location table**/
-export function updateLocations() {
+export function updateLocationCoordinates() 
+{
+    console.log('>>updateLocationCoordinates')
     showMessage('Retrieving and updating location coordinates...', false);
 
     if (currentNetwork.userLocationTable)
-        updateLocationTable(currentNetwork.userLocationTable, currentNetwork.userLocationSchema,
+        updateLocationTableCoordinates(currentNetwork.userLocationTable, currentNetwork.userLocationSchema,
             function (nothingImportant: any) {
                 saveCurrentNetwork(false);
                 showNetwork(currentNetwork.id);
@@ -1068,6 +1097,27 @@ export function checkRequests(callBack: any, locationsFound: any) {
     }
 }
 
+export function updateLocationTableCoordinates(
+    userLocationTable: vistorian.VTable, 
+    locationSchema: datamanager.LocationSchema, 
+    callBack: Function) 
+{
+    saveCurrentNetwork(false);
+    var data: any = userLocationTable.data;
+    requestsRunning = 0;
+    fullGeoNames = [];
+    for (var i = 1; i < data.length; i++) 
+    {
+        updateEntryToLocationTableOSM(i, data[i][locationSchema.geoname], userLocationTable, locationSchema);
+    }
+    // wait for all requests to be returned, until continue
+    requestTimer = setInterval(function () 
+    {
+        currentNetwork.userLocationTable = userLocationTable;
+        checkRequests(callBack, [])
+    }, 500);
+}
+
 export function updateEntryToLocationTableOSM(index: number, geoname: string, locationTable: vistorian.VTable, locationSchema: datamanager.LocationSchema) {
     if(geoname) {
         geoname = geoname.trim();
@@ -1113,20 +1163,4 @@ export function updateEntryToLocationTableOSM(index: number, geoname: string, lo
             });
         xhr['uniqueId'] = requestsRunning++;
     }
-}
-
-export function updateLocationTable(userLocationTable: vistorian.VTable, locationSchema: datamanager.LocationSchema, callBack: Function) {
-    saveCurrentNetwork(false);
-    var data: any = userLocationTable.data;
-    requestsRunning = 0;
-    fullGeoNames = [];
-    for (var i = 1; i < data.length; i++) {
-        updateEntryToLocationTableOSM(i, data[i][locationSchema.geoname], userLocationTable, locationSchema);
-    }
-    // wait for all requests to be returned, until continue
-    requestTimer = setInterval(function () {
-        currentNetwork.userLocationTable = userLocationTable;
-        checkRequests(callBack, [])
-    }, 500);
-
 }
