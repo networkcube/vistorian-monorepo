@@ -335,6 +335,17 @@ function init() {
             .on('mouseout', (d: any) => {
                 messenger.highlight('reset')
             })
+            .attr('marker-end',function (d: any) {
+                if(d.directed){
+                    var color = utils.getPriorityColor(d);
+                    if(!color)
+                        color = COLOR_DEFAULT_LINK;
+                    // if(highlightId && highlightId == d._id) {
+                        // return 'black';
+                    // }
+                    return marker(color);
+                }
+            })
 
         // DRAW NODES (one for every node x position it is at)
 
@@ -755,6 +766,23 @@ function updateLinks(highlightId?: number) {
         })
 
 }
+
+function marker(color: any) 
+{
+    svg.append("svg:defs").append("svg:marker")
+        .attr("id", color.replace("#", ""))
+        .attr("viewBox", "0 -5 10 10")
+        .attr("refX", 12)
+        .attr("refY", 0)
+        .attr("markerWidth", 6)
+        .attr("markerHeight", 6)
+        .attr("orient", "auto") //auto-start-reverse to flip
+        .append("svg:path")
+        .attr("d", "M0,-5L10,0L0,5")
+        .style("fill", color);
+
+    return "url(" + color + ")";
+};
 
 var visibleLabels: any[] = []
 function updateNodes(highlightId?: number) {
