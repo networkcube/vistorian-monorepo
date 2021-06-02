@@ -34,7 +34,7 @@ export var currentNetwork: vistorian.Network;
 // format: [shown name, codename]
 var visualizations = [
     ['Node Link', 'nodelink'],
-    ['Adjacency Matrix', 'matrix'],
+    ['Matrix', 'matrix'],
     ['Time Arcs', 'dynamicego'],
     ['Map', 'map'],
 ]
@@ -77,11 +77,11 @@ export function loadVisualizationList()
             <button onclick="window.exports.networkcube.dataview.loadVisualization(\'mat-nl\');trace.event(\'vis_1\',\'data view\',\'Vis Creation Link Clicked\',\'Matrix & Node Link\');" class="visbutton hastooltip">\
             <img src="../static/figures/nl+mat.png" class="visicon"/><p>Matrix + Node Link</p>\
         </button></li>')
-    $('#visualizationList')
-        .append('<li class="visLink" title="Show all visualizations.">\
-        <button onclick="window.exports.networkcube.dataview.loadVisualization(\'tileview\');trace.event(\'vis_1\',\'data view\',\'Vis Creation Link Clicked\',\'Tile View Link\');" class="visbutton hastooltip">\
-        <img src="../static/figures/all.png" class="visicon"/><p>All</p>\
-        </button></li>')
+    // $('#visualizationList')
+    //     .append('<li class="visLink" title="Show all visualizations.">\
+    //     <button onclick="window.exports.networkcube.dataview.loadVisualization(\'tileview\');trace.event(\'vis_1\',\'data view\',\'Vis Creation Link Clicked\',\'Tile View Link\');" class="visbutton hastooltip">\
+    //     <img src="../static/figures/all.png" class="visicon"/><p>All</p>\
+    //     </button></li>')
 }
 
 
