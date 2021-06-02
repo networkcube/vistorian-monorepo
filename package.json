@@ -39,7 +39,7 @@
         "jstorage",
         "moment",
         "vistorian-core",
-        "vistorian-vis"
+        "vistorian-web"
     ],
     "dependencies": {
         "@types/three": "^0.93.27",
