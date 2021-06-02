@@ -9,7 +9,6 @@
     <script type="text/javascript" src="../static/traces/trace.js"></script>
 
    
-
     <link rel="stylesheet" type="text/css" href="./static/styles.css" />
     <link rel="stylesheet" type="text/css" href="./static/dataview_styles.css" />
     <link rel="stylesheet" type="text/css" href="./static/tablestyle.css" />
@@ -18,20 +17,22 @@
     <link href="https://fonts.googleapis.com/css?family=Poiret+One" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Nunito+Sans" rel="stylesheet">
     <script src='https://kit.fontawesome.com/303540a013.js' crossorigin='anonymous'></script>
-
-
     
     <script src="../node_modules/jquery/dist/jquery.js" type="text/javascript"></script>
     <script src="./static/jquery-ui.js"></script>
     <script src="../node_modules/vistorian-core/lib/vistorian-core.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="bookmarkLogConsent.css">
-    <script src='bookmarkLogConsent.js'></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bookmarkLogConsent.css">
+
+    <script src='bookmarkLogConsent.js'></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  
+
     <script>
         $.get("logging_models.html", function(result){ 
             $("body").append(result);
@@ -200,7 +201,7 @@
                             </select>
                             or
                             <br/>
-                            <button class="menuButton" onclick="window.exports.networkcube.dataview.updateLocationCoordinates();trace.event('dat_13', 'data view', 'update Locations coordinates', 'clicked')">Update location coordinates</button>
+                            <button class="menuButton" onclick="window.exports.networkcube.dataview.updateLocationCoordinatesWrapper();trace.event('dat_13', 'data view', 'update Locations coordinates', 'clicked')">Update location coordinates</button>
                         </div>
 
                         <div id="locationTableDiv" class="tableDiv"></div>
@@ -217,7 +218,6 @@
             </td>
         </tr>
     </table>
-
 
 
     <div id="footer">
@@ -237,20 +237,15 @@
        
     <script> var exports = {}; </script>
     <script src="../lib/vistorian-web.js"></script>
-    <script type="text/javascript">
-       // window.exports.networkcube.storage.saveSessionId(window.vc.utils.getUrlVars()['session']);
-    </script>
 
-    <!-- VER ESTO -->
     <script>
-
 
         // Hack to make upload button look nice: 
         // from: http://tympanus.net/codrops/2015/09/15/styling-customizing-file-inputs-smart-way/
 
         'use strict';
 
-      //  $(document).tooltip();
+          //  $(document).tooltip();
 
         ;(function (document, window, index) {
 
@@ -273,7 +268,6 @@
                 input.addEventListener('blur', function () { input.classList.remove('has-focus'); });
             });
         }(document, window, 0));
-
 
     </script>
        <div id="mydiv" >
