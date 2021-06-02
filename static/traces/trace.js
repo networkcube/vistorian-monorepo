@@ -38,7 +38,7 @@
 
     trace.debug = function(d) {
 	if (!arguments.length) return debug;
-	// debug = d;
+	debug = d;
 	return trace;
     };
 
@@ -94,7 +94,7 @@
 	    httpRequest.setRequestHeader("Accept", "text/plain");
 	    //    httpRequest.setRequestHeader("Content-Length", json.length);
 	}
-	// httpRequest.send(json);
+	httpRequest.send(json);
     };
 
     var sendLogs = function() {
