@@ -1064,9 +1064,10 @@ class Matrix {
       this.nodeOrder[d.id()] >= this.bbox.y0 &&
       this.nodeOrder[d.id()] <= this.bbox.y1);
     let topNodes = this.dgraph.nodes().visible().toArray();
-    topNodes = topNodes.filter((d: any) =>
-      this.nodeOrder[d.id()] >= this.bbox.x0 &&
-      this.nodeOrder[d.id()] <= this.bbox.x1);
+      topNodes = topNodes.filter((d: any) =>
+        this.nodeOrder[d.id()] >= this.bbox.x0 &&
+        this.nodeOrder[d.id()] <= this.bbox.x1);
+    
 
     let visibleData: { [id: number]: { [id: number]: dynamicgraph.NodePair } } = {};
     let row, col: number;
@@ -1077,7 +1078,16 @@ class Matrix {
       if (node.isVisible()) {
         row = this.nodeOrder[node.id()] - this.bbox.y0;
         for (let link of node.links().toArray()) {
-          let neighbor = link.source.id() == node.id() ? link.target : link.source;
+          let neighbor;
+          if((link as any).directed){
+            neighbor = link.target;
+            if(neighbor.id() == node.id()){
+              continue;
+            }
+          }else{
+            neighbor = link.source.id() == node.id() ? link.target : link.source;
+          }
+          // let neighbor = link.source.id() == node.id() ? link.target : link.source;
           if (neighbor.isVisible() &&
             this.nodeOrder[neighbor.id()] >= this.bbox.x0 &&
             this.nodeOrder[neighbor.id()] <= this.bbox.x1) {
@@ -1255,6 +1265,7 @@ if(matrix.dgraph.times().size() > 1){
   let matrixTimeSlider;
   matrixTimeSlider = new MatrixTimeSlider(tsJQ, matrix, vizWidth);
   matrix.setTimeSlider(matrixTimeSlider);
+  messenger.addEventListener('timeRange', matrix.timeRangeHandler);
 }
 let matrixLabels = new MatrixLabels(svg, matrix.margin, matrix);
 let matrixVis = new MatrixVisualization(foreignObject, bbox.width, bbox.height, matrix);
@@ -1267,7 +1278,6 @@ matrix.setMenu(matrixMenu);
 matrix.setCellLabel(cellLabel);
 matrix.setOverview(matrixOverview);
 matrix.setVis(matrixVis);
-messenger.addEventListener('timeRange', matrix.timeRangeHandler);
 messenger.addEventListener(messenger.MESSAGE_SET_STATE, setStateHandler);
 messenger.addEventListener(messenger.MESSAGE_GET_STATE, getStateHandler);
 
