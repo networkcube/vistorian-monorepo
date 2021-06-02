@@ -10,8 +10,8 @@ div#noNetworkTables{
 img.visicon{
 	height: 100px;
 	margin-right: 10px;
-	border: 1px solid #ddd;
-	padding:5px;
+	border: 1px solid #eee;
+	padding: 5px;
 } 
 
 
@@ -98,14 +98,14 @@ input#replaceButton{
 
 .menuButton{
     margin-left: 10px;
-    background-color:#aaa;
+    background-color:#bbb;
     font-size:14px;
     font-weight: normal;
     border-radius:10px;
     border: none;
     display:inline-block;
     cursor:pointer;
-    color:#ffffff;
+    color:#fff;
     padding: 4px;
     padding-left: 8px;
     padding-right: 8px;
@@ -154,6 +154,10 @@ option.tableSelection{
 
 .emptyTableCell{
     background-color:#ffeeee;
+}
+
+.schemaCellSet{
+    background-color: #8c8;
 }
 
 .messageBox{
