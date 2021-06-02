@@ -207,7 +207,7 @@ export function saveCurrentNetwork(failSilently: boolean, saveButton?:boolean)
         if (currentNetwork.userNodeSchema.time != -1) {
             currentNetwork.timeFormat = $('#timeFormatInput_' + currentNetwork.userNodeSchema.name).val()
         }
-    }else
+    }
     if (currentNetwork.userLinkSchema)
     {
         if (currentNetwork.userLinkSchema.time != -1) {
