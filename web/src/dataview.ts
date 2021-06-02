@@ -349,9 +349,9 @@ export function showNetworkTables(networkId: number) {
 export function updateNetworkStatusIndication() {
     if (currentNetwork.ready) {
         $('#networkStatus')
-            .text('Ready for visualization. Select a visualization from the menu on the top.')
+            .text('Network ready for visualization. Select a visualization from the menu on the top.')
             .css('color', '#fff')
-            .css('background', '#2b0')
+            .css('background', '#6b6')
     }else if("userNodeTable" in currentNetwork && currentNetwork.userNodeTable && currentNetwork.userNodeTable.data.length == 1){
         $('#networkStatus')
             .text('Network not ready for visualization. Uploaded node table is empty.')
@@ -491,7 +491,8 @@ export function showTable(table: vistorian.VTable, elementName: string, isLocati
         }
 
         tBody.append(tr);
-        for (var c = 0; c < data[r].length; c++) {
+        for (var c = 0; c < data[r].length; c++) 
+        {
             if(isLocationTable && data[0][c] == "User Name")
             {
                 td = $('<td></td>').attr('contenteditable', 'false');
@@ -539,18 +540,21 @@ export function showTable(table: vistorian.VTable, elementName: string, isLocati
 
         var select, cell, option, timeFormatInput;
 
-        for (var i = 0; i < table.data[0].length; i++) {
+        for (var i = 0; i < table.data[0].length; i++) 
+        {
+
             cell = $('<th class="schemaCell" id="schemaCell_' + schema.name + '_' + i + '"></th>')
             schemaRow.append(cell);
             select = $('<select class="schemaSelection" onchange="window.exports.networkcube.dataview.schemaSelectionChanged(this.value, ' + i + ' , \'' + schema.name + '\');trace.event(\'dat_11\',\'data view\',\'Column Data Type Specified\', this.value);"></select>');
             cell.append(select);
-            select.append('<option>(Not visualized)</option>')
+            select.append('<option>(Not visualized)</option>')    
+                            
             for (var field in schema) {
                 if (field == 'name'
-                    || field == 'constructor'
-                    || field == 'timeFormat')
-                    continue;
-
+                || field == 'constructor'
+                || field == 'timeFormat')
+                continue;
+                
                 var fieldName = '';
                 // Translate schema names in human readable text
                 switch (field) {
@@ -565,7 +569,7 @@ export function showTable(table: vistorian.VTable, elementName: string, isLocati
                         fieldName = field;
                         fieldName = fieldName.charAt(0).toUpperCase() + fieldName.slice(1);
                 }
-
+                
 
                 if(field == 'directed'){
                     option = $('<option value='+field+' class=directionField style=display:block>' + fieldName + '</option>');
@@ -584,11 +588,15 @@ export function showTable(table: vistorian.VTable, elementName: string, isLocati
 
                 if (i == 0 && field == 'id') {
                     $(option).attr('selected', 'selected');
+                    cell.addClass('schemaCellSet');
                     (schema as any)[field] = 0;
                 }
-
-                if ((schema as any)[field] == i) {
+                
+                if ((schema as any)[field] == i) 
+                {
                     $(option).attr('selected', 'selected');
+                    cell.addClass('schemaCellSet');
+                
                     if (field == 'time') {
                         var val = '';
                         if (currentNetwork.hasOwnProperty('timeFormat') 
@@ -610,6 +618,7 @@ export function showTable(table: vistorian.VTable, elementName: string, isLocati
                     for (var k = 0; k < (schema as any).relation.length; k++) {
                         if ((schema as any).relation[k] == i) {
                             $(option).attr('selected', 'selected');
+                            cell.addClass('schemaCellSet')
                         }
                     }
                 }
@@ -618,7 +627,7 @@ export function showTable(table: vistorian.VTable, elementName: string, isLocati
     }
 }
 
-export function deleteCurrentTable() {
+export function deleteCurrentTable(){
     storage.deleteTable(currentTable, SESSION_NAME);
     $('#individualTables').css('display', 'none');
     loadTableList();
@@ -630,6 +639,14 @@ export function deleteCurrentTable() {
 export function schemaSelectionChanged(field: string, columnNumber: number, schemaName: string, parent: HTMLElement) 
 {
     console.log('SCHEMA-SELECTION-CHANGED', field,schemaName)
+
+    // console.log('field', field)
+    // if(field != '(Not visualized)')
+    // {
+    //     console.log('adding class')
+    //     $('#schemaCell_' + schemaName + '_' + columnNumber).addClass('schemaCellSet')
+    // }
+
     // reset schema:
     for (var field2 in (currentNetwork as any)[schemaName]) 
     {
@@ -1069,7 +1086,8 @@ export function removeNetwork(networkId: string) {
     deleteCurrentNetwork();
 }
 
-export function removeTable(tableId: string) {
+export function removeTable(tableId: string) 
+{
     var table = storage.getUserTable(tableId, SESSION_NAME);
     unshowTable('#individualTables')
 

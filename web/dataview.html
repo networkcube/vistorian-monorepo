@@ -86,14 +86,14 @@
                 <div id="networkListDiv">
                     <h2>Your Networks</h2>
                     <ul id="networkList" class="nointent"></ul>
-                    <input type="button" class="menuButton hastooltip" value="New" onclick="window.exports.networkcube.dataview.createNetwork();trace.event('dat_1', 'data view', 'new network', 'created')"
+                    <input type="button" class="menuButton hastooltip" value="New Network" onclick="window.exports.networkcube.dataview.createNetwork();trace.event('dat_1', 'data view', 'new network', 'created')"
                             title="Create new network from one or more tables." />
                 </div>
                 <br />
                 <div id="tableListDiv">
                     <h2>Your Tables</h2>
                     <ul id="tableList" class="nointent"></ul>
-                    <input id="files" type="file" name="file" class="inputfile" value="Upload" name="files[]"
+                    <input id="files" type="file" name="file" class="inputfile" value="Upload Table(s)" name="files[]"
                             data-multiple-caption="{count} files selected" multiple onchange="trace.event('dat_2_DT', 'data view', 'DataTables_FileUpload', 'new file upload')"/>
                     <label for="files" class="menuButton hastooltip" title="Upload a new table in CSV file.">
                             Upload</label>
