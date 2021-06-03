@@ -1026,7 +1026,8 @@ export function updateLocationCoordinatesWrapper()
             (currentNetwork as any).userLocationTable, 
             currentNetwork.userLocationSchema, 
             function(){
-                showNetworkTables(currentNetwork.id);
+                // showNetworkTables(currentNetwork.id);
+                showTable((currentNetwork.userLocationTable as vistorian.VTable), '#locationTableDiv', true, currentNetwork.userLocationSchema);
             }
         )
     }
@@ -1175,44 +1176,48 @@ export function updateLocationCoordinates(
     }, 500);
 }
 
+
 export function getOpenStreetMapCoordinatesForLocation(index: number, geoname: string, locationTable: vistorian.VTable, locationSchema: datamanager.LocationSchema) {
     if(geoname) {
         geoname = geoname.trim();
         fullGeoNames.push(geoname);
         var xhr: any = $.ajax({
-            url: "https://nominatim.openstreetmap.org/search",
+            url: 'https://api.maptiler.com/geocoding/'+geoname.split(',')[0].trim()+'.json?key=4JfMdMSpqOnXq9pxP8x4',
             headers: {  'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Credentials':'true' , 'Access-Control-Allow-Methods': 'POST, GET, OPTIONS','Access-Control-Allow-Headers' :'Authorization,DNT,X-Mx-ReqToken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type'},
-            data: {format: "json", limit: "1", q: geoname.split(',')[0].trim()},
+            data: {output: "json", limit: "1", },
             dataType: 'json'
         })
             .done(function (data, text, XMLHttpRequest) {
                 var entry;
                 var rowIndex = XMLHttpRequest.uniqueId + 1;
                 var userLocationLabel = locationTable.data[rowIndex][locationSchema.label];
-                if (data.length != 0) {
-                    var validResults = [];
-                    var result;
-                    for (var i = 0; i < data.length; i++) {
-                        entry = data[i];
-                        if (entry == undefined)
-                            continue;
-                        if ('lon' in entry &&
-                            'lat' in entry &&
-                            typeof entry.lon === 'string' &&
-                            typeof entry.lat === 'string') {
-                            validResults.push(entry);
-                        }
-                    }
-                    if (validResults.length == 0) {
-                        locationTable.data[rowIndex] = [rowIndex - 1, userLocationLabel, geoname, undefined, undefined];
-                        return;
-                    }
-                    locationTable.data[rowIndex] = [rowIndex - 1, userLocationLabel, geoname, validResults[0].lon, validResults[0].lat];
-                } else {
-                    if (geoname == '')
-                        return;
-                    locationTable.data[rowIndex] = [rowIndex - 1, userLocationLabel, geoname, undefined, undefined];
+                if (data.features.length > 0) {
+                    entry = data.features[0]
+                    console.log('ENTRY RECEIVED', entry, entry.center[0], entry.center[1])
+                    // var validResults = [];
+                    // var result;
+                    // for (var i = 0; i < data.features.length; i++) {
+                    //     entry = data.features[i];
+                    //     if (entry == undefined)
+                    //         continue;
+                    //     if ('longitude' in entry &&
+                    //         'latitude' in entry 
+                    //         // typeof entry.longitude === 'string' &&
+                    //         // typeof entry.latitude === 'string'
+                    //         ) {
+                    //         validResults.push(entry);
+                    //     }
+                    // }
+                    // if (validResults.length == 0) {
+                    locationTable.data[rowIndex] = [rowIndex - 1, userLocationLabel, geoname, entry.center[0], entry.center[1]];
                 }
+                locationTable.data[rowIndex] = [rowIndex - 1, userLocationLabel, geoname, undefined, undefined];
+    // return;
+                // } else {
+                //     if (geoname == '')
+                //         return;
+                //     locationTable.data[rowIndex] = [rowIndex - 1, userLocationLabel, geoname, undefined, undefined];
+                // }
             })
             .always(function () {
                 requestsRunning--;
@@ -1220,3 +1225,94 @@ export function getOpenStreetMapCoordinatesForLocation(index: number, geoname: s
         xhr['uniqueId'] = requestsRunning++;
     }
 }
+// export function getOpenStreetMapCoordinatesForLocation(index: number, geoname: string, locationTable: vistorian.VTable, locationSchema: datamanager.LocationSchema) {
+//     if(geoname) {
+//         geoname = geoname.trim();
+//         fullGeoNames.push(geoname);
+//         var xhr: any = $.ajax({
+//             url: 'https://api.positionstack.com/v1/forward?access_key=8597937ec81294b94fb84e42b4c2f2fc',
+//             headers: {  'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Credentials':'true' , 'Access-Control-Allow-Methods': 'POST, GET, OPTIONS','Access-Control-Allow-Headers' :'Authorization,DNT,X-Mx-ReqToken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type'},
+//             data: {output: "json", limit: "1", query: geoname.split(',')[0].trim()},
+//             dataType: 'json'
+//         })
+//             .done(function (data, text, XMLHttpRequest) {
+//                 var entry;
+//                 var rowIndex = XMLHttpRequest.uniqueId + 1;
+//                 var userLocationLabel = locationTable.data[rowIndex][locationSchema.label];
+//                 if (data.results != 0) {
+//                     var validResults = [];
+//                     var result;
+//                     for (var i = 0; i < data.results.length; i++) {
+//                         entry = data.results[i];
+//                         if (entry == undefined)
+//                             continue;
+//                         if ('longitude' in entry &&
+//                             'latitude' in entry 
+//                             // typeof entry.longitude === 'string' &&
+//                             // typeof entry.latitude === 'string'
+//                             ) {
+//                             validResults.push(entry);
+//                         }
+//                     }
+//                     if (validResults.length == 0) {
+//                         locationTable.data[rowIndex] = [rowIndex - 1, userLocationLabel, geoname, undefined, undefined];
+//                         return;
+//                     }
+//                     locationTable.data[rowIndex] = [rowIndex - 1, userLocationLabel, geoname, validResults[0].longitude, validResults[0].latitude];
+//                 } else {
+//                     if (geoname == '')
+//                         return;
+//                     locationTable.data[rowIndex] = [rowIndex - 1, userLocationLabel, geoname, undefined, undefined];
+//                 }
+//             })
+//             .always(function () {
+//                 requestsRunning--;
+//             });
+//         xhr['uniqueId'] = requestsRunning++;
+//     }
+// }
+// export function getOpenStreetMapCoordinatesForLocation(index: number, geoname: string, locationTable: vistorian.VTable, locationSchema: datamanager.LocationSchema) {
+//     if(geoname) {
+//         geoname = geoname.trim();
+//         fullGeoNames.push(geoname);
+//         var xhr: any = $.ajax({
+//             url: "http://nominatim.openstreetmap.org/search",
+//             headers: {  'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Credentials':'true' , 'Access-Control-Allow-Methods': 'POST, GET, OPTIONS','Access-Control-Allow-Headers' :'Authorization,DNT,X-Mx-ReqToken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type'},
+//             data: {format: "json", limit: "1", q: geoname.split(',')[0].trim()},
+//             dataType: 'json'
+//         })
+//             .done(function (data, text, XMLHttpRequest) {
+//                 var entry;
+//                 var rowIndex = XMLHttpRequest.uniqueId + 1;
+//                 var userLocationLabel = locationTable.data[rowIndex][locationSchema.label];
+//                 if (data.length != 0) {
+//                     var validResults = [];
+//                     var result;
+//                     for (var i = 0; i < data.length; i++) {
+//                         entry = data[i];
+//                         if (entry == undefined)
+//                             continue;
+//                         if ('lon' in entry &&
+//                             'lat' in entry &&
+//                             typeof entry.lon === 'string' &&
+//                             typeof entry.lat === 'string') {
+//                             validResults.push(entry);
+//                         }
+//                     }
+//                     if (validResults.length == 0) {
+//                         locationTable.data[rowIndex] = [rowIndex - 1, userLocationLabel, geoname, undefined, undefined];
+//                         return;
+//                     }
+//                     locationTable.data[rowIndex] = [rowIndex - 1, userLocationLabel, geoname, validResults[0].lon, validResults[0].lat];
+//                 } else {
+//                     if (geoname == '')
+//                         return;
+//                     locationTable.data[rowIndex] = [rowIndex - 1, userLocationLabel, geoname, undefined, undefined];
+//                 }
+//             })
+//             .always(function () {
+//                 requestsRunning--;
+//             });
+//         xhr['uniqueId'] = requestsRunning++;
+//     }
+// }
