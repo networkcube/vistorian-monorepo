@@ -586,6 +586,11 @@ export function importIntoNetworkcube(currentNetwork: Network, sessionid: string
     ///////////////////////////////
 
     var nodeNames: string[] = [];
+    // if(currentNetwork.userNodeTable && currentNetwork.userNodeSchema.label){
+    //     for(var n in currentNetwork.userNodeTable.data){
+    //         nodeNames.push(currentNetwork.userNodeTable.data[n][currentNetwork.userNodeSchema.label])
+    //     }
+    // }
 
     if (currentNetwork.userNodeTable == undefined
         && currentNetwork.userLinkTable != undefined) {

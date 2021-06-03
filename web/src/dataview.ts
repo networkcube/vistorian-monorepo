@@ -564,7 +564,7 @@ export function showTable(table: vistorian.VTable, elementName: string, isLocati
                     case 'location_target': fieldName = 'Location Target Node'; break;
                     case 'linkType': fieldName = 'Link Type'; break;
                     case 'location': fieldName = 'Node Location'; break;
-                    case 'label': fieldName = 'Node'; break;
+                    case 'label': fieldName = 'Node Label'; break;
                     default:
                         fieldName = field;
                         fieldName = fieldName.charAt(0).toUpperCase() + fieldName.slice(1);
@@ -758,7 +758,8 @@ function checkFileType(filesToUpload: any){
     return true
 }
 
-export function uploadNodeTable(e: any) {
+export function uploadNodeTable(e: any) 
+{
     filesToUpload = [e.target.files[0]];
     if(checkFileType(filesToUpload)) {
         uploadFiles(() => {
