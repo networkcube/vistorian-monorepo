@@ -398,35 +398,502 @@ export function createAndNormaliseLocationTable(currentNetwork: Network) {
     return {normalizedLocationSchema, normalizedLocationTable, locationName, locationLabels};
 }
 
-export function importIntoNetworkcube(currentNetwork: Network, sessionid: string, s: boolean) {
+// export function importIntoNetworkcube(currentNetwork: Network, sessionid: string, s: boolean) {
+//     currentNetwork.ready = false;
+
+//     if (currentNetwork.userLinkSchema) {
+//         var userLinkSchema: VLinkSchema = currentNetwork.userLinkSchema;
+//     } else {
+//         var userLinkSchema: VLinkSchema = new VLinkSchema();
+//     }
+
+//     if (currentNetwork.userNodeSchema) {
+//         var userNodeSchema: VNodeSchema = currentNetwork.userNodeSchema;
+//     } else {
+//         var userNodeSchema: VNodeSchema = new VNodeSchema();
+//     }
+
+//     // check minimal conditions to create and import a network
+//     if (currentNetwork.userLinkSchema && currentNetwork.userNodeSchema){
+//         if (!
+//             ((currentNetwork.userLinkSchema.source > -1
+//                 && currentNetwork.userLinkSchema.target > -1)
+//                 || (currentNetwork.userNodeSchema.label > -1
+//                     && currentNetwork.userNodeSchema.relation.length > -1)
+//             )) {
+//             // nothing to import at this point as no schemas defined
+//             return;
+//         }
+//     }
+//     else {
+//         return;
+//     }
+
+
+//     // trim cell entries (remove overhead white space)
+//     if (currentNetwork.userNodeTable) {
+//         cleanTable(currentNetwork.userNodeTable.data);
+//     }
+
+//     if (currentNetwork.userLinkTable) {
+//         cleanTable(currentNetwork.userLinkTable.data);
+//     }
+
+
+//     // Start with empty normalized tables
+//     var normalizedNodeTable: any[] = [];
+//     var normalizedLinkTable: any[] = [];
+
+//     // get standard schemas
+//     // INIT NODE SCHEMA
+//     var normalizedNodeSchema: datamanager.NodeSchema = new datamanager.NodeSchema(0);
+    
+    
+//     // INITIALZE NORMALIZED SCHEMAS WITH USER'S ATTRIBUTES
+    
+//     // required attributes
+//     normalizedNodeSchema.id = 0;
+//     normalizedNodeSchema.label = 1;
+    
+//     var nodeColCount: number = 2
+//     if (currentNetwork.userNodeSchema) {
+//         for (var p in currentNetwork.userNodeSchema) {
+//             if (currentNetwork.userNodeSchema.hasOwnProperty(p)
+//             && (currentNetwork.userNodeSchema as any)[p] > -1
+//             && p != 'id'
+//             && p != 'label'
+//             && p != 'relation'
+//             && (currentNetwork.userNodeSchema as any)[p] > 0
+//             ) {
+//                 (normalizedNodeSchema as any)[p] = nodeColCount++;
+//             }
+//         }
+//     }
+    
+//     // INIT LINK SCHEMA
+//     var normalizedLinkSchema: datamanager.LinkSchema = new datamanager.LinkSchema(0, 1, 2);
+//     // required attributes
+//     normalizedLinkSchema.id = 0;
+//     normalizedLinkSchema.source = 1;
+//     normalizedLinkSchema.target = 2;
+
+//     var linkColCount: number = 3
+//     if (currentNetwork.userLinkSchema) {
+//         for (var p in currentNetwork.userLinkSchema) {
+//             if (currentNetwork.userLinkSchema.hasOwnProperty(p)
+//                 && (currentNetwork.userLinkSchema as any)[p] > -1
+//                 && p != 'id'
+//                 && p != 'source'
+//                 && p != 'target'
+//                 && p != 'location_source'
+//                 && p != 'location_source'
+//             ) {
+//                 (normalizedLinkSchema as any)[p] = linkColCount++;
+//             }
+//         }
+
+//     }
+
+
+//     ///////////////////////////////
+//     // PROCESS SINGLE NODE-TABLE //
+//     ///////////////////////////////
+
+//     if (currentNetwork.userLinkTable == undefined
+//         && currentNetwork.userNodeTable != undefined) {
+//         // create link table and fill
+//         var id: number;
+//         var relCol: number;
+//         var newNodeRow: any[];
+//         var newLinkRow: any[];
+//         var rowNum: number;
+//         var userNodeTable: any[] = currentNetwork.userNodeTable.data;
+
+//         var colCount: number = 3
+//         normalizedLinkSchema.linkType = colCount++;
+//         if (datamanager.isValidIndex(userNodeSchema.time)) {
+//             normalizedLinkSchema.time = colCount++;
+//         }
+
+//         // In the normalized node table, create one row for each row in the node table, 
+//         // if name does not already exists
+//         var nodeLabels: any = []
+//         var nodeIds: any = []
+//         for (var i = 1; i < userNodeTable.length; i++) {
+//             newRow = [0, 0, 0, 0, 0];
+//             id = parseInt(userNodeTable[i][userNodeSchema.id]);
+//             nodeIds.push(id)
+//             newRow[normalizedNodeSchema.id] = id
+//             newRow[normalizedNodeSchema.label] = userNodeTable[i][userNodeSchema.label]
+//             newRow[normalizedNodeSchema.shape] = userNodeTable[i][userNodeSchema.shape]
+//             newRow[normalizedNodeSchema.color] = userNodeTable[i][userNodeSchema.color]
+//             nodeLabels.push(userNodeTable[i][userNodeSchema.label])
+//             normalizedNodeTable.push(newRow);
+//         }
+
+//         // create a node row for each node in a relation field 
+//         // that does not yet has an entry in the node table.
+//         // Plus, create a link in the link table.
+//         for (var i = 1; i < userNodeTable.length; i++) {
+
+//             // Iterate through all relation columns
+//             var row: any;
+//             var sourceId: number;
+//             var targetId: number;
+//             for (var j = 0; j < userNodeSchema.relation.length; j++) {
+//                 row = userNodeTable[i];
+//                 relCol = userNodeSchema.relation[j];
+//                 sourceId = nodeIds[i - 1]
+//                 // dont create relation if field entry is empty;
+//                 if (row[relCol].length == 0)
+//                     continue;
+
+//                 // check if node already exist
+//                 rowNum = nodeLabels.indexOf(row[relCol]);
+
+//                 if (rowNum < 0) {
+//                     // create new node in node table
+//                     newNodeRow = [0, 0];
+//                     newNodeRow[normalizedNodeSchema.id] = normalizedNodeTable.length;
+//                     nodeIds.push(normalizedNodeTable.length - 1)
+//                     nodeLabels.push(row[relCol])
+//                     newNodeRow[normalizedNodeSchema.label] = row[relCol]
+//                     normalizedNodeTable.push(newNodeRow)
+//                     targetId = normalizedNodeTable.length - 1
+//                 }
+//                 else {
+//                     targetId = rowNum
+//                 }
+
+//                 // create entry in link table
+//                 newLinkRow = []
+//                 for (var k = 0; k < colCount; k++) {
+//                     newLinkRow.push('');
+//                 }
+//                 newLinkRow[normalizedLinkSchema.id] = normalizedLinkTable.length;
+//                 newLinkRow[normalizedLinkSchema.source] = sourceId
+//                 newLinkRow[normalizedLinkSchema.target] = targetId
+//                 newLinkRow[normalizedLinkSchema.linkType] = userNodeTable[0][relCol] // set column header as relation type
+//                 if (datamanager.isValidIndex(userNodeSchema.time))
+//                     newLinkRow[normalizedLinkSchema.time] = row[userNodeSchema.time]
+//                 normalizedLinkTable.push(newLinkRow);
+//             }
+//         }
+//     }
+
+//     ///////////////////////////////
+//     // PROCESS SINGLE LINK-TABLE //
+//     ///////////////////////////////
+
+//     var nodeNames: string[] = [];
+//     // if(currentNetwork.userNodeTable && currentNetwork.userNodeSchema.label){
+//     //     for(var n in currentNetwork.userNodeTable.data){
+//     //         nodeNames.push(currentNetwork.userNodeTable.data[n][currentNetwork.userNodeSchema.label])
+//     //     }
+//     // }
+
+//     if (currentNetwork.userNodeTable == undefined
+//         && currentNetwork.userLinkTable != undefined) {
+//         var nodeLocations: number[][] = [];
+//         var nodeTimes: number[][] = [];
+//         var nodeTypes: string[] = [];
+
+//         var userLinkData: any = currentNetwork.userLinkTable.data;
+//         var sourceId: number;
+//         var targetId: number;
+//         var nodeName: string;
+//         var locationName: string;
+//         var timeString: string;
+//         var timeFormatted: string;
+
+//         // Extract node labels and create (simple) normalized node table
+//         var row: any;
+//         for (var i = 1; i < userLinkData.length; i++) {
+//             // source
+//             nodeName = userLinkData[i][userLinkSchema.source];
+//             if (nodeNames.indexOf(nodeName) < 0) {
+//                 row = [nodeNames.length, nodeName];
+//                 nodeNames.push(nodeName);
+//                 normalizedNodeTable.push(row)
+//             }
+
+//             // target
+//             nodeName = userLinkData[i][userLinkSchema.target];
+//             if (nodeNames.indexOf(nodeName) < 0) {
+//                 row = [nodeNames.length, nodeName];
+//                 nodeNames.push(nodeName);
+//                 normalizedNodeTable.push(row)
+//             }
+//         }
+//     }
+
+//     // At this point, there is a normalzied node table
+//     // if the user has not specified any link table, a normalized  
+//     // link table has been created above. 
+//     // If he has provided a link table, it is traversed below and 
+//     // the references to node names are put into place.
+//     if (currentNetwork.userLinkTable != undefined) {
+//         // create normalized link table and replace source/target label by source/target id
+//         normalizedLinkTable = [];
+//         var newRow: any[];
+//         var linkTime: string;
+//         var found: boolean = true;
+//         var userLinkData: any = currentNetwork.userLinkTable.data;
+//         for (var i = 1; i < userLinkData.length; i++) {
+//             newRow = []
+//             for (var k = 0; k < linkColCount; k++) {
+//                 newRow.push('');
+//             }
+//             for (var p in userLinkSchema) {
+//                 if (userLinkSchema.hasOwnProperty(p)
+//                     && (userLinkSchema as any)[p] > -1) {
+//                     newRow[(normalizedLinkSchema as any)[p]] = userLinkData[i][(userLinkSchema as any)[p]];
+//                 }
+//             }
+
+//             sourceId = nodeNames.indexOf(userLinkData[i][userLinkSchema.source]);
+//             newRow[normalizedLinkSchema.source] = sourceId;
+
+//             targetId = nodeNames.indexOf(userLinkData[i][userLinkSchema.target]);
+//             newRow[normalizedLinkSchema.target] = targetId;
+
+//             normalizedLinkTable.push(newRow)
+//         }
+
+//         // check if location and time information exists for nodes
+//         var time: any;
+//         var locationsFound: boolean = false;
+//         var timeFound: boolean = false;
+
+
+//         if (datamanager.isValidIndex(userLinkSchema.location_source)
+//             || datamanager.isValidIndex(userLinkSchema.location_target)) {
+//             // set location schema index to next new column
+//             normalizedNodeSchema.location = nodeColCount++;
+//             // append new field to each row in node table
+//             for (var i = 0; i < normalizedNodeTable.length; i++) {
+//                 normalizedNodeTable[i].push('')
+//             }
+//             // FYI: node table has now at least 3 rows (id, name, location)
+//             if (datamanager.isValidIndex(userLinkSchema.time)) {
+//                 // set time schema index to next new column
+//                 normalizedNodeSchema.time = nodeColCount++;
+//                 // append new field to each row in node table
+//                 for (var i = 0; i < normalizedNodeTable.length; i++) {
+//                     normalizedNodeTable[i].push('')
+//                 }
+//                 // FYI: node table has now at least 4 rows (id, name, location, time)
+//             }
+
+//             // insert locations and ev. times into node table, as found in linktable
+//             for (var i = 1; i < userLinkData.length; i++) {
+//                 var nodeRow: any, rowToDuplicate: any;
+//                 // do for source location
+//                 nodeName = userLinkData[i][userLinkSchema.source]
+//                 if (datamanager.isValidIndex(userLinkSchema.location_source)
+//                     && userLinkData[i][userLinkSchema.location_source]
+//                     && userLinkData[i][userLinkSchema.location_source] != '') {
+//                     var len = normalizedNodeTable.length
+//                     for (var j = 0; j < len; j++) {
+//                         nodeRow = normalizedNodeTable[j];
+//                         if (nodeRow[normalizedNodeSchema.label] == nodeName) {
+//                             rowToDuplicate = undefined;
+//                             if (datamanager.isValidIndex(normalizedNodeSchema.time)) {
+//                                 // if there is already a time but no location,  
+//                                 if (nodeRow[normalizedNodeSchema.time] == userLinkData[i][userLinkSchema.time]) {
+//                                     if (nodeRow[normalizedNodeSchema.location] && nodeRow[normalizedNodeSchema.location] != '') {
+//                                         rowToDuplicate = undefined;
+//                                     } else {
+//                                         rowToDuplicate = nodeRow;
+//                                     }
+//                                     // nothing here node has already a location for this time, continue with next row.
+//                                     j = len; // go to end of table
+//                                     break;
+//                                 } else {
+//                                     rowToDuplicate = nodeRow;
+//                                 }
+//                             } else {
+//                                 // just insert, no dupliation required
+//                                 nodeRow[normalizedNodeSchema.location] = userLinkData[i][userLinkSchema.location_source]
+//                                 j = len; // go to end of table
+//                                 break;
+//                             }
+//                         }
+//                     }
+
+//                     if (rowToDuplicate) {
+//                         if (rowToDuplicate[normalizedNodeSchema.location] == '') {
+//                             rowToDuplicate[normalizedNodeSchema.location] = userLinkData[i][userLinkSchema.location_source]
+//                             rowToDuplicate[normalizedNodeSchema.time] = userLinkData[i][userLinkSchema.time]
+//                         } else {
+//                             var newRowNode = []
+//                             for (var c = 0; c < rowToDuplicate.length; c++) {
+//                                 newRowNode.push(rowToDuplicate[c])
+//                             }
+//                             newRowNode[normalizedNodeSchema.location] = userLinkData[i][userLinkSchema.location_source]
+//                             newRowNode[normalizedNodeSchema.time] = userLinkData[i][userLinkSchema.time]
+//                             normalizedNodeTable.push(newRowNode);
+//                         }
+//                     }
+//                 }
+
+//                 // do for target location
+//                 nodeName = userLinkData[i][userLinkSchema.target]
+//                 if (datamanager.isValidIndex(userLinkSchema.location_target)
+//                     && userLinkData[i][userLinkSchema.location_target]
+//                     && userLinkData[i][userLinkSchema.location_target] != '') {
+//                     var len = normalizedNodeTable.length
+//                     for (var j = 0; j < len; j++) {
+//                         nodeRow = normalizedNodeTable[j];
+//                         if (nodeRow[normalizedNodeSchema.label] == nodeName) {
+//                             rowToDuplicate = undefined;
+//                             if (datamanager.isValidIndex(normalizedNodeSchema.time)) {
+//                                 // if location is not empty, 
+//                                 if (nodeRow[normalizedNodeSchema.time] == userLinkData[i][userLinkSchema.time]) {
+//                                     if (nodeRow[normalizedNodeSchema.location] && nodeRow[normalizedNodeSchema.location] != '') {
+//                                         rowToDuplicate = undefined;
+//                                     } else {
+//                                         rowToDuplicate = nodeRow;
+//                                     }
+//                                     // nothing here node has already a location for this time, continue with next row.
+//                                     j = len; // go to end of table
+//                                     break;
+//                                 } else {
+//                                     rowToDuplicate = nodeRow;
+//                                 }
+//                             } else {
+//                                 // just insert, no dupliation required
+//                                 nodeRow[normalizedNodeSchema.location] = userLinkData[i][userLinkSchema.location_target]
+//                                 j = len; // go to end of table
+//                                 break;
+//                             }
+//                         }
+//                     }
+
+//                     if (rowToDuplicate) {
+//                         if (rowToDuplicate[normalizedNodeSchema.location] == '') {
+//                             rowToDuplicate[normalizedNodeSchema.location] = userLinkData[i][userLinkSchema.location_target]
+//                             rowToDuplicate[normalizedNodeSchema.time] = userLinkData[i][userLinkSchema.time]
+//                         } else {
+//                             // duplicate
+//                             var newRowNode = []
+//                             for (var c = 0; c < rowToDuplicate.length; c++) {
+//                                 newRowNode.push(rowToDuplicate[c])
+//                             }
+//                             newRowNode[normalizedNodeSchema.location] = userLinkData[i][userLinkSchema.location_target]
+//                             newRowNode[normalizedNodeSchema.time] = userLinkData[i][userLinkSchema.time]
+//                             normalizedNodeTable.push(newRowNode);
+//                         }
+//                     }
+//                 }
+//             }
+//         } // end of checking for node times and location in link table
+//     } // end of link table normalization
+
+//     // FORMAT TIMES INTO ISO STANDARD
+
+//     if (currentNetwork.hasOwnProperty('timeFormat') && currentNetwork.timeFormat != undefined && currentNetwork.timeFormat.length > 0) {
+//         var format: string = currentNetwork.timeFormat;
+//         if (normalizedLinkSchema.time != undefined && normalizedLinkSchema.time > -1) {
+//             for (var i = 0; i < normalizedLinkTable.length; i++) {
+//                 time = moment.utc(normalizedLinkTable[i][normalizedLinkSchema.time], format).format(main.timeFormat())
+//                 if (time.indexOf('Invalid') > -1)
+//                     time = undefined;
+//                 normalizedLinkTable[i][normalizedLinkSchema.time] = time;
+//             }
+//         }
+
+//         if (normalizedNodeSchema.time != undefined && normalizedNodeSchema.time > -1) {
+//             for (var i = 0; i < normalizedNodeTable.length; i++) {
+//                 time = moment.utc(normalizedNodeTable[i][normalizedNodeSchema.time], format).format(main.timeFormat());
+//                 if (time.indexOf('Invalid') > -1)
+//                     time = undefined;
+//                 normalizedNodeTable[i][normalizedNodeSchema.time] = time
+//             }
+//         }
+//     }
+
+//     var {normalizedLocationSchema, normalizedLocationTable, locationName, locationLabels} = createAndNormaliseLocationTable(currentNetwork);
+
+//     if (normalizedNodeSchema.location > -1) {
+//         for (var i = 0; i < normalizedNodeTable.length; i++) {
+//             locationName = normalizedNodeTable[i][normalizedNodeSchema.location].trim();
+//             id = locationLabels.indexOf(locationName);
+//             normalizedNodeTable[i][normalizedNodeSchema.location] = id;
+//         }
+//     }
+
+
+//     // set tables to networkcube data set:
+//     var params: any = {}
+//     params.name = currentNetwork.name;
+//     params.nodeTable = normalizedNodeTable;
+//     params.linkTable = normalizedLinkTable;
+//     params.nodeSchema = normalizedNodeSchema;
+//     params.linkSchema = normalizedLinkSchema;
+//     params.locationTable = normalizedLocationTable;
+//     params.locationSchema = normalizedLocationSchema;
+//     params.timeFormat = currentNetwork.timeFormat;
+//     params.directed = currentNetwork.directed;
+//     var dataset: datamanager.DataSet = new datamanager.DataSet(params);
+
+//     if (currentNetwork.userLocationTable) {
+//         currentNetwork.userLocationTable.data = []
+//         currentNetwork.userLocationTable.data.push(['Id', 'User Name', 'Geoname', 'Longitude', 'Latitude'])
+//         for (var i = 0; i < normalizedLocationTable.length; i++) {
+//             currentNetwork.userLocationTable.data.push(normalizedLocationTable[i]);
+//         }
+//     }
+
+
+//     // make ids integer
+//     for (var i = 0; i < normalizedNodeTable.length; i++) {
+//         normalizedNodeTable[i][0] = parseInt(normalizedNodeTable[i][0])
+//     }
+//     for (var i = 0; i < normalizedLinkTable.length; i++) {
+//         normalizedLinkTable[i][0] = parseInt(normalizedLinkTable[i][0])
+//     }
+
+//     // save network on the vistorian side
+//     currentNetwork.ready = true;
+//     storage.saveNetwork(currentNetwork, sessionid);
+
+//     main.setDataManagerOptions({ keepOnlyOneSession: false });
+
+//     main.importData(sessionid, dataset);
+
+//     return dataset;
+// }
+export function importIntoNetworkcube(currentNetwork: Network, sessionid: string, s: boolean) 
+{
     currentNetwork.ready = false;
 
-    if (currentNetwork.userLinkSchema) {
-        var userLinkSchema: VLinkSchema = currentNetwork.userLinkSchema;
-    } else {
-        var userLinkSchema: VLinkSchema = new VLinkSchema();
-    }
+    // if (currentNetwork.userLinkSchema) {
+    //     var userLinkSchema: VLinkSchema = currentNetwork.userLinkSchema;
+    // } else {
+    //     var userLinkSchema: VLinkSchema = new VLinkSchema();
+    // }
 
-    if (currentNetwork.userNodeSchema) {
-        var userNodeSchema: VNodeSchema = currentNetwork.userNodeSchema;
-    } else {
-        var userNodeSchema: VNodeSchema = new VNodeSchema();
-    }
+    // if (currentNetwork.userNodeSchema) {
+    //     var userNodeSchema: VNodeSchema = currentNetwork.userNodeSchema;
+    // } else {
+    //     var userNodeSchema: VNodeSchema = new VNodeSchema();
+    // }
 
     // check minimal conditions to create and import a network
-    if (currentNetwork.userLinkSchema && currentNetwork.userNodeSchema){
-        if (!
-            ((currentNetwork.userLinkSchema.source > -1
-                && currentNetwork.userLinkSchema.target > -1)
-                || (currentNetwork.userNodeSchema.label > -1
-                    && currentNetwork.userNodeSchema.relation.length > -1)
-            )) {
-            // nothing to import at this point as no schemas defined
+    if (!(
+            (   currentNetwork.userLinkSchema 
+                && currentNetwork.userLinkSchema.source > -1
+                && currentNetwork.userLinkSchema.target > -1
+            )
+            || 
+            (   currentNetwork.userNodeSchema
+                && currentNetwork.userNodeSchema.label > -1
+                && currentNetwork.userNodeSchema.relation.length > 0
+            )
+        )){
+            console.log('NETWORK NOT VALID FOR IMPORT', currentNetwork.userNodeSchema)
             return;
-        }
-    }
-    else {
-        return;
     }
 
 
@@ -447,8 +914,7 @@ export function importIntoNetworkcube(currentNetwork: Network, sessionid: string
     // get standard schemas
     // INIT NODE SCHEMA
     var normalizedNodeSchema: datamanager.NodeSchema = new datamanager.NodeSchema(0);
-    
-    
+     
     // INITIALZE NORMALIZED SCHEMAS WITH USER'S ATTRIBUTES
     
     // required attributes
@@ -470,7 +936,7 @@ export function importIntoNetworkcube(currentNetwork: Network, sessionid: string
         }
     }
     
-    // INIT LINK SCHEMA
+    // INIT LINK SCHEMA WITH USER ATTRIBUTES    
     var normalizedLinkSchema: datamanager.LinkSchema = new datamanager.LinkSchema(0, 1, 2);
     // required attributes
     normalizedLinkSchema.id = 0;
@@ -494,69 +960,67 @@ export function importIntoNetworkcube(currentNetwork: Network, sessionid: string
 
     }
 
+    // var nodeLabels: any = []
+    var nodeIds = [];
+    var nodeNames:String[] = [];
 
-    ///////////////////////////////
-    // PROCESS SINGLE NODE-TABLE //
-    ///////////////////////////////
-
-    if (currentNetwork.userLinkTable == undefined
-        && currentNetwork.userNodeTable != undefined) {
-        // create link table and fill
-        var id: number;
-        var relCol: number;
-        var newNodeRow: any[];
-        var newLinkRow: any[];
-        var rowNum: number;
-        var userNodeTable: any[] = currentNetwork.userNodeTable.data;
-
-        var colCount: number = 3
-        normalizedLinkSchema.linkType = colCount++;
-        if (datamanager.isValidIndex(userNodeSchema.time)) {
-            normalizedLinkSchema.time = colCount++;
-        }
-
-        // In the normalized node table, create one row for each row in the node table, 
-        // if name does not already exists
-        var nodeLabels: any = []
-        var nodeIds: any = []
-        for (var i = 1; i < userNodeTable.length; i++) {
-            newRow = [0, 0, 0, 0, 0];
-            id = parseInt(userNodeTable[i][userNodeSchema.id]);
+    if(currentNetwork.userNodeSchema 
+        && currentNetwork.userNodeTable 
+        && currentNetwork.userNodeSchema.label)
+    {
+        let id;
+        // create node table
+        for (var i = 1; i < currentNetwork.userNodeTable.data.length; i++) {
+            let newRow = [0, 0, 0, 0, 0];
+            id = parseInt(currentNetwork.userNodeTable.data[i][currentNetwork.userNodeSchema.id]);
             nodeIds.push(id)
             newRow[normalizedNodeSchema.id] = id
-            newRow[normalizedNodeSchema.label] = userNodeTable[i][userNodeSchema.label]
-            newRow[normalizedNodeSchema.shape] = userNodeTable[i][userNodeSchema.shape]
-            newRow[normalizedNodeSchema.color] = userNodeTable[i][userNodeSchema.color]
-            nodeLabels.push(userNodeTable[i][userNodeSchema.label])
+            // if(currentNetwork.userNodeSchema.label >-1)
+                newRow[normalizedNodeSchema.label] = currentNetwork.userNodeTable.data[i][currentNetwork.userNodeSchema.label]
+            // if(currentNetwork.userNodeSchema.shape >-1)
+                newRow[normalizedNodeSchema.shape] = currentNetwork.userNodeTable.data[i][currentNetwork.userNodeSchema.shape]
+            // if(currentNetwork.userNodeSchema.color >-1)
+                newRow[normalizedNodeSchema.color] = currentNetwork.userNodeTable.data[i][currentNetwork.userNodeSchema.color]
+
+            nodeNames.push(currentNetwork.userNodeTable.data[i][currentNetwork.userNodeSchema.label])
             normalizedNodeTable.push(newRow);
         }
+    }
+    console.log('NODETABLE', normalizedNodeTable)
+    console.log('NODENAMES', nodeNames)
 
-        // create a node row for each node in a relation field 
-        // that does not yet has an entry in the node table.
-        // Plus, create a link in the link table.
-        for (var i = 1; i < userNodeTable.length; i++) {
+
+    if(currentNetwork.userNodeSchema && currentNetwork.userNodeSchema.relation.length > 0 && currentNetwork.userNodeTable)
+    {
+        var colCount: number = 3
+        normalizedLinkSchema.linkType = colCount++;
+        if (datamanager.isValidIndex(currentNetwork.userNodeSchema.time)) {
+            normalizedLinkSchema.time = colCount++;
+        }
+        for (let i = 1; i < currentNetwork.userNodeTable.data.length; i++) {
 
             // Iterate through all relation columns
-            var row: any;
-            var sourceId: number;
-            var targetId: number;
-            for (var j = 0; j < userNodeSchema.relation.length; j++) {
-                row = userNodeTable[i];
-                relCol = userNodeSchema.relation[j];
+            let row: any;
+            let relCol, rowNum
+            let sourceId: number;
+            let targetId: number;
+            for (var j = 0; j < currentNetwork.userNodeSchema.relation.length; j++) {
+                row = currentNetwork.userNodeTable.data[i];
+                relCol = currentNetwork.userNodeSchema.relation[j];
                 sourceId = nodeIds[i - 1]
                 // dont create relation if field entry is empty;
                 if (row[relCol].length == 0)
                     continue;
 
                 // check if node already exist
-                rowNum = nodeLabels.indexOf(row[relCol]);
+                rowNum = nodeNames.indexOf(row[relCol]);
 
                 if (rowNum < 0) {
                     // create new node in node table
-                    newNodeRow = [0, 0];
+                    let newNodeRow = [0, 0];
                     newNodeRow[normalizedNodeSchema.id] = normalizedNodeTable.length;
                     nodeIds.push(normalizedNodeTable.length - 1)
-                    nodeLabels.push(row[relCol])
+                    nodeNames.push(row[relCol])
                     newNodeRow[normalizedNodeSchema.label] = row[relCol]
                     normalizedNodeTable.push(newNodeRow)
                     targetId = normalizedNodeTable.length - 1
@@ -566,51 +1030,30 @@ export function importIntoNetworkcube(currentNetwork: Network, sessionid: string
                 }
 
                 // create entry in link table
-                newLinkRow = []
+                let newLinkRow = []
                 for (var k = 0; k < colCount; k++) {
                     newLinkRow.push('');
                 }
                 newLinkRow[normalizedLinkSchema.id] = normalizedLinkTable.length;
                 newLinkRow[normalizedLinkSchema.source] = sourceId
                 newLinkRow[normalizedLinkSchema.target] = targetId
-                newLinkRow[normalizedLinkSchema.linkType] = userNodeTable[0][relCol] // set column header as relation type
-                if (datamanager.isValidIndex(userNodeSchema.time))
-                    newLinkRow[normalizedLinkSchema.time] = row[userNodeSchema.time]
+                newLinkRow[normalizedLinkSchema.linkType] = currentNetwork.userNodeTable.data[0][relCol] // set column header as relation type
+                if (datamanager.isValidIndex(currentNetwork.userNodeSchema.time))
+                    newLinkRow[normalizedLinkSchema.time] = row[currentNetwork.userNodeSchema.time]
                 normalizedLinkTable.push(newLinkRow);
             }
         }
-    }
-
-    ///////////////////////////////
-    // PROCESS SINGLE LINK-TABLE //
-    ///////////////////////////////
-
-    var nodeNames: string[] = [];
-    // if(currentNetwork.userNodeTable && currentNetwork.userNodeSchema.label){
-    //     for(var n in currentNetwork.userNodeTable.data){
-    //         nodeNames.push(currentNetwork.userNodeTable.data[n][currentNetwork.userNodeSchema.label])
-    //     }
-    // }
-
-    if (currentNetwork.userNodeTable == undefined
-        && currentNetwork.userLinkTable != undefined) {
-        var nodeLocations: number[][] = [];
-        var nodeTimes: number[][] = [];
-        var nodeTypes: string[] = [];
-
-        var userLinkData: any = currentNetwork.userLinkTable.data;
-        var sourceId: number;
-        var targetId: number;
-        var nodeName: string;
-        var locationName: string;
-        var timeString: string;
-        var timeFormatted: string;
+    }else
+    if(currentNetwork.userLinkSchema 
+        && currentNetwork.userLinkTable 
+        && !currentNetwork.userNodeTable)
+    {
 
         // Extract node labels and create (simple) normalized node table
         var row: any;
-        for (var i = 1; i < userLinkData.length; i++) {
+        for (var i = 1; i < currentNetwork.userLinkTable.data.length; i++) {
             // source
-            nodeName = userLinkData[i][userLinkSchema.source];
+            let nodeName = currentNetwork.userLinkTable.data[i][currentNetwork.userLinkSchema.source];
             if (nodeNames.indexOf(nodeName) < 0) {
                 row = [nodeNames.length, nodeName];
                 nodeNames.push(nodeName);
@@ -618,7 +1061,7 @@ export function importIntoNetworkcube(currentNetwork: Network, sessionid: string
             }
 
             // target
-            nodeName = userLinkData[i][userLinkSchema.target];
+            nodeName = currentNetwork.userLinkTable.data[i][currentNetwork.userLinkSchema.target];
             if (nodeNames.indexOf(nodeName) < 0) {
                 row = [nodeNames.length, nodeName];
                 nodeNames.push(nodeName);
@@ -626,35 +1069,34 @@ export function importIntoNetworkcube(currentNetwork: Network, sessionid: string
             }
         }
     }
-
+    
     // At this point, there is a normalzied node table
     // if the user has not specified any link table, a normalized  
     // link table has been created above. 
     // If he has provided a link table, it is traversed below and 
     // the references to node names are put into place.
-    if (currentNetwork.userLinkTable != undefined) {
+    if (currentNetwork.userLinkTable && currentNetwork.userLinkSchema) {
         // create normalized link table and replace source/target label by source/target id
-        normalizedLinkTable = [];
-        var newRow: any[];
-        var linkTime: string;
-        var found: boolean = true;
-        var userLinkData: any = currentNetwork.userLinkTable.data;
-        for (var i = 1; i < userLinkData.length; i++) {
+        // normalizedLinkTable = [];
+        let newRow: any[];
+        // let linkTime: string;
+        // let found: boolean = true;
+        for (var i = 1; i < currentNetwork.userLinkTable.data.length; i++) {
             newRow = []
             for (var k = 0; k < linkColCount; k++) {
                 newRow.push('');
             }
-            for (var p in userLinkSchema) {
-                if (userLinkSchema.hasOwnProperty(p)
-                    && (userLinkSchema as any)[p] > -1) {
-                    newRow[(normalizedLinkSchema as any)[p]] = userLinkData[i][(userLinkSchema as any)[p]];
+            for (var p in currentNetwork.userLinkSchema) {
+                if (currentNetwork.userLinkSchema.hasOwnProperty(p)
+                    && (currentNetwork.userLinkSchema as any)[p] > -1) {
+                    newRow[(normalizedLinkSchema as any)[p]] = currentNetwork.userLinkTable.data[i][(currentNetwork.userLinkSchema as any)[p]];
                 }
             }
 
-            sourceId = nodeNames.indexOf(userLinkData[i][userLinkSchema.source]);
+            let sourceId = nodeNames.indexOf(currentNetwork.userLinkTable.data[i][currentNetwork.userLinkSchema.source]);
             newRow[normalizedLinkSchema.source] = sourceId;
 
-            targetId = nodeNames.indexOf(userLinkData[i][userLinkSchema.target]);
+            let targetId = nodeNames.indexOf(currentNetwork.userLinkTable.data[i][currentNetwork.userLinkSchema.target]);
             newRow[normalizedLinkSchema.target] = targetId;
 
             normalizedLinkTable.push(newRow)
@@ -666,8 +1108,8 @@ export function importIntoNetworkcube(currentNetwork: Network, sessionid: string
         var timeFound: boolean = false;
 
 
-        if (datamanager.isValidIndex(userLinkSchema.location_source)
-            || datamanager.isValidIndex(userLinkSchema.location_target)) {
+        if (datamanager.isValidIndex(currentNetwork.userLinkSchema.location_source)
+            || datamanager.isValidIndex(currentNetwork.userLinkSchema.location_target)) {
             // set location schema index to next new column
             normalizedNodeSchema.location = nodeColCount++;
             // append new field to each row in node table
@@ -675,7 +1117,7 @@ export function importIntoNetworkcube(currentNetwork: Network, sessionid: string
                 normalizedNodeTable[i].push('')
             }
             // FYI: node table has now at least 3 rows (id, name, location)
-            if (datamanager.isValidIndex(userLinkSchema.time)) {
+            if (datamanager.isValidIndex(currentNetwork.userLinkSchema.time)) {
                 // set time schema index to next new column
                 normalizedNodeSchema.time = nodeColCount++;
                 // append new field to each row in node table
@@ -686,13 +1128,13 @@ export function importIntoNetworkcube(currentNetwork: Network, sessionid: string
             }
 
             // insert locations and ev. times into node table, as found in linktable
-            for (var i = 1; i < userLinkData.length; i++) {
+            for (var i = 1; i < currentNetwork.userLinkTable.data.length; i++) {
                 var nodeRow: any, rowToDuplicate: any;
                 // do for source location
-                nodeName = userLinkData[i][userLinkSchema.source]
-                if (datamanager.isValidIndex(userLinkSchema.location_source)
-                    && userLinkData[i][userLinkSchema.location_source]
-                    && userLinkData[i][userLinkSchema.location_source] != '') {
+                let nodeName = currentNetwork.userLinkTable.data[i][currentNetwork.userLinkSchema.source]
+                if (datamanager.isValidIndex(currentNetwork.userLinkSchema.location_source)
+                    && currentNetwork.userLinkTable.data[i][currentNetwork.userLinkSchema.location_source]
+                    && currentNetwork.userLinkTable.data[i][currentNetwork.userLinkSchema.location_source] != '') {
                     var len = normalizedNodeTable.length
                     for (var j = 0; j < len; j++) {
                         nodeRow = normalizedNodeTable[j];
@@ -700,7 +1142,7 @@ export function importIntoNetworkcube(currentNetwork: Network, sessionid: string
                             rowToDuplicate = undefined;
                             if (datamanager.isValidIndex(normalizedNodeSchema.time)) {
                                 // if there is already a time but no location,  
-                                if (nodeRow[normalizedNodeSchema.time] == userLinkData[i][userLinkSchema.time]) {
+                                if (nodeRow[normalizedNodeSchema.time] == currentNetwork.userLinkTable.data[i][currentNetwork.userLinkSchema.time]) {
                                     if (nodeRow[normalizedNodeSchema.location] && nodeRow[normalizedNodeSchema.location] != '') {
                                         rowToDuplicate = undefined;
                                     } else {
@@ -714,7 +1156,7 @@ export function importIntoNetworkcube(currentNetwork: Network, sessionid: string
                                 }
                             } else {
                                 // just insert, no dupliation required
-                                nodeRow[normalizedNodeSchema.location] = userLinkData[i][userLinkSchema.location_source]
+                                nodeRow[normalizedNodeSchema.location] = currentNetwork.userLinkTable.data[i][currentNetwork.userLinkSchema.location_source]
                                 j = len; // go to end of table
                                 break;
                             }
@@ -723,25 +1165,25 @@ export function importIntoNetworkcube(currentNetwork: Network, sessionid: string
 
                     if (rowToDuplicate) {
                         if (rowToDuplicate[normalizedNodeSchema.location] == '') {
-                            rowToDuplicate[normalizedNodeSchema.location] = userLinkData[i][userLinkSchema.location_source]
-                            rowToDuplicate[normalizedNodeSchema.time] = userLinkData[i][userLinkSchema.time]
+                            rowToDuplicate[normalizedNodeSchema.location] = currentNetwork.userLinkTable.data[i][currentNetwork.userLinkSchema.location_source]
+                            rowToDuplicate[normalizedNodeSchema.time] = currentNetwork.userLinkTable.data[i][currentNetwork.userLinkSchema.time]
                         } else {
                             var newRowNode = []
                             for (var c = 0; c < rowToDuplicate.length; c++) {
                                 newRowNode.push(rowToDuplicate[c])
                             }
-                            newRowNode[normalizedNodeSchema.location] = userLinkData[i][userLinkSchema.location_source]
-                            newRowNode[normalizedNodeSchema.time] = userLinkData[i][userLinkSchema.time]
+                            newRowNode[normalizedNodeSchema.location] = currentNetwork.userLinkTable.data[i][currentNetwork.userLinkSchema.location_source]
+                            newRowNode[normalizedNodeSchema.time] = currentNetwork.userLinkTable.data[i][currentNetwork.userLinkSchema.time]
                             normalizedNodeTable.push(newRowNode);
                         }
                     }
                 }
 
                 // do for target location
-                nodeName = userLinkData[i][userLinkSchema.target]
-                if (datamanager.isValidIndex(userLinkSchema.location_target)
-                    && userLinkData[i][userLinkSchema.location_target]
-                    && userLinkData[i][userLinkSchema.location_target] != '') {
+                nodeName = currentNetwork.userLinkTable.data[i][currentNetwork.userLinkSchema.target]
+                if (datamanager.isValidIndex(currentNetwork.userLinkSchema.location_target)
+                    && currentNetwork.userLinkTable.data[i][currentNetwork.userLinkSchema.location_target]
+                    && currentNetwork.userLinkTable.data[i][currentNetwork.userLinkSchema.location_target] != '') {
                     var len = normalizedNodeTable.length
                     for (var j = 0; j < len; j++) {
                         nodeRow = normalizedNodeTable[j];
@@ -749,7 +1191,7 @@ export function importIntoNetworkcube(currentNetwork: Network, sessionid: string
                             rowToDuplicate = undefined;
                             if (datamanager.isValidIndex(normalizedNodeSchema.time)) {
                                 // if location is not empty, 
-                                if (nodeRow[normalizedNodeSchema.time] == userLinkData[i][userLinkSchema.time]) {
+                                if (nodeRow[normalizedNodeSchema.time] == currentNetwork.userLinkTable.data[i][currentNetwork.userLinkSchema.time]) {
                                     if (nodeRow[normalizedNodeSchema.location] && nodeRow[normalizedNodeSchema.location] != '') {
                                         rowToDuplicate = undefined;
                                     } else {
@@ -763,7 +1205,7 @@ export function importIntoNetworkcube(currentNetwork: Network, sessionid: string
                                 }
                             } else {
                                 // just insert, no dupliation required
-                                nodeRow[normalizedNodeSchema.location] = userLinkData[i][userLinkSchema.location_target]
+                                nodeRow[normalizedNodeSchema.location] = currentNetwork.userLinkTable.data[i][currentNetwork.userLinkSchema.location_target]
                                 j = len; // go to end of table
                                 break;
                             }
@@ -772,16 +1214,16 @@ export function importIntoNetworkcube(currentNetwork: Network, sessionid: string
 
                     if (rowToDuplicate) {
                         if (rowToDuplicate[normalizedNodeSchema.location] == '') {
-                            rowToDuplicate[normalizedNodeSchema.location] = userLinkData[i][userLinkSchema.location_target]
-                            rowToDuplicate[normalizedNodeSchema.time] = userLinkData[i][userLinkSchema.time]
+                            rowToDuplicate[normalizedNodeSchema.location] = currentNetwork.userLinkTable.data[i][currentNetwork.userLinkSchema.location_target]
+                            rowToDuplicate[normalizedNodeSchema.time] = currentNetwork.userLinkTable.data[i][currentNetwork.userLinkSchema.time]
                         } else {
                             // duplicate
                             var newRowNode = []
                             for (var c = 0; c < rowToDuplicate.length; c++) {
                                 newRowNode.push(rowToDuplicate[c])
                             }
-                            newRowNode[normalizedNodeSchema.location] = userLinkData[i][userLinkSchema.location_target]
-                            newRowNode[normalizedNodeSchema.time] = userLinkData[i][userLinkSchema.time]
+                            newRowNode[normalizedNodeSchema.location] = currentNetwork.userLinkTable.data[i][currentNetwork.userLinkSchema.location_target]
+                            newRowNode[normalizedNodeSchema.time] = currentNetwork.userLinkTable.data[i][currentNetwork.userLinkSchema.time]
                             normalizedNodeTable.push(newRowNode);
                         }
                     }
@@ -818,7 +1260,7 @@ export function importIntoNetworkcube(currentNetwork: Network, sessionid: string
     if (normalizedNodeSchema.location > -1) {
         for (var i = 0; i < normalizedNodeTable.length; i++) {
             locationName = normalizedNodeTable[i][normalizedNodeSchema.location].trim();
-            id = locationLabels.indexOf(locationName);
+            let id = locationLabels.indexOf(locationName);
             normalizedNodeTable[i][normalizedNodeSchema.location] = id;
         }
     }
