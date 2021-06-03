@@ -1028,6 +1028,7 @@ export function updateLocationCoordinatesWrapper()
             function(){
                 // showNetworkTables(currentNetwork.id);
                 showTable((currentNetwork.userLocationTable as vistorian.VTable), '#locationTableDiv', true, currentNetwork.userLocationSchema);
+                saveCurrentNetwork(false);
             }
         )
     }
@@ -1183,6 +1184,7 @@ export function getOpenStreetMapCoordinatesForLocation(index: number, geoname: s
         fullGeoNames.push(geoname);
         var xhr: any = $.ajax({
             url: 'https://api.maptiler.com/geocoding/'+geoname.split(',')[0].trim()+'.json?key=4JfMdMSpqOnXq9pxP8x4',
+            // headers: {  'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Credentials':'true' , 'Access-Control-Allow-Methods': 'POST, GET, OPTIONS','Access-Control-Allow-Headers' :'Authorization,DNT,X-Mx-ReqToken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type'},
             data: {output: "json", limit: "1", },
             dataType: 'json'
         })
@@ -1209,9 +1211,11 @@ export function getOpenStreetMapCoordinatesForLocation(index: number, geoname: s
                     // }
                     // if (validResults.length == 0) {
                     locationTable.data[rowIndex] = [rowIndex - 1, userLocationLabel, geoname, entry.center[0], entry.center[1]];
+                    console.log('locationTable.data', locationTable.data); 
+                }else{
+                    locationTable.data[rowIndex] = [rowIndex - 1, userLocationLabel, geoname, undefined, undefined];
                 }
-                locationTable.data[rowIndex] = [rowIndex - 1, userLocationLabel, geoname, undefined, undefined];
-    // return;
+                // return;
                 // } else {
                 //     if (geoname == '')
                 //         return;
