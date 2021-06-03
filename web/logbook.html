@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="logbook_s.css">
+        <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+        <script type="text/javascript" src="../static/traces/trace.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mousetrap/1.5.0/mousetrap.min.js"></script>
+        <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+        <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+        <script src='bookmarkLogConsent.js'></script>
+
+        <script src="../d3.js"></script>
+        <script src="../node_modules/jquery/dist/jquery.js" type="text/javascript"></script>
+        <script src="../node_modules/jstorage/jstorage.js"></script>
+        <script> var exports = {}; </script>
+        <script src="../node_modules/vistorian-core/lib/vistorian-core.js"></script>
+        <script src="../lib/vistorian-web.js"></script>
+
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <script src="https://kit.fontawesome.com/303540a013.js" crossorigin="anonymous"></script>
+
+
+
+
+        <script type="text/javascript">
+     
+        
+            
+            const monthNames = ["January", "February", "March", "April", "May", "June",
+                                 "July", "August", "September", "October", "November", "December"];
+
+            var viewType=window.parent.location.pathname;
+            if ((viewType.length!=0) && (typeof viewType !== 'undefined')){
+                viewType=window.parent.location.pathname.split('/',3)[2].split('.')[0];
+            }
+            
+            var networkName=window.parent.location.search;
+            if(networkName.indexOf('&')>-1){
+                networkName=window.parent.location.search.split('&')[1].split('=')[1];
+            }   
+
+            window.vc.messenger.addEventListener("STATE_CREATED",stateCreatedHandler);
+
+            // Stores the captured state in the array of bookmarks
+            function stateCreatedHandler(m){
+
+                let bookmarksArray=JSON.parse(localStorage.getItem("vistorianBookmarks") || "[]");
+                if (Boolean(m.isNewBookmark)){
+                
+                        bookmarksArray[bookmarksArray.length-1].controlsValues.push(m.state);
+                }
+                else{   
+                    if (m.state.networkType==bookmarksArray[m.bookmarkIndex].viewType || m.state.networkType=="nodelink")
+                        bookmarksArray[m.bookmarkIndex].controlsValues[0]=m.state;
+                    else 
+                        if  (m.state.networkType=="matrix") //                        if  (m.viewType=="matrix") 
+
+                            bookmarksArray[m.bookmarkIndex].controlsValues[1]=m.state;
+
+                        else 
+                            if( m.state.networkType=="dynamicego") 
+                                bookmarksArray[m.bookmarkIndex].controlsValues[2]=m.state;
+
+                            else 
+                                if( m.state.networkType=="map") 
+                                    bookmarksArray[m.bookmarkIndex].controlsValues[3]=m.state;
+
+                }
+                
+                localStorage.setItem("vistorianBookmarks", JSON.stringify(bookmarksArray))
+
+                if ((m.typeOfMultiView=="mat-nl" || m.typeOfMultiView=="tileview") && m.state.networkType=="nodelink" )
+                    window.vc.messenger.getState(m.bookmarkIndex,"matrix",m.isNewBookmark,m.typeOfMultiView);
+                else  if (m.typeOfMultiView=="tileview" && m.state.networkType=="matrix" )
+                    window.vc.messenger.getState(m.bookmarkIndex,"dynamicego",m.isNewBookmark,m.typeOfMultiView);
+                else  if (m.typeOfMultiView=="tileview" && m.state.networkType=="dynamicego" )
+                    window.vc.messenger.getState(m.bookmarkIndex,"map",m.isNewBookmark,m.typeOfMultiView);
+
+
+
+            }
+
+            class Bookmark{
+                constructor(id,createdOn,title,viewType,networkDataset,controlsValues,visControls){
+                    this.id=id;
+                    this.createdOn=createdOn;
+                    this.title=title;
+                    this.note="";
+                    this.type="";
+                    this.analysisOpts=[];
+                    this.viewType=viewType;
+                    this.networkDataset=networkDataset;
+                    this.controlsValues=controlsValues;
+                    this.visNetworkControl=visControls;
+                }
+               
+                updateBookmark(title,note,type){
+                    this.title=title;
+                    this.note=note;
+                    this.type=type;
+                }
+                updateBookmarkTitle(title){
+                    this.title=title;
+                }
+                updateBookmarkNotes(note){
+                    this.note=note;
+                }
+                updateBookmarkType(type){
+                    this.type=type;
+                }
+                updateBookmarkDataset(networkDataset){
+                    this.networkDataset=networkDataset;
+                }
+                updateBookmarkAnalysisType(chkbx_AnalysisGroup){
+                    this.analysisOpts=[];
+                    for (var i=0;i<chkbx_AnalysisGroup.length;i++){
+                        if (chkbx_AnalysisGroup[i].checked){
+                            this.analysisOpts.push(i);
+                        }
+                            
+                    }
+                }
+                printBk(){
+                    return ("title: " + this.title + " notes: " + this.note + " Type: " + this.type + " View" +this.viewType + " DS " +this.networkDataset + " " + this.analysisOpts.forEach(function(a){ return a;}) + this.controlsValues.toString());
+                }
+                
+            }
+            function updateBookmarkAnalysisTypeGeneral(bookmark,chkbx_AnalysisGroup){
+                bookmark.analysisOpts=[];
+                    for (var i=0;i<chkbx_AnalysisGroup.length;i++){
+                        if (chkbx_AnalysisGroup[i].checked){
+                            bookmark.analysisOpts.push(i);
+                        }
+                            
+                    }
+                }
+
+            function showBookmarkPopup(){
+                var popupForm=window.parent.document.getElementById("popupFeedbackForm");
+                popupForm.setAttribute("style","display:block");
+
+            }
+            function exportBookmarks(){
+                var fileToExport=localStorage.getItem("vistorianBookmarks");
+                if (fileToExport){
+                    var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(fileToExport);
+                    var downloadElement = document.createElement('a');
+                    downloadElement.setAttribute("href",     dataStr     );
+                    downloadElement.setAttribute("download", "vistorian_bookmarks.json");
+                    downloadElement.click();
+                    trace.event('bkm_9', ' bookmarks file export', true , window.parent.location.pathname);
+
+                }
+                else{
+                    alert("No bookmarks yet created to be exported!");
+                    trace.event('bkm_9', ' bookmarks file export',false , window.parent.location.pathname);
+
+                }
+               
+            }
+
+            // Holds values of each network's controls
+            class networkControls {
+                constructor(networkType,startTime,endTime,globalZoom,panOffsetLocal,panOffsetGlobal){
+                    this.networkType=networkType;
+                    this.timeSliderStart=startTime;
+                    this.timeSliderEnd=endTime;
+                    this.globalZoom=globalZoom;
+                    this.panOffsetLocal=panOffsetLocal ;
+                    this.panOffsetGlobal=panOffsetGlobal;
+                }
+            }
+
+            class nodeLinkControls extends networkControls{
+                constructor(networkType,startTime,endTime,linkOpacity,nodeOpacity,nodeSize,edgeGap,linkWidth,labellingType){
+                    super(networkType,startTime,endTime);
+                    this.linkOpacity=linkOpacity;
+                    this.nodeOpacity=nodeOpacity;
+                    this.nodeSize=nodeSize;
+                    this.edgeGap=edgeGap;
+                    this.linkWidth=linkWidth;
+                    this.labellingType=labellingType;
+                }
+            }
+            class matrixControls extends networkControls{
+                constructor(networkType,startTime,endTime,zoom,labellingType){
+                    super(networkType,startTime,endTime);
+                    this.zoom=zoom;
+                    this.labellingType=labellingType;
+                }
+            }
+            class timeArchsControls extends networkControls{
+                constructor(networkType,startTime,endTime,labellingType){
+                    super(networkType,startTime,endTime);
+                    this.labellingType=labellingType;
+                }
+            }
+            class  mapControls extends networkControls{
+                constructor(networkType,startTime,endTime,nodeOverlap,linkOpacity,opacityOfPositionlessNodes){
+                    super(networkType,startTime,endTime);
+                    this.nodeOverlap=nodeOverlap;
+                    this.linkOpacity=linkOpacity;
+                    this.opacityOfPositionlessNodes=opacityOfPositionlessNodes;
+                }
+            }
+            function checkExistance(no,lstOpts){
+
+                for (var i=0; i<lstOpts.length ; i++)
+                    if (parseInt(no)===parseInt(lstOpts[i]))
+                        return true;
+                return false;
+                    
+            }
+            var counter=0;
+            //var bookmarksJSONFile=[];
+            var generalPBtns=["Analyze Data","Learn","Demo to others","Test & Explore Vistorian","Discuss Findings","Report an Issue"];
+
+            function locateLogObj(logs,elementId){
+                for (var i=0;i<logs.length;i++)
+                    if (logs[i].id==elementId)
+                        return i;
+            }
+            function printBookmarks(state){
+                let userBks = JSON.parse(localStorage.getItem("vistorianBookmarks")) || [];
+
+                var bks=state;
+                console.log(bks);
+                for (var i=0;i<userBks.length;i++)
+                    console.log( userBks[i].printBk());
+
+            }
+            function clearBookmarks(){
+                if (confirm('Are you sure you want to delete all bookmarks?')){
+
+                    localStorage.removeItem("vistorianBookmarks")
+                    initializeJSON();
+                    window.parent.document.getElementById('myFrame').src=window.parent.document.getElementById('myFrame').src;
+                }
+            }
+        
+             function initializeJSON(){
+                let bks=localStorage.getItem("vistorianBookmarks");
+                let userBks = JSON.parse(bks )|| [];
+                var i;
+                if (bks && typeof userBks !== "undefined" && userBks!==null && userBks.length!=0){
+                        for ( i=0;i<userBks.length;i++)
+                            AddNewLog(userBks[i].id,userBks[i].createdOn,userBks[i].title,userBks[i].note,userBks[i].type,userBks[i].analysisOpts,userBks[i].viewType,userBks[i].networkDataset);
+                    
+                    counter=userBks[i-1].id;
+                }
+                else
+                    document.getElementById('lbl_changesState').innerText='No bookmarks yet!';
+                if (viewType=="dataview")
+                    document.getElementById("addNewBookmark").disabled=true;
+                else
+                    document.getElementById("addNewBookmark").disabled=false;
+
+                document.getElementById("loggingSessionID").innerText="Your Session ID is : " + localStorage.getItem('SessionLogId') ;
+                document.getElementById("loggingSessionID").style.display="none";
+            } 
+            function toggleMySessionID(){
+                if (document.getElementById("loggingSessionID").style.display=="none"){
+                    document.getElementById("loggingSessionID").style.display="inline-block";
+                    trace.event('log_11', ' Session ID Button','Show' , window.parent.location.pathname);
+
+                }
+                else {
+                    document.getElementById("loggingSessionID").style.display="none";
+                    trace.event('log_11', ' Session ID Button','hide' , window.parent.location.pathname);
+                }
+
+            }
+
+            function changeBookmarksView(typeChosen){
+                refreshBookmarks();
+                var i;
+                var displayVal;
+                var bkmElements;
+                //Check fo dataview bookmarks 
+                bkmElements=document.getElementsByClassName("dataview");      
+                if  ((typeChosen=="all") ||(typeChosen=="dataview") )
+                    displayVal="block";
+                else
+                    displayVal="none";
+                for (i = 0; i < bkmElements.length; i++) 
+                        bkmElements[i].style.display = displayVal;
+
+                 //Check fo nodelink bookmarks                  
+                bkmElements=document.getElementsByClassName("nodelink");      
+                if  ((typeChosen=="all") ||(typeChosen=="nodelink") )
+                    displayVal="block";
+                else
+                    displayVal="none";
+                for (i = 0; i < bkmElements.length; i++) 
+                        bkmElements[i].style.display = displayVal;
+
+
+                //Check fo map bookmarks       
+                bkmElements=document.getElementsByClassName("map");      
+                if  ((typeChosen=="all") ||(typeChosen=="map") )
+                    displayVal="block";
+                else
+                    displayVal="none";
+                for (i = 0; i < bkmElements.length; i++) 
+                    bkmElements[i].style.display = displayVal;
+                    
+                //Check fo matrix bookmarks  
+                bkmElements=document.getElementsByClassName("matrix");      
+                if  ((typeChosen=="all") ||(typeChosen=="matrix") )
+                    displayVal="block";
+                else
+                    displayVal="none";
+                for (i = 0; i < bkmElements.length; i++) 
+                    bkmElements[i].style.display = displayVal;
+          
+                //Check fo dynamicego bookmarks  
+                bkmElements=document.getElementsByClassName("dynamicego");      
+                if  ((typeChosen=="all") ||(typeChosen=="dynamicego") )
+                    displayVal="block";
+                else
+                    displayVal="none";
+                for (i = 0; i < bkmElements.length; i++) 
+                        bkmElements[i].style.display = displayVal;
+
+                //Check fo mat-nl bookmarks       
+                bkmElements=document.getElementsByClassName("mat-nl");      
+                if  ((typeChosen=="all") ||(typeChosen=="mat-nl") )
+                    displayVal="block";
+                else
+                    displayVal="none";
+                for (i = 0; i < bkmElements.length; i++) 
+                        bkmElements[i].style.display = displayVal;
+                    
+                //Check fo tileview bookmarks  
+                bkmElements=document.getElementsByClassName("tileview");      
+                if  ((typeChosen=="all") ||(typeChosen=="tileview") )
+                    displayVal="block";
+                else
+                    displayVal="none";
+                for (i = 0; i < bkmElements.length; i++) 
+                        bkmElements[i].style.display = displayVal; 
+                refreshBookmarks();         
+ 
+            }
+            function updateLocalStorage(bookmarksArray){
+
+                localStorage.setItem("vistorianBookmarks", JSON.stringify(bookmarksArray));
+                document.getElementById('lbl_changesState').style.backgroundColor="snow";
+                document.getElementById('lbl_changesState').innerText='Changes saved';
+            }
+            function updatesNotSaved(){
+                document.getElementById('lbl_changesState').innerText="Changes have not been saved yet. Click Save button";
+                document.getElementById('lbl_changesState').style.backgroundColor="lightyellow";
+
+            }
+            function updateHeader(){
+                this.parentElement.parentElement.getElementsByClassName("collapsible")[0].innerHTML=this.value;
+            }
+
+            
+            async function readFile(event) {
+                const file = event.target.files.item(0);
+                        const data = await file.text();
+                        localStorage.setItem("vistorianBookmarks",data);
+                        initializeJSON();
+            }
+            function importBookmarks(){
+                var fileImported=document.createElement("input");
+                fileImported.type="file";
+                fileImported.id="jsonFile";
+                fileImported.accept=".json";
+                fileImported.onchange = (event) => {
+                    readFile(event);
+                }
+                
+                var importStatus=false;
+
+                let userBookmarks = JSON.parse(localStorage.getItem("vistorianBookmarks")) || [];
+
+                if (userBookmarks && userBookmarks.length>0){
+                
+                    if (confirm('Are you sure you want to import the selected file? This will overwrite existing bookmarks')){
+                        
+                        fileImported.click(); 
+
+                        importStatus=true;                 
+                    }
+                }
+                else{
+                        fileImported.click(); 
+
+                        importStatus=true;                 
+                    }
+                
+                trace.event('bkm_10', ' bookmark file imported',importStatus , window.parent.location.pathname);
+
+
+            }
+            function captureControlsValues(){
+                                //Create/Update an object to hold the controls' values of the network
+                var visIframe=window.parent.document.getElementsByTagName("iframe")[1];
+                visControls=[];
+                if (viewType== "nodelink" || viewType== "mat-nl" || viewType== "tileview"){
+                    let startTime=visIframe.contentWindow.document.getElementById("sliderKnobMin").getAttribute('cx');
+                    let endTime=visIframe.contentWindow.document.getElementById('sliderKnobMax').getAttribute('cx');
+                    let cntrls=visIframe.contentWindow.document.getElementsByTagName('circle');
+                    let linkOpacity=cntrls[0].getAttribute('cx');
+                    let nodeOpacity=cntrls[1].getAttribute('cx');
+                    let nodeSize=cntrls[2].getAttribute('cx');
+                    let edgeGap=cntrls[3].getAttribute('cx');
+                    let linkWidth=cntrls[4].getAttribute('cx');
+                    let labellingType=visIframe.contentWindow.document.getElementById('selection-input_Labeling').selectedIndex;
+                    visControls.push(new  nodeLinkControls(viewType,startTime,endTime,linkOpacity,nodeOpacity,nodeSize,edgeGap,linkWidth,labellingType));
+                }
+                if (viewType== "matrix" || viewType== "mat-nl" || viewType== "tileview"){
+                    if (viewType== "mat-nl" || viewType== "tileview")
+                        visIframe=window.parent.document.getElementsByTagName("iframe")[2];
+                    let matrixStartTime=visIframe.contentWindow.document.getElementById("sliderKnobMin").getAttribute('cx');
+                    let matrixEndTime=visIframe.contentWindow.document.getElementById('sliderKnobMax').getAttribute('cx');
+                    let matrixZoomVal=visIframe.contentWindow.document.getElementById('cellSizeBox').value;
+                    let matrixLabellingType=visIframe.contentWindow.document.getElementById('labelOrdering').selectedIndex;
+                    visControls.push(new  matrixControls(viewType,matrixStartTime,matrixEndTime,matrixZoomVal,matrixLabellingType));
+                }
+                if (viewType== "dynamicego" || viewType== "tileview"){
+                    if ( viewType== "tileview")
+                        visIframe=window.parent.document.getElementsByTagName("iframe")[3];
+                    let dyStartTime=visIframe.contentWindow.document.getElementById("sliderKnobMin").getAttribute('cx');
+                    let dyEndTime=visIframe.contentWindow.document.getElementById('sliderKnobMax').getAttribute('cx');
+                    let dyLabellingType=visIframe.contentWindow.document.getElementById('labelOrdering').selectedIndex;
+                    visControls.push(new  timeArchsControls(viewType,dyStartTime,dyEndTime,dyLabellingType));
+                }
+                if (viewType== "map" || viewType== "tileview"){
+                    if ( viewType== "tileview")
+                        visIframe=window.parent.document.getElementsByTagName("iframe")[4];
+                    let mapStartTime=visIframe.contentWindow.document.getElementById("sliderKnobMin").getAttribute('cx');
+                    let mapEndTime=visIframe.contentWindow.document.getElementById('sliderKnobMax').getAttribute('cx');
+                    let mapCntrls=visIframe.contentWindow.document.getElementsByTagName('circle');
+                    let mapNodeOverlap=mapCntrls[0].getAttribute('cx');
+                    let mapLinkOpacity=mapCntrls[1].getAttribute('cx');
+                    let mapOpacityOfPositionlessNodes=mapCntrls[2].getAttribute('cx');
+                    visControls.push(new  mapControls(viewType,mapStartTime,mapEndTime,mapNodeOverlap,mapLinkOpacity,mapOpacityOfPositionlessNodes));
+            
+                    
+                }
+                return visControls;
+
+            }
+            function nodeLinkRestore(bkFile,bkIndex,iframeIndex,controlsObjectIndex){
+                            var visIframe=window.parent.document.getElementsByTagName("iframe")[iframeIndex];
+                            let nodelinkObj=bkFile[bkIndex].visNetworkControl[controlsObjectIndex];
+                            let cntrls=visIframe.contentWindow.document.getElementsByTagName('circle');
+                            if (cntrls){
+                                cntrls[0].setAttribute('cx',nodelinkObj.linkOpacity);
+                                cntrls[1].setAttribute('cx',nodelinkObj.nodeOpacity);
+                                cntrls[2].setAttribute('cx',nodelinkObj.nodeSize);
+                                cntrls[3].setAttribute('cx',nodelinkObj.edgeGap);
+                                cntrls[4].setAttribute('cx',nodelinkObj.linkWidth);
+                                visIframe.contentWindow.document.getElementById('selection-input_Labeling').selectedIndex=nodelinkObj.labellingType;
+                            }
+                        }
+            function matrixRestore(bkFile,bkIndex,iframeIndex,controlsObjectIndex){
+                var visIframe=window.parent.document.getElementsByTagName("iframe")[iframeIndex];
+                let matrixObj=bkFile[bkIndex].visNetworkControl[controlsObjectIndex];
+                visIframe.contentWindow.document.getElementById('labelOrdering').selectedIndex=matrixObj.labellingType;
+                visIframe.contentWindow.document.getElementById('cellSizeBox').value=matrixObj.zoom;
+            }
+            function dynamicegoRestore(bkFile,bkIndex,iframeIndex,controlsObjectIndex){
+                var visIframe=window.parent.document.getElementsByTagName("iframe")[iframeIndex];
+                let dyEObj=bkFile[bkIndex].visNetworkControl[controlsObjectIndex];
+                visIframe.contentWindow.document.getElementById('labelOrdering').selectedIndex=dyEObj.labellingType;
+
+            }   
+            function mapRestore(bkFile,bkIndex,iframeIndex,controlsObjectIndex){
+                var visIframe=window.parent.document.getElementsByTagName("iframe")[iframeIndex];
+                let mapObj=bkFile[bkIndex].visNetworkControl[controlsObjectIndex];
+                let mapCntrls=visIframe.contentWindow.document.getElementsByTagName('circle');
+                let mapNodeOverlap=mapCntrls[0].setAttribute('cx',mapObj.nodeOverlap);
+                let mapLinkOpacity=mapCntrls[1].setAttribute('cx',mapObj.linkOpacity);
+                let mapOpacityOfPositionlessNodes=mapCntrls[2].setAttribute('cx',mapObj.opacityOfPositionlessNodes);
+
+            } 
+ 
+            function AddNewLog(id,dateCreated,title,note,selectedType,analysisOptions,networkType,networkDataset){
+                 let userBookmarks = JSON.parse(localStorage.getItem("vistorianBookmarks")) || [];
+
+                 var logs=document.getElementById("logs");
+                //Create new log div
+                var newDiv=document.createElement("div");
+                var currentCounterValue;
+                //set div ID and network type
+                if (id==0){
+                    counter++;
+                    currentCounterValue=counter;
+                    newDiv.className=viewType;
+                }
+                else{
+                    currentCounterValue=id;
+                    newDiv.className=networkType
+                }
+                newDiv.id="div_log_"+currentCounterValue;
+                
+
+                 // create inner collapsible div
+                 //set bookmark date
+                 var newContentDiv=document.createElement("div");
+                newContentDiv.id=currentCounterValue;
+                newContentDiv.setAttribute("class","content");
+                var timeLabelHeader=document.createElement("label");
+                timeLabelHeader.innerHTML="Date/Time Created: &nbsp;&nbsp;&nbsp; ";
+                timeLabelHeader.style="font-weight: bold;float:left;";
+               
+            //    var timeLabel=document.createElement("label");
+
+                var btn_dateTime=document.createElement("span");
+                btn_dateTime.id="btn_dateTime"+currentCounterValue;
+
+                if (dateCreated==""){
+                    var today = new Date();
+                    var date = today.getDate() +'-'+ monthNames[today.getMonth()] +'-'+ today.getFullYear();
+                    var time = today.getHours() + ":" + today.getMinutes();// + ":" + today.getSeconds();
+            //        timeLabel.innerHTML=date+ "  "+time;
+                    btn_dateTime.innerHTML=date+ "  "+time;
+                }
+                else{
+            //        timeLabel.innerHTML=dateCreated;
+                    btn_dateTime.innerHTML=dateCreated;
+                }
+ 
+                //create log collapsible title
+                var headerButton=document.createElement("button");
+
+                var btn_title=document.createElement("span");
+                btn_title.id="btn_title_"+currentCounterValue;
+
+                if (title!="")
+                    btn_title.innerHTML=title;
+                else
+                    btn_title.innerHTML="Bookmark " + currentCounterValue +" : ";;
+                
+                var btn_bookmarkViewType=document.createElement("span");
+            //    btn_bookmarkViewType.style=" font-weight: bold;";
+                if (id==0)
+                    btn_bookmarkViewType.innerHTML= "&#9;&#9;&#9;" + "&#9;&#9;&#9;" + viewType.toUpperCase();
+                else
+                    btn_bookmarkViewType.innerHTML=networkType.toUpperCase();
+                    
+                var lowerContainer=document.createElement("span");
+                lowerContainer.style="display: flex;justify-content: space-between;";
+                lowerContainer.appendChild(btn_dateTime);
+                lowerContainer.appendChild(btn_bookmarkViewType);
+
+              //  lowerContainer.style="display:flex;";
+                if (viewType!= "dataview" ){
+                    var restoreStateIcon=document.createElement("i");
+                    restoreStateIcon.className="fa fa-refresh";
+                    restoreStateIcon.addEventListener('click', function() {
+                        var bkFile=JSON.parse(localStorage.getItem("vistorianBookmarks")) || [];
+                        var bkIndex=locateLogObj(bkFile,newContentDiv.id);//this.parentElement.id);
+
+                        trace.event('bkm_5', ' bookmark state', 'restoreted', window.parent.location.pathname);
+                        
+                        window.vc.messenger.setState(bkFile[bkIndex].controlsValues[0],bkFile[bkIndex].viewType);
+                        var content = this.parentElement.parentElement.nextElementSibling;
+                        headerButton.classList.toggle("active");
+                        if (content.style.maxHeight!=null){
+                            content.style.maxHeight = content.scrollHeight + "px";
+
+                        } else {
+                            content.style.maxHeight = null;
+                        } 
+                        switch (bkFile[bkIndex].viewType){
+                            case "nodelink":
+                                nodeLinkRestore(bkFile,bkIndex,1,0);
+                                break;
+                            case "matrix":
+                                matrixRestore(bkFile,bkIndex,1,0);
+                                
+                                break;
+                            case "dynamicego":
+                                dynamicegoRestore(bkFile,bkIndex,1,0)                           
+                                break;
+                            case "map":
+                                mapRestore(bkFile,bkIndex,1,0);
+                                break;
+                            case "mat-nl":case "tileview":
+                                window.vc.messenger.setState(bkFile[bkIndex].controlsValues[0],"nodelink");
+                                nodeLinkRestore(bkFile,bkIndex,1,0);
+                                window.vc.messenger.setState(bkFile[bkIndex].controlsValues[1],"matrix");
+                                matrixRestore(bkFile,bkIndex,2,1); 
+
+                                if (bkFile[bkIndex].viewType=="tileview"){
+                                    window.vc.messenger.setState(bkFile[bkIndex].controlsValues[2],"dynamicego");
+                                    dynamicegoRestore(bkFile,bkIndex,3,2)
+                                    window.vc.messenger.setState(bkFile[bkIndex].controlsValues[3],"map");
+                                    mapRestore(bkFile,bkIndex,4,3);
+                                }
+                        }
+
+                        });
+                     lowerContainer.appendChild(restoreStateIcon);
+
+                }
+                headerButton.appendChild(btn_title);
+                headerButton.appendChild(document.createElement("br"));
+                headerButton.appendChild(lowerContainer);
+
+                headerButton.setAttribute("class","collapsible");
+                
+                headerButton.addEventListener("click", function() {
+                    this.classList.toggle("active");
+                    var content = this.nextElementSibling;
+                    if (content.style.maxHeight){
+                        content.style.maxHeight = null;
+                    } else {
+                    content.style.maxHeight = content.scrollHeight + "px";
+                     } 
+                });
+ 
+                newDiv.appendChild(headerButton);
+
+                //set the title update container
+                var lbl_title=document.createElement("label");
+                lbl_title.innerText="Bookmark Label:"
+                lbl_title.style="font-weight: bold;float:left;";
+
+                var newTitle=document.createElement("input");
+                newTitle.type="text";
+                newTitle.id="txt_title_"+currentCounterValue;
+                if  (title!="")
+                    newTitle.value=title;
+                else
+                    newTitle.placeholder="Update bookmark label here ..";
+                newTitle.addEventListener('keyup', function() {
+                    let userBks = JSON.parse(localStorage.getItem("vistorianBookmarks")) || [];
+                    document.getElementById(btn_title.id).innerHTML=this.value;
+                    userBks[locateLogObj(userBks,this.parentElement.id)].title=this.value;
+                    updateLocalStorage(userBks);
+                });
+
+                lbl_title.htmlFor=newTitle.id;
+
+                newContentDiv.appendChild(lbl_title);
+                newContentDiv.appendChild(newTitle);
+                newContentDiv.appendChild(document.createElement("br"));
+
+                var newNote=document.createElement("textarea");
+                newNote.id="txt_note_"+currentCounterValue;
+
+                newNote.rows=5;
+                
+                   // newNote.innerHTML=note;
+
+                
+                newNote.placeholder="Enter your notes here ..";
+                if (note!="")
+                    newNote.innerText=note;
+            
+               /*  newNote.addEventListener('keyup', function(event) {
+                    
+                    bookmarksJSONFile[locateLogObj(bookmarksJSONFile,this.parentElement.id)].updateBookmarkNotes(this.value);
+                    updateLocalStorage(bookmarksJSONFile);
+                    updatesNotSaved();
+                    return false; 
+                }); */
+                var notesLabel=document.createElement("label");
+                notesLabel.innerText="Notes:";
+                notesLabel.style="font-weight: bold;";
+                notesLabel.htmlFor=newNote.id;
+                
+                newContentDiv.appendChild(notesLabel);
+
+                newContentDiv.appendChild(newNote);
+               
+               
+
+                
+
+                // Add bookmark type (purpose)
+                var flagTypes=["Review Data Quality","Test a particular hypothesis","Compare different visualizations","Retrieve specific details","Repeat analysis with new data"];
+                var bmTypeLabel=document.createElement("label");
+                bmTypeLabel.innerText="Activity: ";
+                bmTypeLabel.style="font-weight: bold;";
+                newContentDiv.appendChild(bmTypeLabel);
+                
+                var bmType=document.createElement("label");
+                bmType.id="lbl_type_"+currentCounterValue;
+                bmType.style="font-style: italic; ";
+                if (selectedType!="")
+                    bmType.innerText=selectedType;
+                bmType.style.display="none";
+                newContentDiv.appendChild(bmType);
+                
+                // Add "analyze data" with its sub-types
+                var btn= document.createElement("input");
+                btn.type="button";
+                btn.name="menuButton_"+currentCounterValue;
+                btn.classList.add("menuButton"); 
+                btn.style=" display: inline-block;";
+                btn.value=generalPBtns[0];
+                if (selectedType!=""){
+                    if (btn.value==selectedType)
+                        btn.style.backgroundColor= "#FF7F50"; 
+                }
+                    
+                
+                btn.addEventListener('click', function() {
+                    let userBks = JSON.parse(localStorage.getItem("vistorianBookmarks")) || [];
+
+                    document.getElementById(bmType.id).innerText=this.value;
+                    frmChk.style.display="block";
+                    txt_otherType.style.display="none";
+                    document.getElementsByName(this.name).forEach((btn) => {
+
+                            if(btn == this) {
+                                btn.style.backgroundColor= "#FF7F50"; 
+                                trace.event('bkm_3', ' bookmark type specified', this.value, window.parent.location.pathname);
+                            }
+                                
+                            else 
+                                btn.style.backgroundColor= "#bbb"; 
+                             });
+                    document.getElementById(newContentDiv.id).style.maxHeight=document.getElementById(newContentDiv.id).scrollHeight + "px";
+                    userBks[locateLogObj(userBks,this.parentElement.id)].type=document.getElementById(bmType.id).innerText;
+                    updateLocalStorage(userBks);
+
+                    updatesNotSaved();
+                });
+                   newContentDiv.appendChild(btn);
+                //Add rest of the types except (Other) type
+                for (var i=1;i<generalPBtns.length;i++){
+                   var btn= document.createElement("input");
+                   btn.type="button";
+                   btn.classList.add("menuButton"); 
+                   btn.style=" display: inline-block;";
+                   btn.name="menuButton_"+currentCounterValue;
+                   btn.value=generalPBtns[i];
+                   if (selectedType!=""){
+                    if (btn.value==selectedType)
+                        btn.style.backgroundColor= "#FF7F50"; 
+                    }
+                   btn.addEventListener('click', function() {
+                    let userBks = JSON.parse(localStorage.getItem("vistorianBookmarks")) || [];
+
+                        document.getElementById(bmType.id).innerText=this.value;
+                        document.getElementsByName(this.name).forEach((btn) => {
+
+                            if(btn == this) {
+                                btn.style.backgroundColor= "#FF7F50"; 
+                                trace.event('bkm_3', ' bookmark type specified', this.value, window.parent.location.pathname);
+                            }
+                            else 
+                                btn.style.backgroundColor= "#bbb"; 
+                             });
+                        txt_otherType.style.display="none";
+                        frmChk.style.display="none";
+                        userBks[locateLogObj(userBks,this.parentElement.id)].type=document.getElementById(bmType.id).innerText;
+                        updatesNotSaved();
+                        updateLocalStorage(userBks);
+                   });
+                   newContentDiv.appendChild(btn);
+                }
+                btn= document.createElement("input");
+                btn.type="button";
+                btn.value="Other";
+                btn.classList.add("menuButton"); 
+                btn.name="menuButton_"+currentCounterValue;
+                //create other type textarea
+                var txt_otherType=document.createElement("textarea");
+                txt_otherType.id="txt_otherType_"+currentCounterValue;
+                txt_otherType.placeholder="Explian other type here .. Please don't add personal information";
+                var otherType=true;
+                if (selectedType!=""){
+                    for (var i=0;i<generalPBtns.length;i++)
+                        if (generalPBtns[i]==selectedType){
+                            otherType=false;
+                            break;
+                    }
+                }
+               // if ( !otherType || id==0 ){
+        
+                if ( !otherType  ){
+                    txt_otherType.style.display="none";
+                }
+                else{
+                    btn.style.backgroundColor= "#FF7F50";
+                    txt_otherType.innerText=selectedType;
+                    txt_otherType.style.display="block";
+                  }
+
+                btn.addEventListener('click', function() {
+                        if (document.getElementById(bmType.id).innerText.length==0)
+                            document.getElementById(bmType.id).innerText=this.value;
+                        let userBks = JSON.parse(localStorage.getItem("vistorianBookmarks")) || [];
+
+                        document.getElementsByName(this.name).forEach((btn) => {
+
+                            if(btn == this) {
+                                btn.style.backgroundColor= "#FF7F50"; 
+                                trace.event('bkm_3', ' bookmark type specified', this.value, window.parent.location.pathname);
+                            }
+                            else 
+                                btn.style.backgroundColor= "#bbb"; 
+                             });
+                        if (txt_otherType.style.display=="none"){
+                            txt_otherType.style.display="block";
+                            document.getElementById(newContentDiv.id).style.maxHeight=document.getElementById(newContentDiv.id).scrollHeight + "px";
+                        }
+                        userBks[locateLogObj(userBks,this.parentElement.id)].type=document.getElementById(bmType.id).innerText;
+                        updatesNotSaved(); 
+                        updateLocalStorage(userBks);
+  
+                });
+                newContentDiv.appendChild(btn);
+
+/*                 
+                if (bmType.innerText==generalPBtns[generalPBtns.length-1])
+                else */
+
+                
+                txt_otherType.addEventListener('keyup', function() {
+                    // let userBks = JSON.parse(localStorage.getItem("vistorianBookmarks")) || [];
+
+                    document.getElementById(bmType.id).innerText=  this.value;
+                    trace.event('bkm_3', ' bookmark type specified', 'Other: ' + this.value, window.parent.location.pathname);
+                    // if (this.value.length==0)
+                    //     document.getElementById(bmType.id).innerText="Other:"; 
+                    //     userBks[locateLogObj(userBks,this.parentElement.id)].type=document.getElementById(bmType.id).innerText;
+                    updatesNotSaved();
+                    // updateLocalStorage(userBks);
+                });
+                newContentDiv.appendChild(txt_otherType);
+                
+
+                
+                var frmChk=document.createElement("form");
+                frmChk.id="frmcheck_"+ +currentCounterValue;
+                frmChk.action="#";
+                if (bmType.innerText==generalPBtns[0]){
+                    frmChk.style.display="block";
+                }
+                else
+                    frmChk.style.display="none";
+                newContentDiv.appendChild(frmChk);
+                var logFlag=document.createElement("fieldset");
+                logFlag.name="fs_logType_"+currentCounterValue;
+                var selectHeader=document.createElement('legend');
+                selectHeader.style="font-weight: bold;";
+                selectHeader.innerText="Characterize your analysis: ";
+                logFlag.appendChild(selectHeader);
+                 for(var i = 0; i < flagTypes.length; i++) {
+                    var optChk=document.createElement("input");
+                    optChk.type="checkbox";
+                    optChk.value=i;
+                    optChk.name="chkGroup_"+currentCounterValue;
+                    optChk.id="chk_analysis_"+ currentCounterValue+"_"+(i+1);
+                    optChk.style="float:left;";
+                             
+                    optChk.checked=checkExistance(optChk.value,analysisOptions);
+
+                    optChk.addEventListener('click', function() {
+                   //     let userBks = JSON.parse(localStorage.getItem("vistorianBookmarks")) || [];
+
+                        trace.event('bkm_6', ' bookmark analysis type selected', this.value, window.parent.location.pathname);
+                        if (document.getElementById(txt_otherType.id).value.length==0)
+                            document.getElementById(bmType.id).innerText="Other:"; 
+/*                         let bkIndex=locateLogObj(userBks,this.name.charAt(this.name.length-1));
+                        updateBookmarkAnalysisTypeGeneral(userBks[bkIndex],document.getElementsByName(this.name)); */
+                        updatesNotSaved();
+                        //updateLocalStorage(userBks);
+                    });
+                    var opt = document.createElement('label');
+                    opt.innerHTML = flagTypes[i];
+                    opt.htmlFor = optChk.id;
+                    
+                    opt.appendChild(optChk);
+                    logFlag.appendChild(opt);
+                }
+                frmChk.appendChild(logFlag);
+                newContentDiv.appendChild(frmChk);
+                
+                //Add buttons (Restore State|Delete)
+                newContentDiv.appendChild(document.createElement("br"));
+                newContentDiv.appendChild(document.createElement("br"));
+                //Hide restore-state button for non-visualization pages
+               /*  if (newDiv.className!= "dataview" ){
+                    var restoreButton = document.createElement("input");
+                    restoreButton.type = "button";
+                    restoreButton.value="Restore Visualization State";
+                    restoreButton.addEventListener('click', function() {
+                        var bkFile=JSON.parse(localStorage.getItem("vistorianBookmarks")) || [];
+                        var bkIndex=locateLogObj(bkFile,this.parentElement.id);
+
+                        trace.event('bkm_5', ' bookmark state', 'restoreted', window.parent.location.pathname);
+                      
+                        window.vc.messenger.setState(bkFile[bkIndex].controlsValues[0]);
+                       // window.parent.exports.networkcube.vistorian.setState(bookmarksJSONFile[locateLogObj(bookmarksJSONFile,this.parentElement.id)].controlsValues);
+
+                     });
+                    newContentDiv.appendChild(restoreButton);
+                } */
+
+                // Delete button: deletes the current bookmark
+                var deleteButton = document.createElement("input");
+                deleteButton.type = "button";
+                deleteButton.value="Delete Bookmark";
+                
+                deleteButton.addEventListener('click', function() {
+                    let userBks = JSON.parse(localStorage.getItem("vistorianBookmarks")) || [];
+
+                    if (confirm('Are you sure you want to Delete?')){
+                        this.parentElement.parentElement.remove();
+                        userBks.splice(locateLogObj(userBks,this.parentElement.id),1);
+                        trace.event('bkm_4', ' bookmark ', 'deleted', window.parent.location.pathname);
+                        updateLocalStorage(userBks);
+                    }
+                    //logFileJSON.push();
+                    if (userBks.length==0)
+                        document.getElementById('lbl_changesState').innerText='No bookmarks yet!';
+
+
+                });
+                newContentDiv.appendChild(deleteButton);
+
+                // Save button: Saves the current bookmark's updates
+                var saveButton = document.createElement("input");
+                saveButton.type = "button";
+                saveButton.value="Save Changes";
+                
+                saveButton.addEventListener('click', function() {
+
+                        var bkFile=JSON.parse(localStorage.getItem("vistorianBookmarks") || "[]") ;
+
+                        var updatedNotes=this.parentElement.getElementsByTagName("textarea")[1];
+
+                        var bkIndex=locateLogObj(bkFile,this.parentElement.id);
+
+                        if (viewType!="dataview" && bkFile[bkIndex].viewType==viewType){//not to override the state of a visualization incorrectly with a mismatching type or absence of state
+                           //Create an object to hold the state of the network
+                            switch (viewType){
+                                case "nodelink":case "matrix": case "map": case "dynamicego":
+                                    window.vc.messenger.getState(bkIndex,viewType,false,"");
+                                    break;
+                                case "mat-nl":
+                                    window.vc.messenger.getState(bkIndex,"nodelink",false,"mat-nl");
+
+                                   // window.vc.messenger.getState(bkIndex,"matrix",false);
+
+                                    break;
+                                case "tileview": 
+                                    window.vc.messenger.getState(bkIndex,"nodelink",false,"tileview");
+                                    //window.vc.messenger.getState(bkIndex,"matrix",false);
+                                    //window.vc.messenger.getState(bkIndex,"dynamicego",false);
+                                    //window.vc.messenger.getState(bkIndex,"map",false);
+                                    break;
+                            }
+                            
+                            bkFile[bkIndex].visNetworkControl=captureControlsValues();
+                        }
+                        
+
+                        
+
+                        bkFile[bkIndex].note=updatedNotes.value;
+
+                        updateBookmarkAnalysisTypeGeneral(bkFile[bkIndex],document.getElementsByName("chkGroup_"+bkFile[bkIndex].id));
+
+
+                        //if (document.getElementById("txt_otherType_"+bkFile[bkIndex].id).value.length==0)
+                            //document.getElementById("lbl_type_"+bkFile[bkIndex].id).innerText="Other:"; 
+                        if (document.getElementById("lbl_type_"+bkFile[bkIndex].id).innerText.length==0)
+                            alert("You did not specify the type of your bookmark!")
+                        bkFile[locateLogObj(bkFile,this.parentElement.id)].type=document.getElementById("lbl_type_"+bkFile[bkIndex].id).innerText;
+
+                        //currentBookmark.updateBookmarkType(document.getElementById('lbl_type_'+x.id).value);
+                        //currentBookmark.updateBookmarkAnalysisType(currentBookmark)
+                       // (bookmarksJSONFile[bkIndex]).updateBookmarkNotes(updatedNotes.value);
+
+                       // lsBookmarks[locateLogObj(lsBookmarks,this.parentElement.id)].updateBookmarkNotes(updatedNotes.value);
+                    //    localStorage.setItem("vistorianBookmarks", JSON.stringify(bookmarksJSONFile));
+
+                      //  trace.event('bkm_4', ' bookmark ', 'deleted', window.parent.location.pathname);
+                      updateLocalStorage(bkFile);
+                      trace.event('bkm_2', ' updates/changes', 'saved by user', window.parent.location.pathname);
+
+                      return false;
+                });
+                newContentDiv.appendChild(saveButton);
+
+                newContentDiv.appendChild(document.createElement("br"));
+
+                /* if (title!="")
+                {
+                    newContentDiv.style.height=   newContentDiv.scrollHeight +"px";
+                } */
+                newDiv.appendChild(newContentDiv);
+                logs.prepend(newDiv);
+                
+                               /*  else
+                    newBookmark.updateBookmarkDataset(networkName); */
+                var newBookmark;
+                if (id==0){
+                    newBookmark=new Bookmark(currentCounterValue,btn_dateTime.innerHTML,btn_title.innerHTML,newDiv.className,networkName,[],[]);
+                    newBookmark.note=newNote.value;
+                    newBookmark.analysisOpts=analysisOptions;  
+                    newBookmark.updateBookmarkType(selectedType);
+                    userBookmarks.push(newBookmark);
+                    switch (viewType){
+
+                        case "dataview":
+                            networkName=window.parent.document.getElementById('networknameInput').value;
+                            break;
+                        case "nodelink":case "matrix":case "dynamicego":case "map": 
+                            window.vc.messenger.getState(currentCounterValue-1,viewType,true,"");
+                            break;
+                        case "mat-nl": // location= index of 0(nodelink)//1(matrix) in the visControls
+                            window.vc.messenger.getState(currentCounterValue-1,"nodelink",true,"mat-nl");
+
+                            // window.vc.messenger.getState(currentCounterValue-1,"matrix",true);
+                            break;
+                        case "tileview": // location= index of 0(nodelink)//1(matrix)//2(DynamicEgo)//3(Map) in the visControls
+                            window.vc.messenger.getState(currentCounterValue-1,"nodelink",true,"tileview");
+                            // window.vc.messenger.getState(currentCounterValue-1,"matrix",true);
+                            // window.vc.messenger.getState(currentCounterValue-1,"dynamicego",true);
+                            // window.vc.messenger.getState(currentCounterValue-1,"map",true);
+                    }
+                    userBookmarks[userBookmarks.length-1].visNetworkControl=captureControlsValues();
+
+                    
+                }
+
+                updateLocalStorage(userBookmarks);
+               
+
+            }
+            
+
+            
+        </script>
+    </head>
+    <!-- onerror="trace.event('err', event + ' ' + source + lineno, error, document.location.pathname);"  -->
+    <body id="capture" onload="initializeJSON();"  onfocus="refreshBookmarks();"> 
+       
+        <div id="logbook_container" data-role="page" >
+            
+            <div >
+                
+                <form action="#">
+                    <input type="radio" id="allBM" name="bmTypeSelection" value="all" onchange="changeBookmarksView('all');trace.event('bkm_7', ' show all bookmarks (view)', 'selected', window.parent.location.pathname);" checked >
+                    <label style="font-weight:normal;" for="allBM">All bookmarks</label>
+                    <input type="radio" id="specificBM" name="bmTypeSelection" value="specific" onchange="changeBookmarksView(viewType);trace.event('bkm_7', ' show current view bookmarks', 'selected', window.parent.location.pathname);">
+                    <label style="font-weight:normal;" for="specificBM">Only bookmarks of current visualization </label><br>
+                </form>
+            </div>
+            <div>
+                <label id="lbl_changesState" style="background-color:snow;align-items: center;text-align: center;"></label>
+                <br>
+            </div>
+            <div id="logbook_header"  class="hd_div" >  
+                
+                <!-- AddNewLog(0,'','','','',[],viewType,networkName); without bookmarkpopup pane -->
+                <button  id="addNewBookmark" value="Add New" style="border: groove" class="hd_btn"  onclick="showBookmarkPopup();trace.event('bkm_1', ' new bookmark button', 'clicked', window.parent.location.pathname);"><u>A</u>dd New</button>
+                <!-- <button  id="btn_save" value="Save" class="hd_btn"  onclick="updateLocalStorage( (JSON.parse(localStorage.getItem('vistorianBookmarks')) || []));trace.event('bkm_2', ' updates/changes', 'saved by user', window.parent.location.pathname);">Save Bookmarks</button> -->
+
+          
+            </div>
+            <div id="logs" data-role="main" class="ui-content">
+
+            </div>
+            <div >
+              
+                <button style="font-weight:normal;"  id="btn_contactUs" onclick="location.href='mailto:vistorian@inria.fr?subject=[Vistorian] Consultation Request&body=Hi, kindly I would like to arrange a 10-minutes meeting to consult about my data\'s visualization. Thank you.';trace.event('com_3', window.parent.location.pathname, 'bookmark_tool', 'consult_team');"><u>E</u>mail Us & Consult an Expert</button>
+                <button style="font-weight:normal;"  id="btn_reportIssue" onclick="location.href='mailto:vistorian@inria.fr?subject=[Vistorian] Report Technical Bug &body=Hello,\n I am facing a technical problem and would like to request your help. The description of my problem is :\n';trace.event('com_4', window.parent.location.pathname, 'bookmark_tool', 'ReportTechBug');">Report a Technical B<u>u</u>g</button>
+                <div style="float:right">
+                    <button  style="font-weight:normal;" id="btn_exportBookmarks"  onclick="exportBookmarks();trace.event('bkm_9', window.parent.location.pathname, 'bookmark_tool', 'Bookmarks File Exported');">E<u>x</u>port Bookmarks</button>
+                    <button style="font-weight:normal;" id="btn_showHideSessionID" onclick="toggleMySessionID()">Show/<u>H</u>ide My Session ID</button>
+    
+                </div>
+                <div style="float:left;">
+                    <button  style="font-weight:normal;"  id="btn_importBookmarks"  onclick="importBookmarks();trace.event('bkm_10', window.parent.location.pathname, 'bookmark_tool', 'Bookmarks File Imported');"><u>I</u>mport Bookmarks</button>
+
+                    <button  style="font-weight:normal;" id="btn_clearBookmarks"  onclick="clearBookmarks();trace.event('bkm_10', window.parent.location.pathname, 'bookmark_tool', 'Bookmarks File Cleared');"><u>C</u>lear Bookmarks</button>
+
+                </div>
+
+            </div>
+
+            <div style="display: inline-block;">
+                <label id="loggingSessionID" style=" align-items: center;text-align: center; border-style:outset;padding: 5px;"></label>
+            </div>            
+
+        </div>  
+        <script>
+                var parentDoc = window.parent.document;
+                // Add New Bookmark
+                Mousetrap(parentDoc).bind('ctrl+shift+a', function() {
+                    if (viewType!="dataview")
+                        document.getElementById('addNewBookmark').click();
+                });
+                Mousetrap.bind('ctrl+shift+a', function() {
+                    if (viewType!="dataview")
+                        document.getElementById('addNewBookmark').click();
+                });
+                //Clear Bookmarks
+                Mousetrap(parentDoc).bind('ctrl+shift+c', function() {
+                    document.getElementById('btn_clearBookmarks').click();
+                });
+                Mousetrap.bind('ctrl+shift+c', function() {
+                    document.getElementById('btn_clearBookmarks').click();
+                });
+                // Import Bookmarks
+                Mousetrap(parentDoc).bind('ctrl+shift+i', function() {
+                    document.getElementById('btn_importBookmarks').click();
+                });
+                Mousetrap.bind('ctrl+shift+i', function() {
+                    document.getElementById('btn_importBookmarks').click();
+                });
+                // Export Bookmarks
+                Mousetrap(parentDoc).bind('ctrl+shift+x', function() {
+                    document.getElementById('btn_exportBookmarks').click();
+                });
+                Mousetrap.bind('ctrl+shift+x', function() {
+                    document.getElementById('btn_exportBookmarks').click();
+                
+                });
+                // Email us
+                Mousetrap(parentDoc).bind('ctrl+shift+e', function() {
+                    document.getElementById('btn_contactUs').click();
+                });
+                Mousetrap.bind('ctrl+shift+e', function() {
+                    document.getElementById('btn_contactUs').click();
+                });
+                // Report an Issue
+                Mousetrap(parentDoc).bind('ctrl+shift+u', function() {
+                    document.getElementById('btn_reportIssue').click();
+                });
+                Mousetrap.bind('ctrl+shift+u', function() {
+                    document.getElementById('btn_reportIssue').click();
+                });
+                // Show/Hide Session ID
+                Mousetrap(parentDoc).bind('ctrl+shift+h', function() {
+                    document.getElementById('btn_showHideSessionID').click();
+                });
+                Mousetrap.bind('ctrl+shift+h', function() {
+                    document.getElementById('btn_showHideSessionID').click();
+                });
+        </script>
+
+    </body>
+
+</html>

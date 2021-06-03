@@ -32,10 +32,11 @@ module.exports = {
     output: {
         library: "networkcube",
         libraryTarget: "umd",
-        filename: 'vistorian-vis.js',
-        path: path.resolve(__dirname, 'lib')
+        filename: 'vistorian-web.js',
+        path: path.resolve(__dirname, 'lib'),
     },
     devServer: {
-        contentBase: './'
+        contentBase: './',
+        port:8081,
     },
 };

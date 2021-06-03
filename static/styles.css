@@ -17,6 +17,20 @@ div#layout{
 	width: 100%;
 }
 
+form{
+	padding: 0px;
+	width: 100%;
+	text-align: center;
+	background-color:transparent;
+	border: none;
+	cursor:pointer;
+	color:#d95f0e;
+	font-family: Helvetica, sans-serif;
+	font-size:14px;
+	text-decoration: underline;
+	font-weight: 100;
+
+}
 div#footer{
 	margin-top: 100px;
 	height: 200px;

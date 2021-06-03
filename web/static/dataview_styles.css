@@ -10,8 +10,8 @@ div#noNetworkTables{
 img.visicon{
 	height: 100px;
 	margin-right: 10px;
-	border: 1px solid #ddd;
-	padding:5px;
+	border: 1px solid #eee;
+	padding: 5px;
 } 
 
 
@@ -85,19 +85,6 @@ img.controlIcon{
     height: 12pt;
 }
 
-.tableMenuButton{
-    float:right; 
-    margin-left: 10px;
-    /*background-color:#E17F3E;*/
-    background-color:#bbb;
-    border-radius:10px;
-    border: none;
-    display:inline-block;
-    cursor:pointer;
-    color:#ffffff;
-    font-size:12px;
-}
-
 input#replaceButton{
     margin-left: 10px;
     background-color:#E17F3E;
@@ -110,20 +97,19 @@ input#replaceButton{
 }
 
 .menuButton{
+    margin-left: 10px;
     background-color:#bbb;
-    border-radius:15px;
+    font-size:14px;
+    font-weight: normal;
+    border-radius:10px;
     border: none;
     display:inline-block;
     cursor:pointer;
     color:#fff;
-    font-size:12px;
-    font-weight: normal;
-    padding-top: 0px;
-    padding-right: 6px;
-    padding-bottom: 0px;
-    padding-left: 6px;
-    margin-left: 5px;
-
+    padding: 4px;
+    padding-left: 8px;
+    padding-right: 8px;
+    margin: 4px;
 }
 
 
@@ -168,6 +154,10 @@ option.tableSelection{
 
 .emptyTableCell{
     background-color:#ffeeee;
+}
+
+.schemaCellSet{
+    background-color: #8c8;
 }
 
 .messageBox{

@@ -120,8 +120,6 @@ img.menuicon{
 }
 
 
-
-
 ul#menu{
 	margin-bottom: 50px;
 	margin-top: 70px;
@@ -162,24 +160,25 @@ h1{
 	font-size: 30pt;
 	margin-top: 0px;
 	color: #d95f0e;
-	/*font-family: 'Amatic SC', Helvetica, sans-serif;*/
-	font-family: 'Poiret One', 'Helvetica Neue', sans-serif; 
+	font-family: 'Poppins', 'Helvetica Neue', sans-serif; 
 	/*font-weight: 100;*/
 }
 
 h2{
 	margin-top: 50px;
-	font-size: 20pt;
-	font-family: 'Poiret One', 'Helvetica Neue', sans-serif; 
+	font-size: 18pt;
+	font-family: 'Poppins', 'Helvetica Neue', sans-serif; 
 	color:#111111;
 	font-weight: bold;
 	border-radius: 2px;
 }
 
 h3{
-	font-size: 17pt;
-	font-family: 'Poiret One', 'Helvetica Neue', sans-serif; 
-	margin:5px;
+	font-size: 18pt;
+	font-family: 'Poppins', 'Helvetica Neue', sans-serif; 
+	font-weight: bold;
+	margin-top:10px;
+	margin-bottom:15px;	
 }
 
 
@@ -245,7 +244,8 @@ a.largeLink, a.largeLink{
 	text-decoration: underline;
 	text-align: center;
 	font-size: 15pt;
-	font-family: 'Lato', Helvetica, sans-serif;
+	/* font-family: 'Lato', Helvetica, sans-serif; */
+	font-family: 'Poppins', 'Helvetica Neue', sans-serif; 
 	padding: 20px;
 }
 
@@ -268,6 +268,7 @@ p.error_msg{
 
 .visLink{
     margin-top: 5px;
+	margin-right: 40px;
 }
 
 .visLink{
@@ -279,10 +280,12 @@ p.error_msg{
 	border: none;
 	cursor:pointer;
 	color:#d95f0e;
-	font-family: Helvetica, sans-serif;
-	font-size:14px;
-	text-decoration: underline;
-	font-weight: 100;
+	text-align: left;
+	font-size:13pt;
+	font-weight: 200;
+}
+.visbutton p{
+	margin-top:8px;
 }
 
 

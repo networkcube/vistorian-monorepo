@@ -13,17 +13,30 @@
 
         <script src="../node_modules/jquery/dist/jquery.js" type="text/javascript"></script>
         <script type="text/javascript" charset="utf8" src="DataTables-1.10.7/media/js/jquery.dataTables.js"></script>
+        <script src='https://kit.fontawesome.com/303540a013.js' crossorigin='anonymous'></script>
 
         <script> var exports = {}; </script>
         <script src="../node_modules/moment/moment.js" type="text/javascript"></script>
         <script src="../node_modules/jstorage/jstorage.js"></script>
         <script src="../node_modules/vistorian-core/lib/vistorian-core.js"></script>
-        <script src="../lib/vistorian-vis.js"></script>
-
+        <script src="../lib/vistorian-web.js"></script>
+        <link rel="stylesheet" href="bookmarkLogConsent.css">
+        <script src='bookmarkLogConsent.js'></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+        <script>
+            $.get("logging_models.html", function(result){ 
+                $("body").append(result);
+            });
+        </script>  
     </head>
     <title>Matrix + Node Link</title>
 
-<body>
+<body onload="trace.event('log_2', 'load', 'webpage', document.location.pathname);checkLogStatus();dragElement(document.getElementById('mydiv'));" onerror="trace.event('err', event + ' ' + source + lineno, error, document.location.pathname);" onbeforeunload="trace.event('log_12', 'page', 'close', document.location.pathname);" onfocus="refreshBookmarks();">
 
     <!-- VS: Call to trace_test_130529 -->
     <script type="text/javascript" src="../static/traces/trace_test_130529.js"></script>
@@ -33,6 +46,23 @@
             <tr>
                 <td>
                     <div id="logoFrame"></div>
+                    <div id="consentFormBK" style=" display:flex;align-items:center; padding: 8px;">
+                        <img src="../static/logos/VistorianLabLogo.png" width="40px" height="40px">
+    
+                        <strong> VistorianLab!&nbsp;&nbsp;</strong>
+    
+                        <div class="onoffswitch" > 
+                        
+                        <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="consentOnoffswitch"  tabindex="0" onchange="trace.event('log_5', 'Bookmark_Consent_Display', 'Consent_button', this.checked);toggleConsntModel();" > 
+                        <label class="onoffswitch-label" for="consentOnoffswitch">
+                            <span class="onoffswitch-inner"></span>
+                            <span class="onoffswitch-switch"></span>
+                        </label>
+                    
+                        </div>
+                    </div>
+    
+                    <br>
                     <div id="bookmarkFrame"></div>
                 </td>
                 <td id="nodelinkVisFrame"></td>
@@ -45,7 +75,7 @@
         <a class="footer" href="https://go.microsoft.com/fwlink/?LinkId=521839" title="privacy">Privacy & Cookies</a> |
         <a class="footer" href="https://go.microsoft.com/fwlink/?LinkID=760869" title="terms of use">Terms Of Use</a> |
         <a class="footer" href="http://go.microsoft.com/fwlink/?LinkId=506942" title="trademarks">Trademarks</a>
-        © 2016 Microsoft <img src="../static/logos/logo-microsoft.png" height="20px"> © 2016 INRIA <img
+        © <script>document.write(new Date().getFullYear());</script> Microsoft <img src="../static/logos/logo-microsoft.png" height="20px"> © <script>document.write(new Date().getFullYear());</script> INRIA <img
             src="../static/logos/logo-inria.png" height="20px">
     </div>
     <script>
@@ -89,6 +119,37 @@
 
         });
     </script>
+              <div id="mydiv" >
+                <div id="mydivheader" ><strong> Bookmarks</strong> (Drag header to move)
+                    <!-- <button type="button" class="close"  onclick="turnLoggingOff()">&nbsp;×&nbsp;</button> -->
+                    <button type="button" class="close"  onclick="maxmizeBookmarks();">&nbsp;&nbsp;<i class="fa fa-window-maximize" style="font-size:12px"></i></button>
+                    <button type="button" class="close"  onclick="minimizeBookmarks();">&nbsp;&nbsp;<i class="fa fa-window-minimize" style="font-size:12px"></i></button>
+                </div>
+                <iframe id="myFrame" src="logbook.html" ></iframe>
+                </div>
+                <div class="feedback">
+                    <a href="#"><span><i class="far fa-edit" style="font-size:30px;color:#FF7F50">Feedback</i>            </span></a>
+                    <div class="form" style="background-color: white;">
+                      <form>
+                        <h6 class="modal-title">Tell us how you use the vistorian in this moment </h6>
+                        <div class="form-group">
+                            <input type="button" class="menuButtonGadget" id="AnalyzeData" value="Analyze Data" >
+                            <input type="button" class="menuButtonGadget" id="Learn" value="Learn" >
+                            <input type="button" class="menuButtonGadget" id="DemotoOthers" value="Demo to others" >
+                            <input type="button" class="menuButtonGadget" id="exploreVis" value="Test & Explore Vistorian" >
+                            <input type="button" class="menuButtonGadget" id="DiscussFindings" value="Discuss Findings" >          
+                            <input type="button" class="menuButtonGadget" id="ReportIssue" value="Report an Issue" >
+                            <textarea name="message" id="feedback_text" cols="30" rows="10" placeholder="Send us your feedback!"autofocus></textarea>
+                          
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-sm btn-block" onclick="LoggingGeneralFeedback();">
+                          Send it!
+                        </button>
+                      </form>
+                    </div>
+                    <div class="thanks">
+                      Feedback sent! Thank you for helping us!
+                    </div>
+                  </div>
 </body>
-
 </html>

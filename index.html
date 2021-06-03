@@ -1,12 +1,10 @@
 <html>
-
 <head>
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-141751743-1"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
-
         gtag('config', 'UA-141751743-1');
     </script>
 
@@ -20,9 +18,11 @@
     <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Poiret+One" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Nunito+Sans" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+   
 </head>
 
-<body>
+<body onload="trace.event('log_2', 'index', 'webpage', 'load')"> 
     <!-- VS: Call to trace_test_130529 -->
     <script type="text/javascript" src="./static/traces/trace_test_130529.js"></script>
     <script src="./node_modules/jquery/dist/jquery.js" type="text/javascript"></script>
@@ -36,16 +36,16 @@
             <br />
 
             <div id="vistiles">
-                <a href="./web/nodelink.html?session=0&datasetName=demo_scientists" target="_blank">
+                <a href="./web/nodelink.html?session=0&datasetName=demo_scientists" target="_blank" onclick="trace.event('hlp_4', 'index', 'Node Link Example', 'click')">
                     <img class="visimage" src="./static/figures/nodelink.png" />
                 </a>
-                <a href="./web/dynamicego.html?session=0&datasetName=demo_scientists" target="_blank">
+                <a href="./web/dynamicego.html?session=0&datasetName=demo_scientists" target="_blank" onclick="trace.event('hlp_4', 'index', 'Dynamic Ego Example', 'click')">
                     <img class="visimage" src="./static/figures/dynamicego.png" />
                 </a>
-                <a href="./web/matrix.html?session=0&datasetName=demo_scientists" target="_blank">
+                <a href="./web/matrix.html?session=0&datasetName=demo_scientists" target="_blank" onclick="trace.event('hlp_4', 'index', 'Matrix Example', 'click')">
                     <img class="visimage" src="./static/figures/matrix.png" />
                 </a>
-                <a href="./web/map.html?session=0&datasetName=demo_scientists" target="_blank">
+                <a href="./web/map.html?session=0&datasetName=demo_scientists" target="_blank" onclick="trace.event('hlp_4', 'index', 'Map Example', 'click')">
                     <img class="visimage" src="./static/figures/map.png" />
                 </a>
             </div>
@@ -53,17 +53,17 @@
 
             <ul id="menu">
                 <li>
-                    <a href="./web/demo.html?session=0&datasetName=demo_scientists" target="_blank"><img src="./static/logos/eye65.png"
+                    <a href="./web/demo.html?session=0&datasetName=demo_scientists" target="_blank" onclick="trace.event('hlp_7', 'index', 'Visualizations href', 'click')"><img src="./static/logos/eye65.png"
                             class="menuicon" target="_blank" />Visualizations</a>
                 </li>
                 <li>
-                    <a href="./web/dataview.html?session=0" target="_blank"><img src="./static/logos/soccer.png"
+                    <a href="./web/dataview.html?session=0" target="_blank"  onclick="trace.event('hlp_6', 'index', 'Demo href', 'click')" ><img src="./static/logos/soccer.png"
                             class="menuicon" />Demo</a>
                 </li>
                 <li>
                     <!-- VS: Clicks on Your Session -->
                     <a id="resumeSessionLink2" target="_blank"
-                        onclick="trace.event('system', 'ts_YourSession', 'CCC', 'DDD')">
+                        onclick="trace.event('log_3', 'index', 'my session href', 'click')">
                         <!-- VS: Old code -->
                         <!-- <a id="resumeSessionLink2" target="_blank"> -->
                         <img src="./static/logos/003-avatar.png" class="menuicon" />My Session</a>
@@ -74,21 +74,26 @@
                 <br />
                 <li>
                     <a href="http://github.com/networkcube/networkcube/wiki/Visualization-Manual" target="_blank"
-                        onclick="trace.event('help', 'ts_VisManual', 'CCC', 'DDD')">
+                        onclick="trace.event('hlp_1', 'index', 'Vis Manual', 'click')">
                         <img src="./static/logos/002-share.png" class="menuicon" target="_blank" />Visualization Manual</a>
                 </li>
                 <li>
                     <a href="https://github.com/networkcube/networkcube/wiki/Data-Preparation" target="_blank"
-                        onclick="trace.event('help', 'ts_VisManual', 'CCC', 'DDD')">
+                        onclick="trace.event('hlp_2', 'index', 'Data Formating', 'click')">
                         <img src="./static/logos/001-file.png" class="menuicon" target="_blank" />Data Formatting</a>
                 </li>
 
                 <li>
-                    <a href="http://github.com/networkcube/networkcube" target="_blank"><img src="./static/logos/favourite15.png"
+                    <a href="http://github.com/networkcube/networkcube" target="_blank" onclick="trace.event('com_1', 'index', 'github', 'click')"><img src="./static/logos/favourite15.png"
                             class="menuicon" />Github</a>
                 </li>
+                
                 <li>
-                    <a href="mailto:benj.bach@gmail.com" class="menuicon"><img src="./static/logos/chat44.png"
+                    <a href="https://vistorian.github.io/vistorianLab.html" class="menuicon" onclick="trace.event('com_2', 'index', 'vistorinaLab study', 'click')"><img src="./static/logos/VistorianLab.png"
+                            class="menuicon" />Vistorian Lab</a>
+                </li>
+                <li>
+                    <a href="mailto:benj.bach@gmail.com" class="menuicon" onclick="trace.event('com_2', 'index', 'contact', 'click')"><img src="./static/logos/chat44.png"
                             class="menuicon" />Contact</a>
                 </li>
             </ul>
@@ -110,7 +115,7 @@
         <h2>Overview:</h2>
 
         <div id="video_div">
-            <video width="800" height="500" controls>
+            <video width="800" height="500" controls onplay="trace.event('hlp_3', 'index', 'help video', 'play')">
                 <source src="./static/teaser.mp4" type="video/ogg">
             </video>
         </div>
@@ -218,9 +223,9 @@
 
                 <img class="dataPicture" src="./static/figures/nodetable.png" alt="" />
 
-                <a href="./web/demodata/timmysmith.csv">Download example data</a>
+                <a href="./web/demodata/timmysmith.csv" onclick="trace.event('hlp_4', 'index', 'download example data', 'click')">Download example data</a>
                 <br />
-                <a href="https://github.com/networkcube/networkcube/wiki/Importing-Data">Learn more</a> about data
+                <a href="https://github.com/networkcube/networkcube/wiki/Importing-Data" onclick="trace.event('hlp_2', 'index', 'importing data', 'click')">Learn more</a> about data
                 formatting and data schemas in networkcube.
 
                 </h2>
@@ -284,18 +289,17 @@
                     <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0">CC BY 3.0</a>
                 </div>
             </p>
-
             <a class="footer" href="mailto:networkcube@microsoft.com" target="_top">Contact Us</a> |
             <a class="footer" href="https://go.microsoft.com/fwlink/?LinkId=521839" title="privacy">Privacy &
                 Cookies</a> |
             <a class="footer" href="https://go.microsoft.com/fwlink/?LinkID=760869" title="terms of use">Terms Of
                 Use</a> |
             <a class="footer" href="http://go.microsoft.com/fwlink/?LinkId=506942" title="trademarks">Trademarks</a>
-            © 2016 Microsoft <img src="./static/logos/logo-microsoft.png" height="20px"> © 2016 INRIA <img
+            © <script>document.write(new Date().getFullYear())</script> Microsoft <img src="./static/logos/logo-microsoft.png" height="20px"> © <script>(document.write(new Date().getFullYear()))</script> INRIA <img
                 src="./static/logos/logo-inria.png" height="20px">
 
             <script src="./node_modules/jstorage/jstorage.js"></script>
-            <script src="./lib/vistorian-vis.js"></script>
+            <script src="./lib/vistorian-web.js"></script>
 
             <script type="text/javascript">
 
@@ -315,9 +319,8 @@
                 $('#resumeSessionLink').attr('href', './web/dataview.html?session=' + PREVIOUS_SESSION);
                 $('#resumeSessionLink2').attr('href', './web/dataview.html?session=' + PREVIOUS_SESSION);
                 $('#resumeSessionLink3').attr('href', './web/dataview.html?session=' + PREVIOUS_SESSION);
-
                 // Load demo data
-                $.get("https://raw.githubusercontent.com/networkcube/vistorian/master/demo/demo_scientists.vistorian",
+                $.get("/web/demo/demo_scientists.vistorian",
                     function (data) {
                         window.exports.networkcube.vistorian.importData(JSON.parse(data), 0);
                         window.exports.networkcube.vistorian.importIntoNetworkcube(JSON.parse(data), 0)

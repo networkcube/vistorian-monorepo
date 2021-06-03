@@ -2,6 +2,7 @@
 import * as vistorian from './vistorian';
 import * as main from 'vistorian-core/src/main';
 
+
 var SESSION_TABLENAMES: string = "vistorian.tablenames";
 var SESSION_TABLE: string = "vistorian.table";
 var SESSION_NETWORK: string = "vistorian.network";
@@ -13,7 +14,9 @@ var SEP: string = "#";
 
 // SESSION
 export function saveSessionId(sessionid: string) {
-    $.jStorage.set("vistorian.lastSessionId", sessionid);
+    if (sessionid)
+        $.jStorage.set("vistorian.lastSessionId", sessionid);
+  
 }
 
 export function getLastSessionId(): string {

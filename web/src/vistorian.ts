@@ -25,6 +25,8 @@ head.append("<link href='https://fonts.googleapis.com/css?family=Comfortaa' rel=
 head.append("<link href='https://fonts.googleapis.com/css?family=Caveat' rel='stylesheet' type='text/css'>")
 head.append("<link href='https://fonts.googleapis.com/css?family=IM+Fell+English' rel='stylesheet' type='text/css'>")
 
+
+
 function append(url: string) {
     var script: any = document.createElement('script');
     script.type = 'text/javascript';
@@ -283,12 +285,17 @@ export function setHeader(elementId: String, datasetname: String) {
     var dataname: any = $('\
         <p style="margin:5px;background-color:#eeeeee;border-radius:2px;padding-left:10px;padding:5px;"><b>Data:</b> '+ datasetname + '</h2>')
     $('#' + elementId).append(dataname);
+ 
+    //$('#' + elementId).append('')
+    //$('#' + elementId).append('')
+    //$('#' + elementId).append('')
 
     var vars: any = utils.getUrlVars();
 
     // VS: Clicks on Return to DataView
-    $('#' + elementId).append('<a href="../web/dataview.html?session=' + vars['session'] + '&datasetName' + vars['datasetName'] + '" style="margin:5px;padding-left:5px;" onclick="trace.event(\'system\', \'ts_ReturnDV\', \'CCC\', \'DDD\');" target="_blank">Return to Dataview</a>');
+    $('#' + elementId).append('<a href="../web/dataview.html?session=' + vars['session'] + '&datasetName' + vars['datasetName'] + '" style="margin:5px;padding-left:5px;" onclick="trace.event(\'log_4\', document.location.pathname, \'Return to Data View Button\', \'Clicked\');" target="_blank">Return to Dataview</a>');
     $('#' + elementId).append('<br/><br/>');
+
 }
 
 
@@ -309,7 +316,7 @@ export function importData(network: Network, session: any) {
 }
 
 export function createAndNormaliseLocationTable(currentNetwork: Network) {
-////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////
     // CREATE AND NORMALIZE LOCATION TABLE IF ANY LOCATION DATA EXITS //
     ////////////////////////////////////////////////////////////////////
 
