@@ -62,8 +62,8 @@ export class VNodeSchema extends VTableSchema {
     id: number = 0;
     label: number = -1;
     time: number = -1;
-    nodeType: number = -1;
-    color: number = -1;
+    // nodeType: number = -1;
+    // color: number = -1;
     shape: number = -1;
     constructor() {
         super('userNodeSchema')
@@ -980,7 +980,7 @@ export function importIntoNetworkcube(currentNetwork: Network, sessionid: string
             // if(currentNetwork.userNodeSchema.shape >-1)
                 newRow[normalizedNodeSchema.shape] = currentNetwork.userNodeTable.data[i][currentNetwork.userNodeSchema.shape]
             // if(currentNetwork.userNodeSchema.color >-1)
-                newRow[normalizedNodeSchema.color] = currentNetwork.userNodeTable.data[i][currentNetwork.userNodeSchema.color]
+                // newRow[normalizedNodeSchema.color] = currentNetwork.userNodeTable.data[i][currentNetwork.userNodeSchema.color]
 
             nodeNames.push(currentNetwork.userNodeTable.data[i][currentNetwork.userNodeSchema.label])
             normalizedNodeTable.push(newRow);
