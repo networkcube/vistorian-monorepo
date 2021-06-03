@@ -116,7 +116,7 @@ export function loadNetworkList() {
 
         $('#networkList').append('\
             <li>\
-                <a onclick="window.exports.networkcube.dataview.showNetwork(\'' + network.id + '\')"  class="underlined">' + networkDisplayName+  '</a>\
+                <a onclick="window.exports.networkcube.dataview.showNetworkTables(\'' + network.id + '\')"  class="underlined">' + networkDisplayName+  '</a>\
                 <img class="controlIcon" title="Delete this network." src="../static/logos/delete.png" onclick="window.exports.networkcube.dataview.removeNetwork(\''+ network.id + '\');trace.event(\'dat_4\',\'data view\',\'selected network\',\'deleted\')"/>\
                 <img class="controlIcon" title="Download this network in .vistorian format." src="../static/logos/download.png" onclick="window.exports.networkcube.dataview.exportNetwork(\''+ network.id + '\');trace.event(\'dat_7\',\'data view\',\'selected network\',\'downloaded\')"/>\
             </li>')
