@@ -1183,7 +1183,6 @@ export function getOpenStreetMapCoordinatesForLocation(index: number, geoname: s
         fullGeoNames.push(geoname);
         var xhr: any = $.ajax({
             url: 'https://api.maptiler.com/geocoding/'+geoname.split(',')[0].trim()+'.json?key=4JfMdMSpqOnXq9pxP8x4',
-            headers: {  'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Credentials':'true' , 'Access-Control-Allow-Methods': 'POST, GET, OPTIONS','Access-Control-Allow-Headers' :'Authorization,DNT,X-Mx-ReqToken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type'},
             data: {output: "json", limit: "1", },
             dataType: 'json'
         })
