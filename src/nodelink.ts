@@ -442,13 +442,17 @@ function getNodeColor(n: dynamicgraph.Node) {
     if( n.color().split('#')[0] !== ",") {
         return n.color().split('#')[1];
     }
-    return 'black'
+    return '#000'
 }
 
 function getNodeShape(n: dynamicgraph.Node) {
     var tmp = n.shape().split(',');
-    if(tmp && tmp[0]) {
-        return tmp[tmp.length - 1];
+    if(tmp && tmp[0]) 
+    {
+        let shape = tmp[tmp.length - 1];
+        if(!shape)
+            shape = 'circle';
+        return shape;
     }
     return 'circle'
 }
@@ -673,6 +677,7 @@ function updateNodes(highlightId?: number) {
             }
             if (!color)
                 color = getNodeColor(d);
+            // console.log('>>>>nodecolor', color)
             return color;
         })
         .style('opacity', (d: any) => {
