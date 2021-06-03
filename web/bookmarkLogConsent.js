@@ -57,13 +57,14 @@ function turnLoggingOff(){
     var feedbackButton=document.querySelectorAll(".feedback a")[0];
     if (feedbackButton)
         feedbackButton.style.display = "none";  
+    deactivateActivityTracker()
 
 }
 
 function turnOnLogging(){
    var urlTxt=window.location.pathname;
     urlTxt=urlTxt.substring(urlTxt.lastIndexOf("/")+1,urlTxt.indexOf("."));
-
+    activateActivityTracker();
     localStorage.setItem("acceptLogging", "true");
     trace.event('log_9', 'start logging', 'webpage', urlTxt);
     var bookmarksTool = document.getElementById("mydiv"); 
@@ -192,7 +193,7 @@ let userActivityTimeout = null;
 // let userActivityThrottlerTimeout = null;
 // let isInactive = false;
 
-activateActivityTracker();
+//activateActivityTracker();
 
 
 //register the interactions' events with the function responsible
@@ -226,7 +227,7 @@ function userActivityTracker(){
 }
 
 function checkDispalyOfInactivity(){
-  var nowTime=new Date();
+  var nowTime=new Date().getTime();
   var lastLoggedActvityTime=localStorage.getItem("userInactivityloggedTime");
   if (nowTime-lastLoggedActvityTime>=INACTIVE_USER_TIME_THRESHOLD)
     inactiveUserAction();
