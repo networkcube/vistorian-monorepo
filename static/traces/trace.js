@@ -38,7 +38,7 @@
 
     trace.debug = function(d) {
 	if (!arguments.length) return debug;
-	debug = d;
+	// debug = d;
 	return trace;
     };
 
