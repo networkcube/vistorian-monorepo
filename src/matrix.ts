@@ -1078,15 +1078,16 @@ class Matrix {
       if (node.isVisible()) {
         row = this.nodeOrder[node.id()] - this.bbox.y0;
         for (let link of node.links().toArray()) {
-          let neighbor;
-          if((link as any).directed){
-            neighbor = link.target;
-            if(neighbor.id() == node.id()){
-              continue;
-            }
-          }else{
+          var neighbor;
+          // if((link as any).directed == true){
+          //   console.log('directed', (link as any).directed)
+          //   neighbor = link.target;
+          //   if(link.target.id() == node.id()){
+          //     continue;
+          //   }
+          // }else{
             neighbor = link.source.id() == node.id() ? link.target : link.source;
-          }
+          // }
           // let neighbor = link.source.id() == node.id() ? link.target : link.source;
           if (neighbor.isVisible() &&
             this.nodeOrder[neighbor.id()] >= this.bbox.x0 &&
