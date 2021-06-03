@@ -116,7 +116,7 @@ export function loadNetworkList() {
 
         $('#networkList').append('\
             <li>\
-                <a onclick="window.exports.networkcube.dataview.showNetwork(\'' + network.id + '\')"  class="underlined">' + networkDisplayName+  '</a>\
+                <a onclick="window.exports.networkcube.dataview.showNetworkTables(\'' + network.id + '\')"  class="underlined">' + networkDisplayName+  '</a>\
                 <img class="controlIcon" title="Delete this network." src="../static/logos/delete.png" onclick="window.exports.networkcube.dataview.removeNetwork(\''+ network.id + '\');trace.event(\'dat_4\',\'data view\',\'selected network\',\'deleted\')"/>\
                 <img class="controlIcon" title="Download this network in .vistorian format." src="../static/logos/download.png" onclick="window.exports.networkcube.dataview.exportNetwork(\''+ network.id + '\');trace.event(\'dat_7\',\'data view\',\'selected network\',\'downloaded\')"/>\
             </li>')
@@ -564,7 +564,7 @@ export function showTable(table: vistorian.VTable, elementName: string, isLocati
                     case 'location_target': fieldName = 'Location Target Node'; break;
                     case 'linkType': fieldName = 'Link Type'; break;
                     case 'location': fieldName = 'Node Location'; break;
-                    case 'label': fieldName = 'Node'; break;
+                    case 'label': fieldName = 'Node Label'; break;
                     default:
                         fieldName = field;
                         fieldName = fieldName.charAt(0).toUpperCase() + fieldName.slice(1);
@@ -758,7 +758,8 @@ function checkFileType(filesToUpload: any){
     return true
 }
 
-export function uploadNodeTable(e: any) {
+export function uploadNodeTable(e: any) 
+{
     filesToUpload = [e.target.files[0]];
     if(checkFileType(filesToUpload)) {
         uploadFiles(() => {
