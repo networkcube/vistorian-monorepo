@@ -140,7 +140,7 @@
                     <br/>
                     <script>
                         $('#networkStatus').bind('DOMSubtreeModified', function(){
-                            var tourStep = (parseInt(localStorage.getItem('VistorianTour')) >= 1);
+                            var tourStep = parseInt(localStorage.getItem('VistorianTour'));
                             if (tourStep==3 || tourStep==4) {
                                 startVisGuide(window.exports.networkcube.dataview.currentNetwork.ready);
                                         

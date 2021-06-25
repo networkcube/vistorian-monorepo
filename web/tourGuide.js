@@ -12,7 +12,7 @@ var allSteps= [
             {
                 title: "Try Vistorian Lab Now (NEW Feature)! ",
                 element: document.querySelector('#consentFormBK'),
-                intro: "The Vistorian Lab is your new research assistant! It will help you to analyze your data and capture your findings. Please support our research through allowing us to anonymously track your interactions with the Vistorian. We will not record your network data. Find  more about <a href='https://vistorian.github.io/studyPhase1_activityLogging.html' target='_blank' >here </a>.",
+                intro: "The Vistorian Lab is your new research assistant! It will help you to analyze your data and capture your findings. Find  more about it<a href='https://vistorian.github.io/studyPhase1_activityLogging.html' target='_blank' >here </a>.",
                 step: "1"
             }, 
             {
@@ -165,7 +165,7 @@ function guide_afterLinkTableUpload(){
         });
 
         intro.start();
-    }, 5000);
+    }, 3000);
     
 }
 
@@ -199,7 +199,7 @@ function guide_afterNodeTableUpload(){
         });
 
         intro.start();
-    }, 5000);
+    }, 3000);
     
 }
 
@@ -261,20 +261,21 @@ function restartTour(){
             break;
         case 4:
             selectedSteps=allSteps.slice(0,7);
-            selectedSteps.push(allSteps.slice(10,13));
+            allSteps.slice(10,13).forEach(step => selectedSteps.push(step));
             break;
         case 6:
             selectedSteps=allSteps.slice(0,10);
-            selectedSteps.push(allSteps.slice(13,18));
+            allSteps.slice(13,18).forEach(step => selectedSteps.push(step));
+
             break;
         case 7:
             selectedSteps=allSteps.slice(0,7);
-            selectedSteps.push(allSteps.slice(10,18));
+            allSteps.slice(10,18).forEach(step =>selectedSteps.push(step));
             break;
         
         
     }
-
+console.log(selectedSteps.toString());
     intro.setOptions({
         steps:selectedSteps
     });
@@ -328,18 +329,21 @@ window.addEventListener('load', function () {
 
 function startVisGuide(networkStatus){
     if (networkStatus){
+        var tourStep=parseInt(localStorage.getItem('VistorianTour'));
         
-        
-        if (parseInt(localStorage.getItem('VistorianTour'))==3){
+        if (tourStep<3 || tourStep>4)
+            return;
+        else if (tourStep==3){
             currentButton="link_network_ready";
             localStorage.setItem('VistorianTour', '6');
+            
         }
-        else  if (parseInt(localStorage.getItem('VistorianTour'))==4){
+        else  if (tourStep==4){
             currentButton="node_network_ready";
             localStorage.setItem('VistorianTour', '7');
         }
-        else
-            return;
+        
+            
         
         intro.setOptions({
             steps:allSteps.slice(13,18)
