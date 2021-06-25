@@ -33,6 +33,12 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
         <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+        <script type="text/javascript">
+            (function() {
+            emailjs.init("user_JavzXpZJiP0v5iG2TcFj9");
+            })();
+        </script>
         <script>
             $.get("logging_models.html", function(result){ 
                 $("body").append(result);
@@ -118,6 +124,7 @@
             window.exports.networkcube.vistorian.setHeader('logoFrame', params['datasetName']);
 
         });
+        
     </script>
            <div id="mydiv" >
                 <div id="mydivheader" ><strong> Bookmarks</strong> (Drag header to move)

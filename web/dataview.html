@@ -27,12 +27,21 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-    
+    <!-- <script src="https://smtpjs.com/v3/smtp.js"></script> -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function() {
+        emailjs.init("user_JavzXpZJiP0v5iG2TcFj9");
+        })();
+    </script>
     
     <link rel="stylesheet" type="text/css" href="./static/styles.css" />
     <link rel="stylesheet" type="text/css" href="./static/dataview_styles.css" />
     <link rel="stylesheet" type="text/css" href="./static/tablestyle.css" />
     <link rel="stylesheet" href="./static/jquery-ui.css">
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/intro.js/minified/introjs.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intro.js-mit@3.0.0/themes/introjs-flattener.css">
+
     
     <script>
         $.get("logging_models.html", function(result){ 
@@ -42,7 +51,8 @@
 </head>
 
 <body onload="trace.event('log', 'load', 'webpage', document.location.pathname);checkLogStatus();dragElement(document.getElementById('mydiv'));" onfocus="refreshBookmarks();" onerror="trace.event('err', event + ' ' + source + lineno, error, document.location.pathname);"  onbeforeunload="trace.event('log_12', 'page', 'close', document.location.pathname);">
-
+    <script src="https://unpkg.com/intro.js/minified/intro.min.js" type="text/javascript"></script>
+    
     <!-- VS: Call to trace_test_130529 -->
     <script type="text/javascript" src="../static/traces/trace_test_130529.js"></script>
 
@@ -81,12 +91,17 @@
                 
                     </div>
                 </div>
+                <div>
+                    <input id="startTourAgain" type="button" class="menuButton hastooltip" value="Start your tour now!" style="background-color: #FF7F50;"
+                        title="This will start the tour to explore The Vistorian's interface"
+                        onclick="trace.event('log_','Start Tour Button','clicked','dataview'); ;restartTour()"></button>
+                </div>
             <p></p>
 
                 <div id="networkListDiv">
                     <h2>Your Networks</h2>
                     <ul id="networkList" class="nointent"></ul>
-                    <input type="button" class="menuButton hastooltip" value="New Network" onclick="window.exports.networkcube.dataview.createNetwork();trace.event('dat_1', 'data view', 'new network', 'created')"
+                    <input id="btn_newNetwork" type="button"  class="menuButton hastooltip" value="New Network" onclick="window.exports.networkcube.dataview.createNetwork();trace.event('dat_1', 'data view', 'new network', 'created');guide_afterNetworkCreation();"
                             title="Create new network from one or more tables." />
                 </div>
                 <br />
@@ -113,7 +128,7 @@
                 <div id="networkTables" style="display:none;">
 
                     <div id="networkInfoDiv">
-                        <p id="networkStatus"></p>
+                        <p id="networkStatus" ></p>
                         <p>Network Name: 
                             <input id="networknameInput" type="text" size="50" onchange="trace.event('dat_9', 'data view', 'network name', 'updated')" />
                         </p>
@@ -123,6 +138,15 @@
                             onclick="deleteCurrentNetworkBookmarks();window.exports.networkcube.dataview.deleteCurrentNetwork();trace.event('dat_6', 'data view', 'network', 'deleted')" />
                     </div>
                     <br/>
+                    <script>
+                        $('#networkStatus').bind('DOMSubtreeModified', function(){
+                            var tourStep = (parseInt(localStorage.getItem('VistorianTour')) >= 1);
+                            if (tourStep==3 || tourStep==4) {
+                                startVisGuide(window.exports.networkcube.dataview.currentNetwork.ready);
+                                        
+                            }
+                        });
+                    </script>
         
                     <!-- Show link table here -->
                     <div id="linkTableContainer">
@@ -141,11 +165,12 @@
                             or <input id="linkTableUpload" 
                                 type="file" name="file" class="inputfile" value="Upload"
                                 name="files[]" data-multiple-caption="{count} files selected" 
-                                onchange="trace.event('dat_2_LK', 'data view', 'LinkTable_FileUpload', 'new LK file upload')" />
+                                onchange="trace.event('dat_2_LK', 'data view', 'LinkTable_FileUpload', 'new LK file upload');guide_afterLinkTableUpload();" />
                             <label 
                                 for="linkTableUpload" 
                                 class="menuButton hastooltip"
-                                title="Upload a new table in CSV file.">
+                                title="Upload a new table in CSV file."
+                                id="lbl_uploadLinkTable">
                                 Upload new link table
                             </label>
                             <br/>
@@ -157,7 +182,7 @@
                             This network is directed, i.e, link direction from source to target node is important.
                             <br/>
                         </div>
-                        <div id="linkTableDiv" class="tableDiv"></div>
+                        <div id="linkTableDiv" class="tableDiv"  ></div>
                     </div>
 
                     <!-- Show Node table here -->
@@ -173,8 +198,9 @@
                                 <option value="---">---</option>
                             </select>
                             or <input id="nodeTableUpload" type="file" name="file" class="inputfile" value="Upload"
-                                name="files[]" data-multiple-caption="{count} files selected" onchange="trace.event('dat_2_NT', 'data view', 'NodeTable_FileUpload', 'new NT file upload')"/>
+                                name="files[]" data-multiple-caption="{count} files selected" onchange="trace.event('dat_2_NT', 'data view', 'NodeTable_FileUpload', 'new NT file upload');guide_afterNodeTableUpload();"/>
                             <label 
+                                id="lbl_uploadNodeTable"
                                 for="nodeTableUpload" 
                                 class="menuButton hastooltip"
                                 title="Upload a new table in CSV file.">
@@ -203,7 +229,7 @@
                             </select>
                             or
                             <br/>
-                            <button class="menuButton" onclick="window.exports.networkcube.dataview.updateLocationCoordinatesWrapper();trace.event('dat_13', 'data view', 'update Locations coordinates', 'clicked')">Update location coordinates</button>
+                            <button id="btn_updateCoordinates" class="menuButton" onclick="window.exports.networkcube.dataview.updateLocationCoordinatesWrapper();trace.event('dat_13', 'data view', 'update Locations coordinates', 'clicked')" >Update location coordinates</button>
                         </div>
 
                         <div id="locationTableDiv" class="tableDiv"></div>
@@ -305,6 +331,7 @@
               Feedback sent! Thank you for helping us!
             </div>
           </div>
+    <script src="tourGuide.js"></script>
     </body>
 </html>
 

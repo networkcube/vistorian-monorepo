@@ -1,5 +1,6 @@
 window.onload = (event) => {
-  console.log('page is fully loaded');
+  document.head.appendChild('<script src="https://smtpjs.com/v3/smtp.js"></script>');
+
 };
                 
 function dragElement(elmnt) {
@@ -322,14 +323,15 @@ function LoggingGeneralFeedback(){
   var urlTxt=window.location.pathname;
   urlTxt=urlTxt.substring(urlTxt.lastIndexOf("/")+1,urlTxt.indexOf("."));
 
-  let tempLog=false;
+/*   let tempLog=false;
 
   //check if the logging enabled, otherwise turn it temporarlly on for logging feedback
-  if (Boolean(localStorage.getItem("acceptLogging"))==false)
+  if (localStorage.getItem("acceptLogging")==="false")
       tempLog=true;
 
-  if (tempLog)
-    localStorage.setItem("acceptLogging", "true");
+  if (tempLog) 
+    localStorage.setItem("acceptLogging", "true"); 
+    */
 
     let btns=document.getElementsByClassName('menuButtonGadget');
     for (var i=0;i<btns.length;i++)
@@ -340,12 +342,10 @@ function LoggingGeneralFeedback(){
         
         //add general feedback
         trace.event('log_15', 'General feedback', document.getElementById('feedback_text').value, urlTxt);
-      
-
-
-
+    
+/* 
   if (tempLog)
-    localStorage.setItem("acceptLogging", "false");
+    localStorage.setItem("acceptLogging", "false"); */
 
 }
 
@@ -356,15 +356,15 @@ function LoggingFeedback(){
   var urlTxt=window.location.pathname;
   urlTxt=urlTxt.substring(urlTxt.lastIndexOf("/")+1,urlTxt.indexOf("."));
 
-
+/* 
   let tempLog=false;
 
   //check if the logging enabled, otherwise turn it temporarlly on for logging feedback
-  if (Boolean(localStorage.getItem("acceptLogging"))==false)
+  if (localStorage.getItem("acceptLogging")==="false")
       tempLog=true;
 
   if (tempLog)
-    localStorage.setItem("acceptLogging", "true");
+    localStorage.setItem("acceptLogging", "true"); */
 
     let btns=document.getElementsByClassName('feedbackMenuButton');
     for (var i=0;i<btns.length;i++){
@@ -390,12 +390,14 @@ function LoggingFeedback(){
 
 
 
-  if (tempLog)
-    localStorage.setItem("acceptLogging", "false");
+/*   if (tempLog)
+    localStorage.setItem("acceptLogging", "false"); */
     document.getElementById('timeoutPopupForm').style.display="none";
 
 
 }
+
+
 
 function resetFeedbackForm(){
   let btns=document.getElementsByClassName('feedbackMenuButton');
@@ -414,6 +416,21 @@ function resetFeedbackForm(){
 
   document.getElementById('popupFeedbackForm').style.display="none";
   
+}
+
+function resetSupportRequestFeedbackForm(msg){
+
+  
+  var urlTxt=window.location.pathname;
+  urlTxt=urlTxt.substring(urlTxt.lastIndexOf("/")+1,urlTxt.indexOf("."));
+  document.getElementById("userEmail").value="";
+  document.getElementById("txt_errorDescriptionByUser").value="";
+  document.getElementById('errorFeedbackFormModel').style.display="none";
+  if (msg=='cancel')
+    trace.event('log_18', 'Support Request Form', 'Canceled', urlTxt);
+  else
+    trace.event('log_17', 'Support Request Form', 'Submiited', urlTxt);
+
 }
 
 function resetTimeOutFeedbackForm(){
@@ -584,8 +601,6 @@ window.onblur=(function(){
 });
 
 window.addEventListener('beforeunload', (event) => {
-  
-
   var bkFrame=document.getElementById("myFrame");
   var bkFrameDoc;
   if (bkFrame)
@@ -597,6 +612,46 @@ window.addEventListener('beforeunload', (event) => {
   if (statusText=="Changes have not been saved yet. Click Save button"){
     event.returnValue = "Are you sure you want to leave?";
   }
+});
+
+const ErrorFormTrigger=3;
+
+window.addEventListener('error', (event) => {
+  //log error
+  //trace.event('err', event + ' ' + source + lineno, error, document.location.pathname);
+
+  // Get Page Name
+  var urlTxt=window.location.pathname;
+  urlTxt=urlTxt.substring(urlTxt.lastIndexOf("/")+1,urlTxt.indexOf("."));
+
+  // Store errors list
+  var errorsList= JSON.parse((localStorage.getItem("vistorianErrorsList") || "[]"));
+  var errorOccured={'event':event.message, 'source':event.filename, 'lineno':event.lineno,'error':event.error, 'page':urlTxt};
+  errorsList.push(errorOccured);
+  localStorage.setItem("vistorianErrorsList",JSON.stringify(errorsList));
+
+  //Check number of error to show Support Request Form
+  var errorCounter= parseInt((localStorage.getItem("vistorianErrorsCounter") || "0"));
+  errorCounter++;
+  if  (errorCounter<ErrorFormTrigger){
+    localStorage.setItem("vistorianErrorsCounter",errorCounter);
+  }
+  else{
+      document.getElementById('txt_sessionID_errorForm').value= (localStorage.getItem('SessionLogId') || "None - [VistorianLab Status (off)]");
+      document.getElementById('txt_errorsList').value=(localStorage.getItem('vistorianErrorsList') || "");
+      var visLabStatus;
+      if (localStorage.getItem("acceptLogging")==="true")
+          visLabStatus="On";
+      else
+          visLabStatus="Off";
+    
+      document.getElementById('txt_vistorianLabStatus').value= visLabStatus;
+      document.getElementById('errorFeedbackFormModel').style.display = "block";
+      trace.event('log_17', ' Support Request Form ', 'Displayed', urlTxt);
+      localStorage.setItem("vistorianErrorsCounter",0);
+  }
+
+
 });
 
 function deleteCurrentNetworkBookmarks(){
@@ -621,4 +676,25 @@ function deleteCurrentNetworkBookmarks(){
     }
   
   }
+}
+
+
+function sendSupportRequestForm(){
+  //
+    message="Thank you for submitting support request form. In the meantime, please refresh the current page and try again what you had in mind. We are working on your issue. Apologies and thank you very much for reporting.";
+  
+    var emailParam= {
+      sessionID: document.getElementById('txt_sessionID_errorForm').value,
+      vistorianLabStatus: document.getElementById('txt_vistorianLabStatus').value,
+      email: document.getElementById('userEmail').value,
+      issueDescription: document.getElementById('txt_errorDescriptionByUser').value,
+      errorsList: document.getElementById('txt_errorsList').value
+    }
+
+    emailjs.send('service_jwbha6x', 'template_j7at6tq', emailParam)
+    .then(function(res){
+        console.log("Succes ",res.status);
+
+    });
+    resetSupportRequestFeedbackForm('confirm');
 }
