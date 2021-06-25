@@ -38,7 +38,7 @@
 
     trace.debug = function(d) {
 	if (!arguments.length) return debug;
-	debug = d;
+	// debug = d;
 	return trace;
     };
 
@@ -130,7 +130,7 @@
 
     function traceEvent(cat, action, label, value) {
 		
-		if (Boolean(localStorage.getItem(LoggingPhase))){
+	//	if (Boolean(localStorage.getItem(LoggingPhase))){
 			if (starting) {
 			//if (StartedLogging()) {
 			//	storageType.setItem(LoggingPhase,false);
@@ -138,10 +138,10 @@
 			starting = false;
 			_sending = [];
 			traceEvent("log_1", "Vistorian Trace", "Session", "Start");
-			traceEvent("_trace", "document.location", "href", localStorage.getItem(SessionLogId));
-			traceEvent("_trace", "browser", "userAgent", navigator.userAgent);
-			traceEvent("_trace", "screen", "size", "w:"+screen.width+";h:"+screen.height);
-			traceEvent("_trace", "window", "innerSize", "w:"+window.innerWidth+";h:"+window.innerHeight);
+		//	traceEvent("_trace", "document.location", "href", localStorage.getItem(SessionLogId));
+		//	traceEvent("_trace", "browser", "userAgent", navigator.userAgent);
+		//	traceEvent("_trace", "screen", "size", "w:"+screen.width+";h:"+screen.height);
+		//	traceEvent("_trace", "window", "innerSize", "w:"+window.innerWidth+";h:"+window.innerHeight);
 			_sending = null;
 		}
 
@@ -158,7 +158,7 @@
 		if (_sending == null)
 			sendLogs();
 		return trace;
-		}
+	//	}
     }
 
     //    console.log("Trace initialized with sessionId=%s", sessionId);
