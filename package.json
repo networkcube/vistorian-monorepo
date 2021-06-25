@@ -27,13 +27,13 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/alkadi-mh/vistorian-dynamicego_tr.git"
+        "url": "git+https://github.com/alkadi-mh/vistorian-dynamicego.git"
     },
     "collaborators": [
         "Jean-Daniel Fekete <Jean-Daniel.Fekete@inria.fr",
         "Alexandra Ibarra Cuesta"
     ],
-    "homepage": "https://github.com/alkadi-mh/vistorian-dynamicego_tr#readme",
+    "homepage": "https://github.com/alkadi-mh/vistorian-dynamicego#readme",
     "bundledDependencies": [
         "jquery",
         "jstorage",
