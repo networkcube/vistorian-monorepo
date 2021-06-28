@@ -25,15 +25,18 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src='web/bookmarkLogConsent.js'></script>
 
-
+    <script async src="https://api.countapi.xyz/hit/vistorian.online/e898e585-ec25-4479-bed6-61383fb3a90d"></script>
   <script>
        function acceptConsent(showToUser){
             // To display consent form upon user's landing on the dataview page.
             var urlTxt=window.location.pathname;
             urlTxt=urlTxt.substring(urlTxt.lastIndexOf("/")+1,urlTxt.indexOf("."));
             var landingConsentForm = document.getElementById("onLoadConsentForm"); 
+            
             if (showToUser){
-               // if ((document.getElementById('chk_dontShowLandingConsent').checked))
+                    var doneConsent = (parseInt(localStorage.getItem('VistorianTour')) == 0);
+                    if (doneConsent)
+                        return ;
                     landingConsentForm.style.display = "block";
             }
             else{
@@ -41,6 +44,10 @@
                 localStorage.setItem("acceptLogging", "true");
                 trace.event('log_9', 'start logging', 'webpage', urlTxt);   
             }
+        }
+        function updateConsentPref(){
+            if ((document.getElementById('chk_dontShowLandingConsent').checked))
+                localStorage.setItem('VistorianTour', '0');
         }
    </script>
 </head>
@@ -112,7 +119,7 @@
                 </li>
                 
                 <li>
-                    <a href="https://vistorian.github.io/vistorianLab.html" class="menuicon" onclick="trace.event('com_2', 'index', 'vistorinaLab study', 'click')"><img src="./static/logos/VistorianLab.png"
+                    <a href="https://vistorian.github.io/vistorianLab.html" target="_blank"  class="menuicon" onclick="trace.event('com_2', 'index', 'vistorinaLab study', 'click')"><img src="./static/logos/VistorianLab.png"
                             class="menuicon" />Vistorian Lab</a>
                 </li>
                 <li>
@@ -371,7 +378,7 @@
         </div>
         <!-- Modal footer -->
         <div class="modal-footer">
-            <!-- <label for="chk_dontShowConsent">  <input type="checkbox" id="chk_dontShowLandingConsent"> Don't show consent form again.</label> -->
+             <label for="chk_dontShowConsent">  <input type="checkbox" id="chk_dontShowLandingConsent" onclick="updateConsentPref()"> Don't show consent form again.</label>
 
             <a href="/static/logging_consent/Vistorian Tracing Consent form .pdf" download> <button type="button" class="btn btn-link" onclick="trace.event('log_7', 'consent', 'downloaded', document.location.pathname);">Download this Consent Form for your records</button></a>
   

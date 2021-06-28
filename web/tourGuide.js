@@ -3,145 +3,155 @@ const intro=introJs();
 
 var currentButton="start";
 
-var allSteps= [
-            {
-                title: "Welcome to The Vistorian Tour Guide",
-                intro: "Through this tour we will introudce you to The Vistorian and its new features!",
-                step: "0"
-            },
-            {
-                title: "Try Vistorian Lab Now (NEW Feature)! ",
-                element: document.querySelector('#consentFormBK'),
-                intro: "The Vistorian Lab is your new research assistant! It will help you to analyze your data and capture your findings. Find  more about it<a href='https://vistorian.github.io/studyPhase1_activityLogging.html' target='_blank' >here </a>.",
-                step: "1"
-            }, 
-            {
-                title: "First-Step: Create a New Network",
-                element: document.querySelector('#btn_newNetwork'),
-                intro: "Start by clicking here to create a new network.",
-                step: "2"
-            },
-            {
-                element: document.querySelector('#lbl_uploadLinkTable'),
-                title:"Second-Step: Upload Your Data Table", 
-                intro:"Click here to upload your table if it is a LINK table.",
-                step: "3"
-            },
-            {
-                element: document.querySelector('#lbl_uploadNodeTable'),
-                title:"Second-Step: Upload Your Data Table", 
-                intro:"Click here to upload your table if it is a NODE table.",
-                step: "4"
-            },
-            {
-                element: document.querySelector('#btn_updateCoordinates'),
-                title:"Third-Step: Update Locations Coordinates (Optional)", 
-                intro:"Click here after uploading your link/node table and if your data contains locations (ex. cities) in order to update locations' coordinates",
-                step: "5"
-            },
-            {
-                element: document.querySelector('#directedNetworkCheckBox'),
-                title:"Is your network directed?", 
-                intro:"Ensure this box is checked if your network is directed.",
-                step: "6"
-            },
-            {
-                //element: document.querySelectorAll('.schemaCell')[1],
-                element: document.getElementById('schemaCell_userLinkSchema_1'),
-                title:"Specify Column Type", 
-                intro:"For each column of your intrest, specify how you describe such the data  of such attribute. If the network is directed then choose types for example: Source Node, Target Node. For undirected networks choose for example: Node 1 and Node 2.  ",
-                step: "7"
-            },
-            {
-                element: document.getElementById('schemaCell_userLinkSchema_2'),
-                title:"Specify Column Type", 
-                intro:"You need to specify at least two columns to create a network: Source Node/Node1 and Target Node/Node 2. You can describe more columns as needed (ex. location, date, ..).",
-                step: "8"
-            },
-            {
-                element: document.querySelector('#networkStatus'),
-                title:"Network's Readiness for Visualization", 
-                intro:"Once your network is ready for visualization, this header will turn into green.",
-                step: "9"
-            },
-            {
-                element: document.getElementById('schemaCell_userNodeSchema_1'),
-                title:"Specify Column Type", 
-                intro:"For each column of your intrest, specify how you describe such the data  of such attribute.",
-                step: "10"
-            },
-            {
-                element: document.getElementById('schemaCell_userNodeSchema_2'),
-                title:"Specify Column Type", 
-                intro:"You need to specify at least two columns to create a network: Node label and relation. You can describe more columns as needed (ex. location, time, ..).",
-                step: "11"
-            },
-            {
-                element: document.querySelector('#networkStatus'),
-                title:"Network's Readiness for Visualization", 
-                intro:"Once your network is ready for visualization, this header will turn into green.",
-                step: "12"
-            },
-            {
-                element: document.querySelectorAll('.visLink')[0],
-                title:"Nodelink Visualization", 
-                intro:"Click here to create a nodelink visualization.",
-                step: "13"
-            },
-            {
-                element: document.querySelectorAll('.visLink')[1],
-                title:"Matrix Visualization", 
-                intro:"Click here to create a matrix visualization.",
-                step: "14"
-            },
-            {
-                element: document.querySelectorAll('.visLink')[2],
-                title:"Time Arcs Visualization", 
-                intro:"Click here to create a time arcs visualization.",
-                step: "15"
-            },
-            {
-                element: document.querySelectorAll('.visLink')[3],
-                title:"Map Visualization", 
-                intro:"Click here to create a map visualization. Ensure you have updated locations coordinates.",
-                step: "16"
-            },
-            {
-                element: document.querySelectorAll('.visLink')[4],
-                title:"Nodelink and Matrix Visualizations", 
-                intro:"Create both nodelink and matrix visualizations. This allows you to compare and analyze your network using both representations.",
-                step: "17"
-            }
+function returnRequiredSteps(){
 
-            
+    var allSteps= [
+        {
+            title: "Welcome to The Vistorian Tour Guide",
+            intro: "Through this tour we will introudce you to The Vistorian and its new features!",
+            step: "0"
+        }, 
+        {
+            title: "First-Step: Create a New Network",
+            element: document.querySelector('#btn_newNetwork'),
+            intro: "Start by clicking here to create a new network.",
+            step: "1"
+        },
+        {
+            element: document.querySelector('#lbl_uploadLinkTable'),
+            title:"Second-Step: Upload Your Data Table", 
+            intro:"Click here to upload your table if it is a LINK table.",
+            step: "2"
+        },
+        {
+            element: document.querySelector('#lbl_uploadNodeTable'),
+            title:"Second-Step: Upload Your Data Table", 
+            intro:"Click here to upload your NODE table if your table is a node table. If your network has only a LINK table, ignore this step.",
+            step: "3"
+        },
+        {
+            element: document.querySelector('#directedNetworkCheckBox'),
+            title:"Is your network directed?", 
+            intro:"Ensure this box is checked if your network is directed.",
+            step: "4"
+        },
+        {
+            //element: document.getElementById('linkTableDiv')
+            element: document.querySelectorAll('.schemaRow')[0],
+            title:"Specify Column Type", 
+            intro:"Use these dropdown menus to specify which information is shown in the columns of your table. To visualize a network, you need specify two columns:<ul style='list-style-type:disc;'><li>Source Node (or \'Node 1\' in case your network is undirected)</li><li>Target Node (or \'Node 2\' in case your network is undirected)</li></ul>",
+            step: "5"
+        },
+        {   //document.getElementById('schemaCell_userLinkSchema_2'),
+            element: document.querySelectorAll('.schemaRow')[0],
+            title:"Specify Column Type", 
+            intro:"Now, chose the second field Source Node / Node 1 or Target Node / Node 2. You can specify more information later, such as time, link type, link weight, etc.",
+            step: "6"
+        },
+        {
+            element: document.querySelector('#networkStatus'),
+            title:"Network's Readiness for Visualization", 
+            intro:"Once your network is ready for visualization, this header will turn green.",
+            step: "7"
+        },
+        {   //document.getElementById('schemaCell_userNodeSchema_1'),
+            element: document.querySelectorAll('.schemaRow')[0],
+            title:"Specify Column Type", 
+            intro:"For each column of your intrest, specify how you describe such the data  of such attribute.",
+            step: "8"
+        },
+        {
+            element: document.querySelectorAll('.schemaRow')[0],
+            title:"Specify Column Type", 
+            intro:"You need to specify at least two columns to create a network: Node label and relation. You can describe more columns as needed (ex. location, time, ..).",
+            step: "9"
+        },
+        {
+            element: document.querySelector('#networkStatus'),
+            title:"Network's Readiness for Visualization", 
+            intro:"Once your network is ready for visualization, this header will turn into green.",
+            step: "10"
+        },
+        {
+            element: document.querySelectorAll('.visLink')[0],
+            title:"Nodelink Visualization", 
+            intro:"Click here to create a nodelink visualization.",
+            step: "11"
+        },
+        {
+            element: document.querySelectorAll('.visLink')[1],
+            title:"Matrix Visualization", 
+            intro:"Click here to create a matrix visualization.",
+            step: "12"
+        },
+        {
+            element: document.querySelectorAll('.visLink')[2],
+            title:"Time Arcs Visualization", 
+            intro:"Click here to create a time arcs visualization.",
+            step: "13"
+        },
+        {
+            element: document.querySelectorAll('.visLink')[3],
+            title:"Map Visualization", 
+            intro:"Click here to create a map visualization. Ensure you have updated locations coordinates.",
+            step: "14"
+        },
+        {
+            element: document.querySelectorAll('.visLink')[4],
+            title:"Nodelink and Matrix Visualizations", 
+            intro:"Create both nodelink and matrix visualizations. This allows you to compare and analyze your network using both representations.",
+            step: "15"
+        },
+        {
+            element: document.querySelector('#btn_updateCoordinates'),
+            title:"Update Locations Coordinates (Optional)", 
+            intro:"Click here after uploading your link/node table and if your data contains locations (ex. cities) in order to update locations' coordinates and use the Map Visualization",
+            step: "16"
+        },
+        {
+            title: "Try Vistorian Lab Now (NEW Feature)! ",
+            element: document.querySelector('#consentFormBK'),
+            intro: "The Vistorian Lab is your new research assistant! It will help you to analyze your data and capture your findings. Find  more about it<a href='https://vistorian.github.io/studyPhase1_activityLogging.html' target='_blank' >here </a>.",
+            step: "17"
+        }
+
         
-        ];
+    
+    ];
+
+    return allSteps;
+}
   //addStepAfterLKUpload
 
 function startFromTheBeginning(){
+    allSteps=returnRequiredSteps();
     // Start from scratch - Guide to create a network
     intro.setOptions({
-        steps:allSteps.slice(0,3)
+        steps:allSteps.slice(0,2)
     });
     intro.start();
 }
 function guide_afterNetworkCreation(){
+    allSteps=returnRequiredSteps();
+
     //  Guide to upload data after create a network
 
     var currentReachedStep=parseInt(localStorage.getItem('VistorianTour'));
     if (currentReachedStep<2){
-        currentButton="network_creation";
+        currentButton="network_cxreation";
         localStorage.setItem('VistorianTour', '2');
 
         intro.setOptions({
-            steps:allSteps.slice(3,7)
+            steps:allSteps.slice(2,5)
         });
         intro.start();
     }
 } 
 function guide_afterLinkTableUpload(){
+    allSteps=returnRequiredSteps();
+
     var currentReachedStep=parseInt(localStorage.getItem('VistorianTour'));
-    if (currentReachedStep<=2){
+    if (currentReachedStep<=2 ){
 
         currentButton="LK_Upload";
         localStorage.setItem('VistorianTour', '3');
@@ -150,26 +160,8 @@ function guide_afterLinkTableUpload(){
         tableUpdateTimer = setTimeout(function(){
 
             intro.setOptions({
-                steps:[{
-                    element: document.getElementById('schemaCell_userLinkSchema_1'),
-                    title:"Specify Column Type", 
-                    intro:"For each column of your intrest, specify how you describe such the data  of such attribute. If the network is directed then choose types for example: Source Node, Target Node. For undirected networks choose for example: Node 1 and Node 2.  ",
-                    step: "7"
-                },
-                {
-                    element: document.getElementById('schemaCell_userLinkSchema_2'),
-                    title:"Specify Column Type", 
-                    intro:"You need to specify at least two columns to create a network: Source Node/Node1 and Target Node/Node 2. You can describe more columns as needed (ex. location, date, ..).",
-                    step: "8"
-                },
-                {
-                    element: document.querySelector('#networkStatus'),
-                    title:"Network's Readiness for Visualization", 
-                    intro:"Once your network is ready for visualization, this header will turn into green.",
-                    step: "9"
-                }
-                ]
-            });
+                steps:allSteps.slice(5,8)
+            });;
 
             intro.start();
         }, 2000);
@@ -177,6 +169,8 @@ function guide_afterLinkTableUpload(){
 }
 
 function guide_afterNodeTableUpload(){
+    allSteps=returnRequiredSteps();
+
     var currentReachedStep=parseInt(localStorage.getItem('VistorianTour'));
     if (currentReachedStep<=2){
 
@@ -187,25 +181,7 @@ function guide_afterNodeTableUpload(){
         tableUpdateTimer = setTimeout(function(){
 
             intro.setOptions({
-                steps:[{
-                    element: document.getElementById('schemaCell_userNodeSchema_1'),
-                    title:"Specify Column Type", 
-                    intro:"For each column of your intrest, specify how you describe such the data  of such attribute.",
-                    step: "10"
-                },
-                {
-                    element: document.getElementById('schemaCell_userNodeSchema_2'),
-                    title:"Specify Column Type", 
-                    intro:"You need to specify at least two columns to create a network: Node label and relation. You can describe more columns as needed (ex. location, time, ..).",
-                    step: "11"
-                },
-                {
-                    element: document.querySelector('#networkStatus'),
-                    title:"Network's Readiness for Visualization", 
-                    intro:"Once your network is ready for visualization, this header will turn into green.",
-                    step: "12"
-                }
-                ]
+                steps:allSteps.slice(8,11)
             });
 
             intro.start();
@@ -256,31 +232,34 @@ observer.observe(targetNode, config);
  
 
 function restartTour(){
+    allSteps=returnRequiredSteps();
+
     // restart the whole tour based on the step the user has reached.
     var stepReached = parseInt(localStorage.getItem('VistorianTour'));
     var selectedSteps=[];
+    
     switch(stepReached){
         case 1:
-            selectedSteps=allSteps.slice(0,3);
+            selectedSteps=allSteps.slice(0,2);
             break;
         case 2:
-            selectedSteps=allSteps.slice(0,7);
+            selectedSteps=allSteps.slice(0,5);
             break;
         case 3:
-            selectedSteps=allSteps.slice(0,10);
+            selectedSteps=allSteps.slice(0,8);
             break;
         case 4:
-            selectedSteps=allSteps.slice(0,7);
-            allSteps.slice(10,13).forEach(step => selectedSteps.push(step));
+            selectedSteps=allSteps.slice(0,5);
+            allSteps.slice(8,11).forEach(step => selectedSteps.push(step));
             break;
         case 6:
-            selectedSteps=allSteps.slice(0,10);
-            allSteps.slice(13,18).forEach(step => selectedSteps.push(step));
+            selectedSteps=allSteps.slice(0,8);
+            allSteps.slice(11,18).forEach(step => selectedSteps.push(step));
 
             break;
         case 7:
-            selectedSteps=allSteps.slice(0,7);
-            allSteps.slice(10,18).forEach(step =>selectedSteps.push(step));
+            selectedSteps=allSteps.slice(0,5);
+            allSteps.slice(8,18).forEach(step =>selectedSteps.push(step));
             break;
         
         
@@ -337,6 +316,8 @@ window.addEventListener('load', function () {
 });
 
 function startVisGuide(networkStatus){
+    allSteps=returnRequiredSteps();
+
     
     if (networkStatus){
         var tourStep=parseInt(localStorage.getItem('VistorianTour'));
@@ -356,7 +337,7 @@ function startVisGuide(networkStatus){
             
         
         intro.setOptions({
-            steps:allSteps.slice(13,18)
+            steps:allSteps.slice(11,18)
         });
         intro.start();
     }
