@@ -19,10 +19,33 @@
     <link href="https://fonts.googleapis.com/css?family=Poiret+One" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Nunito+Sans" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-   
+    <link rel="stylesheet" href="web/bookmarkLogConsent.css">
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src='web/bookmarkLogConsent.js'></script>
+
+
+  <script>
+       function acceptConsent(showToUser){
+            // To display consent form upon user's landing on the dataview page.
+            var urlTxt=window.location.pathname;
+            urlTxt=urlTxt.substring(urlTxt.lastIndexOf("/")+1,urlTxt.indexOf("."));
+            var landingConsentForm = document.getElementById("onLoadConsentForm"); 
+            if (showToUser){
+               // if ((document.getElementById('chk_dontShowLandingConsent').checked))
+                    landingConsentForm.style.display = "block";
+            }
+            else{
+                landingConsentForm.style.display = "none"; 
+                localStorage.setItem("acceptLogging", "true");
+                trace.event('log_9', 'start logging', 'webpage', urlTxt);   
+            }
+        }
+   </script>
 </head>
 
-<body onload="trace.event('log_2', 'index', 'webpage', 'load')"> 
+<body onload="acceptConsent(true);trace.event('log_2', 'index', 'webpage', 'load')"> 
     <!-- VS: Call to trace_test_130529 -->
     <script type="text/javascript" src="./static/traces/trace_test_130529.js"></script>
     <script src="./node_modules/jquery/dist/jquery.js" type="text/javascript"></script>
@@ -327,4 +350,42 @@
                     });
 
             </script>
+
+<div class="container">
+            
+    <!-- Consent Modal -->
+    <div class="modal" id="onLoadConsentForm">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+        
+        <!-- Modal Header -->
+        <div class="modal-header">
+            <h3 class="modal-title" style="color:#FF7F50;">Anonymous Activity Logging for Research Purposes</h3>
+            <button type="button" class="close" data-dismiss="modal" onclick="acceptConsent(false);">×</button>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="modal-body" style="text-align: justify;font-size: 18px;">
+        <p ><span>The Vistorian is a research prototype to build better visualizations for multivariate networks.</span></p>
+        <p ><span>By using The Vistorian, you agree that your interactions with the tool are being anonymously logged for research purposes at the University of Edinburgh. We will not log any information related to your data or browser settings. No cookies or third party software will be installed. For more information, please see <a href="https://vistorian.github.io/studyPhase1_activityLogging.html" target="_blank">here</a>.</span></p>
+        </div>
+        <!-- Modal footer -->
+        <div class="modal-footer">
+            <!-- <label for="chk_dontShowConsent">  <input type="checkbox" id="chk_dontShowLandingConsent"> Don't show consent form again.</label> -->
+
+            <a href="/static/logging_consent/Vistorian Tracing Consent form .pdf" download> <button type="button" class="btn btn-link" onclick="trace.event('log_7', 'consent', 'downloaded', document.location.pathname);">Download this Consent Form for your records</button></a>
+  
+            <div >  
+            <button type="button" class="btn btn-danger" style="align-items:center;width:200px;" data-dismiss="modal" onclick="acceptConsent(false);turnOnLogging()">OK</button>
+            </div>
+                
+                
+        </div>
+        
+        
+    </div>
+    </div>
+    
+  </div>
+  </div>
 </body>

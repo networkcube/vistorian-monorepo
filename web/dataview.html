@@ -27,7 +27,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-    <!-- <script src="https://smtpjs.com/v3/smtp.js"></script> -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
     <script type="text/javascript">
         (function() {
@@ -47,6 +46,8 @@
         $.get("logging_models.html", function(result){ 
             $("body").append(result);
         });
+
+        
     </script> 
 </head>
 
@@ -119,6 +120,15 @@
                     <input id="clearCacheButton" type="button" class=" hastooltip" value="Empty browser cache"
                         title="This will remove ALL your networks and tables from your browser cache. FOREVER. Use this function if your browser is not repsponding anymore. "
                         onclick="window.exports.networkcube.dataview.clearCache();trace.event('dat_5','data view','browser cache','cleared')"></button>
+                </div>
+            <br/>
+                <div class="helpSidebar">
+                    <h2><span>Help Quick Access:</span> </h2> 
+                    <ul style="list-style-type:disc;" >
+                        <li><a href="https://vistorian.github.io/gettingstarted.html" target="_blank"   >How to get started?</a></li>
+                        <li><a href="https://vistorian.github.io/tutorial/bookmarks.html" target="_blank"   >A Step-by-Step Guide to Create your first visualization</a></li>
+                        <li><a href="https://youtu.be/eXIDFK2vJ6Y" target="_blank"   >Watch our video on how to format your data!</a></li>
+                      </ul>  
                 </div>
             </td>
 

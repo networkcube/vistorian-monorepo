@@ -1,5 +1,5 @@
-window.onload = (event) => {
-  document.head.appendChild('<script src="https://smtpjs.com/v3/smtp.js"></script>');
+window.onload = function(event) {
+  document.head.appendChild('');
 
 };
                 
@@ -12,7 +12,7 @@ function dragElement(elmnt) {
     /* otherwise, move the DIV from anywhere inside the DIV:*/
     elmnt.onmousedown = dragMouseDown;
   }
-
+}
   function dragMouseDown(e) {
     e = e || window.event;
     e.preventDefault();
@@ -42,32 +42,34 @@ function dragElement(elmnt) {
     document.onmouseup = null;
     document.onmousemove = null;
   }
-}
+
 
 function turnLoggingOff(){
     var urlTxt=window.location.pathname;
     urlTxt=urlTxt.substring(urlTxt.lastIndexOf("/")+1,urlTxt.indexOf("."));
 
     localStorage.setItem("acceptLogging", "false");
-    trace.event('log_10', 'stop logging', 'webpage', urlTxt);
+    trace.event('log_10', 'VistorianLab', 'OFF', urlTxt);
     var checkBox = document.getElementById("consentOnoffswitch");
     checkBox.checked=false;
     var bookmarksTool = document.getElementById("mydiv");
-    document.getElementById('myModal').style.display = "none";
+    //document.getElementById('myModal').style.display = "none";
     bookmarksTool.style.display = "none";
     var feedbackButton=document.querySelectorAll(".feedback a")[0];
     if (feedbackButton)
-        feedbackButton.style.display = "none";  
-    deactivateActivityTracker()
+        feedbackButton.style.display = "none";
+    // To be activaited upon optional logging  
+   // deactivateActivityTracker()
 
 }
 
 function turnOnLogging(){
    var urlTxt=window.location.pathname;
     urlTxt=urlTxt.substring(urlTxt.lastIndexOf("/")+1,urlTxt.indexOf("."));
-    activateActivityTracker();
+    // To be deactivaited upon optional logging
+    //  activateActivityTracker();
     localStorage.setItem("acceptLogging", "true");
-    trace.event('log_9', 'start logging', 'webpage', urlTxt);
+    trace.event('log_9', 'VistorianLab', 'ON', urlTxt);
     var bookmarksTool = document.getElementById("mydiv"); 
     if (bookmarksTool)
         bookmarksTool.style.display = "block";
@@ -78,11 +80,9 @@ function turnOnLogging(){
       minimizeBookmarks();
     else
       maxmizeBookmarks();
-    var mdl=document.getElementById('myModal');
-    if (mdl)    
-      mdl.style.display = "none";
-
-    
+    //var mdl=document.getElementById('myModal');
+    //if (mdl)    
+      //mdl.style.display = "none";    
 }
 
 function checkLogStatus(){
@@ -93,7 +93,9 @@ function checkLogStatus(){
         turnOnLogging();
     }
 }
+
 var toolbarMHeight,toolbarMWidth,toolbarTop,toolbarLeft,bookmarkMinimized=false;
+
 function minimizeBookmarks(){
   var parentUrlTxt=window.parent.location.pathname;
   parentUrlTxt=parentUrlTxt.substring(parentUrlTxt.lastIndexOf("/")+1,parentUrlTxt.indexOf("."));
@@ -137,13 +139,14 @@ function toggleConsntModel(){
   parentUrlTxt=parentUrlTxt.substring(parentUrlTxt.lastIndexOf("/")+1,parentUrlTxt.indexOf("."));
 
   if (document.getElementById('consentOnoffswitch').checked){
-    if (document.getElementById('chk_dontShowConsent').checked)
+    //if (document.getElementById('chk_dontShowConsent').checked)
       turnOnLogging();
-    else{
-        document.getElementById('myModal').style.display = "block";
-        trace.event('log_5', ' Consent Form ', 'Displayed', parentUrlTxt);
+      
+   // else{
+        //document.getElementById('myModal').style.display = "block";
+        //trace.event('log_5', ' Consent Form ', 'Displayed', parentUrlTxt);
 
-    }
+   // }
   }
   else
     turnLoggingOff();
@@ -191,10 +194,8 @@ const INACTIVE_USER_TIME_THRESHOLD = 300000; //300000 = 5 minutes
 // const USER_ACTIVITY_THROTTLER_TIME = 120000 ; // 60000= 1 minute throttler
 
 let userActivityTimeout = null;
-// let userActivityThrottlerTimeout = null;
-// let isInactive = false;
 
-//activateActivityTracker();
+
 
 
 //register the interactions' events with the function responsible
@@ -211,6 +212,9 @@ function activateActivityTracker() {
  // }
 }
 
+
+//turn it on for all users upon arrival
+activateActivityTracker();
 
 function  deactivateActivityTracker() {
   window.removeEventListener("mousemove", userActivityTracker);
@@ -283,17 +287,7 @@ function inactiveUserAction() {
 
 
 function disablingFeedbackPopup(){
-  /* if (chk.checked)
-    localStorage.setItem("stopFeedbackPopup", "true");
-   
 
-  if (localStorage.getItem("stopFeedbackPopup")){
-    clearTimeout(userActivityTimeout);
-    clearTimeout(userActivityThrottlerTimeout);
-    deactivateActivityTracker();
-  }
-  else*/
- // userActivityThrottler();
 
   resetFeedbackForm();
 }
@@ -322,17 +316,6 @@ function LoggingGeneralFeedback(){
 
   var urlTxt=window.location.pathname;
   urlTxt=urlTxt.substring(urlTxt.lastIndexOf("/")+1,urlTxt.indexOf("."));
-
-/*   let tempLog=false;
-
-  //check if the logging enabled, otherwise turn it temporarlly on for logging feedback
-  if (localStorage.getItem("acceptLogging")==="false")
-      tempLog=true;
-
-  if (tempLog) 
-    localStorage.setItem("acceptLogging", "true"); 
-    */
-
     let btns=document.getElementsByClassName('menuButtonGadget');
     for (var i=0;i<btns.length;i++)
       //Set main type of usage
@@ -342,10 +325,6 @@ function LoggingGeneralFeedback(){
         
         //add general feedback
         trace.event('log_15', 'General feedback', document.getElementById('feedback_text').value, urlTxt);
-    
-/* 
-  if (tempLog)
-    localStorage.setItem("acceptLogging", "false"); */
 
 }
 
@@ -355,16 +334,6 @@ function LoggingGeneralFeedback(){
 function LoggingFeedback(){
   var urlTxt=window.location.pathname;
   urlTxt=urlTxt.substring(urlTxt.lastIndexOf("/")+1,urlTxt.indexOf("."));
-
-/* 
-  let tempLog=false;
-
-  //check if the logging enabled, otherwise turn it temporarlly on for logging feedback
-  if (localStorage.getItem("acceptLogging")==="false")
-      tempLog=true;
-
-  if (tempLog)
-    localStorage.setItem("acceptLogging", "true"); */
 
     let btns=document.getElementsByClassName('feedbackMenuButton');
     for (var i=0;i<btns.length;i++){
@@ -380,18 +349,11 @@ function LoggingFeedback(){
           }
         }
         
-        //check if type was other
         if (btns[i].value=="Other")
           trace.event('bkm_3', ' bookmark type specified', 'Other: ' + document.getElementById('txt_other_timeout').value, urlTxt);
        }
-        //No general feedback
-       // trace.event('log_15', 'feedback_popup', document.getElementById('feedback_text_popup').value, urlTxt);
       }
 
-
-
-/*   if (tempLog)
-    localStorage.setItem("acceptLogging", "false"); */
     document.getElementById('timeoutPopupForm').style.display="none";
 
 

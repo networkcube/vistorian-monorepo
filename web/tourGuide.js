@@ -127,80 +127,90 @@ function startFromTheBeginning(){
 }
 function guide_afterNetworkCreation(){
     //  Guide to upload data after create a network
-    currentButton="network_creation";
-    localStorage.setItem('VistorianTour', '2');
 
-    intro.setOptions({
-        steps:allSteps.slice(3,7)
-    });
-    intro.start();
-} 
-function guide_afterLinkTableUpload(){
-    currentButton="LK_Upload";
-    localStorage.setItem('VistorianTour', '3');
-
-    // wait for link/node table to be populated with data and then start the guide.
-    tableUpdateTimer = setTimeout(function(){
+    var currentReachedStep=parseInt(localStorage.getItem('VistorianTour'));
+    if (currentReachedStep<2){
+        currentButton="network_creation";
+        localStorage.setItem('VistorianTour', '2');
 
         intro.setOptions({
-            steps:[{
-                element: document.getElementById('schemaCell_userLinkSchema_1'),
-                title:"Specify Column Type", 
-                intro:"For each column of your intrest, specify how you describe such the data  of such attribute. If the network is directed then choose types for example: Source Node, Target Node. For undirected networks choose for example: Node 1 and Node 2.  ",
-                step: "7"
-            },
-            {
-                element: document.getElementById('schemaCell_userLinkSchema_2'),
-                title:"Specify Column Type", 
-                intro:"You need to specify at least two columns to create a network: Source Node/Node1 and Target Node/Node 2. You can describe more columns as needed (ex. location, date, ..).",
-                step: "8"
-            },
-            {
-                element: document.querySelector('#networkStatus'),
-                title:"Network's Readiness for Visualization", 
-                intro:"Once your network is ready for visualization, this header will turn into green.",
-                step: "9"
-            }
-            ]
+            steps:allSteps.slice(3,7)
         });
-
         intro.start();
-    }, 3000);
-    
+    }
+} 
+function guide_afterLinkTableUpload(){
+    var currentReachedStep=parseInt(localStorage.getItem('VistorianTour'));
+    if (currentReachedStep<=2){
+
+        currentButton="LK_Upload";
+        localStorage.setItem('VistorianTour', '3');
+
+        // wait for link/node table to be populated with data and then start the guide.
+        tableUpdateTimer = setTimeout(function(){
+
+            intro.setOptions({
+                steps:[{
+                    element: document.getElementById('schemaCell_userLinkSchema_1'),
+                    title:"Specify Column Type", 
+                    intro:"For each column of your intrest, specify how you describe such the data  of such attribute. If the network is directed then choose types for example: Source Node, Target Node. For undirected networks choose for example: Node 1 and Node 2.  ",
+                    step: "7"
+                },
+                {
+                    element: document.getElementById('schemaCell_userLinkSchema_2'),
+                    title:"Specify Column Type", 
+                    intro:"You need to specify at least two columns to create a network: Source Node/Node1 and Target Node/Node 2. You can describe more columns as needed (ex. location, date, ..).",
+                    step: "8"
+                },
+                {
+                    element: document.querySelector('#networkStatus'),
+                    title:"Network's Readiness for Visualization", 
+                    intro:"Once your network is ready for visualization, this header will turn into green.",
+                    step: "9"
+                }
+                ]
+            });
+
+            intro.start();
+        }, 2000);
+    }
 }
 
 function guide_afterNodeTableUpload(){
-    currentButton="NT_Upload";
-    localStorage.setItem('VistorianTour', '4');
+    var currentReachedStep=parseInt(localStorage.getItem('VistorianTour'));
+    if (currentReachedStep<=2){
 
-    // wait for link/node table to be populated with data and then start the guide.
-    tableUpdateTimer = setTimeout(function(){
+        currentButton="NT_Upload";
+        localStorage.setItem('VistorianTour', '4');
 
-        intro.setOptions({
-            steps:[{
-                element: document.getElementById('schemaCell_userNodeSchema_1'),
-                title:"Specify Column Type", 
-                intro:"For each column of your intrest, specify how you describe such the data  of such attribute.",
-                step: "10"
-            },
-            {
-                element: document.getElementById('schemaCell_userNodeSchema_2'),
-                title:"Specify Column Type", 
-                intro:"You need to specify at least two columns to create a network: Node label and relation. You can describe more columns as needed (ex. location, time, ..).",
-                step: "11"
-            },
-            {
-                element: document.querySelector('#networkStatus'),
-                title:"Network's Readiness for Visualization", 
-                intro:"Once your network is ready for visualization, this header will turn into green.",
-                step: "12"
-            }
-            ]
-        });
+        // wait for link/node table to be populated with data and then start the guide.
+        tableUpdateTimer = setTimeout(function(){
 
-        intro.start();
-    }, 3000);
-    
+            intro.setOptions({
+                steps:[{
+                    element: document.getElementById('schemaCell_userNodeSchema_1'),
+                    title:"Specify Column Type", 
+                    intro:"For each column of your intrest, specify how you describe such the data  of such attribute.",
+                    step: "10"
+                },
+                {
+                    element: document.getElementById('schemaCell_userNodeSchema_2'),
+                    title:"Specify Column Type", 
+                    intro:"You need to specify at least two columns to create a network: Node label and relation. You can describe more columns as needed (ex. location, time, ..).",
+                    step: "11"
+                },
+                {
+                    element: document.querySelector('#networkStatus'),
+                    title:"Network's Readiness for Visualization", 
+                    intro:"Once your network is ready for visualization, this header will turn into green.",
+                    step: "12"
+                }
+                ]
+            });
+
+            intro.start();
+        }, 2000);
+    }
 }
 
 /* 
@@ -275,7 +285,6 @@ function restartTour(){
         
         
     }
-console.log(selectedSteps.toString());
     intro.setOptions({
         steps:selectedSteps
     });
@@ -328,6 +337,7 @@ window.addEventListener('load', function () {
 });
 
 function startVisGuide(networkStatus){
+    
     if (networkStatus){
         var tourStep=parseInt(localStorage.getItem('VistorianTour'));
         

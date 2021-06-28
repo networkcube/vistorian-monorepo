@@ -33,8 +33,27 @@
     height: 90%; 
     min-width: 100px;
 }
-            
 
+.helpSidebar{
+  height: 250px;
+  width: 170px;
+  position: sticky;
+  top: 0px;
+  border: 1px solid grey;
+}
+
+.helpSidebar h2{
+  text-align: left;
+  margin-top: -10px;
+  height: 20px;
+  line-height: 20px;
+  font-size: 15px;
+  
+}
+            
+.helpSidebar h2 span {
+    background-color: white;
+  }
 .onoffswitch {
     position: relative; width: 50px;
     -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
