@@ -42,7 +42,6 @@ var visualizations = [
 
 var messages: string[] = [];
 
-
 init()
 
 export function init() {
@@ -110,8 +109,8 @@ export function loadNetworkList() {
     networkNames.forEach((t: any) => {
         network = storage.getNetwork(t, SESSION_NAME);
         var networkDisplayName = network.name;
-        if (networkDisplayName.length > 18){
-            networkDisplayName = networkDisplayName.slice(0,18) + '...';
+        if (networkDisplayName.length > 15){
+            networkDisplayName = networkDisplayName.slice(0,15) + '...';
         }
 
         $('#networkList').append('\

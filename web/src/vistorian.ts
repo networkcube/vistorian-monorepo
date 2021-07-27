@@ -893,6 +893,7 @@ export function importIntoNetworkcube(currentNetwork: Network, sessionid: string
             )
         )){
             console.log('NETWORK NOT VALID FOR IMPORT', currentNetwork.userNodeSchema)
+            new Error('Your network is not valid. Please check that you have set all the required fields; at least a source and a target node.');
             return;
     }
 

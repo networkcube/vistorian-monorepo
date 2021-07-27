@@ -6,41 +6,6 @@
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <title>Data view</title>
 
-    <script>
-        // script showing an error message whenever the console throws an error.
-        // This work around is necessary here to capture errors from external scripts, such as vistorian-core etc. as well. Windows.onerror does only capture errors from within the same script.
-        if (console.everything === undefined)
-        {
-            console.everything = [];
-
-            console.defaultLog = console.log.bind(console);
-            console.log = function(){
-                console.everything.push({"type":"log", "datetime":Date().toLocaleString(), "value":Array.from(arguments)});
-                console.defaultLog.apply(console, arguments);
-            }
-            console.defaultError = console.error.bind(console);
-            console.error = function(){
-                console.everything.push({"type":"error", "datetime":Date().toLocaleString(), "value":Array.from(arguments)});
-                console.defaultError.apply(console, arguments);
-                var message = '';
-                for(var i=0 ; i<arguments.length; i++){
-                    message += arguments[i] + ' ';
-                }
-                window.alert('Sorry. Something went wrong. Please try again or contact the Vistorian team (vistorian@inria.fr) with the message below:\r\n\r\n' + message)
-            }
-            console.defaultWarn = console.warn.bind(console);
-            console.warn = function(){
-                console.everything.push({"type":"warn", "datetime":Date().toLocaleString(), "value":Array.from(arguments)});
-                console.defaultWarn.apply(console, arguments);
-            }
-            console.defaultDebug = console.debug.bind(console);
-            console.debug = function(){
-                console.everything.push({"type":"debug", "datetime":Date().toLocaleString(), "value":Array.from(arguments)});
-                console.defaultDebug.apply(console, arguments);
-            }
-        }
-    </script>
-
     <!-- VS: Call to trace.js -->
     <script type="text/javascript" src="../static/traces/trace.js"></script>
 
@@ -105,8 +70,6 @@
             </td>
             <td>
                 <div id="visualizationListDiv">
-                    <br/>
-                    <h2>Visualizations</h2>
                     <ul id="visualizationList" class="nointent"></ul>
                 </div>
             </td>
@@ -130,7 +93,7 @@
                     </div>
                 </div>
                 <div>
-                    <input id="startTourAgain" type="button" class="menuButton hastooltip" value="Start your tour now!" style="background-color: #FF7F50;"
+                    <input id="startTourAgain" type="button" class="menuButton hastooltip" value="Start my tour" style="background-color: #FF7F50;"
                         title="This will start the tour to explore The Vistorian's interface"
                         onclick="trace.event('log_','Start Tour Button','clicked','dataview'); ;restartTour()"></button>
                 </div>
@@ -175,10 +138,11 @@
                 <div id="networkTables" style="display:none;">
 
                     <div id="networkInfoDiv">
-                        <p id="networkStatus" ></p>
-                        <p>Network Name: 
+                        <h2>Network: 
                             <input id="networknameInput" type="text" size="50" onchange="trace.event('dat_9', 'data view', 'network name', 'updated')" />
-                        </p>
+                        </h2>
+                        <br/>
+                        <p id="networkStatus" ></p>
                         <input id="saveNetworkButton" class="menuButton" type="button" value="Save Network"
                             onclick="window.exports.networkcube.dataview.saveCurrentNetwork(false,true);trace.event('dat_17', 'data view', 'network', 'saved')" />
                         <input id="deleteNetworkButton" class="menuButton" type="button" value="Delete Network"
