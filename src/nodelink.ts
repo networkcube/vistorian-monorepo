@@ -13,11 +13,11 @@ var COLOR_DEFAULT_NODE: string = '#333333';
 var COLOR_HIGHLIGHT: string = '#ff8800';
 var LINK_OPACITY: number = .5;
 var NODE_OPACITY: number = 1;
-var LINK_WIDTH: number = 1;
+var LINK_WIDTH_SCALE: number = 1;
 var OFFSET_LABEL = { x: 5, y: 4 }
 var LINK_GAP: number = 2;
-var LAYOUT_TIMEOUT: number = 3000;
-var LABELBACKGROUND_OPACITY: number = 1;
+// var LAYOUT_TIMEOUT: number = 3000;
+// var LABELBACKGROUND_OPACITY: number = 1;
 var LABELDISTANCE: number = 10;
 var SLIDER_WIDTH: number = 100
 var SLIDER_HEIGHT: number = 35;
@@ -30,7 +30,7 @@ interface Bounds {
     left: number;
     top: number;
 }
-var margin: Bounds = { left: 20, top: 20 };
+// var margin: Bounds = { left: 20, top: 20 };
 var TIMELINE_HEIGHT: number = 50;
 
 var currentLayout: string = 'forceDirected';
@@ -47,11 +47,11 @@ var directed = dgraph.directed;
 var nodes: any = dgraph.nodes().toArray();
 var nodesOrderedByDegree: dynamicgraph.Node[] = dgraph.nodes().toArray().sort((n1: any, n2: any) => n2.neighbors().length - n1.neighbors().length);
 
-var nodePairs: dynamicgraph.NodePairQuery = dgraph.nodePairs();
+// var nodePairs: dynamicgraph.NodePairQuery = dgraph.nodePairs();
 var links: any = dgraph.links().toArray();
 var linkArrays = dgraph.linkArrays;
 links = addDirectionToLinks(links, linkArrays);
-var nodeLength: number = nodes.length;
+// var nodeLength: number = nodes.length;
 
 //When a link row is hovered over in dataview.ts, a message is received here to highlight the corresponding link.
 var bcLink = new BroadcastChannel('row_hovered_over_link');
@@ -70,16 +70,20 @@ bcNode.onmessage = function (ev) {
 var hiddenLabels: any = [];
 var LABELING_STRATEGY: number = 1;
 
-var linkWeightScale = d3.scale.linear().range([0, LINK_WIDTH]);
+
+var linkWeightScale = d3.scale.linear().range([1, 1]);
+if(dgraph.links().weights().max() > 1){
+    linkWeightScale.range([1, 3]) // if this is a weighted graph, the largest link is three times as thick as the normal (non-weighted) one.
+}
 linkWeightScale.domain([
     0,
     dgraph.links().weights().max()
 ]);
 
+
 messenger.setDefaultEventListener(updateEvent);
 messenger.addEventListener(messenger.MESSAGE_SET_STATE, setStateHandler);
 messenger.addEventListener(messenger.MESSAGE_GET_STATE, getStateHandler);
-
 
 
 // MENU
@@ -101,9 +105,8 @@ ui.makeSlider(menuDiv, 'Edge Gap', SLIDER_WIDTH, SLIDER_HEIGHT, LINK_GAP, 0, 10,
     LINK_GAP = value;
     updateLayout();
 })
-ui.makeSlider(menuDiv, 'Link Width', SLIDER_WIDTH, SLIDER_HEIGHT, LINK_WIDTH, 0, 10, function (value: number) {
-    LINK_WIDTH = value;
-    linkWeightScale.range([0, LINK_WIDTH]);
+ui.makeSlider(menuDiv, 'Link Width', SLIDER_WIDTH, SLIDER_HEIGHT, LINK_WIDTH_SCALE, 0, 10, function (value: number) {
+    LINK_WIDTH_SCALE = value;
     updateLinks();
 })
 makeDropdown(menuDiv, 'Labeling', ['Automatic', 'Hide All', 'Show All', 'Neighbors'], (selection: any) => {
@@ -236,13 +239,12 @@ var nodeLabelOutlines: any;
 var visualLinks: any;
 var layout: any;
 
-// line function for curved links
+// line function for straight links
 var lineFunction: any = d3.svg.line() // only line() d3 v4
     .x(function (d: any) { return d.x; })
     .y(function (d: any) { return d.y; })
-    .interpolate("none")
-    // .interpolate("basis")// d3 v4 is .curve(d3.curveLinear);
-
+    .interpolate("bundle")
+    
 function marker(color: any) 
 {
     svg.append("svg:defs").append("svg:marker")
@@ -256,7 +258,6 @@ function marker(color: any)
         .append("svg:path")
         .attr("d", "M0,-5L10,0L0,5")
         .style("fill", color);
-
     return "url(" + color + ")";
 };
 
@@ -370,8 +371,9 @@ function init() {
         .data(links)
         .enter()
         .append('path')
-        // .attr("marker-end", "url(#triangle)")
-        .attr('d', (d: any) => lineFunction(d.path))
+        .attr('d', (d: dynamicgraph.Link) => {
+            lineFunction((d as any).path)
+        })
         .attr('onclick','trace.event(\'vis_31\',document.location.pathname,\'Link\',\'Click\')')
         .attr('onmouseover','trace.event(\'vis_32\',document.location.pathname,\'Link\',\'Mouse Over\')')
         .style('opacity', LINK_OPACITY)
@@ -564,8 +566,8 @@ function setStateHandler(m: messenger.SetStateMessage){
     updateLayout();
 
     // set linkwidh
-    LINK_WIDTH = state.linkWidth;
-    linkWeightScale.range([0, LINK_WIDTH]);
+    LINK_WIDTH_SCALE = state.linkWidth;
+    // linkWeightScale.range([1, LINK_WIDTH_SCALE]);
     updateLinks();
 
     
@@ -596,7 +598,7 @@ function getStateHandler( m: messenger.GetStateMessage){
     
     if (m.viewType=="nodelink" ){
         var nlNetwor: messenger.NetworkControls;
-        nlNetwor=new messenger.NodeLinkControls("nodelink",time_start.unixTime(),time_end.unixTime(),globalZoom,panOffsetLocal,panOffsetGlobal,LINK_OPACITY,NODE_OPACITY,NODE_SIZE,LINK_GAP,LINK_WIDTH,LABELING_STRATEGY);
+        nlNetwor=new messenger.NodeLinkControls("nodelink",time_start.unixTime(),time_end.unixTime(),globalZoom,panOffsetLocal,panOffsetGlobal,LINK_OPACITY,NODE_OPACITY,NODE_SIZE,LINK_GAP,LINK_WIDTH_SCALE,LABELING_STRATEGY);
         messenger.stateCreated(nlNetwor,m.bookmarkIndex,m.viewType,m.isNewBookmark,m.typeOfMultiView);
 
         //  var states=JSON.parse(localStorage.getItem("currentCapturedStates") || "[]" ) ;
@@ -756,7 +758,8 @@ function updateLinks(highlightId?: number){
             }
         })
         .style('stroke-width', function (d: any) {
-            var w: any = linkWeightScale(d.weights(time_start, time_end).mean());
+            var w: any = linkWeightScale(d.weights(time_start, time_end).mean()) * LINK_WIDTH_SCALE;
+            // console.log('mean weight for this link ', w);
             return d.isHighlighted() ? w * 2 : w;
         })
 
@@ -765,37 +768,54 @@ function updateLinks(highlightId?: number){
 
 function calculateCurvedLinks()
 {
-    var path: any, dir: any, offset: any, offset2: any, multiLink: dynamicgraph.NodePair | undefined;
+    var path: any, dir: any, offset: any, offset2: any, nodePair: dynamicgraph.NodePair | undefined;
     var links: dynamicgraph.Link[];
-    for (var i = 0; i < dgraph.nodePairs().length; i++) {
-        multiLink = dgraph.nodePair(i);
-        if (multiLink) {
-            if (multiLink.links().length < 2) {
-                (multiLink.links().toArray() as any)[0]['path'] = [
-                    { x: (multiLink.source as any).x, y: (multiLink.source as any).y },
-                    // { x: (multiLink.source as any).x, y: (multiLink.source as any).y },
-                    // { x: (multiLink.target as any).x, y: (multiLink.target as any).y },
-                    { x: (multiLink.target as any).x, y: (multiLink.target as any).y }]
-            } else {
-                links = multiLink.links().toArray();
+    for (var i = 0; i < dgraph.nodePairs().length; i++) 
+    {
+        nodePair = dgraph.nodePair(i);
+        if (nodePair) 
+        {
+            // test if there is only one link, 
+            // then, draw straight line
+            if (nodePair.links().length < 2) 
+            {
+                if(nodePair.source != nodePair.target)
+                {
+                    (nodePair.links().toArray() as any)[0]['path'] = [
+                        { x: (nodePair.source as any).x, y: (nodePair.source as any).y },
+                        { x: (nodePair.target as any).x, y: (nodePair.target as any).y }]
+                }else
+                { // this is a single ego link
+                    (nodePair.links().toArray() as any)[0]['path'] = [
+                        { x: (nodePair.source as any).x, y: (nodePair.source as any).y },
+                        { x: (nodePair.source as any).x + 10, y: (nodePair.source as any).y },
+                        { x: (nodePair.source as any).x + 10, y: (nodePair.source as any).y -10 },
+                        { x: (nodePair.source as any).x, y: (nodePair.source as any).y -10 },
+                        { x: (nodePair.source as any).x, y: (nodePair.source as any).y}]
+                }
+            } 
+            else // multiple links
+            {
+                links = nodePair.links().toArray();
                 // Draw self-links as back-link
-                if (multiLink.source == multiLink.target) {
-                    var minGap = getNodeRadius(multiLink.source) / 2 + 4;
+                if (nodePair.source == nodePair.target)
+                {
+                    var minGap = getNodeRadius(nodePair.source) / 2 + 4;
                     for (var j = 0; j < links.length; j++) {
                         (links as any)[j]['path'] = [
-                            { x: (multiLink.source as any).x, y: (multiLink.source as any).y },
-                            { x: (multiLink.source as any).x, y: (multiLink.source as any).y - minGap - (i * LINK_GAP) },
-                            { x: (multiLink.source as any).x + minGap + (i * LINK_GAP), y: (multiLink.source as any).y - minGap - (i * LINK_GAP) },
-                            { x: (multiLink.source as any).x + minGap + (i * LINK_GAP), y: (multiLink.source as any).y },
-                            { x: (multiLink.source as any).x, y: -(multiLink.source as any).y },
+                            { x: (nodePair.source as any).x, y: (nodePair.source as any).y },
+                            { x: (nodePair.source as any).x, y: (nodePair.source as any).y - minGap - (j * LINK_GAP) },
+                            { x: (nodePair.source as any).x + minGap + (j * LINK_GAP), y: (nodePair.source as any).y - minGap - (j * LINK_GAP) },
+                            { x: (nodePair.source as any).x + minGap + (j * LINK_GAP), y: (nodePair.source as any).y },
+                            { x: (nodePair.source as any).x, y: (nodePair.source as any).y },
                         ]
                     }
                     // non-self links
                 } else {
 
                     dir = {
-                        x: (multiLink.target as any).x - (multiLink.source as any).x,
-                        y: (multiLink.target as any).y - (multiLink.source as any).y
+                        x: (nodePair.target as any).x - (nodePair.source as any).x,
+                        y: (nodePair.target as any).y - (nodePair.source as any).y
                     }
                     // normalize
                     offset = stretchVector([-dir.y, dir.x], LINK_GAP)
@@ -805,17 +825,17 @@ function calculateCurvedLinks()
                     for (var j = 0; j < links.length; j++) {
                         if (links[j] as any) {
                             (links[j] as any)['path'] = [
-                                {x: (multiLink.source as any).x, y: (multiLink.source as any).y},
+                                {x: (nodePair.source as any).x, y: (nodePair.source as any).y},
                                 //Curved links
                                 {
-                                    x: (multiLink.source as any).x + offset2[0] + (j - links.length / 2 + .5) * offset[0],
-                                    y: ((multiLink.source as any).y + offset2[1] + (j - links.length / 2 + .5) * offset[1])
+                                    x: (nodePair.source as any).x + offset2[0] + (j - links.length / 2 + .5) * offset[0],
+                                    y: ((nodePair.source as any).y + offset2[1] + (j - links.length / 2 + .5) * offset[1])
                                 },
                                 {
-                                    x: (multiLink.target as any).x - offset2[0] + (j - links.length / 2 + .5) * offset[0],
-                                    y: ((multiLink.target as any).y - offset2[1] + (j - links.length / 2 + .5) * offset[1])
+                                    x: (nodePair.target as any).x - offset2[0] + (j - links.length / 2 + .5) * offset[0],
+                                    y: ((nodePair.target as any).y - offset2[1] + (j - links.length / 2 + .5) * offset[1])
                                 },
-                                {x: (multiLink.target as any).x, y: (multiLink.target as any).y}]
+                                {x: (nodePair.target as any).x, y: (nodePair.target as any).y}]
                         }
                     }
 
