@@ -545,18 +545,18 @@ function init() {
 
 
 function createNodeLabel(npo: any) {
-    var locationLabel: any = '';
-    if (npo.location == undefined || npo.location.label() == undefined) {
-        locationLabel = '';
+    var locationLabel: String = '';
+    if (npo.location != undefined && npo.location.label() != undefined)
+    {
+        locationLabel = ', ' + npo.location.label();
     }
-    else {
-        locationLabel = npo.location.label() + ', ';
-    }
+
     var time: any = dgraph.time(npo.timeIds[0]);
+    var timeLabel:String = ''
     if (time)
-        return npo.node.label() + ' (' + moment.utc(time.unixTime()).format('MM/DD/YYYY') + ')';
-    else
-        return npo.node.label();
+        timeLabel = ' (' + moment.utc(time.unixTime()).format('MM/DD/YYYY') + ')';
+
+    return npo.node.label() + locationLabel + timeLabel;
 }
 
 var hittestRect: google.maps.LatLngBounds = new google.maps.LatLngBounds();
@@ -926,8 +926,8 @@ function updateLocationMarkers() {
 // Calculates curve paths for links
 function updateLinkPaths() {
 
-    var path: any, dir: any, offset: any, center: any;
-    var link: dynamicgraph.Link | undefined;
+    var path: any, dir: any, offset: any, center: any; 
+    var link: dynamicgraph.Link | any;
     var sourceNPO: any, targetNPO: any;
     var EDGE_GAP: any = 5
     var cx1: any, cy1: any, cx2: any, cy2: any;
@@ -976,10 +976,12 @@ function updateLinkPaths() {
         } else {
             cx1 = center.x;
             cy1 = center.y;
-            cx2 = cx1;
-            cy2 = cy1;
+            // cx2 = cx1;
+            // cy2 = cy1;
+            var l : number = Math.sqrt(dir.x * dir.x + dir.y * dir.y);
             (link as any)['path'] = [
                 { x: sourceNPO.x, y: sourceNPO.y },
+                { x: center.x, y: center.y - l * .15},
                 { x: targetNPO.x, y: targetNPO.y }]
         }
     }
@@ -988,6 +990,19 @@ function updateLinkPaths() {
         .attr("d", function (d: any) { return line(d.path); })
 
 }
+
+// somehow is not called!
+// function randomSeed(link: dynamicgraph.Link)
+// {
+//     console.log('randomseed');
+//     var nodes = this.dynamicgraph.nodes().toArray();
+//     var numNodes = nodes.length;
+//     var si = nodes.indexOf(link.source)
+//     var ti = nodes.indexOf(link.target)
+//     var v = (si * ti + si + ti) / (numNodes*numNodes + numNodes+numNodes)   
+//     console.log('v', v)
+//     return v * .2;
+// }
 
 function showLabel(i: any, b: any) {
     if (b) {
