@@ -1122,42 +1122,49 @@ function reorderLabels() {
 function updateNodePositions() {
 
     var npo: any;
-    for (var i = 0; i < nodePositionObjects.length; i++) {
+    for (var i = 0; i < nodePositionObjects.length; i++) 
+    {
         npo = nodePositionObjects[i];
         npo.x = npo.xOrig + npo.displacementVector[0] * OVERLAP_FRACTION;
         npo.y = npo.yOrig + npo.displacementVector[1] * OVERLAP_FRACTION;
     }
 
+    for (var i = 0; i < nodePositionObjects.length; i++) 
+    {
+        if (!nodePositionObjects[i].fixedPosition) 
+        {
+            // npo = nodePositionObjects[i]
 
-    for (var i = 0; i < nodePositionObjects.length; i++) {
-        if (!nodePositionObjects[i].fixedPosition) {
-            npo = nodePositionObjects[i]
+            // // calculate barycenter of related npos
+            // var x_bar: number = 0
+            // var y_bar: number = 0
+            // for (var j = 0; j < npo.inNeighbors.length; j++) 
+            // {
+            //     x_bar += npo.inNeighbors[j].x
+            //     y_bar += npo.inNeighbors[j].y
+            // }
+            // for (var j = 0; j < npo.outNeighbors.length; j++) 
+            // {
+            //     x_bar += npo.outNeighbors[j].x
+            //     y_bar += npo.outNeighbors[j].y
+            // }
+            // x_bar /= (npo.inNeighbors.length + npo.outNeighbors.length)
+            // y_bar /= (npo.inNeighbors.length + npo.outNeighbors.length)
 
-            // calculat barycenter of related npos
-            var x_bar: number = 0
-            var y_bar: number = 0
-            for (var j = 0; j < npo.inNeighbors.length; j++) {
-                x_bar += npo.inNeighbors[j].x
-                y_bar += npo.inNeighbors[j].y
-            }
-            for (var j = 0; j < npo.outNeighbors.length; j++) {
-                x_bar += npo.outNeighbors[j].x
-                y_bar += npo.outNeighbors[j].y
-            }
-            x_bar /= (npo.inNeighbors.length + npo.outNeighbors.length)
-            y_bar /= (npo.inNeighbors.length + npo.outNeighbors.length)
+            // var x_vec: number = npo.x - x_bar;
+            // var y_vec: number = npo.y - y_bar;
+            // var d: number = Math.sqrt(x_vec * x_vec + y_vec * y_vec);
+            // if (d == 0) 
+            // {
+            //     d = 1;
+            // }
+            // x_vec /= d;
+            // y_vec /= d;
 
-            var x_vec: number = npo.x - x_bar;
-            var y_vec: number = npo.y - y_bar;
-            var d: number = Math.sqrt(x_vec * x_vec + y_vec * y_vec);
-            if (d == 0) {
-                d = 1;
-            }
-            x_vec /= d;
-            y_vec /= d;
-
-            npo.x = x_bar + 200 * x_vec;
-            npo.y = y_bar + 200 * y_vec;
+            // npo.x = x_bar + 200 * x_vec;
+            // npo.y = y_bar + 200 * y_vec;
+            npo.x = 0;
+            npo.y = 0;
         }
     }
 
