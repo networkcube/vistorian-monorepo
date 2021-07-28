@@ -2664,37 +2664,40 @@ export class NumberQuery extends Query {
     }
 
     min(): number {
-        var min: number = this._elements[0];
+        this._elements = this.makeNumbers(this._elements);
+        var min: number = parseInt(this._elements[0]+'');
         for (var i = 1; i < this._elements.length; i++) {
             if (this._elements[i] != undefined)
-                min = Math.min(min, this._elements[i]);
+                min = Math.min(min, parseInt(this._elements[i]+''));
         }
         return min;
     }
     max(): number {
-        var max: number = this._elements[0];
+        var max: number = parseInt(this._elements[0]+'');
         for (var i = 1; i < this._elements.length; i++) {
             if (this._elements[i] != undefined)
-                max = Math.max(max, this._elements[i]);
+                max = Math.max(max,  parseInt(this._elements[i]+''));
         }
         return max;
     }
     mean(): number {
+        this._elements = this.makeNumbers(this._elements);
         var v = 0;
         var count = 0;
         for (var i = 0; i < this._elements.length; i++) {
             if (typeof this._elements[i] == 'number') {
-                v += this._elements[i];
+                v += parseInt(this._elements[i]+'');
                 count++;
             }
         }
+        console.log('mean', v / count)
         return v / count;
     }
     sum() {
         var sum = 0;
         for (var i = 0; i < this._elements.length; i++) {
             if (typeof this._elements[i] == 'number') {
-                sum += this._elements[i];
+                sum += parseInt(this._elements[i]+'');
             }
         }
         return sum;
@@ -2713,6 +2716,23 @@ export class NumberQuery extends Query {
             f(this._elements[i], i);
         }
         return this;
+    }
+    
+    makeNumbers(elements:number[]): number[] {
+        console.log('make numbers...')
+        if(elements && elements.length > 0){
+            var first = elements[0]
+            if(typeof first == 'string'){
+                var numberElements:number[] = []
+                for (var i = 0; i < elements.length; i++){
+                    numberElements.push(parseFloat(elements[i]+''))
+                }
+                console.log('string array converted', numberElements)
+                return numberElements;
+            }
+        }
+
+        return elements;
     }
 
 }
