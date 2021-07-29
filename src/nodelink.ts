@@ -440,11 +440,16 @@ function getNodeRadius(n: dynamicgraph.Node) {
 }
 
 
-function getNodeColor(n: dynamicgraph.Node) {
-    if( n.color().split('#')[0] !== ",") {
-        return n.color().split('#')[1];
+function getNodeColor(n: dynamicgraph.Node) 
+{
+    var c
+    if (n.color().split('#')[0] !== ",") {
+        c = n.color().split('#')[1];
     }
-    return '#000'
+    if(!c){
+        c = '#000';
+    }
+    return c;
 }
 
 function getNodeShape(n: dynamicgraph.Node) {
