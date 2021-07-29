@@ -452,7 +452,9 @@ function getNodeShape(n: dynamicgraph.Node) {
     if(!shape){
         shape = 'circle';
     }
-    return 'circle'
+    // console.log('node shape', shape)
+    // temporaryly this function is not working until the proper setting of node shape has been fixed.
+    return 'circle';
 }
 
 function updateLabelVisibility() {
