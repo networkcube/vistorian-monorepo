@@ -736,8 +736,8 @@ export class DynamicGraph {
                 this.nodeArrays.filter.push(false);
                 this.nodeArrays.locations.push(new ScalarTimeSeries<number>());
                 this.nodeArrays.attributes.push(new Object());
-                this.nodeArrays.colors.push('')
-                this.nodeArrays.shapes.push('')
+                this.nodeArrays.color.push('')
+                this.nodeArrays.shape.push('')
                 if (isValidIndex(data.nodeSchema.label)) {
                     this.nodeArrays.label.push(row[data.nodeSchema.label]);
                 } else {
@@ -778,7 +778,7 @@ export class DynamicGraph {
             // check shapes
             if (isValidIndex(data.nodeSchema.shape)) {
                 var shape = row[data.nodeSchema.shape];
-                this.nodeArrays.shapes.push(shape);
+                this.nodeArrays.shape.push(shape);
             }
 
             // gather node type
@@ -1040,7 +1040,7 @@ export class DynamicGraph {
         //Build a color mapping
         const colorSet = new Set(['#e4549b', '#a33a36', '#bd6221', '#dfba47', '#b5b867', '#479b7f', '#335b8e', '#78387d']);
         var colorMappings: { [color: string]: string; } = {};
-        (this.nodeArrays as any).color.forEach(function (color: any) {
+        this.nodeArrays.color.forEach(function (color: any) {
             if (!colorMappings[color]) {
                 let colorSetAsArray = Array.from(colorSet)
                 var generatedColor = colorSetAsArray[Math.floor(Math.random() * colorSetAsArray.length)]
@@ -1050,14 +1050,14 @@ export class DynamicGraph {
         });
 
         //Add color values to nodeArray colors
-        for(var i=0; i<(this.nodeArrays as any).color.length; i++) {
-            (this.nodeArrays as any).color[i] = [(this.nodeArrays as any).color[i], colorMappings[(this.nodeArrays as any).color[i]]];
+        for(var i=0; i<this.nodeArrays.color.length; i++) {
+            this.nodeArrays.color[i] = this.nodeArrays.color[i], colorMappings[this.nodeArrays.color[i]];
         }
 
         //Build a shape mapping
         const shapeSet = new Set(['cross', 'diamond', 'square', 'triangle-down', 'triangle-up']);
         var shapeMappings: { [shape: string]: string; } = {};
-        (this.nodeArrays as any).shape.forEach(function (shape: any) {
+        this.nodeArrays.shape.forEach(function (shape: any) {
             if (!shapeMappings[shape]) {
                 let shapeSetAsArray = Array.from(shapeSet)
                 var generatedShape = shapeSetAsArray[Math.floor(Math.random() * shapeSetAsArray.length)]
@@ -1067,8 +1067,8 @@ export class DynamicGraph {
         });
 
         //Add shapes to nodeArray shapes
-        for(var i=0; i<(this.nodeArrays as any).shape.length; i++) {
-            (this.nodeArrays as any).shape[i] = [(this.nodeArrays as any).shape[i], shapeMappings[(this.nodeArrays as any).shape[i]]];
+        for(var i=0; i<this.nodeArrays.shape.length; i++) {
+            this.nodeArrays.shape[i] = this.nodeArrays.shape[i], shapeMappings[this.nodeArrays.shape[i]];
         }
         console.log(" TEST ")
         console.log(this)
@@ -1870,8 +1870,8 @@ export class NodeArray extends AttributeArray {
     locations: ScalarTimeSeries<number>[] = []
     filter: boolean[] = [];
     nodeType: string[] = [];
-    colors: string[] = [];
-    shapes: string[] = [];
+    color: string[] = [];
+    shape: string[] = [];
 }
 
 export class LinkArray extends AttributeArray {
@@ -2718,8 +2718,8 @@ export class NumberQuery extends Query {
         return this;
     }
     
-    makeNumbers(elements:number[]): number[] {
-        console.log('make numbers...')
+    makeNumbers(elements:number[]): number[] 
+    {
         if(elements && elements.length > 0){
             var first = elements[0]
             if(typeof first == 'string'){
