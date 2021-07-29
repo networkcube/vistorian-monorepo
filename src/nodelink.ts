@@ -448,13 +448,9 @@ function getNodeColor(n: dynamicgraph.Node) {
 }
 
 function getNodeShape(n: dynamicgraph.Node) {
-    var tmp = n.shape().split(',');
-    if(tmp && tmp[0]) 
-    {
-        let shape = tmp[tmp.length - 1];
-        if(!shape)
-            shape = 'circle';
-        return shape;
+    var shape = n.shape()
+    if(!shape){
+        shape = 'circle';
     }
     return 'circle'
 }
