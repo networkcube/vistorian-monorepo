@@ -1030,7 +1030,7 @@ export class DynamicGraph {
         for (var i = 0; i < this.linkArrays.length; i++) {
             for (var j = 0; j < this.timeArrays.length; j++) {
                 if(this.linkArrays.weights[i]) {
-                    if (this.linkArrays.weights[i].serie.hasOwnProperty(this.timeArrays.id[j].toString())) {
+                    if (this.linkArrays.weights[i].toArray().hasOwnProperty(this.timeArrays.id[j].toString())) {
                         this.timeArrays.links[j].push(this.linkArrays.id[i]);
                     }
                 }
@@ -2295,7 +2295,7 @@ export class BasicElement {
  * steps in the format key->value. I.e. the value for the
  * time step with ID 3 is accessed by this.3   */
 export class ScalarTimeSeries<T>{
-    serie: any = {};
+    private serie: any = {};
 
     /** @returns a ScalarTimeSeries for the specified period. */
     period(t1: Time, t2: Time): ScalarTimeSeries<T> {
@@ -2318,7 +2318,7 @@ export class ScalarTimeSeries<T>{
     /** @returns the value for a specified time point. */
     get(t: Time): any { // before T!!
         if (this.serie[t.id()] == undefined)
-            return; // this is avoid!!
+            return ; // this is avoid!!
         return this.serie[t.id()];
     }
 
@@ -2326,6 +2326,9 @@ export class ScalarTimeSeries<T>{
         return this.toArray().length;
     }
 
+    getSerie(): Object[]{
+        return this.serie;
+    }
 
     /** Returns all values as array.
      * @param removeDuplicates
@@ -2690,7 +2693,7 @@ export class NumberQuery extends Query {
                 count++;
             }
         }
-        console.log('mean', v / count)
+        // console.log('mean', v / count)
         return v / count;
     }
     sum() {
@@ -3148,22 +3151,25 @@ export class Node extends BasicElement {
         var serie: ScalarTimeSeries<number>;
         if (t2 != undefined && t1 != undefined)
             serie = (<ScalarTimeSeries<number>>this.attr('locations')).period(t1, t2);
+            // return this.attr('locations').period(t1, t2);
         else if (t1 != undefined)
             serie = (<ScalarTimeSeries<number>>(this.attr('locations')).get(t1));
+            // return this.attr('locations').get(t1);
         else
             serie = (<ScalarTimeSeries<number>>this.attr('locations'));
+            // return this.attr('locations');
 
-        serie = serie.serie;
-        // replace numbers by times
-        var serie2 = new ScalarTimeSeries<Location>();
-        for (var t in serie) {
+        var serie2 = serie.getSerie();
+        // replace numbers by locations
+        var serie3 = new ScalarTimeSeries<Location>();
+        for (var t in serie2) {
             var time = this.g.time(parseInt(t));
-            var location = this.g.location((serie as any)[t]);
+            var location = this.g.location((serie2 as any)[t]);
             if (time != undefined && location != undefined) {
-                serie2.set(time, location);
+                serie3.set(time, location);
             }
         }
-        return serie2;
+        return serie3;
     }
 
 
