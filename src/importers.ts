@@ -6,7 +6,6 @@ import {
 } from './dynamicgraph'
 import * as moment from 'moment'
 import * as main from './main'
-import * as Papa from 'papaparse'
 
 export function loadDyson(url: string, callback: Function) 
 {
@@ -67,7 +66,6 @@ export function loadLinkTable(
     }
 
     $.get(url, (linkData) => {
-        // var linkData: any = Papa.parse(linkData, {}).data;
         var array = []
         var rows = linkData.split('\r\n')
         for(var i=1 ; i<rows.length ; i++){
