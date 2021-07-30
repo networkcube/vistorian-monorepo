@@ -4,6 +4,7 @@ import * as queries from './queries';
 import * as utils from './utils';
 import * as ordering from './ordering';
 import * as motifs from './motifs';
+import * as importers from './importers';
 import * as messenger from './messenger';
 import * as main from './main';
 import * as datamanager from './datamanager';
@@ -27,6 +28,7 @@ export {
     motifs,
     messenger,
     main,
+    importers,
     datamanager,
     analytics,
     search,
