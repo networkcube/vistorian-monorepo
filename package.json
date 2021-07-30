@@ -28,13 +28,13 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/alkadi-mh/vistorian-core_tr.git"
+        "url": "git+https://github.com/alkadi-mh/vistorian-core.git"
     },
     "collaborators": [
         "Jean-Daniel Fekete <Jean-Daniel.Fekete@inria.fr",
         "Alexandra Ibarra Cuesta"
     ],
-    "homepage": "https://github.com/alkadi-mh/vistorian-core_tr.git#readme",
+    "homepage": "https://github.com/alkadi-mh/vistorian-core.git#readme",
     "bundledDependencies": [
         "moment"
     ],
