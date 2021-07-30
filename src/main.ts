@@ -169,6 +169,17 @@ export function createVisualizationIFrame(parentId: string, visUri: string, sess
     for (var prop in visParams) {
         visParamString += '&' + prop + '=' + visParams[prop];
     }
+
+    if(!visUri.startsWith('http'))
+    {
+        if (window.location.port)
+            var server = location.protocol + '//' + window.location.hostname + ':' + window.location.port + '' + window.location.pathname;
+        else
+            var server = location.protocol + '//' + window.location.hostname + '' + window.location.pathname;
+        visUri = server + "/node_modules/vistorian-" + visUri + "/web/index.html";
+    }
+
+
     iframe.attr('src', visUri + '?'
         + 'session=' + session
         + '&datasetName=' + dataName
@@ -187,7 +198,16 @@ export function createVisualizationIFrame(parentId: string, visUri: string, sess
 }
 //
 // // Internal convenient function to open a window
-function openView(session: string, visUri: string, dataname: string, tab: boolean) {
+function openView(session: string, visUri: string, dataname: string, tab: boolean) 
+{    
+    if(!visUri.startsWith('http'))
+    {
+        if (window.location.port)
+            var server = location.protocol + '//' + window.location.hostname + ':' + window.location.port + '' + window.location.pathname;
+        else
+            var server = location.protocol + '//' + window.location.hostname + '' + window.location.pathname;
+        visUri = server + "/node_modules/vistorian-" + visUri + "/web/index.html";
+    }
 
     var url = visUri + '?session=' + session + '&datasetName=' + dataname;
 
