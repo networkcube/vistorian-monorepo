@@ -68,7 +68,7 @@ bcNode.onmessage = function (ev) {
 // states
 // var mouseDownNode = undefined;
 var hiddenLabels: any = [];
-var LABELING_STRATEGY: number = 1;
+var LABELING_STRATEGY: number = 0;
 
 
 var linkWeightScale = d3.scale.linear().range([1, 1]);
