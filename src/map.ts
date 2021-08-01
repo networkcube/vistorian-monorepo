@@ -352,21 +352,22 @@ function init() {
         // obtain nodePositionObjects
         // one npo per node x position 
         var npo: NodePositionObject = new NodePositionObject();
-        var nodes: any[] = dgraph.nodes().toArray();
-        var n: any, positions: any;
+        var nodes: dynamicgraph.Node[] = dgraph.nodes().toArray();
+        var n: dynamicgraph.Node, positions: any;
         var googleLatLng: any;
         var serie: any;
-        for (var i = 0; i < nodes.length; i++) {
+        for (var i = 0; i < nodes.length; i++) 
+        {
             n = nodes[i];
-            positions = n.locationSerie().serie;
+            positions = n.locationSerie().getSerie();
             serie = new dynamicgraph.ScalarTimeSeries<Object>();
             nodePositionObjectsLookupTable.push(serie);
             for (var tId in positions) {
                 googleLatLng = new google.maps.LatLng(
-                    positions[tId].latitude(),
-                    positions[tId].longitude());
+                    positions[parseInt(tId)].latitude(),
+                    positions[parseInt(tId)].longitude());
                 // check if npo for this node and position does 
-                // already exist, if not its created in side this function
+                // already exist, if norun t its created in side this function
                 npo = getNodePositionObjectsForLocation(n, positions[tId].longitude(), positions[tId].latitude());
                 npo.location = positions[tId]
                 if (positions[tId].npos.indexOf(npo) == -1) {
@@ -931,7 +932,8 @@ function updateLinkPaths() {
     var sourceNPO: any, targetNPO: any;
     var EDGE_GAP: any = 5
     var cx1: any, cy1: any, cx2: any, cy2: any;
-    for (var i = 0; i < dgraph.links().length; i++) {
+    for (var i = 0; i < dgraph.links().length; i++) 
+    {
         link = dgraph.link(i);
 
         if (link)

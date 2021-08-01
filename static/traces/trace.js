@@ -94,7 +94,10 @@
 	    httpRequest.setRequestHeader("Accept", "text/plain");
 	    //    httpRequest.setRequestHeader("Content-Length", json.length);
 	}
-	httpRequest.send(json);
+	if(!window.location.origin.includes('localhost'))
+	{
+		httpRequest.send(json);
+	}
     };
 
     var sendLogs = function() {
