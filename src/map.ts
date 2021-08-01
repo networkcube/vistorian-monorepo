@@ -14,7 +14,7 @@ import * as moment from 'moment';
 var COLOR_DEFAULT_LINK: string = '#999999';
 var COLOR_DEFAULT_NODE: string = '#999999';
 var COLOR_HIGHLIGHT: string = '#ff8800';
-var INNER_OPACITY: number = 0.8;
+var LINK_OPACITY: number = 0.4;
 var NODE_UNPOSITIONED_OPACITY: number = 0.4
 var LOCATION_MARKER_WIDTH: number = 10;
 var OVERLAP_FRACTION: number = 0.3;
@@ -22,6 +22,7 @@ var NODE_SIZE: number = 4;
 var OUT_OF_TIME_NODES_OPACITY: number = 0;
 var LABEL_OFFSET_X: number = 20;
 var SHOW_NON_PLACE: boolean = true;
+var LINK_GAP = 2;
 
 var width: number = window.innerWidth
 var height: number = window.innerHeight - 100;
@@ -57,6 +58,44 @@ var emptyNodePositions: any = {}
 // VISUAL ELEMENTS
 var nodePositionObjects: any[] = [];
 var nodePositionObjectsLookupTable: any[] = [];
+
+var geoMultiLinks:GeoMultiLink[] = [];
+
+// class GeoLink extends dynamicgraph.Link{
+
+//     GeoLink(){
+//         super();
+//     }
+//     sourceNPO: NodePositionObject;
+//     targetNPO: NodePositionObject;
+// }
+
+class GeoMultiLink{
+
+    // private sourceNPOs: NodePositionObject[] = [];
+    // private targetNPOs: NodePositionObject[] = [];
+    private links:dynamicgraph.Link[] = []
+
+    public numLinks()
+    {
+        return this.links.length;
+    }
+    public addLink(link:any)
+    {
+        if(this.links.indexOf(link) == -1)
+        {
+            this.links.push(link)
+            link.geoMultiLink = this;
+        }
+    }
+    public getLinks():dynamicgraph.Link[]{
+        return this.links;
+    }
+    public linkIndex(l:any):number
+    {
+        return this.links.indexOf(l);
+    }
+} 
 
 export class NodePositionObject {
     timeIds: number[] = [];
@@ -738,7 +777,7 @@ function updateLinks(highlightId?: number) {
                 if (intersectedLink == d)
                     return 1;
                 else
-                    return INNER_OPACITY * .3;
+                    return LINK_OPACITY * .3;
             }
 
             return d.isHighlighted()
@@ -746,7 +785,7 @@ function updateLinks(highlightId?: number) {
                 || d.target.isHighlighted() ?
                 // 1 :
                 // INNER_OPACITY;
-                Math.min(1, INNER_OPACITY + .2) : INNER_OPACITY;
+                Math.min(1, LINK_OPACITY) : LINK_OPACITY;
 
         })
         .style('stroke-width', function (d: any) {
@@ -927,15 +966,28 @@ function updateLocationMarkers() {
 // Calculates curve paths for links
 function updateLinkPaths() {
 
-    var path: any, dir: any, offset: any, center: any; 
-    var link: dynamicgraph.Link | any;
+    var path: any, dir: any, offset: any;
+    var center: any;
+    var link, link2: dynamicgraph.Link | any;
     var sourceNPO: any, targetNPO: any;
     var EDGE_GAP: any = 5
     var cx1: any, cy1: any, cx2: any, cy2: any;
+    
+    // reinit geoMultiLinks
+    geoMultiLinks = [];
+    var geoMultiLink:GeoMultiLink;
     for (var i = 0; i < dgraph.links().length; i++) 
     {
         link = dgraph.link(i);
+        (<any>link).geoMultiLink = undefined;        
+    }
 
+    for (var i = 0; i < dgraph.links().length; i++) 
+    {
+
+        link = dgraph.link(i);
+        
+        // check for NPOs
         if (link)
             sourceNPO = link.sourceNPO;
         else
@@ -952,6 +1004,37 @@ function updateLinkPaths() {
         if (targetNPO == undefined)
             targetNPO = { x: 0, y: 0 };
 
+        (<any>link).sourceNPO = sourceNPO;
+        (<any>link).targetNPO = targetNPO;
+        
+        // check for geomultilinks
+        for (var j = 0; j < i; j++)
+        {
+            link2 = dgraph.link(j);
+            if(linkOverlapTest(link, link2))
+            {
+                // console.log('link overlap', i,j)
+                if((<any>link2).geoMultiLink)
+                {
+                    geoMultiLink = (<any>link2).geoMultiLink;
+                    geoMultiLink.addLink(link);
+                }else{
+                    geoMultiLink = new GeoMultiLink();
+                    geoMultiLinks.push(geoMultiLink);
+                    geoMultiLink.addLink(link);
+                    geoMultiLink.addLink(link2);
+                }
+            }
+        }
+    }
+    console.log('>> TOTAL MULTILINKS:', geoMultiLinks.length);
+
+    for (var i = 0; i < dgraph.links().length; i++) 
+    {
+        link = dgraph.link(i);
+        sourceNPO = link?.sourceNPO;
+        targetNPO = link?.targetNPO;
+
         dir = {
             x: targetNPO.x - sourceNPO.x,
             y: targetNPO.y - sourceNPO.y
@@ -964,8 +1047,10 @@ function updateLinkPaths() {
             y: sourceNPO.y + dir.y / 2
         }
 
+        // self-links
         if (sourceNPO.x == targetNPO.x
-            && sourceNPO.y == targetNPO.y) {
+            && sourceNPO.y == targetNPO.y) 
+        {
             cx1 = center.x + 30 + Math.random() * 30;
             cy1 = center.y - 10 + Math.random() * 30;
             cx2 = center.x + 10 + Math.random() * 30;
@@ -975,15 +1060,23 @@ function updateLinkPaths() {
                 { x: cx1, y: cy1 },
                 { x: cx2, y: cy2 },
                 { x: targetNPO.x, y: targetNPO.y }]
-        } else {
+        } else 
+        {
+            // non-self links
             cx1 = center.x;
             cy1 = center.y;
-            // cx2 = cx1;
-            // cy2 = cy1;
-            var l : number = Math.sqrt(dir.x * dir.x + dir.y * dir.y);
+        
+            // let linkLength : number = Math.sqrt(dir.x * dir.x + dir.y * dir.y);
+            let multiplier: number = 0;
+            if((<any>link).geoMultiLink)
+            {
+                let multiLink:GeoMultiLink = (<GeoMultiLink>(<any>link).geoMultiLink); 
+                multiplier = multiLink.linkIndex(link) - multiLink.numLinks() / 2;            
+            }
+            let stretch = multiplier * LINK_GAP;
             (link as any)['path'] = [
                 { x: sourceNPO.x, y: sourceNPO.y },
-                { x: center.x, y: center.y - l * .15},
+                { x: center.x + (offset[0] * stretch), y: center.y + (offset[1] * stretch)},
                 { x: targetNPO.x, y: targetNPO.y }]
         }
     }
@@ -991,6 +1084,29 @@ function updateLinkPaths() {
     visualLinks
         .attr("d", function (d: any) { return line(d.path); })
 
+}
+
+
+function linkOverlapTest(l1: any, l2: any): boolean
+{
+    return l1.sourceNPO == l2.sourceNPO && l1.targetNPO == l2.targetNPO;
+    // var distX = l1.sourceNPO.x - l2.sourceNPO.x 
+    // var distY = l1.sourceNPO.y - l2.sourceNPO.y
+    // var dist = Math.sqrt(distX * distX + distY * distY); 
+    // if(dist > NODE_SIZE*2)
+    // {
+    //     // source NPOs are not overlapping, hence return at this point.
+    //     return false;
+    // }else{
+    //     distX = l1.targetNPO.x - l2.targetNPO.x 
+    //     distY = l1.targetNPO.y - l2.targetNPO.y
+    //     dist = Math.sqrt(distX * distX + distY * distY); 
+    //     if(dist > NODE_SIZE*2)
+    //     {
+    //         return false;
+    //     }        
+    // }
+    // return true;
 }
 
 // somehow is not called!
@@ -1052,17 +1168,20 @@ ui.makeSlider(menuDiv, 'Node Overlap', 100, MENU_HEIGHT, OVERLAP_FRACTION, -.05,
     OVERLAP_FRACTION = value;
     updateNodePositions();
 })
-
+ui.makeSlider(menuDiv, 'Edge Gap', 100, MENU_HEIGHT, LINK_GAP, 0, 10, function (value: number) {
+    LINK_GAP = value;
+    updateLinkPaths();
+})
 // LINK OPACITY SLIDER    
 var menuDiv = d3.select('#menuDiv');
-ui.makeSlider(menuDiv, 'Link Opacity', 100, MENU_HEIGHT, INNER_OPACITY, 0, 1, function (value: number) {
-    INNER_OPACITY = value;
+ui.makeSlider(menuDiv, 'Link Opacity', 100, MENU_HEIGHT, LINK_OPACITY, 0, 1, function (value: number) {
+    LINK_OPACITY = value;
     updateLinks();
 })
 
 // NON-POSITIONED NODES OPACITY SLIDER    
 var menuDiv = d3.select('#menuDiv');
-ui.makeSlider(menuDiv, 'Opacity of Positionless Nodes', 200, MENU_HEIGHT, INNER_OPACITY, 0, 1, function (value: number) {
+ui.makeSlider(menuDiv, 'Opacity of Positionless Nodes', 100, MENU_HEIGHT, LINK_OPACITY, 0, 1, function (value: number) {
     NODE_UNPOSITIONED_OPACITY = value;
     updateNodes();
 })
@@ -1320,7 +1439,7 @@ function setStateHandler(m: messenger.SetStateMessage){
     OVERLAP_FRACTION = state.nodeOverlap;
     updateNodePositions();
 
-    INNER_OPACITY = state.linkOpacity;
+    LINK_OPACITY = state.linkOpacity;
     updateLinks();
 
     NODE_UNPOSITIONED_OPACITY = state.opacityOfPositionlessNodes;
@@ -1338,7 +1457,7 @@ function setStateHandler(m: messenger.SetStateMessage){
 function getStateHandler( m: messenger.GetStateMessage){
     if (m.viewType=="map"){
 
-        var mapNetwork: messenger.NetworkControls=new messenger.MapControls("map",time_start.unixTime(),time_end.unixTime(),OVERLAP_FRACTION,INNER_OPACITY,NODE_UNPOSITIONED_OPACITY);
+        var mapNetwork: messenger.NetworkControls=new messenger.MapControls("map",time_start.unixTime(),time_end.unixTime(),OVERLAP_FRACTION,LINK_OPACITY,NODE_UNPOSITIONED_OPACITY);
       /*   var bookmarksArray=JSON.parse(localStorage.getItem("vistorianBookmarks") || "[]");
 
       if (m.bookmarkIndex!=bookmarksArray.length-1){
