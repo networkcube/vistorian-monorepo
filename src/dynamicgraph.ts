@@ -2693,7 +2693,6 @@ export class NumberQuery extends Query {
                 count++;
             }
         }
-        // console.log('mean', v / count)
         return v / count;
     }
     sum() {
