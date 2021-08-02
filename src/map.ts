@@ -1090,7 +1090,9 @@ function updateLinkPaths() {
 
 function linkOverlapTest(l1: any, l2: any): boolean
 {
-    return l1.sourceNPO == l2.sourceNPO && l1.targetNPO == l2.targetNPO;
+    return (l1.sourceNPO == l2.sourceNPO && l1.targetNPO == l2.targetNPO)
+        || (l1.sourceNPO == l2.targetNPO && l1.targetNPO == l2.sourceNPO);
+
     // var distX = l1.sourceNPO.x - l2.sourceNPO.x 
     // var distY = l1.sourceNPO.y - l2.sourceNPO.y
     // var dist = Math.sqrt(distX * distX + distY * distY); 
