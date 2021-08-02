@@ -1072,7 +1072,7 @@ function updateLinkPaths() {
             if((<any>link).geoMultiLink)
             {
                 let multiLink:GeoMultiLink = (<GeoMultiLink>(<any>link).geoMultiLink); 
-                multiplier = multiLink.linkIndex(link) - multiLink.numLinks() / 2;            
+                multiplier = multiLink.linkIndex(link);            
             }
             let stretch = multiplier * LINK_GAP;
             (link as any)['path'] = [
