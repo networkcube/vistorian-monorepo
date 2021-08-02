@@ -16,6 +16,7 @@ var COLOR_DEFAULT_NODE: string = '#999999';
 var COLOR_HIGHLIGHT: string = '#ff8800';
 var LINK_OPACITY: number = 0.4;
 var NODE_UNPOSITIONED_OPACITY: number = 0.4
+var LINK_WIDTH_SCALE: number = 1;
 var LOCATION_MARKER_WIDTH: number = 10;
 var OVERLAP_FRACTION: number = 0.3;
 var NODE_SIZE: number = 4;
@@ -789,7 +790,7 @@ function updateLinks(highlightId?: number) {
 
         })
         .style('stroke-width', function (d: any) {
-            var weight = linkWeightScale(d.weights(time_start, time_end).mean());
+            var weight = linkWeightScale(d.weights(time_start, time_end).mean()) * LINK_WIDTH_SCALE;
             var thisSelection = d3.select(this);
             if (weight < 0) {
                 weight = -weight;
@@ -1178,10 +1179,14 @@ ui.makeSlider(menuDiv, 'Link Opacity', 100, MENU_HEIGHT, LINK_OPACITY, 0, 1, fun
     LINK_OPACITY = value;
     updateLinks();
 })
+ui.makeSlider(menuDiv, 'Link Width', 100, MENU_HEIGHT, LINK_WIDTH_SCALE, 0, 10, function (value: number) {
+    LINK_WIDTH_SCALE = value;
+    updateLinks();
+})
 
 // NON-POSITIONED NODES OPACITY SLIDER    
 var menuDiv = d3.select('#menuDiv');
-ui.makeSlider(menuDiv, 'Opacity of Positionless Nodes', 100, MENU_HEIGHT, LINK_OPACITY, 0, 1, function (value: number) {
+ui.makeSlider(menuDiv, 'Positionless Nodes', 150, MENU_HEIGHT, LINK_OPACITY, 0, 1, function (value: number) {
     NODE_UNPOSITIONED_OPACITY = value;
     updateNodes();
 })
@@ -1444,6 +1449,8 @@ function setStateHandler(m: messenger.SetStateMessage){
 
     NODE_UNPOSITIONED_OPACITY = state.opacityOfPositionlessNodes;
     updateNodes();
+
+
     
     time_start=state.timeSliderStart;
     time_end=state.timeSliderEnd;
