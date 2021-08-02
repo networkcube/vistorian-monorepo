@@ -89,6 +89,7 @@
 	{
 		httpRequest.open("POST", traceUrl, true);
 	}
+	
 	if (window.XDomainRequest) {
 	    // no request header?
 	}
