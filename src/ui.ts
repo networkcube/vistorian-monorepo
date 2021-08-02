@@ -10,22 +10,23 @@ export function makeSlider(
     value: number,
     min: number,
     max: number,
-    f: Function): void {
+    handler: Function): void 
+{
 
-    var slider: Slider = new Slider(5, height - 5, width, min, max, .01);
-    var svg = d3parent.append('svg')
-        .attr('width', width + 20)
-        .attr('height', height);
+        var slider: Slider = new Slider(5, height - 5, width, min, max, .01);
+        var svg = d3parent.append('svg')
+            .attr('width', width + 20)
+            .attr('height', height);
 
-    svg.append('text')
-        .attr('x', 10)
-        .attr('y', height - 15)
-        .text(label)
-        .attr('class', 'sliderLabel');
+        svg.append('text')
+            .attr('x', 10)
+            .attr('y', height - 15)
+            .text(label)
+            .attr('class', 'sliderLabel');
 
-    slider.appendTo(svg);
-    slider.set(value);
-    slider.setDragEndCallBack(f);
+        slider.appendTo(svg);
+        slider.set(value);
+        slider.setDragEndCallBack(handler);
 }
 
 export class RadioButton {
