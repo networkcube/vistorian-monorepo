@@ -485,6 +485,7 @@ export function mouseWheelHandler(event: any) {
     updateLinks();
     updateNodes();
     webgl.render();
+    messenger.zoomInteraction("dynamicego","zoom");
 }
 
 
