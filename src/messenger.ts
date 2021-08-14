@@ -18,7 +18,7 @@ export var MESSAGE_SEARCH_RESULT = 'searchResult';
 export var MESSAGE_SET_STATE= 'SET_STATE';
 export var MESSAGE_GET_STATE= 'GET_STATE';
 export var MESSAGE_STATE_CREATED= 'STATE_CREATED';
-export var MESSAGE_ZOOM_INTERACTION='ZOOM_INTERACTION'
+export var MESSAGE_ZOOM_INTERACTION='ZOOM_INTERACTION';
 
 
 var MESSENGER_PROPAGATE: boolean = true;
@@ -520,8 +520,7 @@ export class ZoomInteractionMessage extends Message{
     }
 }
 export function zoomInteraction(visType:string,ineractionType:string){
-    // State created : to set the state after getting it from the selected network
-
+    // log zoom interactions
     distributeMessage(new ZoomInteractionMessage(visType,ineractionType), true);
 }
 
@@ -643,7 +642,7 @@ function processMessage(m: Message) {
                                                     } // ELSE ??
                                                 }
                                                 else
-                                                    if (m.type == MESSAGE_GET_STATE || m.type == MESSAGE_SET_STATE || m.type == MESSAGE_STATE_CREATED){
+                                                    if (m.type == MESSAGE_GET_STATE || m.type == MESSAGE_SET_STATE || m.type == MESSAGE_STATE_CREATED || m.type ==  MESSAGE_ZOOM_INTERACTION){
                                                         // this type is a state message. no adjustments on the graph necessary.
                                                     }
 
