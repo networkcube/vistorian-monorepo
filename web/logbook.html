@@ -42,7 +42,13 @@
                 networkName=window.parent.location.search.split('&')[1].split('=')[1];
             }   
 
+
             window.vc.messenger.addEventListener("STATE_CREATED",stateCreatedHandler);
+            window.vc.messenger.addEventListener("ZOOM_INTERACTION",zoomLoggingHandler);
+
+            function zoomLoggingHandler(m){
+                trace.event('vis_41', m.ineractionType, true,m.visType);
+            }
 
             // Stores the captured state in the array of bookmarks
             function stateCreatedHandler(m){

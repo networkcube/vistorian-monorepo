@@ -636,6 +636,7 @@ function deleteCurrentNetworkBookmarks(){
 }
 
 
+//Show support request form on error occurance
 function sendSupportRequestForm(){
   //
     message="Thank you for submitting support request form. In the meantime, please refresh the current page and try again what you had in mind. We are working on your issue. Apologies and thank you very much for reporting.";
