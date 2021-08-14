@@ -68,7 +68,7 @@ bcNode.onmessage = function (ev) {
 // states
 // var mouseDownNode = undefined;
 var hiddenLabels: any = [];
-var LABELING_STRATEGY: number = 1;
+var LABELING_STRATEGY: number = 0;
 
 
 var linkWeightScale = d3.scale.linear().range([1, 1]);
@@ -442,23 +442,26 @@ function getNodeRadius(n: dynamicgraph.Node) {
 }
 
 
-function getNodeColor(n: dynamicgraph.Node) {
-    if( n.color().split('#')[0] !== ",") {
-        return n.color().split('#')[1];
+function getNodeColor(n: dynamicgraph.Node) 
+{
+    var c
+    if (n.color().split('#')[0] !== ",") {
+        c = n.color().split('#')[1];
     }
-    return '#000'
+    if(!c){
+        c = '#000';
+    }
+    return c;
 }
 
 function getNodeShape(n: dynamicgraph.Node) {
-    var tmp = n.shape().split(',');
-    if(tmp && tmp[0]) 
-    {
-        let shape = tmp[tmp.length - 1];
-        if(!shape)
-            shape = 'circle';
-        return shape;
+    var shape = n.shape()
+    if(!shape){
+        shape = 'circle';
     }
-    return 'circle'
+    // console.log('node shape', shape)
+    // temporaryly this function is not working until the proper setting of node shape has been fixed.
+    return 'circle';
 }
 
 function updateLabelVisibility() {

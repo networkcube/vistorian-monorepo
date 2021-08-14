@@ -17,11 +17,9 @@
 
     <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
 
-    <!--<script src="../node_modules/d3/d3.min.js"></script>-->
+    <script type="text/javascript" src="../static/trace.js"></script>
 
-    <script type="text/javascript" src="../static/traces/trace.js"></script>
-
-    <script src="../d3.js"></script>
+    <script src="../static/d3.js"></script>
     <script src="../node_modules/jquery/dist/jquery.js" type="text/javascript"></script>
     <script src="../node_modules/moment/moment.js" type="text/javascript"></script>
 </head>
@@ -30,7 +28,6 @@
 <body  onload="trace.event('log_2', 'node link', 'webpage', 'load')"  >
     <div>
         <div id="menuDiv">
-            <!-- VS: Clicks on Manual -->
             <a class="manual-button" target="_blank"
                 href="https://github.com/networkcube/networkcube/wiki/Visualization-Manual#node-link-visualization-nodelink" 
                 onclick="trace.event('hlp_1', 'Node link', 'Vis Manual', 'click')">
