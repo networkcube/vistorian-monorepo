@@ -220,6 +220,8 @@ var svg: any = d3.select('#visSvg')
             n.y = mouse[1] + (n.y - mouse[1]) * globalZoom;
         }
         updateLayout();
+        messenger.zoomInteraction("nodelink","zoom");
+
     })
 
 svg = svg.append('g')
