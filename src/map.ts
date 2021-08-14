@@ -14,14 +14,16 @@ import * as moment from 'moment';
 var COLOR_DEFAULT_LINK: string = '#999999';
 var COLOR_DEFAULT_NODE: string = '#999999';
 var COLOR_HIGHLIGHT: string = '#ff8800';
-var INNER_OPACITY: number = 0.8;
+var LINK_OPACITY: number = 0.4;
 var NODE_UNPOSITIONED_OPACITY: number = 0.4
+var LINK_WIDTH_SCALE: number = 1;
 var LOCATION_MARKER_WIDTH: number = 10;
 var OVERLAP_FRACTION: number = 0.3;
 var NODE_SIZE: number = 4;
 var OUT_OF_TIME_NODES_OPACITY: number = 0;
 var LABEL_OFFSET_X: number = 20;
 var SHOW_NON_PLACE: boolean = true;
+var LINK_GAP = 2;
 
 var width: number = window.innerWidth
 var height: number = window.innerHeight - 100;
@@ -57,6 +59,44 @@ var emptyNodePositions: any = {}
 // VISUAL ELEMENTS
 var nodePositionObjects: any[] = [];
 var nodePositionObjectsLookupTable: any[] = [];
+
+var geoMultiLinks:GeoMultiLink[] = [];
+
+// class GeoLink extends dynamicgraph.Link{
+
+//     GeoLink(){
+//         super();
+//     }
+//     sourceNPO: NodePositionObject;
+//     targetNPO: NodePositionObject;
+// }
+
+class GeoMultiLink{
+
+    // private sourceNPOs: NodePositionObject[] = [];
+    // private targetNPOs: NodePositionObject[] = [];
+    private links:dynamicgraph.Link[] = []
+
+    public numLinks()
+    {
+        return this.links.length;
+    }
+    public addLink(link:any)
+    {
+        if(this.links.indexOf(link) == -1)
+        {
+            this.links.push(link)
+            link.geoMultiLink = this;
+        }
+    }
+    public getLinks():dynamicgraph.Link[]{
+        return this.links;
+    }
+    public linkIndex(l:any):number
+    {
+        return this.links.indexOf(l);
+    }
+} 
 
 export class NodePositionObject {
     timeIds: number[] = [];
@@ -355,21 +395,22 @@ function init() {
         // obtain nodePositionObjects
         // one npo per node x position 
         var npo: NodePositionObject = new NodePositionObject();
-        var nodes: any[] = dgraph.nodes().toArray();
-        var n: any, positions: any;
+        var nodes: dynamicgraph.Node[] = dgraph.nodes().toArray();
+        var n: dynamicgraph.Node, positions: any;
         var googleLatLng: any;
         var serie: any;
-        for (var i = 0; i < nodes.length; i++) {
+        for (var i = 0; i < nodes.length; i++) 
+        {
             n = nodes[i];
-            positions = n.locationSerie().serie;
+            positions = n.locationSerie().getSerie();
             serie = new dynamicgraph.ScalarTimeSeries<Object>();
             nodePositionObjectsLookupTable.push(serie);
             for (var tId in positions) {
                 googleLatLng = new google.maps.LatLng(
-                    positions[tId].latitude(),
-                    positions[tId].longitude());
+                    positions[parseInt(tId)].latitude(),
+                    positions[parseInt(tId)].longitude());
                 // check if npo for this node and position does 
-                // already exist, if not its created in side this function
+                // already exist, if norun t its created in side this function
                 npo = getNodePositionObjectsForLocation(n, positions[tId].longitude(), positions[tId].latitude());
                 npo.location = positions[tId]
                 if (positions[tId].npos.indexOf(npo) == -1) {
@@ -548,18 +589,18 @@ function init() {
 
 
 function createNodeLabel(npo: any) {
-    var locationLabel: any = '';
-    if (npo.location == undefined || npo.location.label() == undefined) {
-        locationLabel = '';
+    var locationLabel: String = '';
+    if (npo.location != undefined && npo.location.label() != undefined)
+    {
+        locationLabel = ', ' + npo.location.label();
     }
-    else {
-        locationLabel = npo.location.label() + ', ';
-    }
+
     var time: any = dgraph.time(npo.timeIds[0]);
+    var timeLabel:String = ''
     if (time)
-        return npo.node.label() + ' (' + moment.utc(time.unixTime()).format('MM/DD/YYYY') + ')';
-    else
-        return npo.node.label();
+        timeLabel = ' (' + moment.utc(time.unixTime()).format('MM/DD/YYYY') + ')';
+
+    return npo.node.label() + locationLabel + timeLabel;
 }
 
 var hittestRect: google.maps.LatLngBounds = new google.maps.LatLngBounds();
@@ -740,7 +781,7 @@ function updateLinks(highlightId?: number) {
                 if (intersectedLink == d)
                     return 1;
                 else
-                    return INNER_OPACITY * .3;
+                    return LINK_OPACITY * .3;
             }
 
             return d.isHighlighted()
@@ -748,11 +789,11 @@ function updateLinks(highlightId?: number) {
                 || d.target.isHighlighted() ?
                 // 1 :
                 // INNER_OPACITY;
-                Math.min(1, INNER_OPACITY + .2) : INNER_OPACITY;
+                Math.min(1, LINK_OPACITY) : LINK_OPACITY;
 
         })
         .style('stroke-width', function (d: any) {
-            var weight = linkWeightScale(d.weights(time_start, time_end).mean());
+            var weight = linkWeightScale(d.weights(time_start, time_end).mean()) * LINK_WIDTH_SCALE;
             var thisSelection = d3.select(this);
             if (weight < 0) {
                 weight = -weight;
@@ -929,14 +970,28 @@ function updateLocationMarkers() {
 // Calculates curve paths for links
 function updateLinkPaths() {
 
-    var path: any, dir: any, offset: any, center: any;
-    var link: dynamicgraph.Link | undefined;
+    var path: any, dir: any, offset: any;
+    var center: any;
+    var link, link2: dynamicgraph.Link | any;
     var sourceNPO: any, targetNPO: any;
     var EDGE_GAP: any = 5
     var cx1: any, cy1: any, cx2: any, cy2: any;
-    for (var i = 0; i < dgraph.links().length; i++) {
+    
+    // reinit geoMultiLinks
+    geoMultiLinks = [];
+    var geoMultiLink:GeoMultiLink;
+    for (var i = 0; i < dgraph.links().length; i++) 
+    {
         link = dgraph.link(i);
+        (<any>link).geoMultiLink = undefined;        
+    }
 
+    for (var i = 0; i < dgraph.links().length; i++) 
+    {
+
+        link = dgraph.link(i);
+        
+        // check for NPOs
         if (link)
             sourceNPO = link.sourceNPO;
         else
@@ -953,6 +1008,37 @@ function updateLinkPaths() {
         if (targetNPO == undefined)
             targetNPO = { x: 0, y: 0 };
 
+        (<any>link).sourceNPO = sourceNPO;
+        (<any>link).targetNPO = targetNPO;
+        
+        // check for geomultilinks
+        for (var j = 0; j < i; j++)
+        {
+            link2 = dgraph.link(j);
+            if(linkOverlapTest(link, link2))
+            {
+                // console.log('link overlap', i,j)
+                if((<any>link2).geoMultiLink)
+                {
+                    geoMultiLink = (<any>link2).geoMultiLink;
+                    geoMultiLink.addLink(link);
+                }else{
+                    geoMultiLink = new GeoMultiLink();
+                    geoMultiLinks.push(geoMultiLink);
+                    geoMultiLink.addLink(link);
+                    geoMultiLink.addLink(link2);
+                }
+            }
+        }
+    }
+    console.log('>> TOTAL MULTILINKS:', geoMultiLinks.length);
+
+    for (var i = 0; i < dgraph.links().length; i++) 
+    {
+        link = dgraph.link(i);
+        sourceNPO = link?.sourceNPO;
+        targetNPO = link?.targetNPO;
+
         dir = {
             x: targetNPO.x - sourceNPO.x,
             y: targetNPO.y - sourceNPO.y
@@ -965,8 +1051,10 @@ function updateLinkPaths() {
             y: sourceNPO.y + dir.y / 2
         }
 
+        // self-links
         if (sourceNPO.x == targetNPO.x
-            && sourceNPO.y == targetNPO.y) {
+            && sourceNPO.y == targetNPO.y) 
+        {
             cx1 = center.x + 30 + Math.random() * 30;
             cy1 = center.y - 10 + Math.random() * 30;
             cx2 = center.x + 10 + Math.random() * 30;
@@ -976,13 +1064,23 @@ function updateLinkPaths() {
                 { x: cx1, y: cy1 },
                 { x: cx2, y: cy2 },
                 { x: targetNPO.x, y: targetNPO.y }]
-        } else {
+        } else 
+        {
+            // non-self links
             cx1 = center.x;
             cy1 = center.y;
-            cx2 = cx1;
-            cy2 = cy1;
+        
+            // let linkLength : number = Math.sqrt(dir.x * dir.x + dir.y * dir.y);
+            let multiplier: number = 0;
+            if((<any>link).geoMultiLink)
+            {
+                let multiLink:GeoMultiLink = (<GeoMultiLink>(<any>link).geoMultiLink); 
+                multiplier = multiLink.linkIndex(link);            
+            }
+            let stretch = multiplier * LINK_GAP;
             (link as any)['path'] = [
                 { x: sourceNPO.x, y: sourceNPO.y },
+                { x: center.x + (offset[0] * stretch), y: center.y + (offset[1] * stretch)},
                 { x: targetNPO.x, y: targetNPO.y }]
         }
     }
@@ -991,6 +1089,44 @@ function updateLinkPaths() {
         .attr("d", function (d: any) { return line(d.path); })
 
 }
+
+
+function linkOverlapTest(l1: any, l2: any): boolean
+{
+    return (l1.sourceNPO == l2.sourceNPO && l1.targetNPO == l2.targetNPO)
+        || (l1.sourceNPO == l2.targetNPO && l1.targetNPO == l2.sourceNPO);
+
+    // var distX = l1.sourceNPO.x - l2.sourceNPO.x 
+    // var distY = l1.sourceNPO.y - l2.sourceNPO.y
+    // var dist = Math.sqrt(distX * distX + distY * distY); 
+    // if(dist > NODE_SIZE*2)
+    // {
+    //     // source NPOs are not overlapping, hence return at this point.
+    //     return false;
+    // }else{
+    //     distX = l1.targetNPO.x - l2.targetNPO.x 
+    //     distY = l1.targetNPO.y - l2.targetNPO.y
+    //     dist = Math.sqrt(distX * distX + distY * distY); 
+    //     if(dist > NODE_SIZE*2)
+    //     {
+    //         return false;
+    //     }        
+    // }
+    // return true;
+}
+
+// somehow is not called!
+// function randomSeed(link: dynamicgraph.Link)
+// {
+//     console.log('randomseed');
+//     var nodes = this.dynamicgraph.nodes().toArray();
+//     var numNodes = nodes.length;
+//     var si = nodes.indexOf(link.source)
+//     var ti = nodes.indexOf(link.target)
+//     var v = (si * ti + si + ti) / (numNodes*numNodes + numNodes+numNodes)   
+//     console.log('v', v)
+//     return v * .2;
+// }
 
 function showLabel(i: any, b: any) {
     if (b) {
@@ -1038,17 +1174,24 @@ ui.makeSlider(menuDiv, 'Node Overlap', 100, MENU_HEIGHT, OVERLAP_FRACTION, -.05,
     OVERLAP_FRACTION = value;
     updateNodePositions();
 })
-
+ui.makeSlider(menuDiv, 'Edge Gap', 100, MENU_HEIGHT, LINK_GAP, 0, 10, function (value: number) {
+    LINK_GAP = value;
+    updateLinkPaths();
+})
 // LINK OPACITY SLIDER    
 var menuDiv = d3.select('#menuDiv');
-ui.makeSlider(menuDiv, 'Link Opacity', 100, MENU_HEIGHT, INNER_OPACITY, 0, 1, function (value: number) {
-    INNER_OPACITY = value;
+ui.makeSlider(menuDiv, 'Link Opacity', 100, MENU_HEIGHT, LINK_OPACITY, 0, 1, function (value: number) {
+    LINK_OPACITY = value;
+    updateLinks();
+})
+ui.makeSlider(menuDiv, 'Link Width', 100, MENU_HEIGHT, LINK_WIDTH_SCALE, 0, 10, function (value: number) {
+    LINK_WIDTH_SCALE = value;
     updateLinks();
 })
 
 // NON-POSITIONED NODES OPACITY SLIDER    
 var menuDiv = d3.select('#menuDiv');
-ui.makeSlider(menuDiv, 'Opacity of Positionless Nodes', 200, MENU_HEIGHT, INNER_OPACITY, 0, 1, function (value: number) {
+ui.makeSlider(menuDiv, 'Positionless Nodes', 150, MENU_HEIGHT, LINK_OPACITY, 0, 1, function (value: number) {
     NODE_UNPOSITIONED_OPACITY = value;
     updateNodes();
 })
@@ -1110,42 +1253,49 @@ function reorderLabels() {
 function updateNodePositions() {
 
     var npo: any;
-    for (var i = 0; i < nodePositionObjects.length; i++) {
+    for (var i = 0; i < nodePositionObjects.length; i++) 
+    {
         npo = nodePositionObjects[i];
         npo.x = npo.xOrig + npo.displacementVector[0] * OVERLAP_FRACTION;
         npo.y = npo.yOrig + npo.displacementVector[1] * OVERLAP_FRACTION;
     }
 
+    for (var i = 0; i < nodePositionObjects.length; i++) 
+    {
+        if (!nodePositionObjects[i].fixedPosition) 
+        {
+            // npo = nodePositionObjects[i]
 
-    for (var i = 0; i < nodePositionObjects.length; i++) {
-        if (!nodePositionObjects[i].fixedPosition) {
-            npo = nodePositionObjects[i]
+            // // calculate barycenter of related npos
+            // var x_bar: number = 0
+            // var y_bar: number = 0
+            // for (var j = 0; j < npo.inNeighbors.length; j++) 
+            // {
+            //     x_bar += npo.inNeighbors[j].x
+            //     y_bar += npo.inNeighbors[j].y
+            // }
+            // for (var j = 0; j < npo.outNeighbors.length; j++) 
+            // {
+            //     x_bar += npo.outNeighbors[j].x
+            //     y_bar += npo.outNeighbors[j].y
+            // }
+            // x_bar /= (npo.inNeighbors.length + npo.outNeighbors.length)
+            // y_bar /= (npo.inNeighbors.length + npo.outNeighbors.length)
 
-            // calculat barycenter of related npos
-            var x_bar: number = 0
-            var y_bar: number = 0
-            for (var j = 0; j < npo.inNeighbors.length; j++) {
-                x_bar += npo.inNeighbors[j].x
-                y_bar += npo.inNeighbors[j].y
-            }
-            for (var j = 0; j < npo.outNeighbors.length; j++) {
-                x_bar += npo.outNeighbors[j].x
-                y_bar += npo.outNeighbors[j].y
-            }
-            x_bar /= (npo.inNeighbors.length + npo.outNeighbors.length)
-            y_bar /= (npo.inNeighbors.length + npo.outNeighbors.length)
+            // var x_vec: number = npo.x - x_bar;
+            // var y_vec: number = npo.y - y_bar;
+            // var d: number = Math.sqrt(x_vec * x_vec + y_vec * y_vec);
+            // if (d == 0) 
+            // {
+            //     d = 1;
+            // }
+            // x_vec /= d;
+            // y_vec /= d;
 
-            var x_vec: number = npo.x - x_bar;
-            var y_vec: number = npo.y - y_bar;
-            var d: number = Math.sqrt(x_vec * x_vec + y_vec * y_vec);
-            if (d == 0) {
-                d = 1;
-            }
-            x_vec /= d;
-            y_vec /= d;
-
-            npo.x = x_bar + 200 * x_vec;
-            npo.y = y_bar + 200 * y_vec;
+            // npo.x = x_bar + 200 * x_vec;
+            // npo.y = y_bar + 200 * y_vec;
+            npo.x = 0;
+            npo.y = 0;
         }
     }
 
@@ -1299,11 +1449,13 @@ function setStateHandler(m: messenger.SetStateMessage){
     OVERLAP_FRACTION = state.nodeOverlap;
     updateNodePositions();
 
-    INNER_OPACITY = state.linkOpacity;
+    LINK_OPACITY = state.linkOpacity;
     updateLinks();
 
     NODE_UNPOSITIONED_OPACITY = state.opacityOfPositionlessNodes;
     updateNodes();
+
+
     
     time_start=state.timeSliderStart;
     time_end=state.timeSliderEnd;
@@ -1317,7 +1469,7 @@ function setStateHandler(m: messenger.SetStateMessage){
 function getStateHandler( m: messenger.GetStateMessage){
     if (m.viewType=="map"){
 
-        var mapNetwork: messenger.NetworkControls=new messenger.MapControls("map",time_start.unixTime(),time_end.unixTime(),OVERLAP_FRACTION,INNER_OPACITY,NODE_UNPOSITIONED_OPACITY);
+        var mapNetwork: messenger.NetworkControls=new messenger.MapControls("map",time_start.unixTime(),time_end.unixTime(),OVERLAP_FRACTION,LINK_OPACITY,NODE_UNPOSITIONED_OPACITY);
       /*   var bookmarksArray=JSON.parse(localStorage.getItem("vistorianBookmarks") || "[]");
 
       if (m.bookmarkIndex!=bookmarksArray.length-1){

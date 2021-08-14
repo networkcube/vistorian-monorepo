@@ -10,8 +10,6 @@
         <link rel="stylesheet" type="text/css" href="./static/visview.css">
         <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
         <link href='https://fonts.googleapis.com/css?family=Comfortaa' rel='stylesheet' type='text/css'>
-
-        <!-- VS: Call to trace.js -->
         <script type="text/javascript" src="./static/traces/trace.js"></script>
 
         <script src="./d3.js"></script>
@@ -24,24 +22,15 @@
             src="./static/DataTables-1.10.7/media/js/jquery.dataTables.js"></script>
 
         <script> var exports = {}; </script>
-        <script src="./node_modules/vistorian-core/lib/vistorian-core.js"></script>
-        <script src="./node_modules/vistorian-web/lib/vistorian-web.js"></script>
+        <!-- <script src="./node_modules/vistorian-web/lib/vistorian-web.js"></script> -->
+        <script src="https://unpkg.com/vistorian-core@0.0.13/lib/vistorian-core.js"></script>
 
     </head>
     <title>Node link</title>
 
 <body>
-    <!-- VS: Call to trace_test_130529 -->
-    <script type="text/javascript" src="./static/traces/trace_test_130529.js"></script>
     <table>
         <tr>
-
-            <!--            
-            <td width="220px">
-                <div id="logoFrame"></div>
-                <div width="220" id="bookmarkFrame"></div>
-            </td>
--->
 
             <td width="220px">
                 <div width="220" id="visFrame">
@@ -52,9 +41,8 @@
 
         <script type="text/javascript">
             // Load demo data
-            $.get("https://raw.githubusercontent.com/networkcube/vistorian/master/demo/demo_scientists.vistorian",
+            $.get("https://raw.githubusercontent.com/networkcube/vistorian-web/master/web/demo/demo_scientists.vistorian",
                 function (data) {
-                    window.exports.networkcube.vistorian.importData(JSON.parse(data), 0);
                     window.exports.networkcube.vistorian.importData(JSON.parse(data), 0);
                 });
 

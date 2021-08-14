@@ -85,7 +85,10 @@
 	    }
 	};
 	var json = JSON.stringify(list);
-	httpRequest.open("POST", traceUrl, true);
+	if(!window.location.origin.includes('localhost'))
+	{
+		httpRequest.open("POST", traceUrl, true);
+	}
 	if (window.XDomainRequest) {
 	    // no request header?
 	}
@@ -94,7 +97,10 @@
 	    httpRequest.setRequestHeader("Accept", "text/plain");
 	    //    httpRequest.setRequestHeader("Content-Length", json.length);
 	}
-	httpRequest.send(json);
+	if(!window.location.origin.includes('localhost'))
+	{
+		httpRequest.send(json);
+	}
     };
 
     var sendLogs = function() {
