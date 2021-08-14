@@ -18,7 +18,7 @@ export var MESSAGE_SEARCH_RESULT = 'searchResult';
 export var MESSAGE_SET_STATE= 'SET_STATE';
 export var MESSAGE_GET_STATE= 'GET_STATE';
 export var MESSAGE_STATE_CREATED= 'STATE_CREATED';
-export var MESSAGE_ZOOM_INTERACTION='ZOOM_INTERACTION'
+
 
 var MESSENGER_PROPAGATE: boolean = true;
 
@@ -37,8 +37,7 @@ var MESSAGE_HANDLERS: string[] = [
     MESSAGE_SELECTION_COLORING,
     MESSAGE_SET_STATE,
     MESSAGE_GET_STATE,
-    MESSAGE_STATE_CREATED,
-    MESSAGE_ZOOM_INTERACTION
+    MESSAGE_STATE_CREATED
 ]
 
 
@@ -509,20 +508,6 @@ export function stateCreated(state: NetworkControls,bookmarkIndex: number,viewTy
     distributeMessage(new StateCreatedMessage(state,bookmarkIndex,viewType,isNewBookmark,typeOfMultiView), true);
 }
 
-export class ZoomInteractionMessage extends Message{
-    visType:string;
-    ineractionType:string;
-    constructor(visType:string,ineractionType:string){
-        super(MESSAGE_ZOOM_INTERACTION)
-        this.visType=visType;
-        this.ineractionType=ineractionType;
-    }
-}
-export function zoomInteraction(visType:string,ineractionType:string){
-    // State created : to set the state after getting it from the selected network
-
-    distributeMessage(new ZoomInteractionMessage(visType,ineractionType), true);
-}
 
 ////////////////////////
 // INTERNAL FUNCTIONS //
