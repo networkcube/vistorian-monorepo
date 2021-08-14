@@ -212,6 +212,7 @@ function init() {
     map.addListener('zoom_changed', function () {
         $('#weirdDiv').css('width', window.innerWidth * Math.random());
         $('#weirdDiv').parent().parent().css('width', window.innerWidth * Math.random());
+        messenger.zoomInteraction("map","zoom");
     });
 
     var bcNode = new BroadcastChannel('row_hovered_over_node');
@@ -237,6 +238,8 @@ function init() {
         $('#weirdDiv').parent().parent().css('width', window.innerWidth * Math.random());
 
         var northWest: any = { x: map.getBounds().getSouthWest().lng(), y: map.getBounds().getNorthEast().lat() }
+        messenger.zoomInteraction("map","span");
+
     });
 
     // create overlay over googlemaps
