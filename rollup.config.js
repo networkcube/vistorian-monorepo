@@ -7,7 +7,7 @@ export default {
     input: 'build/src/index.js',
     external: [
         'd3',
-        'lz-string',
+        'lz-string', 
         'reorder.js',
         'netclustering',
         'swiftset',

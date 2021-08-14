@@ -9,7 +9,8 @@
         "allowSyntheticDefaultImports": true,
         "moduleResolution": "node",
         "resolveJsonModule": true,
-        "declaration": true
+        "declaration": true,
+        "allowJs": true
     },
     "pretty": false,
     "files": ["src/index.ts"],
