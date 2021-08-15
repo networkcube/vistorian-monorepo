@@ -70,10 +70,12 @@ export function updateViewOnlyList(type: string, name: string){
         //Remove duplicates
         var tmp: any[] = [];
         var trimmedColors = (dgraph.nodeArrays as any).color.filter(function (v: any) {
-            if (tmp.indexOf(v.toString()) < 0) {
-                tmp.push(v.toString());
-                return v;
-            }
+			if(typeof v!='undefined' && v){
+				if (tmp.indexOf(v.toString()) < 0) {
+					tmp.push(v.toString());
+					return v;
+				}
+			}
         });
         //Remove null/undefinted
         var tmp: any[] = [];
@@ -88,10 +90,12 @@ export function updateViewOnlyList(type: string, name: string){
         //Remove duplicates
         var tmp: any[] = [];
         var trimmedShapes = (dgraph.nodeArrays as any).shape.filter(function (v: any) {
-            if (tmp.indexOf(v.toString()) < 0) {
-                tmp.push(v.toString());
-                return v;
-            }
+			if(typeof v!='undefined' && v){
+				if (tmp.indexOf(v.toString()) < 0) {
+					tmp.push(v.toString());
+					return v;
+				}
+			}
         });
         //Remove null/undefinted
         var tmp: any[] = [];
@@ -269,7 +273,7 @@ export function updateList(type: string, name: string) {
 	nodeGs.append('svg:image')
 		.attr('id', 'eye_' + name)
 		.attr('class', 'icon_eye icon')
-		.attr('xlink:href', 'eye-visible.png')
+		.attr('xlink:href', 'eye-seeing.png')//eye-visible.png
 		.attr('x', 130 + (RECT_SIZE + GAP_ICONS) * i++)
 		.attr('onclick','trace.event(\'vis_14\',document.location.pathname,\'' +name + '\' , this.getAttribute(\'href\'))')
 		.on('click', function (d: datamanager.Selection, i: any) {
