@@ -85,11 +85,7 @@
 	    }
 	};
 	var json = JSON.stringify(list);
-	if(!window.location.origin.includes('localhost'))
-	{
-		httpRequest.open("POST", traceUrl, true);
-	}
-	
+	httpRequest.open("POST", traceUrl, true);
 	if (window.XDomainRequest) {
 	    // no request header?
 	}
