@@ -166,31 +166,107 @@ $('#visDiv').append('<svg id="visSvg" width="' + (width - 20) + '" height="' + (
 
 console.log(dgraph);
 var mouseStart: number[];
+var mouseEnd: number[];
+
 var panOffsetLocal: number[] = [0, 0];
 var panOffsetGlobal: number[] = [0, 0];
 
 var isMouseDown: boolean = false;
 var globalZoom: number = 1;
 
-var svg: any = d3.select('#visSvg')
+let shiftDown = false;
+
+
+var parentSvg: any = d3.select('#visSvg');
+
+const svg = parentSvg.append('g')
+    .attr('width', width)
+    .attr('height', height);
+
+const selectionRect = svg
+    .append("rect")
+    .attr("id", "selectionRect")
+    .attr("x", 0)
+    .attr("y", 0)
+    .attr("width", 0)
+    .attr("height", 0)
+    .style("opacity", 0.2);
+
+parentSvg
     .on('mousedown', () => {
         isMouseDown = true;
         // <MouseEvent>
         mouseStart = [(d3.event).x, (d3.event).y];
     })
     .on('mousemove', () => {
-        if (isMouseDown) {
+        if (isMouseDown && !shiftDown) {
             panOffsetLocal[0] = ((d3.event).x - mouseStart[0]) * globalZoom;
             panOffsetLocal[1] = ((d3.event).y - mouseStart[1]) * globalZoom;
             svg.attr("transform", "translate(" + (panOffsetGlobal[0] + panOffsetLocal[0]) + ',' + (panOffsetGlobal[1] + panOffsetLocal[1]) + ")");
+        } else if (isMouseDown){
+            mouseEnd = [(d3.event).x, (d3.event).y];
+
+            // mouse positions are  clientX/clientY in local (DOM content) cooordinates - NOT relative to the parent SVG
+            // @ts-ignore
+            const {x: leftOffset, y: topOffset} = document.getElementById("visSvg").getBoundingClientRect();
+
+            const r_h = Math.abs(mouseStart[1] - mouseEnd[1]);
+            const r_x = Math.min(mouseStart[0], mouseEnd[0]) - leftOffset - panOffsetGlobal[0];
+            const r_w = Math.abs(mouseStart[0] - mouseEnd[0]);
+            const r_y = Math.min(mouseStart[1], mouseEnd[1]) - topOffset - panOffsetGlobal[1];
+
+            selectionRect
+                .attr("x", r_x)
+                .attr("width", r_w)
+                .attr("y", r_y)
+                .attr("height", r_h);
         }
     })
     .on('mouseup', () => {
         isMouseDown = false;
-        panOffsetGlobal[0] += panOffsetLocal[0]
-        panOffsetGlobal[1] += panOffsetLocal[1]
+        if (shiftDown){
+            mouseEnd = [(d3.event).x, (d3.event).y];
+
+            // mouse positions are  clientX/clientY in local (DOM content) cooordinates - NOT relative to the parent SVG
+            // @ts-ignore
+            const {x: leftOffset, y: topOffset} = document.getElementById("visSvg").getBoundingClientRect();
+
+            const r_h = Math.abs(mouseStart[1] - mouseEnd[1]);
+            const r_x = Math.min(mouseStart[0], mouseEnd[0]) - leftOffset - panOffsetGlobal[0];
+            const r_w = Math.abs(mouseStart[0] - mouseEnd[0]);
+            const r_y = Math.min(mouseStart[1], mouseEnd[1]) - topOffset - panOffsetGlobal[1];
+
+            selectionRect
+                .attr("x", r_x)
+                .attr("width", r_w)
+                .attr("y", r_y)
+                .attr("height", r_h);
+
+            // @ts-ignore
+
+            const selectedNodes = visualNodes.filter(function (d,i,n) {
+                // @ts-ignore
+                const node = d3.select(this);
+                const [node_x, node_y] = node.attr("transform").replace("translate(", "").replace(")", "").split(",");
+
+                const y = +node.attr("y");
+
+                return +node_x >= r_x && +node_x <= (r_x + r_w) && +node_y >= r_y && +node_y <= (r_y + r_h);
+            });
+
+            console.log("Selected nodes:", selectedNodes);
+            // N.B. node objects are selectedNodes
+            // ids are selectedNodes.data().map(d => d._id)
+            // labels are selectedNodes.data().map(d => d.label())
+            // TODO: publish message announcing this selection
+
+
+        } else {
+            panOffsetGlobal[0] += panOffsetLocal[0];
+            panOffsetGlobal[1] += panOffsetLocal[1];
+        }
     })
-    .on('wheel.zoom', (e) => {
+    .on('wheel.zoom', () => {
         // zoom
         (<any>d3.event).preventDefault();
         (<any>d3.event).stopPropagation();
@@ -219,14 +295,37 @@ var svg: any = d3.select('#visSvg')
             n.x = mouse[0] + (n.x - mouse[0]) * globalZoom;
             n.y = mouse[1] + (n.y - mouse[1]) * globalZoom;
         }
+
+        // update selection rectangle position
+        const newPos = {
+            x1:  mouse[0] + (+selectionRect.attr("x") - mouse[0]) * globalZoom,
+            x2:  mouse[0] + (+selectionRect.attr("x") + +selectionRect.attr("width") - mouse[0]) * globalZoom,
+
+            y1:  mouse[1] + (+selectionRect.attr("y") - mouse[1]) * globalZoom,
+            y2:  mouse[1] + (+selectionRect.attr("y") + +selectionRect.attr("height") - mouse[1]) * globalZoom,
+        };
+        selectionRect
+            .attr("x", newPos.x1)
+            .attr("width", newPos.x2 - newPos.x1)
+            .attr("y", newPos.y1)
+            .attr("height", newPos.y2 - newPos.y1);
+
         updateLayout();
         messenger.zoomInteraction("nodelink","zoom");
 
-    })
+    });
 
-svg = svg.append('g')
-    .attr('width', width)
-    .attr('height', height)
+document.addEventListener("keydown", (event) => {
+    if (event.key === "Shift") {
+        shiftDown = true;
+        // TODO: finish any in-progress pans
+    }
+});
+document.addEventListener("keyup", (event) => {
+    if (event.key === "Shift") {
+        shiftDown = false;
+    }
+});
 
 
 var linkLayer: any = svg.append('g')
