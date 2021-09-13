@@ -6,7 +6,7 @@
     "types": "lib/index.d.js",
     "scripts": {
         "build": "tsc --pretty false && webpack --config webpack.config.js",
-        "lint": "tslint -p . -e 'package.json'",
+        "lint": "eslint --ignore-pattern src/lib/* src/",
         "clean": "rimraf lib",
         "start": "webpack-dev-server --config webpack.config.js --open",
         "prepare": "npm run build"
@@ -16,9 +16,11 @@
     "devDependencies": {
         "@types/jquery": "^1.10.35",
         "@types/jstorage": "^0.3.30",
+        "@typescript-eslint/eslint-plugin": "^4.31.0",
+        "@typescript-eslint/parser": "^4.31.0",
+        "eslint": "^7.32.0",
         "rimraf": "^2.6.3",
         "ts-loader": "^5.3.3",
-        "tslint": "^5.12.1",
         "typescript": "^3.2.4",
         "webpack": "^4.29.0",
         "webpack-bundle-analyzer": "^3.0.3",
