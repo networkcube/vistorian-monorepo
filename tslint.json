@@ -1,0 +1,13 @@
+{
+    "tslint.options": {
+        "project": "tsconfig.json",
+        "typeCheck": true
+    },
+    "defaultSeverity": "error",
+    "extends": [
+        "tslint:recommended"
+    ],
+    "jsRules": {},
+    "rules": {},
+    "rulesDirectory": []
+}
