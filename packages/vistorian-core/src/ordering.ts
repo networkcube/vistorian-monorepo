@@ -68,7 +68,7 @@ export function orderNodes(graph: DynamicGraph, config?: OrderingConfiguration):
     // Reorder
     var leafOrder = reorder
         .optimal_leaf_order()
-        .distance(distance)
+        //.distance(distance)
         .reorder(similarityMatrix);
 
     leafOrder.forEach(function (lo: any, i: number) {
