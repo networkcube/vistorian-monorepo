@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta content="text/html; charset=UTF-8; X-Content-Type-Options=nosniff" http-equiv="Content-Type" />
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <title>Data view</title>
+
+    <!-- VS: Call to trace.js -->
+    <script type="text/javascript" src="../static/traces/trace.js"></script>
+
+    <script async src="https://api.countapi.xyz/hit/vistorian.online/dataview"></script>
+
+    <link href="https://fonts.googleapis.com/css?family=Poiret+One" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Nunito+Sans" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <script src='https://kit.fontawesome.com/303540a013.js' crossorigin='anonymous'></script>
+    
+    <script src="../node_modules/jquery/dist/jquery.js" type="text/javascript"></script>
+    <script src="./static/jquery-ui.js"></script>
+    <script src="../node_modules/vistorian-core/lib/vistorian-core.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bookmarkLogConsent.css">
+    
+    <script src='bookmarkLogConsent.js'></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function() {
+        emailjs.init("user_JavzXpZJiP0v5iG2TcFj9");
+        })();
+    </script>
+    
+    <link rel="stylesheet" type="text/css" href="./static/styles.css" />
+    <link rel="stylesheet" type="text/css" href="./static/dataview_styles.css" />
+    <link rel="stylesheet" type="text/css" href="./static/tablestyle.css" />
+    <link rel="stylesheet" href="./static/jquery-ui.css">
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/intro.js/minified/introjs.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intro.js-mit@3.0.0/themes/introjs-flattener.css">
+
+    
+    <script>
+        $.get("logging_models.html", function(result){ 
+            $("body").append(result);
+        });
+
+        
+    </script> 
+</head>
+
+<body onload="trace.event('log', 'load', 'webpage', document.location.pathname);checkLogStatus();dragElement(document.getElementById('mydiv'));" onfocus="refreshBookmarks();" onerror="trace.event('err', event + ' ' + source + lineno, error, document.location.pathname);"  onbeforeunload="trace.event('log_12', 'page', 'close', document.location.pathname);">
+    <script src="https://unpkg.com/intro.js/minified/intro.min.js" type="text/javascript"></script>
+
+    <table id="main">
+        <tr id="firstRow">
+            <td id="menu">
+                <a href="../index.html"><img width="100%" src="../static/logos/logo-networkcube.png" /></a>
+                <p id="intro">
+                    This is your data view. Below you find a list of visualizations and the
+                    networks currently in your browser.
+                </p>
+            </td>
+            <td>
+                <div id="visualizationListDiv">
+                    <ul id="visualizationList" class="nointent"></ul>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td id="lists">
+               
+                <div id="consentFormBK" style=" display:flex;align-items:center;padding: 8px;">
+                    <img src="../static/logos/VistorianLabLogo.png" width="40px" height="40px">
+
+                    <strong> VistorianLab&nbsp;&nbsp;</strong>
+
+                    <div class="onoffswitch" > 
+                    
+                    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="consentOnoffswitch"  tabindex="0" onchange="trace.event('log_5', 'Bookmark_Consent_Display', 'Consent_button', this.checked);toggleConsntModel();" > 
+                    <label class="onoffswitch-label" for="consentOnoffswitch">
+                        <span class="onoffswitch-inner"></span>
+                        <span class="onoffswitch-switch"></span>
+                    </label>
+                
+                    </div>
+                </div>
+                <div>
+                    <input id="startTourAgain" type="button" class="menuButton hastooltip" value="Start my tour" style="background-color: #FF7F50;"
+                        title="This will start the tour to explore The Vistorian's interface"
+                        onclick="trace.event('log_','Start Tour Button','clicked','dataview'); ;restartTour()"></button>
+                </div>
+            <p></p>
+
+                <div id="networkListDiv">
+                    <h2>Your Networks</h2>
+                    <ul id="networkList" class="nointent"></ul>
+                    <input id="btn_newNetwork" type="button"  class="menuButton hastooltip" value="New Network" onclick="window.exports.networkcube.dataview.createNetwork();trace.event('dat_1', 'data view', 'new network', 'created');guide_afterNetworkCreation();"
+                            title="Create new network from one or more tables." />
+                </div>
+                <br />
+                <div id="tableListDiv">
+                    <h2>Your Tables</h2>
+                    <ul id="tableList" class="nointent"></ul>
+                    <input id="files" type="file" name="file" class="inputfile" value="Upload Table(s)" name="files[]"
+                            data-multiple-caption="{count} files selected" multiple onchange="trace.event('dat_2_DT', 'data view', 'DataTables_FileUpload', 'new file upload')"/>
+                    <label for="files" class="menuButton hastooltip" title="Upload a new table in CSV file.">
+                            Upload</label>
+        
+                </div>
+
+                <div>
+                    <input id="clearCacheButton" type="button" class=" hastooltip" value="Empty browser cache"
+                        title="This will remove ALL your networks and tables from your browser cache. FOREVER. Use this function if your browser is not repsponding anymore. "
+                        onclick="window.exports.networkcube.dataview.clearCache();trace.event('dat_5','data view','browser cache','cleared')"></button>
+                </div>
+            <br/>
+                <div class="helpSidebar">
+                    <h2><span> Quick Help:</span> </h2> 
+                    <ul style="list-style-type:disc;" >
+                        <li><a href="https://vistorian.github.io/gettingstarted.html" onclick="trace.event('hlp_8', 'dataview', 'tutorials', 'click')" target="_blank"   >How to get started?</a></li>
+                        <li><a href="https://vistorian.github.io/tutorial/bookmarks.html" onclick="trace.event('hlp_8', 'dataview', 'tutorials', 'click')" target="_blank"   >A Step-by-Step Guide to Create your first visualization</a></li>
+                        <li><a href="https://youtu.be/eXIDFK2vJ6Y" onclick="trace.event('hlp_8', 'dataview', 'tutorials', 'click')" target="_blank"   >Watch our video on how to format your data!</a></li>
+                      </ul>  
+                </div>
+            </td>
+
+
+            <td id="center">
+
+                <div id="networkTables" style="display:none;">
+
+                    <div id="networkInfoDiv">
+                        <h2>Network: 
+                            <input id="networknameInput" type="text" size="50" onchange="trace.event('dat_9', 'data view', 'network name', 'updated')" />
+                        </h2>
+                        <br/>
+                        <p id="networkStatus" ></p>
+                        <input id="saveNetworkButton" class="menuButton" type="button" value="Save Network"
+                            onclick="window.exports.networkcube.dataview.saveCurrentNetwork(false,true);trace.event('dat_17', 'data view', 'network', 'saved')" />
+                        <input id="deleteNetworkButton" class="menuButton" type="button" value="Delete Network"
+                            onclick="deleteCurrentNetworkBookmarks();window.exports.networkcube.dataview.deleteCurrentNetwork();trace.event('dat_6', 'data view', 'network', 'deleted')" />
+                    </div>
+                    <br/>
+                    <script>
+                        $('#networkStatus').bind('DOMSubtreeModified', function(){
+                            var tourStep = parseInt(localStorage.getItem('VistorianTour'));
+                            if (tourStep==3 || tourStep==4) {
+                                startVisGuide(window.exports.networkcube.dataview.currentNetwork.ready);
+                                        
+                            }
+                            var netStatus=window.exports.networkcube;
+                            if (netStatus && netStatus!='undefined')
+                                trace.event('dat_18', 'data view', 'network_status', window.exports.networkcube.dataview.currentNetwork.ready);
+
+                        });
+                    </script>
+        
+                    <!-- Show link table here -->
+                    <div id="linkTableContainer">
+                        <div class="title">
+                            <h3>Link Table</h3>
+                            <p>A link table describes the links in a network. That means that each row describes
+                                        a link with at least a source and target. Optional attributes include time, link
+                                        type, link weight, and locations of source and target nodes while connected
+                                        through this link.
+                            </p>
+                            Select a previously uploaded link table from the list: 
+                            <select id="linktableSelect" 
+                                onchange="window.exports.networkcube.dataview.setLinkTable(this);trace.event('dat_3_LK', 'data view', 'LinkTable_select', ' LK selected')">
+                                <option value="---">---</option>
+                            </select>
+                            or <input id="linkTableUpload" 
+                                type="file" name="file" class="inputfile" value="Upload"
+                                name="files[]" data-multiple-caption="{count} files selected" 
+                                onchange="trace.event('dat_2_LK', 'data view', 'LinkTable_FileUpload', 'new LK file upload');guide_afterLinkTableUpload();" />
+                            <label 
+                                for="linkTableUpload" 
+                                class="menuButton hastooltip"
+                                title="Upload a new table in CSV file."
+                                id="lbl_uploadLinkTable">
+                                Upload new link table
+                            </label>
+                            <br/>
+                            <input id="directedNetworkCheckBox" 
+                                type="checkbox" 
+                                name="directedCheckbox" 
+                                checked
+                                onclick="window.exports.networkcube.dataview.directedCheckboxClick();trace.event('dat_12', 'data view', 'directed checkbox', this.checked)" />
+                            This network is directed, i.e, link direction from source to target node is important.
+                            <br/>
+                        </div>
+                        <div id="linkTableDiv" class="tableDiv"  ></div>
+                    </div>
+
+                    <!-- Show Node table here -->
+                    <div id="nodeTableContainer">
+                        <div class="title">
+                            <h3>Node Table</h3>
+                            <p>A node table describes the nodes in the network. That means that each row in the
+                                        node table describes a node and its relations, or attributes.
+                            </p>
+                            Select a previously uploaded node table from the list: 
+                            <select id="nodetableSelect"
+                                onchange="window.exports.networkcube.dataview.setNodeTable(this);trace.event('dat_3_NT', 'data view', 'NodeTable_select', ' NT selected')">
+                                <option value="---">---</option>
+                            </select>
+                            or <input id="nodeTableUpload" type="file" name="file" class="inputfile" value="Upload"
+                                name="files[]" data-multiple-caption="{count} files selected" onchange="trace.event('dat_2_NT', 'data view', 'NodeTable_FileUpload', 'new NT file upload');guide_afterNodeTableUpload();"/>
+                            <label 
+                                id="lbl_uploadNodeTable"
+                                for="nodeTableUpload" 
+                                class="menuButton hastooltip"
+                                title="Upload a new table in CSV file.">
+                                Upload new node table
+                            </label>
+                        </div>
+
+                        <!-- Table content goes here:  -->
+                        <div id="nodeTableDiv" class="tableDiv">
+
+                        </div>
+                    </div>
+
+
+                    <!-- Show location table here -->
+                    <div id="locationTableContainer">
+                        <div class="title">
+                            <p>
+                                <h3>Location Table</h3>
+                                <p><i>A location table describes coordinates of places mentioned in the link table.</i>
+                                </p>
+                            </p>
+                            Select a previously uploaded location table from the list: <select id="locationtableSelect"
+                                onchange="window.exports.networkcube.dataview.setLocationTable(this);trace.event('dat_3_LO', 'data view', 'LocationTable_select', ' LO selected')">
+                                <option value="---">---</option>
+                            </select>
+                            or
+                            <br/>
+                            <button id="btn_updateCoordinates" class="menuButton" onclick="window.exports.networkcube.dataview.updateLocationCoordinatesWrapper();trace.event('dat_13', 'data view', 'update Locations coordinates', 'clicked')" >Update location coordinates</button>
+                        </div>
+
+                        <div id="locationTableDiv" class="tableDiv"></div>
+                    </div>
+                </div>
+
+                <div id="individualTables" style="display:none;">
+                    <div id="tableInfoDiv">
+                        <input id="deleteTableButton" type="button" value="Delete" onclick="window.exports.networkcube.dataview.deleteCurrentTable();" />
+                        </p>
+                    </div>
+                    <div id="individualTable"></div>
+                </div>
+            </td>
+        </tr>
+    </table>
+
+
+    <div id="footer">
+        <a class="footer" href="mailto:networkcube@microsoft.com" target="_top">Contact Us</a> |
+        <a class="footer" href="https://go.microsoft.com/fwlink/?LinkId=521839" title="privacy">Privacy & Cookies</a> |
+        <a class="footer" href="https://go.microsoft.com/fwlink/?LinkID=760869" title="terms of use">Terms Of Use</a> |
+        <a class="footer" href="http://go.microsoft.com/fwlink/?LinkId=506942" title="trademarks">Trademarks</a>
+        © <script>document.write(new Date().getFullYear())</script> Microsoft <img src="../static/logos/logo-microsoft.png" height="20px"> © <script>(document.write(new Date().getFullYear()));</script> INRIA <img
+            src="../static/logos/logo-inria.png" height="20px">
+    </div>
+
+
+
+    <script type="text/javascript" charset="utf8" src="DataTables-1.10.7/media/js/jquery.dataTables.js"></script>
+    <script src="../node_modules/jstorage/jstorage.js"></script>
+    
+       
+    <script> var exports = {}; </script>
+    <script src="../lib/vistorian-web.js"></script>
+
+    <script>
+
+        // Hack to make upload button look nice: 
+        // from: http://tympanus.net/codrops/2015/09/15/styling-customizing-file-inputs-smart-way/
+
+        'use strict';
+
+          //  $(document).tooltip();
+
+        ;(function (document, window, index) {
+
+            var inputs = document.querySelectorAll('.inputfile');
+            Array.prototype.forEach.call(inputs, function (input) {
+                var label = input.nextElementSibling,
+                    labelVal = label.innerHTML;
+
+                input.addEventListener('change', function (e) {
+                    var fileName = '';
+                    if (this.files && this.files.length > 1)
+                        fileName = (this.getAttribute('data-multiple-caption') || '').replace('{count}', this.files.length);
+                    else
+                        fileName = e.target.value.split('\\').pop();
+
+                });
+
+                // Firefox bug fix
+                input.addEventListener('focus', function () { input.classList.add('has-focus'); });
+                input.addEventListener('blur', function () { input.classList.remove('has-focus'); });
+            });
+        }(document, window, 0));
+
+    </script>
+       <div id="mydiv" >
+        <div id="mydivheader" ><strong> Bookmarks</strong> (Drag header to move)
+            <!-- <button type="button" class="close"  onclick="turnLoggingOff()">&nbsp;×&nbsp;</button> -->
+            <button type="button" class="close"  onclick="maxmizeBookmarks();">&nbsp;&nbsp;<i class="fa fa-window-maximize" style="font-size:12px"></i></button>
+
+            <button type="button" class="close"  onclick="minimizeBookmarks();">&nbsp;&nbsp;<i class="fa fa-window-minimize" style="font-size:12px"></i></button>
+        </div>
+        <iframe id="myFrame" src="logbook.html"  ></iframe>
+        </div>
+        <div class="feedback">
+            <a href="#"><span><i class="far fa-edit" style="font-size:28px;color:#FF7F50">Feedback</i>            </span></a>
+            <div class="form" style="background-color: white;">
+              <form>
+                <h6 class="modal-title">Tell us how you use the vistorian in this moment </h6>
+                <div class="form-group">
+                    <input type="button" class="menuButtonGadget" id="AnalyzeData" value="Analyze Data" >
+                    <input type="button" class="menuButtonGadget" id="Learn" value="Learn" >
+                    <input type="button" class="menuButtonGadget" id="DemotoOthers" value="Demo to others" >
+                    <input type="button" class="menuButtonGadget" id="exploreVis" value="Test & Explore Vistorian" >
+                    <input type="button" class="menuButtonGadget" id="DiscussFindings" value="Discuss Findings" >          
+                    <input type="button" class="menuButtonGadget" id="ReportIssue" value="Report an Issue" >
+                    <textarea name="message" id="feedback_text" cols="30" rows="10" placeholder="Send us your feedback!"autofocus></textarea>
+                  
+                </div>
+                <button type="submit" class="btn btn-primary btn-sm btn-block" onclick="LoggingGeneralFeedback();">
+                  Send it!
+                </button>
+              </form>
+            </div>
+            <div class="thanks">
+              Feedback sent! Thank you for helping us!
+            </div>
+          </div>
+    <script src="tourGuide.js"></script>
+    </body>
+</html>
+
+
+

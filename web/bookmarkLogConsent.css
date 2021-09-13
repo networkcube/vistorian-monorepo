@@ -1,0 +1,224 @@
+#mydiv {
+    position: fixed;
+    top: 0px;
+    right: 120px;
+    align-self: flex-start;
+    background-color: #f1f1f1;
+    text-align: center;
+    border: 1px solid #d3d3d3;
+    display :none;
+    width: 500px;
+    height:calc( 85% );
+    cursor: move;
+    box-shadow: 0px 8px 16px rgba(0,0,0,0.25);
+    min-width:20%;
+    resize: both;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    direction: rtl;
+}
+
+.remove-all-styles {
+    all: revert;
+  }
+            
+#mydivheader {
+    padding: 10px;
+    cursor: move;
+    background-color: #FF7F50;
+    color: #fff;
+}
+#myFrame {
+    width: 100%;
+    height: 90%; 
+    min-width: 100px;
+}
+
+.helpSidebar{
+  height: 250px;
+  width: 170px;
+  position: sticky;
+  top: 0px;
+  border: 1px solid grey;
+}
+
+.helpSidebar h2{
+  text-align: left;
+  margin-top: -10px;
+  height: 20px;
+  line-height: 20px;
+  font-size: 15px;
+  
+}
+            
+.helpSidebar h2 span {
+    background-color: white;
+  }
+.onoffswitch {
+    position: relative; width: 50px;
+    -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+}
+.onoffswitch-checkbox {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+.onoffswitch-label {
+    display: block; overflow: hidden; cursor: pointer;
+    border: 2px solid #999999; border-radius: 20px;
+}
+.onoffswitch-inner {
+    display: block; width: 200%; margin-left: -100%;
+    transition: margin 0.3s ease-in 0s;
+}
+.onoffswitch-inner:before, .onoffswitch-inner:after {
+    display: block; float: left; width: 50%; height: 25px; padding: 0; line-height: 25px;
+    font-size: 14px; color: white; font-family: Trebuchet, Arial, sans-serif; font-weight: bold;
+    box-sizing: border-box;
+}
+.onoffswitch-inner:before {
+    content: "ON";
+    padding-left: 10px;
+    background-color: #FF7F50; color: #FFFFFF;
+}
+.onoffswitch-inner:after {
+    content: "OFF";
+    padding-right: 6px;
+    background-color: #EEEEEE; color: #999999;
+    text-align: right;
+}
+.onoffswitch-switch {
+    display: block; width: 15px; margin: -3px;
+    background: #FFFFFF;
+    position: absolute; top: 0; bottom: 0;
+    right: 40px;
+    top: -6px;
+    border: 2px solid #999999; border-radius: 20px;
+    transition: all 0.3s ease-in 0s; 
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
+    margin-left: 0;
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
+    right: 0px; 
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  margin: 0;
+  padding: 0;
+}
+
+.feedback_active {
+  background: transparent;
+ 
+  position: fixed;
+  z-index: 9000;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.feedback {
+  
+  position: fixed;
+  bottom: 50px;
+  right: 50px;
+  z-index: 10000;
+  background: transparent;
+  transition: all 3s;
+}
+.feedback a {
+  display: none;
+  font-size: 2em; 
+  padding: 10px;
+  border-radius: 50px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  
+}
+.feedback a span {
+  
+  display: inline-block;
+  transition: transform 0.2s ease-in-out;
+}
+.feedback a span:hover {
+  background: transparent;
+
+  transform: rotate(20deg);
+}
+.feedback .form {
+  display: none;
+  padding: 15px;
+  width: 225px;
+  border-radius: 10px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+}
+.feedback .form form {
+  margin: 0;
+}
+.feedback .form textarea {
+  margin: 0;
+  height: auto;
+  padding: 0.5rem 0.75rem;
+  display: block;
+  max-width: 87%;
+  border: 1px solid #d2ddec;
+  background-clip: padding-box;
+  color: #12263f;
+  background-color: #fff;
+  border-radius: 0.375rem;
+  overflow: auto;
+  resize: vertical;
+  height: 62px;
+  font-size: 0.9em;
+}
+.feedback .form textarea:focus {
+  color: #12263f;
+  background-color: #fff;
+  border-color: #2c7be5;
+  outline: 0;
+  box-shadow: transparent;
+}
+.feedback .form button {
+  display: block;
+  width: 100%;
+  color: #fff;
+  cursor: pointer;
+  background-color: #2c7be5;
+  border-color: #2c7be5;
+  padding: 0.125rem 0.5rem;
+  font-size: 0.8125rem;
+  line-height: 1.75;
+  border-radius: 0.25rem;
+  text-align: center;
+  /* vertical-align: middle; */
+  border: 1px solid transparent;
+}
+.feedback .thanks {
+  display: none;
+  background: white;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  padding: 15px;
+}
+.feedback .form-group {
+  margin-bottom: 2px;
+}
+
+.feedbackMenuButton, .menuButtonGadget,.timeoutFeedbackMenuButton {
+  background-color: #bbb;
+  border-radius: 15px;
+  border: none;
+  display: inline-block;
+  cursor: pointer;
+  color: #fff;
+  font-size: 14px;
+  font-weight: normal;
+  padding-top: 0px;
+  padding-right: 6px;
+  padding-bottom: 0px;
+  padding-left: 6px;
+  margin-left: 5px;
+}
+
