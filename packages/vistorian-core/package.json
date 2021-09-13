@@ -19,7 +19,7 @@
         "@typescript-eslint/parser": "^4.31.0",
         "eslint": "^7.32.0",
         "rimraf": "^2.6.3",
-        "rollup": "^1.1.2",
+        "rollup": "^2.56.3",
         "rollup-plugin-commonjs": "^10.1.0",
         "rollup-plugin-json": "^4.0.0",
         "rollup-plugin-node-resolve": "^5.2.0",
