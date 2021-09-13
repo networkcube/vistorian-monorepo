@@ -53,7 +53,7 @@
         "jquery": "^3.3.1",
         "jstorage": "^0.4.8",
         "moment": "^2.23.0",
-        "papaparse": "^5.0.0",
+        "papaparse": "^5.3.1",
         "vistorian-bookmarkbrowser": "0.0.1-alpha",
         "vistorian-core": "0.0.12",
         "vistorian-dynamicego": "0.0.1-alpha",
