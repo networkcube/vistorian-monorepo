@@ -35,7 +35,6 @@
     "homepage": "https://github.com/networkcube/vistorian-monorepo#readme",
     "bundledDependencies": [
         "jquery",
-        "lz-string",
         "moment",
         "vistorian-core"
     ],
