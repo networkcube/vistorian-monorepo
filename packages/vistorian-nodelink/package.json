@@ -28,13 +28,13 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/alkadi-mh/vistorian-nodelink_tr.git"
+        "url": "git+https://github.com/networkcube/vistorian-monorepo.git"
     },
     "collaborators": [
         "Jean-Daniel Fekete <Jean-Daniel.Fekete@inria.fr",
         "Alexandra Ibarra Cuesta"
     ],
-    "homepage": "https://github.com/alkadi-mh/vistorian-web_tr#readme",
+    "homepage": "https://github.com/networkcube/vistorian-monorepo#readme",
     "bundledDependencies": [
         "jquery",
         "jstorage",
@@ -54,6 +54,6 @@
         "nodemon": "^2.0.3",
         "papaparse": "^5.0.0",
         "three": "^0.100.0",
-        "vistorian-core": "file:../vistorian-core"
+        "vistorian-core": "0.0.12"
     }
 }

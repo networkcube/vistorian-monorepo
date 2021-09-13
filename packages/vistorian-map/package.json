@@ -27,13 +27,13 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/alkadi-mh/vistorian-map_tr.git"
+        "url": "git+https://github.com/networkcube/vistorian-monorepo.git"
     },
     "collaborators": [
         "Jean-Daniel Fekete <Jean-Daniel.Fekete@inria.fr",
         "Alexandra Ibarra Cuesta"
     ],
-    "homepage": "https://github.com/alkadi-mh/vistorian-web_tr#readme",
+    "homepage": "https://github.com/networkcube/vistorian-monorepo#readme",
     "bundledDependencies": [
         "jquery",
         "jstorage",
@@ -49,6 +49,6 @@
         "three": "^0.100.0",
         "jstorage": "^0.4.8",
         "lz-string": "^1.4.4",
-        "vistorian-core": "file:../vistorian-core"
+        "vistorian-core": "0.0.12"
     }
 }
