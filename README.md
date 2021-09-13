@@ -15,7 +15,7 @@ It uses [Lerna](https://lerna.js.org/) to manage the repository.
 
 ## Getting started
 
-If you just want to *use* The Vistorian, you can use it a [vistorian.online](http://vistorian.online).
+If you just want to *use* The Vistorian, you can use it at [vistorian.online](http://vistorian.online).
 
 If you want to *develop* The Vistorian by adding features or fixing bugs, you will need to get it running locally on your machine.
 
@@ -46,3 +46,5 @@ Then open the URL printed in the console.
 
 (instead of http-server, you can use an alternative from this [Big list of http static server one-liners ](https://gist.github.com/willurd/5720255)))
 
+
+You can apply an `npm run` command to all packages using `lerna run` (e.g., `lerna run build`)
