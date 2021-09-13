@@ -43,13 +43,11 @@
     ],
     "dependencies": {
         "@types/three": "^0.93.27",
-        "@types/lz-string": "^1.3.33",
         "circular-dependency-plugin": "^5.0.2",
         "jquery": "^3.3.1",
         "moment": "^2.23.0",
         "three": "^0.100.0",
         "jstorage": "^0.4.8",
-        "lz-string": "^1.4.4",
         "vistorian-core": "0.0.12"
     }
 }
