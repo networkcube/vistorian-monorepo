@@ -1,0 +1,6 @@
+.DS_Store
+*.js.map
+debug/*
+node_modules
+build
+/lib
