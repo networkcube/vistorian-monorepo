@@ -4,27 +4,27 @@ import { Time, DynamicGraph, dgraphReplacer, dgraphReviver, IDCompound, copyTime
 import { getDynamicGraph } from './main'
 import { searchForTerm } from './search'
 
-export var MESSAGE_HIGHLIGHT = 'highlight';
-export var MESSAGE_SELECTION = 'selection';
-export var MESSAGE_TIME_RANGE = 'timeRange';
-export var MESSAGE_SELECTION_CREATE = 'createSelection';
-export var MESSAGE_SELECTION_DELETE = 'deleteSelection';
-export var MESSAGE_SELECTION_SET_CURRENT = 'setCurrentSelectionId';
-export var MESSAGE_SELECTION_COLORING = 'setSelectionColor';
-export var MESSAGE_SELECTION_SET_COLORING_VISIBILITY = 'selectionColoring';
-export var MESSAGE_SELECTION_FILTER = 'selectionFilter';
-export var MESSAGE_SELECTION_PRIORITY = 'selectionPriority'
-export var MESSAGE_SEARCH_RESULT = 'searchResult';
-export var MESSAGE_SET_STATE= 'SET_STATE';
-export var MESSAGE_GET_STATE= 'GET_STATE';
-export var MESSAGE_STATE_CREATED= 'STATE_CREATED';
-export var MESSAGE_ZOOM_INTERACTION='ZOOM_INTERACTION';
+export const MESSAGE_HIGHLIGHT = 'highlight';
+export const MESSAGE_SELECTION = 'selection';
+export const MESSAGE_TIME_RANGE = 'timeRange';
+export const MESSAGE_SELECTION_CREATE = 'createSelection';
+export const MESSAGE_SELECTION_DELETE = 'deleteSelection';
+export const MESSAGE_SELECTION_SET_CURRENT = 'setCurrentSelectionId';
+export const MESSAGE_SELECTION_COLORING = 'setSelectionColor';
+export const MESSAGE_SELECTION_SET_COLORING_VISIBILITY = 'selectionColoring';
+export const MESSAGE_SELECTION_FILTER = 'selectionFilter';
+export const MESSAGE_SELECTION_PRIORITY = 'selectionPriority'
+export const MESSAGE_SEARCH_RESULT = 'searchResult';
+export const MESSAGE_SET_STATE = 'SET_STATE';
+export const MESSAGE_GET_STATE = 'GET_STATE';
+export const MESSAGE_STATE_CREATED = 'STATE_CREATED';
+export const MESSAGE_ZOOM_INTERACTION ='ZOOM_INTERACTION';
 
 
-var MESSENGER_PROPAGATE: boolean = true;
+const MESSENGER_PROPAGATE = true;
 
 
-var MESSAGE_HANDLERS: string[] = [
+const MESSAGE_HANDLERS: string[] = [
     MESSAGE_HIGHLIGHT,
     MESSAGE_SELECTION,
     MESSAGE_TIME_RANGE,
@@ -44,7 +44,7 @@ var MESSAGE_HANDLERS: string[] = [
 
 
 
-var messageHandlers: MessageHandler[] = [];
+const messageHandlers: MessageHandler[] = [];
 
 // contains handlers for passing messages to the
 // visualization.
@@ -55,9 +55,9 @@ class MessageHandler {
     selectionUpdate: Function = () => { return; };
 
 }
-var messageHandler: MessageHandler = new MessageHandler();
+const messageHandler: MessageHandler = new MessageHandler();
 
-var previousMessageId: number = -1;
+let previousMessageId = -1;
 
 // register an event handler
 export function addEventListener(messageType: string, handler: Function) {
@@ -65,7 +65,7 @@ export function addEventListener(messageType: string, handler: Function) {
 }
 
 export function setDefaultEventListener(handler: Function) {
-    for (var i = 0; i < MESSAGE_HANDLERS.length; i++) {
+    for (let i = 0; i < MESSAGE_HANDLERS.length; i++) {
         (messageHandler as any)[MESSAGE_HANDLERS[i]] = handler;
     }
 }
@@ -90,7 +90,7 @@ export class Message {
 
 
 export function sendMessage(type: string, body: any) {
-    var m = new Message(type)
+    const m = new Message(type)
     m.body = body;
     distributeMessage(m, true);
 }
@@ -107,7 +107,7 @@ export function sendMessage(type: string, body: any) {
 /////////////////////////
 
 function isEmpty(obj: any) {
-    for (var key in obj) {
+    for (const key in obj) {
         if (obj.hasOwnProperty(key))
             return false;
     }
@@ -118,11 +118,11 @@ function isEmpty(obj: any) {
 // HIGHLIGHT
 export function highlight(action: string, elementCompound?: ElementCompound): void {
 
-    var g: DynamicGraph = getDynamicGraph();
-    var idCompound: IDCompound = makeIdCompound(elementCompound);
+    const g: DynamicGraph = getDynamicGraph();
+    const idCompound: IDCompound = makeIdCompound(elementCompound);
 
 
-    var highlightAnyElement = false;
+    let highlightAnyElement = false;
     if (elementCompound != null && !isEmpty(elementCompound)) {
         highlightAnyElement = true;
     }
@@ -131,11 +131,7 @@ export function highlight(action: string, elementCompound?: ElementCompound): vo
         action = 'reset';
 
     // create message
-    var m: HighlightMessage;
-    m = new HighlightMessage(
-        action,
-        idCompound);
-
+    const m: HighlightMessage = new HighlightMessage(action, idCompound);
     distributeMessage(m);
 
 
@@ -162,14 +158,14 @@ export class HighlightMessage extends Message {
 // SELECTION MESSAGES
 
 export function selection(action: string, compound: ElementCompound, selectionId?: number): void {
-    var g: DynamicGraph = getDynamicGraph();
+    const g: DynamicGraph = getDynamicGraph();
     if (!selectionId)
         selectionId = g.currentSelection_id;
-    var selection = g.getSelection(selectionId)
+    const selection = g.getSelection(selectionId)
 
-    var idCompound: IDCompound = makeIdCompound(compound);
+    const idCompound: IDCompound = makeIdCompound(compound);
 
-    var m: SelectionMessage = new SelectionMessage(
+    const m: SelectionMessage = new SelectionMessage(
         action,
         idCompound,
         selectionId);
@@ -194,7 +190,7 @@ export class SelectionMessage extends Message {
 // TIME CHANGE MESSAGES
 
 export function timeRange(startUnix: number, endUnix: number, single: Time, propagate?: boolean) {
-    var m: TimeRangeMessage = new TimeRangeMessage(startUnix, endUnix);
+    const m: TimeRangeMessage = new TimeRangeMessage(startUnix, endUnix);
     if (propagate == undefined)
         propagate = false;
 
@@ -220,10 +216,10 @@ export class TimeRangeMessage extends Message {
 
 export function createSelection(type: string, name: string) {
 
-    var g: DynamicGraph = getDynamicGraph();
-    var b = g.createSelection(type);
+    const g: DynamicGraph = getDynamicGraph();
+    const b = g.createSelection(type);
     b.name = name;
-    var m = new CreateSelectionMessage(b)
+    const m = new CreateSelectionMessage(b)
     distributeMessage(m, false);
 
     return b;
@@ -244,8 +240,8 @@ export class CreateSelectionMessage extends Message {
 
 export function setCurrentSelection(b: Selection) {
 
-    var g: DynamicGraph = getDynamicGraph();
-    var m = new SetCurrentSelectionIdMessage(b);
+    const g: DynamicGraph = getDynamicGraph();
+    const m = new SetCurrentSelectionIdMessage(b);
     distributeMessage(m);
 }
 export class SetCurrentSelectionIdMessage extends Message {
@@ -260,7 +256,7 @@ export class SetCurrentSelectionIdMessage extends Message {
 
 export function showSelectionColor(selection: Selection, showColor: boolean) {
 
-    var m = new ShowSelectionColorMessage(selection, showColor)
+    const m = new ShowSelectionColorMessage(selection, showColor)
     distributeMessage(m);
 }
 export class ShowSelectionColorMessage extends Message {
@@ -279,7 +275,7 @@ export class ShowSelectionColorMessage extends Message {
 
 export function filterSelection(selection: Selection, filter: boolean) {
 
-    var m = new FilterSelectionMessage(selection, filter);
+    const m = new FilterSelectionMessage(selection, filter);
     distributeMessage(m);
 }
 export class FilterSelectionMessage extends Message {
@@ -296,7 +292,7 @@ export class FilterSelectionMessage extends Message {
 
 export function swapPriority(s1: Selection, s2: Selection) {
 
-    var m = new SelectionPriorityMessage(s1, s2, s2.priority, s1.priority);
+    const m = new SelectionPriorityMessage(s1, s2, s2.priority, s1.priority);
     distributeMessage(m);
 }
 
@@ -319,7 +315,7 @@ export class SelectionPriorityMessage extends Message {
 
 export function deleteSelection(selection: Selection) {
 
-    var m = new DeleteSelectionMessage(selection);
+    const m = new DeleteSelectionMessage(selection);
     distributeMessage(m);
 }
 
@@ -355,7 +351,7 @@ class SelectionColorMessage extends Message {
 
 export function search(term: string, type?: string) {
 
-    var idCompound: IDCompound = searchForTerm(term, getDynamicGraph(), type);
+    const idCompound: IDCompound = searchForTerm(term, getDynamicGraph(), type);
     distributeMessage(new SearchResultMessage(term, idCompound));
 }
 
@@ -529,7 +525,7 @@ export function zoomInteraction(visType:string,ineractionType:string){
 // INTERNAL FUNCTIONS //
 ////////////////////////
 
-var MESSAGE_KEY: string = 'networkcube_message';
+const MESSAGE_KEY = 'networkcube_message';
 localStorage[MESSAGE_KEY] = undefined;
 
 export function distributeMessage(message: Message, ownView?: boolean) {
@@ -550,11 +546,11 @@ export function distributeMessage(message: Message, ownView?: boolean) {
 
 function receiveMessage() {
     // read message from local storage
-    var s = localStorage[MESSAGE_KEY];
+    const s = localStorage[MESSAGE_KEY];
     if (s == undefined || s == 'undefined')
         return;
-    var dgraph: DynamicGraph = getDynamicGraph();
-    var m: Message = <Message>JSON.parse(
+    const dgraph: DynamicGraph = getDynamicGraph();
+    const m: Message = <Message>JSON.parse(
         s,
         function (k, v) { return dgraphReviver(dgraph, k, v); });
 
@@ -567,32 +563,32 @@ function receiveMessage() {
 
 
 function processMessage(m: Message) {
-    var graph = getDynamicGraph();
+    const graph = getDynamicGraph();
 
     if ((messageHandler as any)[m.type]) {
         // for messages with handlers
         if (m.type == MESSAGE_HIGHLIGHT) {
-            var m2: HighlightMessage = <HighlightMessage>m;
+            const m2: HighlightMessage = <HighlightMessage>m;
             graph.highlight(m2.action, m2.idCompound);
         } else
             if (m.type == MESSAGE_SELECTION) {
-                var m3: SelectionMessage = <SelectionMessage>m;
+                const m3: SelectionMessage = <SelectionMessage>m;
                 graph.selection(m3.action, m3.idCompound, m3.selectionId);
             } else
                 if (m.type == MESSAGE_TIME_RANGE) {
                     // this type is a view message. no adjustments on the graph necessary.
                 } else
                     if (m.type == MESSAGE_SELECTION_SET_COLORING_VISIBILITY) {
-                        var m4: ShowSelectionColorMessage = <ShowSelectionColorMessage>m;
-                        var m4Selection = graph.getSelection(m4.selectionId);
+                        const m4: ShowSelectionColorMessage = <ShowSelectionColorMessage>m;
+                        const m4Selection = graph.getSelection(m4.selectionId);
                         if (m4Selection != undefined) {
                             m4Selection.showColor = m4.showColor;
                         }
                     } else
                         if (m.type == MESSAGE_SELECTION_PRIORITY) {
-                            var m5: SelectionPriorityMessage = <SelectionPriorityMessage>m;
-                            var m5SelectionId1 = graph.getSelection(m5.selectionId1);
-                            var m5SelectionId2 = graph.getSelection(m5.selectionId2);
+                            const m5: SelectionPriorityMessage = <SelectionPriorityMessage>m;
+                            const m5SelectionId1 = graph.getSelection(m5.selectionId1);
+                            const m5SelectionId2 = graph.getSelection(m5.selectionId2);
                             if (m5SelectionId1 != undefined) {
                                 m5SelectionId1.priority = m5.priority1;
                             } // ELSE?
@@ -600,43 +596,43 @@ function processMessage(m: Message) {
                                 m5SelectionId2.priority = m5.priority2;
                             } // ELSE?
 
-                            var linkElements = graph.links().selected().toArray();
-                            for (var i = 0; i < linkElements.length; i++) {
+                            const linkElements = graph.links().selected().toArray();
+                            for (let i = 0; i < linkElements.length; i++) {
                                 linkElements[i].getSelections().sort(sortByPriority)
                             }
-                            var nodeElements = graph.nodes().selected().toArray();
-                            for (var i = 0; i < nodeElements.length; i++) {
+                            const nodeElements = graph.nodes().selected().toArray();
+                            for (let i = 0; i < nodeElements.length; i++) {
                                 nodeElements[i].getSelections().sort(sortByPriority)
                             }
-                            var nodePairElements = graph.nodePairs().selected().toArray();
-                            for (var i = 0; i < nodePairElements.length; i++) {
+                            const nodePairElements = graph.nodePairs().selected().toArray();
+                            for (let i = 0; i < nodePairElements.length; i++) {
                                 nodePairElements[i].getSelections().sort(sortByPriority)
                             }
                         } else
                             if (m.type == MESSAGE_SELECTION_FILTER) {
-                                var m6: FilterSelectionMessage = <FilterSelectionMessage>m;
+                                const m6: FilterSelectionMessage = <FilterSelectionMessage>m;
                                 graph.filterSelection(m6.selectionId, m6.filter);
                             } else
                                 // test messages that don't require a message handler
                                 if (m.type == MESSAGE_SELECTION_CREATE) {
-                                    var m7: CreateSelectionMessage = <CreateSelectionMessage>m;
+                                    const m7: CreateSelectionMessage = <CreateSelectionMessage>m;
                                     graph.addSelection(m7.selection.id, m7.selection.color, m7.selection.acceptedType, m7.selection.priority);
                                 } else
                                     if (m.type == MESSAGE_SELECTION_SET_CURRENT) {
-                                        var m8: SetCurrentSelectionIdMessage = <SetCurrentSelectionIdMessage>m;
+                                        const m8: SetCurrentSelectionIdMessage = <SetCurrentSelectionIdMessage>m;
                                         graph.setCurrentSelection(m8.selectionId);
                                     } else
                                         if (m.type == MESSAGE_SELECTION_DELETE) {
-                                            var m10: DeleteSelectionMessage = <DeleteSelectionMessage>m;
+                                            const m10: DeleteSelectionMessage = <DeleteSelectionMessage>m;
                                             graph.deleteSelection(m10.selectionId);
                                         } else
                                             if (m.type == MESSAGE_SEARCH_RESULT) {
-                                                var m11: SearchResultMessage = <SearchResultMessage>m;
+                                                const m11: SearchResultMessage = <SearchResultMessage>m;
                                                 graph.highlight('set', m11.idCompound);
                                             } else
                                                 if (m.type == MESSAGE_SELECTION_COLORING) {
-                                                    var m12: SelectionColorMessage = <SelectionColorMessage>m;
-                                                    var m12Selection = graph.getSelection(m12.selectionId);
+                                                    const m12: SelectionColorMessage = <SelectionColorMessage>m;
+                                                    const m12Selection = graph.getSelection(m12.selectionId);
                                                     if (m12Selection != undefined) {
                                                         m12Selection.color = m12.color;
                                                     } // ELSE ??

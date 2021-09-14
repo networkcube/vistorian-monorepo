@@ -11,11 +11,11 @@ export class Selection {
     name: string;
     elementIds: number[];
     acceptedType: string;
-    color: string = "#3366cc"; // INIT??
+    color = "#3366cc"; // INIT??
     id: number;
-    showColor: boolean = true;
-    filter: boolean = false;
-    priority: number = 0;
+    showColor = true;
+    filter = false;
+    priority = 0;
 
     constructor(id: number, acceptedType: string) {
         this.id = id;
@@ -41,7 +41,7 @@ export class DataSet {
     locationSchema: LocationSchema;
     selections: Selection[] = [] //predefined selections (not link type)
 
-    timeFormat: string = ''; // INIT?????????????
+    timeFormat = ''; // INIT?????????????
     directed: boolean;
 
     // constructor(name:string, nodeTable:any[], linkTable:any[], nodeSchema:NodeSchema, linkSchema:LinkSchema, locationTable?:any, locationSchema?:LocationSchema){
@@ -94,12 +94,12 @@ export class TableSchema {
 export class NodeSchema extends TableSchema {
     id: number;
     /* INIT ?????????????????? */
-    label: number = -1;
-    time: number = -1;
-    location: number = -1;
-    nodeType: number = -1;
-    shape: number = -1;
-    color: number = -1;
+    label = -1;
+    time = -1;
+    location = -1;
+    nodeType = -1;
+    shape = -1;
+    color = -1;
     constructor(id: number) {
         super('nodeSchema');
         this.id = id;
@@ -111,10 +111,10 @@ export class LinkSchema extends TableSchema {
     id: number;
     source: number;
     target: number;
-    weight: number = -1; // INIT????????
-    linkType: number = -1;
-    directed: number = -1;
-    time: number = -1;
+    weight = -1; // INIT????????
+    linkType = -1;
+    directed = -1;
+    time = -1;
     constructor(id: number, source: number, target: number) {
         super('linkSchema');
         this.source = source;
@@ -125,13 +125,13 @@ export class LinkSchema extends TableSchema {
 export class LocationSchema extends TableSchema {
     id: number;
     label: number; // user given label
-    geoname: number = -1; // actual geo name (english)
-    longitude: number = -1;
-    latitude: number = -1;
-    x: number = -1;
-    y: number = -1;
-    z: number = -1;
-    radius: number = -1;
+    geoname = -1; // actual geo name (english)
+    longitude = -1;
+    latitude = -1;
+    x = -1;
+    y = -1;
+    z = -1;
+    radius = -1;
 
     constructor(
         id: number,

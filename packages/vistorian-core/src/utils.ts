@@ -17,7 +17,7 @@ import * as moment from 'moment'
 
 export function getType(elements: any[]): string | undefined { // before was only string
 
-    var type: string = ''; // before only string, without init
+    let type = ''; // before only string, without init
     if (elements.length == 0)
         return;
     if (elements[0] instanceof Node)
@@ -45,7 +45,7 @@ export function getType(elements: any[]): string | undefined { // before was onl
 /* moved from utils to queries */
 
 export function makeElementCompound(elements: IDCompound, g: DynamicGraph): ElementCompound {
-    var result: ElementCompound = new ElementCompound;
+    const result: ElementCompound = new ElementCompound;
     if (elements != undefined) {
         if (elements.nodeIds) {
             result.nodes = <Node[]>elements.nodeIds.map((id, i) => g.node(id)); // ?? WITH OR WITHOUT ?? .filter((element) => { return (element != undefined) });
@@ -75,8 +75,8 @@ export class ElementCompound {
 
 export function getPriorityColor(element: BasicElement): string | undefined { // before: return string
 
-    var j = 0
-    var selections = element.getSelections();
+    let j = 0
+    const selections = element.getSelections();
     while (!selections[j].showColor) {
         j++;
         if (j == selections.length) {
@@ -94,10 +94,10 @@ export function sortByPriority(s1: any, s2: any) {
 
 
 export function getUrlVars(): Object {
-    var vars: Object = {};
-    var params = window.location.search.replace("?", "").split('&');
-    var tmp: any;
-    var value: any;
+    const vars: Object = {};
+    const params = window.location.search.replace("?", "").split('&');
+    let tmp: any;
+    let value: any;
     params.forEach(function (item) {
         tmp = item.split("=");
         value = decodeURIComponent(tmp[1]);
@@ -137,12 +137,12 @@ export function hex2RgbNormalized(hex: string): number[] {
 
 
 export function areEqualShallow(a: any, b: any): boolean {
-    for (var key in a) {
+    for (const key in a) {
         if (!(key in b) || a[key] !== b[key]) {
             return false;
         }
     }
-    for (var key in b) {
+    for (const key in b) {
         if (!(key in a) || a[key] !== b[key]) {
             return false;
         }
@@ -165,8 +165,8 @@ export function compareTypesShallow(a: any, b: any): boolean {
 }
 
 export function copyArray<TElement>(arr: any[], ctorFunc: () => TElement): TElement[] {
-    var arrayClone: TElement[] = [];
-    for (var elem in arr) {
+    const arrayClone: TElement[] = [];
+    for (const elem in arr) {
         arrayClone.push(copyPropsShallow(arr[elem], ctorFunc()));
     }
     return arrayClone;
@@ -208,10 +208,10 @@ export function inBox(x: any, y: any, box: Box): boolean {
 export function isSame(a: any[], b: any[]): boolean {
     if (a.length != b.length)
         return false;
-    var found = true;
-    for (var i = 0; i < a.length; i++) {
+    let found = true;
+    for (let i = 0; i < a.length; i++) {
         found = false;
-        for (var j = 0; j < b.length; j++) {
+        for (let j = 0; j < b.length; j++) {
             if (a[i] == b[j])
                 found = true;
         }
@@ -222,28 +222,28 @@ export function isSame(a: any[], b: any[]): boolean {
 }
 
 export function cloneCompound(compound: IDCompound): IDCompound {
-    var result: IDCompound = new IDCompound();
+    const result: IDCompound = new IDCompound();
     if (compound.nodeIds) {
         result.nodeIds = [];
-        for (var i = 0; i < compound.nodeIds.length; i++) {
+        for (let i = 0; i < compound.nodeIds.length; i++) {
             result.nodeIds.push(compound.nodeIds[i])
         }
     }
     if (compound.linkIds) {
         result.linkIds = [];
-        for (var i = 0; i < compound.linkIds.length; i++) {
+        for (let i = 0; i < compound.linkIds.length; i++) {
             result.linkIds.push(compound.linkIds[i])
         }
     }
     if (compound.nodePairIds) {
         result.nodePairIds = [];
-        for (var i = 0; i < compound.nodePairIds.length; i++) {
+        for (let i = 0; i < compound.nodePairIds.length; i++) {
             result.nodePairIds.push(compound.nodePairIds[i])
         }
     }
     if (compound.timeIds) {
         result.timeIds = [];
-        for (var i = 0; i < compound.timeIds.length; i++) {
+        for (let i = 0; i < compound.timeIds.length; i++) {
             result.timeIds.push(compound.timeIds[i])
         }
     }
@@ -251,7 +251,7 @@ export function cloneCompound(compound: IDCompound): IDCompound {
 }
 
 export function makeIdCompound(elements: ElementCompound | undefined): IDCompound {
-    var result: IDCompound = new IDCompound;
+    const result: IDCompound = new IDCompound;
     if (elements != undefined) {
         if (elements.nodes) {
             result.nodeIds = elements.nodes.map((n: any, i: any) => n.id());
@@ -290,7 +290,7 @@ export function arraysEqual(a: any, b: any) {
     // If you don't care about the order of the elements inside
     // the array, you should sort both arrays here.
 
-    for (var i = 0; i < a.length; ++i) {
+    for (let i = 0; i < a.length; ++i) {
         if (a[i] !== b[i]) return false;
     }
     return true;
@@ -300,9 +300,9 @@ export function encapsulate(array: any[], attrName?: string): Object[] {
     if (attrName == undefined) {
         attrName = 'element';
     }
-    var a = []
-    var o: Object;
-    for (var i = 0; i < array.length; i++) {
+    const a = []
+    let o: Object;
+    for (let i = 0; i < array.length; i++) {
         o = {
             index: i,
         };
@@ -313,12 +313,18 @@ export function encapsulate(array: any[], attrName?: string): Object[] {
 }
 
 export function isPointInPolyArray(poly: number[][], pt: number[]) {
-    for (var c = false, i = -1, l = poly.length, j = l - 1; ++i < l; j = i) ((poly[i][1] <= pt[1] && pt[1] < poly[j][1]) || (poly[j][1] <= pt[1] && pt[1] < poly[i][1])) && (pt[0] < (poly[j][0] - poly[i][0]) * (pt[1] - poly[i][1]) / (poly[j][1] - poly[i][1]) + poly[i][0]) && (c = !c); return c;
+    const l = poly.length;
+
+    let c = false;
+    let i = -1;
+    let j = l - 1;
+
+    for (; ++i < l; j = i) ((poly[i][1] <= pt[1] && pt[1] < poly[j][1]) || (poly[j][1] <= pt[1] && pt[1] < poly[i][1])) && (pt[0] < (poly[j][0] - poly[i][0]) * (pt[1] - poly[i][1]) / (poly[j][1] - poly[i][1]) + poly[i][0]) && (c = !c); return c;
 }
 
 
 export function formatTimeAtGranularity(time: Time, granualarity: number) {
-    var momentTime = moment.utc(time.unixTime())
+    const momentTime = moment.utc(time.unixTime())
     switch (granualarity) {
         case 0: return momentTime.millisecond();
         case 1: return momentTime.second();
@@ -344,9 +350,9 @@ export function formatTimeAtGranularity(time: Time, granualarity: number) {
 // Downloads the content of the openGL canvas to the 
 // desktop.
 export function downloadPNGFromCanvas(name: string) {
-    var blob = getBlobFromCanvas(document.getElementsByTagName('canvas')[0]);
-    var fileNameToSaveAs = name + '_' + new Date().toUTCString() + '.png';
-    var downloadLink = document.createElement("a")
+    const blob = getBlobFromCanvas(document.getElementsByTagName('canvas')[0]);
+    const fileNameToSaveAs = name + '_' + new Date().toUTCString() + '.png';
+    const downloadLink = document.createElement("a")
     downloadLink.download = fileNameToSaveAs;
     downloadLink.href = window.URL.createObjectURL(blob);
     downloadLink.click();
@@ -354,7 +360,7 @@ export function downloadPNGFromCanvas(name: string) {
 
 // Returns a blob from the passed canvas.
 function getBlobFromCanvas(canvas: any): Blob {
-    var dataURL = canvas.toDataURL("image/png")
+    const dataURL = canvas.toDataURL("image/png")
     return dataURItoBlob(dataURL);
 }
 
@@ -367,21 +373,21 @@ function getBlobFromCanvas(canvas: any): Blob {
 
 // downloads a screenshot on the desktop from the passed svg
 export function downloadPNGfromSVG(name: string, svgId: string) {
-    var blob = getBlobFromSVG(name, svgId);
+    const blob = getBlobFromSVG(name, svgId);
 }
 
 // creates an image blob from the passed svg and calls the 
 // callback function with the blob as parameter
 export function getBlobFromSVG(name: string, svgId: string, callback?: Function) {
-    var width = $('#' + svgId).width();
-    var height = $('#' + svgId).height();
+    const width = $('#' + svgId).width();
+    const height = $('#' + svgId).height();
     if (callback != undefined) // UNDEFINED ?? 
         getBlobFromSVGString(name, getSVGString(d3.select('#' + svgId).node()), width, height, callback) // what happend if callback undefinied (example above)
 }
 export function getBlobFromSVGNode(name: string, svgNode: any, callback: Function, backgroundColor?: string) {
-    var string = getSVGString(svgNode);
-    var width = svgNode.getAttribute('width')
-    var height = svgNode.getAttribute('height')
+    const string = getSVGString(svgNode);
+    let width = svgNode.getAttribute('width')
+    let height = svgNode.getAttribute('height')
     if (width == null) {
         width = window.innerWidth + 1000;
     }
@@ -393,18 +399,19 @@ export function getBlobFromSVGNode(name: string, svgNode: any, callback: Functio
 export function getBlobFromSVGString(name: string, svgString: string, width: number, height: number, callback: Function, backgroundColor?: string) {
     // get SVG string
     // CREATE PNG
-    var format: any = format ? format : 'png';
+    //var format: any = format ? format : 'png';
+    const format = "png"
 
     // turn SVG in to PNG
-    var imgsrc: string = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgString))); // Convert SVG string to data URL
+    const imgsrc: string = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgString))); // Convert SVG string to data URL
 
     // Prepare canvas
-    var canvas: any = document.createElement("canvas");
+    const canvas: any = document.createElement("canvas");
     canvas.width = width;
     canvas.height = height;
 
-    var context: any = canvas.getContext("2d");
-    var image: any = new Image();
+    const context: any = canvas.getContext("2d");
+    const image: any = new Image();
     image.src = imgsrc;
 
     image.onload = function () {
@@ -424,42 +431,42 @@ export function getBlobFromSVGString(name: string, svgString: string, width: num
 
 export function getSVGString(svgNode: any) {
     svgNode.setAttribute('xlink', 'http://www.w3.org/1999/xlink');
-    var cssStyleText = getCSSStyles(svgNode);
+    const cssStyleText = getCSSStyles(svgNode);
     appendCSS(cssStyleText, svgNode);
 
-    var serializer = new XMLSerializer();
-    var svgString = serializer.serializeToString(svgNode);
+    const serializer = new XMLSerializer();
+    let svgString = serializer.serializeToString(svgNode);
     svgString = svgString.replace(/(\w+)?:?xlink=/g, 'xmlns:xlink='); // Fix root xlink without namespace
     svgString = svgString.replace(/NS\d+:href/g, 'xlink:href'); // Safari NS namespace fix
 
     return svgString;
 
     function getCSSStyles(parentElement: any) {
-        var selectorTextArr = [];
+        const selectorTextArr = [];
 
         // Add Parent element Id and Classes to the list
         selectorTextArr.push('#' + parentElement.id);
-        for (var c = 0; c < parentElement.classList.length; c++)
+        for (let c = 0; c < parentElement.classList.length; c++)
             if (!contains('.' + parentElement.classList[c], selectorTextArr))
                 selectorTextArr.push('.' + parentElement.classList[c]);
 
         // Add Children element Ids and Classes to the list
-        var nodes = parentElement.getElementsByTagName("*");
-        for (var i = 0; i < nodes.length; i++) {
-            var id = nodes[i].id;
+        const nodes = parentElement.getElementsByTagName("*");
+        for (let i = 0; i < nodes.length; i++) {
+            const id = nodes[i].id;
             if (!contains('#' + id, selectorTextArr))
                 selectorTextArr.push('#' + id);
 
-            var classes = nodes[i].classList;
-            for (var c = 0; c < classes.length; c++)
+            const classes = nodes[i].classList;
+            for (let c = 0; c < classes.length; c++)
                 if (!contains('.' + classes[c], selectorTextArr))
                     selectorTextArr.push('.' + classes[c]);
         }
 
         // Extract CSS Rules
-        var extractedCSSText = "";
-        for (var i = 0; i < document.styleSheets.length; i++) {
-            var s = <CSSStyleSheet>document.styleSheets[i];
+        let extractedCSSText = "";
+        for (let i = 0; i < document.styleSheets.length; i++) {
+            const s = <CSSStyleSheet>document.styleSheets[i];
 
             try {
                 if (!s.cssRules) continue;
@@ -468,9 +475,9 @@ export function getSVGString(svgNode: any) {
                 continue;
             }
 
-            var cssRules = s.cssRules;
-            for (var r = 0; r < cssRules.length; r++) {
-                var rule = <CSSStyleRule>cssRules[r];
+            const cssRules = s.cssRules;
+            for (let r = 0; r < cssRules.length; r++) {
+                const rule = <CSSStyleRule>cssRules[r];
                 if (contains(rule.selectorText, selectorTextArr))
                     extractedCSSText += rule.cssText;
             }
@@ -486,22 +493,22 @@ export function getSVGString(svgNode: any) {
     }
 
     function appendCSS(cssText: string, element: any) {
-        var styleElement = document.createElement("style");
+        const styleElement = document.createElement("style");
         styleElement.setAttribute("type", "text/css");
         styleElement.innerHTML = cssText;
-        var refNode = element.hasChildNodes() ? element.children[0] : null;
+        const refNode = element.hasChildNodes() ? element.children[0] : null;
         element.insertBefore(styleElement, refNode);
     }
 }
 
 
 export function exportPNG(canvas: any, name: string) {
-    var dataURL: any = canvas.toDataURL('image/jpg', 1);
-    var blob: any = dataURItoBlob(dataURL);
+    const dataURL: any = canvas.toDataURL('image/jpg', 1);
+    const blob: any = dataURItoBlob(dataURL);
     // window.open(dataURL);
 
-    var fileNameToSaveAs: any = name + '_' + new Date().toUTCString() + '.png';
-    var downloadLink: any = document.createElement("a")
+    const fileNameToSaveAs: any = name + '_' + new Date().toUTCString() + '.png';
+    const downloadLink: any = document.createElement("a")
     downloadLink.download = fileNameToSaveAs;
     downloadLink.href = (window as any).webkitURL.createObjectURL(blob);
     downloadLink.click();
@@ -511,19 +518,19 @@ export function exportPNG(canvas: any, name: string) {
 // returns a blob from a URL/URI
 function dataURItoBlob(dataURI: string): Blob {
     // convert base64/URLEncoded data component to raw binary data held in a string
-    var byteString;
+    let byteString;
     if (dataURI.split(',')[0].indexOf('base64') >= 0)
         byteString = atob(dataURI.split(',')[1]);
     else
         byteString = unescape(dataURI.split(',')[1]);
 
     // separate out the mime component
-    var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+    const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
     console.log('mimeString', mimeString)
 
     // write the bytes of the string to a typed array
-    var ia = new Uint8Array(byteString.length);
-    for (var i = 0; i < byteString.length; i++) {
+    const ia = new Uint8Array(byteString.length);
+    for (let i = 0; i < byteString.length; i++) {
         ia[i] = byteString.charCodeAt(i);
     }
 
@@ -531,7 +538,7 @@ function dataURItoBlob(dataURI: string): Blob {
 }
 
 
-var msgBox;
+let msgBox;
 export function showMessage(message: string, timeout: any) {
     if ($('.messageBox'))
         $('.messageBox').remove();

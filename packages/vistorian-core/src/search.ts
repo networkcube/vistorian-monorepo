@@ -1,12 +1,12 @@
 import { DynamicGraph, Link, Node, Location, IDCompound } from './dynamicgraph'
 
 export function searchForTerm(term: string, dgraph: DynamicGraph, type?: string): IDCompound {
-	var terms = term.toLowerCase().split(',');
+	const terms = term.toLowerCase().split(',');
 
-	var result: IDCompound = new IDCompound();
+	const result: IDCompound = new IDCompound();
 
 
-	for (var i = 0; i < terms.length; i++) {
+	for (let i = 0; i < terms.length; i++) {
 		term = terms[i].trim();
 		if (!type || type == 'node')
 			result.nodeIds = result.nodeIds.concat(dgraph.nodes().filter(

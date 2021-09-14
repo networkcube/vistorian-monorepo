@@ -13,8 +13,8 @@ export function makeSlider(
     handler: Function): void 
 {
 
-        var slider: Slider = new Slider(5, height - 5, width, min, max, .01);
-        var svg = d3parent.append('svg')
+        const slider: Slider = new Slider(5, height - 5, width, min, max, .01);
+        const svg = d3parent.append('svg')
             .attr('width', width + 20)
             .attr('height', height);
 
@@ -31,15 +31,15 @@ export function makeSlider(
 
 export class RadioButton {
 
-    private checked: boolean = false;
+    private checked = false;
 
     circle: any; // BEFORE d3.Selection<d3.BaseType, {}, HTMLElement, any>; 
     label: any; // BEFORE d3.Selection<d3.BaseType, {}, HTMLElement, any>; 
 
     color: string;
-    text: string = '';
+    text = '';
 
-    RADIUS: number = 7;
+    RADIUS = 7;
 
     clickHandler: any; // BEFORE Function;
 
@@ -52,7 +52,7 @@ export class RadioButton {
 
 
     appendTo(x: number, y: number, svg: D3.Selection) { 
-        var g = svg.append('g')
+        const g = svg.append('g')
             .attr('transform', 'translate(' + x + ',' + y + ')');
 
         this.circle = g.append('circle')

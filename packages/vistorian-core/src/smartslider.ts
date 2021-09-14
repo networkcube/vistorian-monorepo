@@ -3,21 +3,21 @@
 export class SmartSlider {
 
     /* VISUALIZATION PARAMETERS */
-    BAR_WIDTH: number = 15;
-    RADIUS_HANDLE: number = 5;
+    BAR_WIDTH = 15;
+    RADIUS_HANDLE = 5;
 
     // LEFT: number = this.RADIUS_HANDLE;
     // RIGHT: number = this.RADIUS_HANDLE;
-    LEFT: number = 0;
-    RIGHT: number = 0;
-    HEIGHT: number = 10;
-    TOP: number = 0;
+    LEFT = 0;
+    RIGHT = 0;
+    HEIGHT = 10;
+    TOP = 0;
 
     max: number;
     min: number;
     stepWidth: number;
     hasTickmarks: boolean;
-    isInverted: boolean = false;
+    isInverted = false;
 
     svg: any; // BEFORE d3.Selection<d3.BaseType, {}, HTMLElement, any>;
     x: number;
@@ -100,8 +100,8 @@ export class SmartSlider {
                 .domain([this.min, this.max])
                 .range([this.LEFT, this.width - this.RIGHT - this.LEFT]);
 
-            for (var i = this.min; i <= this.max; i += this.stepWidth) {
-                var x = this.val2spaceScale(i);
+            for (let i = this.min; i <= this.max; i += this.stepWidth) {
+                const x = this.val2spaceScale(i);
                 this.g.append("line")
                     .attr('class', 'rangeTick')
                     .attr("x1", x)
@@ -191,21 +191,21 @@ export class SmartSlider {
 
     }
 
-    dragStartXMouse: number = 0; // BEFORE number;
-    dragStartXBar: number = 0; // BEFORE number;
+    dragStartXMouse = 0; // BEFORE number;
+    dragStartXBar = 0; // BEFORE number;
     dragObj: any;
-    currentBarLength: number = 0; // BEFORE number;
+    currentBarLength = 0; // BEFORE number;
 
     dragStart() {
         this.dragStartXMouse = Math.max(this.LEFT, Math.min(this.width - this.RIGHT, this.getRelX()));
-        var sourceEvent = (d3.event).sourceEvent; // d3.BaseEvent
+        const sourceEvent = (d3.event).sourceEvent; // d3.BaseEvent
         this.dragObj = sourceEvent ? sourceEvent.target : undefined;
         if (this.isInverted) {
             // determine whether we are left of min, in between, or right of max
             // the startxbar is the left end of whichever segment we are in, 
             // and the barlength is same
-            var minPos: number = parseInt(this.circleMin.attr('cx'));
-            var maxPos: number = parseInt(this.circleMax.attr('cx'));
+            const minPos: number = parseInt(this.circleMin.attr('cx'));
+            const maxPos: number = parseInt(this.circleMax.attr('cx'));
             if (this.dragStartXMouse < minPos) {
                 this.dragStartXBar = this.LEFT;
                 this.currentBarLength = minPos - this.LEFT;
@@ -225,8 +225,8 @@ export class SmartSlider {
     dragMove() {
         // if we are dragging the entire bar
         if (!this.isInverted && this.dragObj.id == this.bar0.attr('id')) {
-            var xOffset = Math.max(this.LEFT, Math.min(this.width - this.RIGHT, this.getRelX())) - this.dragStartXMouse;
-            var x1 = Math.max(this.LEFT, Math.min(this.width - this.RIGHT - this.currentBarLength, this.dragStartXBar + xOffset))
+            const xOffset = Math.max(this.LEFT, Math.min(this.width - this.RIGHT, this.getRelX())) - this.dragStartXMouse;
+            const x1 = Math.max(this.LEFT, Math.min(this.width - this.RIGHT - this.currentBarLength, this.dragStartXBar + xOffset))
             this.bar0.attr('x', x1)
             this.circleMin.attr("cx", x1)
             this.circleMax.attr("cx", x1 + this.currentBarLength);
@@ -266,8 +266,8 @@ export class SmartSlider {
 
 
     getRelX(): number {
-        var sourceEvent = (d3.event).sourceEvent;
-        var pageX = sourceEvent ? (sourceEvent).pageX : 0;
+        const sourceEvent = (d3.event).sourceEvent;
+        const pageX = sourceEvent ? (sourceEvent).pageX : 0;
         return pageX - this.LEFT - this.x - this.rect.left;
     }
 

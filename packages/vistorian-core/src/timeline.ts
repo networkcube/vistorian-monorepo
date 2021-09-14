@@ -65,26 +65,26 @@ export class Timeline {
     visualize() {
 
         /* MOVE TO CONSTRUCTOR */
-        var times = this.network.times().toArray();
+        const times = this.network.times().toArray();
 
         // create non-indexed times
-        var unix_start = times[0] ? times[0].unixTime() : 0;
-        var unix_end = times[times.length - 1] ? times[times.length - 1].unixTime() : 0;
+        const unix_start = times[0] ? times[0].unixTime() : 0;
+        const unix_end = times[times.length - 1] ? times[times.length - 1].unixTime() : 0;
 
-        var start = moment.utc(unix_start + '', 'x').startOf(this.granules[this.minGran]);
-        var end = moment.utc(unix_end + '', 'x').startOf(this.granules[this.minGran]);
-        var numTimes = Math.ceil(Math.abs(start.diff(end, this.granules[this.minGran]))); // WITHOUT 's'
+        const start = moment.utc(unix_start + '', 'x').startOf(this.granules[this.minGran]);
+        const end = moment.utc(unix_end + '', 'x').startOf(this.granules[this.minGran]);
+        const numTimes = Math.ceil(Math.abs(start.diff(end, this.granules[this.minGran]))); // WITHOUT 's'
         this.maxGran = Math.min(this.maxGran, this.granules.length - 1);
-        var granularity_levels = ((this.maxGran - this.minGran) + 1);
-        var granularity_height = this.HEIGHT / granularity_levels;
+        const granularity_levels = ((this.maxGran - this.minGran) + 1);
+        const granularity_height = this.HEIGHT / granularity_levels;
 
         // create all timeObjects (UTC)
-        var prev = moment.utc(unix_start + '', 'x');
-        var prevprev = moment.utc((unix_start - 86400000) + '', 'x'); // substract one day
+        let prev = moment.utc(unix_start + '', 'x');
+        const prevprev = moment.utc((unix_start - 86400000) + '', 'x'); // substract one day
         // bb: check why 'substract' is not working:
         // prevprev.substract(1, this.granules[this.minGran] + 's');
         this.timeObjects.push(prev);
-        for (var i = 1; i < numTimes; i++) {
+        for (let i = 1; i < numTimes; i++) {
             prev = moment.utc(prev) // ???
             prev.add(1, this.granules[this.minGran]) // WITHOUT 's'
             this.timeObjects.push(prev)
@@ -94,17 +94,17 @@ export class Timeline {
         this.timeGranularities = []
         // set granularity for first time step: 
 
-        var granularitySet: boolean
-        var y1: any, y2: any;
-        var to1: any, to2: any;
-        for (var i = 0; i < this.timeObjects.length; i++) {
+        let granularitySet: boolean
+        let y1: any, y2: any;
+        let to1: any, to2: any;
+        for (let i = 0; i < this.timeObjects.length; i++) {
             granularitySet = false
             if (i == 0)
                 to1 = prevprev;
             else
                 to1 = this.timeObjects[i - 1]
             to2 = this.timeObjects[i];
-            for (var gran = this.maxGran; gran >= this.minGran && !granularitySet; gran--) {
+            for (let gran = this.maxGran; gran >= this.minGran && !granularitySet; gran--) {
                 if (gran > 7) {
                     y1 = to1.get(this.granules[7]) + '';
                     y2 = to2.get(this.granules[7]) + '';
@@ -184,8 +184,9 @@ export class Timeline {
 
     update(startUnix: any, endUnix: any) {
         // search for start:
-        var startId: any, endId: any;
-        for (var i = 0; i < this.timeObjects.length; i++) {
+        let startId: any, endId: any;
+        let i = 0;
+        for (i; i < this.timeObjects.length; i++) {
             if ((this.timeObjects[i].unix() * 1000) > startUnix) {
                 startId = i - 1;
                 break;
@@ -210,13 +211,13 @@ export class Timeline {
         // set range function domain
         this.position_x.domain([minTimeId, maxTimeId]);
 
-        var ticksFitting = Math.floor(this.WIDTH / this.TICK_MIN_DIST);
-        var minTime = this.timeObjects[this.minTimeId];
-        var maxTime = this.timeObjects[this.maxTimeId];
-        var requiredTicks: number = Number.MAX_VALUE; // INIT?
-        var t1: any, t2: any;
+        const ticksFitting = Math.floor(this.WIDTH / this.TICK_MIN_DIST);
+        const minTime = this.timeObjects[this.minTimeId];
+        const maxTime = this.timeObjects[this.maxTimeId];
+        let requiredTicks: number = Number.MAX_VALUE; // INIT?
+        let t1: any, t2: any;
         this.tick_minGran_visible = undefined;
-        for (var g = this.minGran; g < this.maxGran && this.tick_minGran_visible == undefined; g++) {
+        for (let g = this.minGran; g < this.maxGran && this.tick_minGran_visible == undefined; g++) {
             // calculate how many times of this granularity can fit.
             t1 = moment.utc(minTime).startOf(this.granules[g])
             t2 = moment.utc(maxTime).startOf(this.granules[g])
@@ -252,7 +253,7 @@ export class Timeline {
             this.timeLabels = this.webgl.selectAll()
                 .data(this.timeObjects)
                 .filter((d: any, i: number) => {
-                    var visible =
+                    const visible =
                         this.timeGranularities[i] >= this.tick_minGran_visible;
                     return visible;
                 })
@@ -273,7 +274,7 @@ export class Timeline {
 
         this.tickmarks
             .style('opacity', (d: any, i: number) => {
-                var visible =
+                const visible =
                     i == 0
                         || i >= this.minTimeId
                         && i <= this.maxTimeId
@@ -290,15 +291,15 @@ export class Timeline {
         // update labels
         this.timeLabels
             .style('opacity', (d: any, i: number) => {
-                var globalId = this.timeObjects.indexOf(d)
-                var visible =
+                const globalId = this.timeObjects.indexOf(d)
+                const visible =
                     globalId >= this.minTimeId
                     && globalId <= this.maxTimeId
                     && this.timeGranularities[globalId] >= this.label_minGran_visible
                 return visible ? 1 : 0;
             })
             .attr('x', (d: any, i: number) => {
-                var globalId = this.timeObjects.indexOf(d)
+                const globalId = this.timeObjects.indexOf(d)
                 return this.position_x(globalId) + 8;
             })
 
@@ -314,8 +315,8 @@ export class Timeline {
     }
 
     formatTime(index: number): string {
-        var t = this.timeObjects[index];
-        var g = Math.min(Math.max(this.tick_minGran_visible, this.timeGranularities[index]), 7);
+        const t = this.timeObjects[index];
+        const g = Math.min(Math.max(this.tick_minGran_visible, this.timeGranularities[index]), 7);
 
         return utils.formatAtGranularity(t, g)
     }
@@ -329,7 +330,7 @@ export class Timeline {
             this.highlightId = undefined;
         }
 
-        for (var i = 0; i < this.timeObjects.length; i++) {
+        for (let i = 0; i < this.timeObjects.length; i++) {
             if (!unixTime || (this.timeObjects[i].unix() * 1000) > unixTime) { // IS CORRECT !unixTime ?? 
                 this.highlightId = i - 1;
                 break;

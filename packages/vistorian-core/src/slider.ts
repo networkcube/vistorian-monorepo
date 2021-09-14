@@ -3,13 +3,13 @@
 export class Slider {
 
     /* VISUALIZATION PARAMETERS */
-    BAR_WIDTH: number = 5;
-    RADIUS_HANDLE: number = 5;
+    BAR_WIDTH = 5;
+    RADIUS_HANDLE = 5;
 
     LEFT: number = this.RADIUS_HANDLE;
     RIGHT: number = this.RADIUS_HANDLE;
-    HEIGHT: number = 10;
-    TOP: number = 0;
+    HEIGHT = 10;
+    TOP = 0;
 
     max: number;
     min: number;
@@ -94,7 +94,7 @@ export class Slider {
     currentBarLength: any;
     dragStart() {
         this.dragStartXMouse = Math.max(this.LEFT, Math.min(this.width - this.RIGHT, this.getRelX()))
-        var sourceEvent = d3.event.sourceEvent; // (d3.event as d3.BaseEvent)
+        const sourceEvent = d3.event.sourceEvent; // (d3.event as d3.BaseEvent)
         this.dragObj = sourceEvent ? sourceEvent.target : undefined;
     }
 
@@ -111,8 +111,8 @@ export class Slider {
 
 
     getRelX(): number {
-        var sourceEvent = d3.event.sourceEvent;
-        var pageX = sourceEvent ? (sourceEvent).pageX : 0; // <MouseEvent>
+        const sourceEvent = d3.event.sourceEvent;
+        const pageX = sourceEvent ? (sourceEvent).pageX : 0; // <MouseEvent>
         return pageX - this.LEFT - this.x - this.rect.left;
     }
 

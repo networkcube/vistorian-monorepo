@@ -17,11 +17,11 @@ export class TimeSlider {
 
     /** VISUALIZATION  PARAMETERS */
 
-    MARGIN_SLIDER_RIGHT: number = 30;
-    MARGIN_SLIDER_LEFT: number = 10;
-    TICK_GAP: number = 2;
-    TICK_LABEL_GAP: number = 40;
-    SLIDER_TOP: number = 25;
+    MARGIN_SLIDER_RIGHT = 30;
+    MARGIN_SLIDER_LEFT = 10;
+    TICK_GAP = 2;
+    TICK_LABEL_GAP = 40;
+    SLIDER_TOP = 25;
     HEIGHT = 200;
 
 
@@ -48,11 +48,11 @@ export class TimeSlider {
         this.times = dgraph.times().toArray();
         this.widgetWidth = width;
 
-        var timesDummy = new dynamicgraph.Time(0, this.dgraph);
+        const timesDummy = new dynamicgraph.Time(0, this.dgraph);
         this.sliderWidth = width - this.MARGIN_SLIDER_RIGHT + 5 - this.MARGIN_SLIDER_LEFT - 5;
-        var lastDummyYear: m.Moment = this.times.length != 0 ? this.times[this.times.length - 1].moment() : timesDummy.moment(); // WHAT HAPPEND??
-        var minGran: number = dgraph.gran_min;
-        var minGranName: m.unitOfTime.DurationConstructor = 'milliseconds';
+        let lastDummyYear: m.Moment = this.times.length != 0 ? this.times[this.times.length - 1].moment() : timesDummy.moment(); // WHAT HAPPEND??
+        const minGran: number = dgraph.gran_min;
+        let minGranName: m.unitOfTime.DurationConstructor = 'milliseconds';
         switch (minGran) {
             case 1: minGranName = 'milliseconds'; break;
             case 2: minGranName = 'seconds'; break;
@@ -73,7 +73,7 @@ export class TimeSlider {
 
         lastDummyYear.add(1, minGranName);
 
-        let unixTimeSlider = this.times.length != 0 ? this.times[0].unixTime() : 0; // IS IT OK?? 
+        const unixTimeSlider = this.times.length != 0 ? this.times[0].unixTime() : 0; // IS IT OK?? 
         this.slider = new SmartSlider(this.MARGIN_SLIDER_LEFT, this.SLIDER_TOP, this.sliderWidth, unixTimeSlider, lastDummyYear.valueOf(), 1);
 
         if (callBack)
@@ -94,7 +94,7 @@ export class TimeSlider {
         if (!x) x = 0
         if (!y) y = 0
 
-        var g: any = svg.append('g')
+        const g: any = svg.append('g')
             .attr('transform', 'translate(' + x + ',' + y + ')')
 
         g.append("g")
@@ -141,13 +141,13 @@ export class TimeSlider {
 
 
     drawTickmarks(granularity: number, tickTimes: dynamicgraph.Time[], svg: D3.Selection) {
-        var time: dynamicgraph.Time;
-        var displayLabelSpacing: number = 1; // display every label
+        let time: dynamicgraph.Time;
+        let displayLabelSpacing = 1; // display every label
         while (Math.floor(this.sliderWidth / this.TICK_LABEL_GAP) < (tickTimes.length / displayLabelSpacing) && displayLabelSpacing < 100) {
             displayLabelSpacing++;
         }
 
-        for (var i = 0; i < tickTimes.length; i++) {
+        for (let i = 0; i < tickTimes.length; i++) {
 
             if ((i % displayLabelSpacing) == 0) {
                 svg.append('text')
@@ -185,8 +185,8 @@ export class TimeSlider {
     }
 
     formatForGranularities(time: dynamicgraph.Time, gran_min: number, gran_max: number) {
-        var formatString: string = ''
-        var format: string;
+        let formatString = ''
+        let format: string;
         while (gran_max >= gran_min) {
             formatString += this.getGranularityFormattingString(gran_max, (gran_max > gran_min));
             gran_max--;
@@ -210,7 +210,7 @@ export class TimeSlider {
     updateTime(minUnix: number, maxUnix: number, single: number) {
         // times are still correct here? 
 
-        var format = function (d: any) { return d.toDateString(); };
+        const format = function (d: any) { return d.toDateString(); };
 
         single = Math.round(single);
 
