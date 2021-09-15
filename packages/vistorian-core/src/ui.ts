@@ -1,4 +1,4 @@
-/// <reference path="./lib/d3.d.ts"/>
+import * as d3 from "d3";
 
 import { Slider } from './slider'
 
@@ -51,7 +51,7 @@ export class RadioButton {
 
 
 
-    appendTo(x: number, y: number, svg: D3.Selection) { 
+    appendTo(x: number, y: number, svg: d3.Selection<any,any,any,any>) {
         var g = svg.append('g')
             .attr('transform', 'translate(' + x + ',' + y + ')');
 
