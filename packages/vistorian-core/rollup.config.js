@@ -6,8 +6,7 @@ import sourcemaps from 'rollup-plugin-sourcemaps';
 export default {
     input: 'build/src/index.js',
     external: [
-        'd3',
-        'lz-string', 
+        'lz-string',
         'reorder.js',
         'netclustering',
         'swiftset',
@@ -21,7 +20,6 @@ export default {
         sourcemap: true,
         name: 'vc',
         globals: {
-            'd3': 'd3',
             'lz-string': 'LZString',
             'reorder.js': 'reorder',
             'netclustering': 'netClustering',

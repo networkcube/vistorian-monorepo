@@ -6,7 +6,7 @@
     "types": "lib/index.d.ts",
     "scripts": {
         "build": "tsc --pretty false && rollup -c",
-        "lint": "eslint --ignore-pattern src/lib/* src/",
+        "lint": "eslint src/",
         "clean": "rimraf lib",
         "prepare": "npm run build"
     },
@@ -40,7 +40,9 @@
         "moment"
     ],
     "dependencies": {
+        "@types/d3": "^7.0.0",
         "@types/three": "^0.93.27",
+        "d3": "^7.0.1",
         "jquery": "^3.3.1",
         "lz-string": "^1.3.32",
         "moment": "^2.23.0",

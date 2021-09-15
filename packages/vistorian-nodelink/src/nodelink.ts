@@ -1,4 +1,4 @@
-/// <reference path="./lib/d3.d.ts"/>
+import * as d3 from "d3";
 
 import * as dynamicgraph from 'vistorian-core/src/dynamicgraph';
 import * as utils from 'vistorian-core/src/utils';
@@ -71,7 +71,7 @@ var hiddenLabels: any = [];
 var LABELING_STRATEGY: number = 0;
 
 
-var linkWeightScale = d3.scale.linear().range([1, 1]);
+var linkWeightScale = d3.scaleLinear().range([1, 1]);
 if(dgraph.links().weights().max() > 1){
     linkWeightScale.range([1, 3]) // if this is a weighted graph, the largest link is three times as thick as the normal (non-weighted) one.
 }
@@ -193,18 +193,18 @@ const selectionRect = svg
     .style("opacity", 0.2);
 
 parentSvg
-    .on('mousedown', () => {
+    .on('mousedown', (ev: MouseEvent) => {
         isMouseDown = true;
         // <MouseEvent>
-        mouseStart = [(d3.event).x, (d3.event).y];
+        mouseStart = [ev.clientX, ev.clientY]; // todo: is a .sourceEvent needed?
     })
-    .on('mousemove', () => {
+    .on('mousemove', (ev: MouseEvent) => {
         if (isMouseDown && !shiftDown) {
-            panOffsetLocal[0] = ((d3.event).x - mouseStart[0]) * globalZoom;
-            panOffsetLocal[1] = ((d3.event).y - mouseStart[1]) * globalZoom;
+            panOffsetLocal[0] = (ev.clientX - mouseStart[0]) * globalZoom;
+            panOffsetLocal[1] = (ev.clientY - mouseStart[1]) * globalZoom;
             svg.attr("transform", "translate(" + (panOffsetGlobal[0] + panOffsetLocal[0]) + ',' + (panOffsetGlobal[1] + panOffsetLocal[1]) + ")");
         } else if (isMouseDown){
-            mouseEnd = [(d3.event).x, (d3.event).y];
+            mouseEnd = [ev.clientX, ev.clientY];
 
             // mouse positions are  clientX/clientY in local (DOM content) cooordinates - NOT relative to the parent SVG
             // @ts-ignore
@@ -222,10 +222,10 @@ parentSvg
                 .attr("height", r_h);
         }
     })
-    .on('mouseup', () => {
+    .on('mouseup', (ev: MouseEvent) => {
         isMouseDown = false;
         if (shiftDown){
-            mouseEnd = [(d3.event).x, (d3.event).y];
+            mouseEnd = [ev.clientX, ev.clientY];
 
             // mouse positions are  clientX/clientY in local (DOM content) cooordinates - NOT relative to the parent SVG
             // @ts-ignore
@@ -266,16 +266,16 @@ parentSvg
             panOffsetGlobal[1] += panOffsetLocal[1];
         }
     })
-    .on('wheel.zoom', () => {
+    .on('wheel.zoom', (ev: WheelEvent) => {
         // zoom
-        (<any>d3.event).preventDefault();
-        (<any>d3.event).stopPropagation();
+        ev.preventDefault();
+        ev.stopPropagation();
 
         // The WheelEvent has a deltaMode attribute, which specifies unit for the delta values
         // https://www.w3.org/TR/uievents/#idl-wheelevent
         // It seems that Chrome provides values in pixels, whereas Firefox provides values in lines.
-        const deltaMode = (<any>d3.event).deltaMode;
-        const deltaY = (<any>d3.event).deltaY;
+        const deltaMode = ev.deltaMode; //TODO: does this need a sourceEvent?
+        const deltaY = ev.deltaY;
         let deltaPixels = 0;
         if (deltaMode === 1) {
             deltaPixels = deltaY * 16;
@@ -288,7 +288,7 @@ parentSvg
 
         var globalZoom = 1 - deltaPixels / 1000;
 
-        var mouse = [(d3.event).x - panOffsetGlobal[0], (d3.event).y - panOffsetGlobal[1]];
+        var mouse = [ev.clientX - panOffsetGlobal[0], ev.clientY - panOffsetGlobal[1]];
         var d: any, n: any;
         for (var i = 0; i < nodes.length; i++) {
             n = nodes[i]
@@ -341,11 +341,11 @@ var visualLinks: any;
 var layout: any;
 
 // line function for straight links
-var lineFunction: any = d3.svg.line() // only line() d3 v4
+var lineFunction: any = d3.line()
     .x(function (d: any) { return d.x; })
     .y(function (d: any) { return d.y; })
-    .interpolate("bundle")
-    
+    .curve(d3.curveBundle)
+
 function marker(color: any) 
 {
     svg.append("svg:defs").append("svg:marker")
@@ -367,33 +367,10 @@ for (var i = 0; i < nodes.length; i++) {
     (nodes as any)[i]['height'] = getNodeRadius(nodes[i]) * 2;
 }
 
-/* d3 v3 */
-layout = d3.layout.force()
-    .linkDistance(30)
-    .size([width, height])
-    .nodes(nodes)
-    .links(links)
-    .on('end', () => {
-        unshowMessage();
-        updateNodes();
-        updateLinks();
-        updateLayout();
-        // package layout coordinates
-        var coords = []
-        for (var i = 0; i < nodes.length; i++) {
-            coords.push({ x: (nodes[i] as any).x, y: (nodes[i] as any).y })
-        }
-        messenger.sendMessage('layout', { coords: coords })
-    })
-    .start()
-
-
-/* d3 v4 */
-/*
-layout = d3.forceSimulation()
-    .force("link", d3.forceLink().distance(30).strength(0.1))
-    .nodes(nodes)
-    .force("link", d3.forceLink().links(links))
+layout = d3.forceSimulation(nodes)
+    .force("link", d3.forceLink(links)) // .distance(30).strength(0.1)
+    .force("charge", d3.forceManyBody())
+    .force("center", d3.forceCenter(width / 2, height / 2))
     .on('end', () => {
         unshowMessage();
 
@@ -407,7 +384,6 @@ layout = d3.forceSimulation()
         }
         messenger.sendMessage('layout', { coords: coords })
     })
-*/
 
 // show layout-message
 showMessage('Calculating<br/>layout');
@@ -421,14 +397,14 @@ function init() {
         .enter()
         .append('path')
         // @ts-ignore
-        .attr('d', (n: dynamicgraph.Node) => d3.svg.symbol().type(getNodeShape(n))())
+        .attr('d', (n: dynamicgraph.Node) => d3.symbol().type(getNodeShape(n))())
         .attr('class', 'nodes')
         .style('fill', (n: dynamicgraph.Node) => getNodeColor(n)) 
         .attr('onclick','trace.event(\'vis_29\',document.location.pathname,\'Node\',\'Click\')')
         .attr('onmouseover','trace.event(\'vis_30\',document.location.pathname,\'Node\',\'Mouse Over\')')
         .on('mouseover', mouseOverNode)
         .on('mouseout', mouseOutNode)
-        .on('click', (d: any) => {
+        .on('click', (ev: MouseEvent, d: any) => {
             var selections = d.getSelections();
             var currentSelection = dgraph.getCurrentSelection();
             for (var j = 0; j < selections.length; j++) {
@@ -478,13 +454,13 @@ function init() {
         .attr('onclick','trace.event(\'vis_31\',document.location.pathname,\'Link\',\'Click\')')
         .attr('onmouseover','trace.event(\'vis_32\',document.location.pathname,\'Link\',\'Mouse Over\')')
         .style('opacity', LINK_OPACITY)
-        .on('mouseover', (d: any, i: any) => {
+        .on('mouseover', (ev: MouseEvent, d: any) => {
             messenger.highlight('set', <utils.ElementCompound>{ links: [d] })
         })
-        .on('mouseout', (d: any) => {
+        .on('mouseout', () => {
             messenger.highlight('reset')
         })
-        .on('click', (d: any) => {
+        .on('click', (ev: MouseEvent, d: any) => {
             var selections = d.getSelections();
             var currentSelection = dgraph.getCurrentSelection();
             for (var j = 0; j < selections.length; j++) {
@@ -555,12 +531,21 @@ function getNodeColor(n: dynamicgraph.Node)
 
 function getNodeShape(n: dynamicgraph.Node) {
     var shape = n.shape()
-    if(!shape){
-        shape = 'circle';
+
+    const shapes : Record<string, d3.SymbolType> = {
+        circle: d3.symbolCircle,
+        cross: d3.symbolCross,
+        diamond: d3.symbolDiamond,
+        square: d3.symbolSquare,
+        star: d3.symbolStar,
+        triangle: d3.symbolTriangle,
+        wye: d3.symbolWye
     }
+
+    return shapes[shape] ? shapes[shape] : d3.symbolCircle;
+
     // console.log('node shape', shape)
     // temporaryly this function is not working until the proper setting of node shape has been fixed.
-    return 'circle';
 }
 
 function updateLabelVisibility() {
@@ -626,14 +611,14 @@ function isHidingNode(n1: any, n2: any) {
 //// INTERACTION ////
 /////////////////////
 
-function mouseOverNode(n: any) {
+function mouseOverNode(ev: MouseEvent, n: any) {
     var newElementCompound: utils.ElementCompound = new utils.ElementCompound();
     newElementCompound.nodes = [n]
     messenger.highlight('set', newElementCompound)
     // BEFORE
     // messenger.highlight('set', { nodes: [n] })
 }
-function mouseOutNode(n: any) {
+function mouseOutNode() {
     messenger.highlight('reset')
 }
 
@@ -766,7 +751,7 @@ function updateNodeSize() {
     visualNodes
         // .attr('r', (n: any) => getNodeRadius(n))
         //@ts-ignore
-        .attr('d', (n: any) => d3.svg.symbol().size(getNodeRadius(n)).type(getNodeShape(n))())
+        .attr('d', (n: any) => d3.symbol().size(getNodeRadius(n)).type(getNodeShape(n))())
 }
 
 function updateNodes(highlightId?: number) {
