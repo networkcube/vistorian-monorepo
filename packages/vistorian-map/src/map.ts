@@ -1,5 +1,13 @@
-/// <reference path="lib/google.maps.d.ts" />
-/// <reference path="./lib/d3.d.ts"/>
+/// <reference path="./lib/google.maps.d.ts" />
+
+/* Tried adding to tsconfig.json:
+  "typeRoots": [
+    "node_modules/@types"
+  ]
+
+ */
+
+import * as d3 from "d3";
 
 import * as dynamicgraph from 'vistorian-core/src/dynamicgraph';
 import * as utils from 'vistorian-core/src/utils';
@@ -120,7 +128,7 @@ let overlay: any;
 let map: any;
 
 
-const linkWeightScale = d3.scale.linear().range([0, 2]);
+const linkWeightScale = d3.scaleLinear().range([0, 2]);
 linkWeightScale.domain([
     0,
     dgraph.links().weights().max()
@@ -128,15 +136,13 @@ linkWeightScale.domain([
 
 messenger.setDefaultEventListener(updateEvent);
 
-const color: any = d3.scale.category20; // in d3 v4 d3.scaleOrdinal(d3.schemeCategory10);
-
 dgraph.nodes().toArray().forEach((n: any) => {
     n['width'] = n.attr('label').length * 5 + 10,
         n['height'] = 10;
 })
 
 
-const nodeSizeFunction: any = d3.scale.linear()
+const nodeSizeFunction: any = d3.scaleLinear()
     .domain([0, 100])
     .range([NODE_SIZE, NODE_SIZE])
 
@@ -361,10 +367,10 @@ function init() {
 
         // DRAW EDGES  
 
-        line = d3.svg.line() // d3.line() in d3 v4
+        line = d3.line()
             .x(function (d: any) { return d.x; })
             .y(function (d: any) { return d.y; })
-            .interpolate("basis"); // .curve(d3.curveBasis) in d3 v4;
+         .curve(d3.curveBasis);
 
         visualLinks = svg.selectAll(".link")
             .data(dgraph.links().toArray())
@@ -372,10 +378,10 @@ function init() {
             .append("path")
             .attr("class", "link")
             .style('fill', 'none')
-            .on('mouseover', (d: any, i: any) => {
+            .on('mouseover', (ev: MouseEvent, d: any) => {
                 messenger.highlight('set', <utils.ElementCompound>{ links: [d] })
             })
-            .on('mouseout', (d: any) => {
+            .on('mouseout', () => {
                 messenger.highlight('reset')
             })
             .attr('marker-end',function (d: any) {

@@ -1,4 +1,4 @@
-/// <reference path="./lib/d3.d.ts"/>
+import * as d3 from "d3";
 
 import * as utils from 'vistorian-core/src/utils';
 import * as dynamicgraph from 'vistorian-core/src/dynamicgraph';
@@ -49,7 +49,7 @@ export function createSelectionCategory(name: string, type: string) {
 		.attr('type', 'button')
 		.attr('value', '+')
 		.attr('onclick','trace.event(\'vis_13\',document.location.pathname,\'add \' ,\'' + type + '\')')
-		.on('click', function (d: string) { createSelection(d) })
+		.on('click', function (ev: MouseEvent, d: string) { createSelection(d) })
 
 }
 
@@ -149,7 +149,7 @@ export function updateViewOnlyList(type: string, name: string){
 			.style('fill', function (d: any) {
 				return d[1]
 			})
-			.on('click', function (d: any) {
+			.on('click', function (ev: MouseEvent, d: any) {
 				messenger.setSelectionColor(d, '#' + Math.floor(Math.random() * 16777215).toString(16));
 			})
 	}
@@ -172,7 +172,7 @@ export function updateViewOnlyList(type: string, name: string){
 		.style('font-family', 'Helvetica')
 		.attr('x', RECT_SIZE + 10)
 		.attr('y', RECT_SIZE * .8)
-		.on('click', function (d: any) {
+		.on('click', function (ev: MouseEvent, d: any) {
 			messenger.setCurrentSelection(d);
 			updateLists();
 		})
@@ -243,7 +243,7 @@ export function updateList(type: string, name: string) {
 		.attr('width', RECT_SIZE)
 		.attr('height', RECT_SIZE)
 		.style('fill', function (d: any) { return d.color })
-		.on('click', function (d: any) {
+		.on('click', function (ev: MouseEvent, d: any) {
 			messenger.setSelectionColor(d, '#' + Math.floor(Math.random() * 16777215).toString(16));
 		})
 
@@ -256,7 +256,7 @@ export function updateList(type: string, name: string) {
 		.style('font-family', 'Helvetica')
 		.attr('x', RECT_SIZE + 10)
 		.attr('y', RECT_SIZE * .8)
-		.on('click', function (d: any) {
+		.on('click', function (ev: MouseEvent, d: any) {
 			messenger.setCurrentSelection(d);
 			updateLists();
 		})
@@ -266,7 +266,7 @@ export function updateList(type: string, name: string) {
 	nodeGs.append('svg:image')
 		.attr('class', 'icon_showColor icon')
 		.attr('x', 130 + (RECT_SIZE + GAP_ICONS) * i++)
-		.on('click', function (d: datamanager.Selection, i: number) {
+		.on('click', function (ev: MouseEvent, d: datamanager.Selection, i: number) {
 			messenger.showSelectionColor(d, !d.showColor);
 		})
 
@@ -276,7 +276,7 @@ export function updateList(type: string, name: string) {
 		.attr('xlink:href', 'eye-seeing.png')//eye-visible.png
 		.attr('x', 130 + (RECT_SIZE + GAP_ICONS) * i++)
 		.attr('onclick','trace.event(\'vis_14\',document.location.pathname,\'' +name + '\' , this.getAttribute(\'href\'))')
-		.on('click', function (d: datamanager.Selection, i: any) {
+		.on('click', function (ev: MouseEvent, d: datamanager.Selection, i: any) {
 			messenger.filterSelection(d, !d.filter);
 		})
 
@@ -285,7 +285,7 @@ export function updateList(type: string, name: string) {
 		.attr('class', 'icon')
 		.attr('xlink:href', 'up.png')
 		.attr('x', 130 + (RECT_SIZE + GAP_ICONS) * i++)
-		.on('click', function (d: datamanager.Selection, i: number) {
+		.on('click', function (ev: MouseEvent, d: datamanager.Selection, i: number) {
 			if (i > 0)
 				messenger.swapPriority(d, <datamanager.Selection>d3.selectAll('.selectionDiv_' + d.acceptedType).data()[i - 1]); // CAST TO SELECTION??
 		})
@@ -295,7 +295,7 @@ export function updateList(type: string, name: string) {
 		.attr('class', 'icon')
 		.attr('xlink:href', 'down.png')
 		.attr('x', 130 + (RECT_SIZE + GAP_ICONS) * i++)
-		.on('click', function (d: datamanager.Selection, i: number) {
+		.on('click', function (ev: MouseEvent, d: datamanager.Selection, i: number) {
 			if (d3.selectAll('.selectionDiv_' + d.acceptedType).data()[i + 1])
 				messenger.swapPriority(d, <datamanager.Selection>d3.selectAll('.selectionDiv_' + d.acceptedType).data()[i + 1]);// CAST TO SELECTION??
 		})
@@ -305,7 +305,7 @@ export function updateList(type: string, name: string) {
 		.attr('class', 'icon')
 		.attr('xlink:href', 'delete.png')
 		.attr('x', 130 + (RECT_SIZE + GAP_ICONS) * i++)
-		.on('click', function (d: datamanager.Selection, i: number) {
+		.on('click', function (ev: MouseEvent, d: datamanager.Selection, i: number) {
 			messenger.deleteSelection(d);
 		})
 
