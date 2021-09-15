@@ -367,29 +367,6 @@ for (var i = 0; i < nodes.length; i++) {
     (nodes as any)[i]['height'] = getNodeRadius(nodes[i]) * 2;
 }
 
-/* d3 v3 */
-/*
-layout = d3.layout.force()
-    .linkDistance(30)
-    .size([width, height])
-    .nodes(nodes)
-    .links(links)
-    .on('end', () => {
-        unshowMessage();
-        updateNodes();
-        updateLinks();
-        updateLayout();
-        // package layout coordinates
-        var coords = []
-        for (var i = 0; i < nodes.length; i++) {
-            coords.push({ x: (nodes[i] as any).x, y: (nodes[i] as any).y })
-        }
-        messenger.sendMessage('layout', { coords: coords })
-    })
-    .start()
-*/
-
-/* d3 v4 */
 layout = d3.forceSimulation(nodes)
     .force("link", d3.forceLink(links)) // .distance(30).strength(0.1)
     .force("charge", d3.forceManyBody())
