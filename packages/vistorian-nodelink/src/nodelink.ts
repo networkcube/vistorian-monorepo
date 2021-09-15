@@ -341,12 +341,11 @@ var visualLinks: any;
 var layout: any;
 
 // line function for straight links
-var lineFunction: any = d3.line() // only line() d3 v4
+var lineFunction: any = d3.line()
     .x(function (d: any) { return d.x; })
     .y(function (d: any) { return d.y; })
     .curve(d3.curveBundle)
-//.interpolate("bundle")
-    
+
 function marker(color: any) 
 {
     svg.append("svg:defs").append("svg:marker")
