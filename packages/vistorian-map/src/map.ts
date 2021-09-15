@@ -19,56 +19,56 @@ import * as timeslider from 'vistorian-core/src/timeslider';
 
 import * as moment from 'moment';
 
-var COLOR_DEFAULT_LINK: string = '#999999';
-var COLOR_DEFAULT_NODE: string = '#999999';
-var COLOR_HIGHLIGHT: string = '#ff8800';
-var LINK_OPACITY: number = 0.4;
-var NODE_UNPOSITIONED_OPACITY: number = 0.4
-var LINK_WIDTH_SCALE: number = 1;
-var LOCATION_MARKER_WIDTH: number = 10;
-var OVERLAP_FRACTION: number = 0.3;
-var NODE_SIZE: number = 4;
-var OUT_OF_TIME_NODES_OPACITY: number = 0;
-var LABEL_OFFSET_X: number = 20;
-var SHOW_NON_PLACE: boolean = true;
-var LINK_GAP = 2;
+const COLOR_DEFAULT_LINK = '#999999';
+const COLOR_DEFAULT_NODE = '#999999';
+const COLOR_HIGHLIGHT = '#ff8800';
+let LINK_OPACITY = 0.4;
+let NODE_UNPOSITIONED_OPACITY = 0.4
+let LINK_WIDTH_SCALE = 1;
+const LOCATION_MARKER_WIDTH = 10;
+let OVERLAP_FRACTION = 0.3;
+const NODE_SIZE = 4;
+const OUT_OF_TIME_NODES_OPACITY = 0;
+const LABEL_OFFSET_X = 20;
+const SHOW_NON_PLACE = true;
+let LINK_GAP = 2;
 
-var width: number = window.innerWidth
-var height: number = window.innerHeight - 100;
+const width: number = window.innerWidth
+const height: number = window.innerHeight - 100;
 
 interface Bounds {
     left: number;
     top: number;
 }
-var margin: Bounds = { left: 20, top: 20 };
-var TIMELINE_HEIGHT: number = 50;
-var MENU_HEIGHT: number = 50;
+const margin: Bounds = { left: 20, top: 20 };
+const TIMELINE_HEIGHT = 50;
+const MENU_HEIGHT = 50;
 
-var dgraph: dynamicgraph.DynamicGraph = main.getDynamicGraph();
+const dgraph: dynamicgraph.DynamicGraph = main.getDynamicGraph();
 // get dynamic graph
-var links: dynamicgraph.Link[] = dgraph.links().toArray();
-var times: any[] = dgraph.times().toArray();
-var locations: any[] = dgraph.locations().toArray();
-for (var i = 0; i < locations.length; i++) {
+const links: dynamicgraph.Link[] = dgraph.links().toArray();
+const times: any[] = dgraph.times().toArray();
+const locations: any[] = dgraph.locations().toArray();
+for (let i = 0; i < locations.length; i++) {
     locations[i]['npos'] = [];
 }
-var time_start: any = dgraph.time(0); // BEFORE queries.Time
-var time_end: any = dgraph.times().last(); // BEFORE queries.Time
+let time_start: any = dgraph.time(0); // BEFORE queries.Time
+let time_end: any = dgraph.times().last(); // BEFORE queries.Time
 
 // world map to show node positions
-var mapCanvas: any = d3.select('#visDiv').node();
+const mapCanvas: any = d3.select('#visDiv').node();
 $(mapCanvas).css('width', '100%');
 $(mapCanvas).css('height', $(window).height() - 60);
 
 // one empty default nodeposition object for every node
 // for the cases this node has no position at a given time.
-var emptyNodePositions: any = {}
+const emptyNodePositions: any = {}
 
 // VISUAL ELEMENTS
-var nodePositionObjects: any[] = [];
-var nodePositionObjectsLookupTable: any[] = [];
+const nodePositionObjects: any[] = [];
+const nodePositionObjectsLookupTable: any[] = [];
 
-var geoMultiLinks:GeoMultiLink[] = [];
+let geoMultiLinks:GeoMultiLink[] = [];
 
 // class GeoLink extends dynamicgraph.Link{
 
@@ -110,25 +110,25 @@ export class NodePositionObject {
     timeIds: number[] = [];
     location: any; // BEFORE queries.Location;
     node: any; // BEFORE queries.Node;
-    x: number = 0; // INIT ?? 
-    y: number = 0; // INIT ??
-    xOrig: number = 0; // INIT ??
-    yOrig: number = 0; // INIT ??
+    x = 0; // INIT ?? 
+    y = 0; // INIT ??
+    xOrig = 0; // INIT ??
+    yOrig = 0; // INIT ??
     geoPos: google.maps.LatLng = new google.maps.LatLng(0, 0); // INIT ??
-    displaced: boolean = false; // INIT ??
+    displaced = false; // INIT ??
     displacementVector: number[] = []; // INIT ??
-    fixedPosition: boolean = true;
+    fixedPosition = true;
     inLinks: dynamicgraph.Link[] = [];
     outLinks: dynamicgraph.Link[] = [];
     inNeighbors: dynamicgraph.Node[] = [];
     outNeighbors: dynamicgraph.Node[] = [];
 }
 
-var overlay: any;
-var map: any;
+let overlay: any;
+let map: any;
 
 
-var linkWeightScale = d3.scaleLinear().range([0, 2]);
+const linkWeightScale = d3.scaleLinear().range([0, 2]);
 linkWeightScale.domain([
     0,
     dgraph.links().weights().max()
@@ -142,31 +142,31 @@ dgraph.nodes().toArray().forEach((n: any) => {
 })
 
 
-var nodeSizeFunction: any = d3.scaleLinear()
+const nodeSizeFunction: any = d3.scaleLinear()
     .domain([0, 100])
     .range([NODE_SIZE, NODE_SIZE])
 
 
 // DRAW 
-var svg: any;
-var line: any;
-var visualNodes: any;
-var visualLinks: any;
-var vNodeLabels: any;
-var vNodeLabelBackgrounds: any;
-var geoProjection: google.maps.MapCanvasProjection;
-var layer: any;
-var locationsPanelDiv: HTMLDivElement;
+let svg: any;
+let line: any;
+let visualNodes: any;
+let visualLinks: any;
+let vNodeLabels: any;
+let vNodeLabelBackgrounds: any;
+let geoProjection: google.maps.MapCanvasProjection;
+let layer: any;
+let locationsPanelDiv: HTMLDivElement;
 
 
-var locationDisplayTimeoutHandle: any = -1;
-var prevIntersectedLink: any;
-var prevIntersectedNode: any;
-var intersectedLink: any;
-var intersectedNode: any;
-var prevDist: any;
-var f: any;
-var F: number = 1000;
+const locationDisplayTimeoutHandle: any = -1;
+let prevIntersectedLink: any;
+let prevIntersectedNode: any;
+let intersectedLink: any;
+let intersectedNode: any;
+let prevDist: any;
+let f: any;
+const F = 1000;
 
 
 messenger.addEventListener(messenger.MESSAGE_SET_STATE, setStateHandler);
@@ -175,7 +175,7 @@ messenger.addEventListener(messenger.MESSAGE_GET_STATE, getStateHandler);
 
 // STYLING MAP
 function init() {
-    var mapOptions: any = {
+    const mapOptions: any = {
         center: new google.maps.LatLng(48.8588589, 2.3470599),
         zoom: 5,
         zoomControl: true,
@@ -261,29 +261,29 @@ function init() {
         messenger.zoomInteraction("map","zoom");
     });
 
-    var bcNode = new BroadcastChannel('row_hovered_over_node');
+    const bcNode = new BroadcastChannel('row_hovered_over_node');
     bcNode.onmessage = function (ev) {
         updateNodes(ev.data.id);
     };
 
-    var bcLink = new BroadcastChannel('row_hovered_over_link');
+    const bcLink = new BroadcastChannel('row_hovered_over_link');
     bcLink.onmessage = function (ev) {
         updateLinks(ev.data.id);
     };
 
-    var lastPanUpdate: number = window.performance.now();
+    let lastPanUpdate: number = window.performance.now();
     map.addListener('center_changed', function (e: any) {
 
-        var current: any = window.performance.now();
-        var delta: any = current - lastPanUpdate;
+        const current: any = window.performance.now();
+        const delta: any = current - lastPanUpdate;
         if (delta < 1000) {
-            var pps = (1000 / delta).toFixed(0);
+            const pps = (1000 / delta).toFixed(0);
         }
         lastPanUpdate = current;
         $('#weirdDiv').css('width', window.innerWidth * Math.random());
         $('#weirdDiv').parent().parent().css('width', window.innerWidth * Math.random());
 
-        var northWest: any = { x: map.getBounds().getSouthWest().lng(), y: map.getBounds().getNorthEast().lat() }
+        const northWest: any = { x: map.getBounds().getSouthWest().lng(), y: map.getBounds().getNorthEast().lat() }
         messenger.zoomInteraction("map","span");
 
     });
@@ -320,7 +320,7 @@ function init() {
 
         // CREATE LOCATION MARKERS (Cirle for every location)
 
-        var locationMarker: any = svg.selectAll('.locationMarker')
+        const locationMarker: any = svg.selectAll('.locationMarker')
             .data(locations)
             .enter()
             .append('g')
@@ -335,7 +335,7 @@ function init() {
 
         // define arrow markers for directed links
 
-        var defs: any = svg.append('svg:defs');
+        const defs: any = svg.append('svg:defs');
         defs.append('svg:marker')
             .attr('id', 'end-arrow')
             .attr('viewBox', '0 -5 10 10')
@@ -350,7 +350,7 @@ function init() {
             .attr('opacity', .5)
             .attr('transform', 'translate(-5, 0)')
 
-        var grad: any = defs.append('svg:linearGradient')
+        const grad: any = defs.append('svg:linearGradient')
             .attr('id', 'line-gradient')
         grad.append('svg:stop')
             .attr('offset', 0)
@@ -386,7 +386,7 @@ function init() {
             })
             .attr('marker-end',function (d: any) {
                 if(d.directed){
-                    var color = utils.getPriorityColor(d);
+                    let color = utils.getPriorityColor(d);
                     if(!color)
                         color = COLOR_DEFAULT_LINK;
                     // if(highlightId && highlightId == d._id) {
@@ -400,18 +400,18 @@ function init() {
 
         // obtain nodePositionObjects
         // one npo per node x position 
-        var npo: NodePositionObject = new NodePositionObject();
-        var nodes: dynamicgraph.Node[] = dgraph.nodes().toArray();
-        var n: dynamicgraph.Node, positions: any;
-        var googleLatLng: any;
-        var serie: any;
-        for (var i = 0; i < nodes.length; i++) 
+        let npo: NodePositionObject = new NodePositionObject();
+        const nodes: dynamicgraph.Node[] = dgraph.nodes().toArray();
+        let n: dynamicgraph.Node, positions: any;
+        let googleLatLng: any;
+        let serie: any;
+        for (let i = 0; i < nodes.length; i++) 
         {
             n = nodes[i];
             positions = n.locationSerie().getSerie();
             serie = new dynamicgraph.ScalarTimeSeries<Object>();
             nodePositionObjectsLookupTable.push(serie);
-            for (var tId in positions) {
+            for (const tId in positions) {
                 googleLatLng = new google.maps.LatLng(
                     positions[parseInt(tId)].latitude(),
                     positions[parseInt(tId)].longitude());
@@ -429,7 +429,7 @@ function init() {
         }
 
         // assign NPOs to links
-        var loc: any; // BEFORE queries.Location;
+        let loc: any; // BEFORE queries.Location;
         visualLinks
             .each((link: any) => {
                 // get source and target NPO
@@ -491,13 +491,13 @@ function init() {
         }
 
         // test for hovering nodes
-        var minDist: number = 0.5 * F;
-        var mouse: any = { x: ev.latLng.lng() * F, y: ev.latLng.lat() * F }
-        var pos: any;
+        let minDist: number = 0.5 * F;
+        const mouse: any = { x: ev.latLng.lng() * F, y: ev.latLng.lat() * F }
+        let pos: any;
         intersectedNode = undefined;
-        var projection: any = overlay.getProjection();
-        var d: any;
-        for (var i = 0; i < nodePositionObjects.length; i++) {
+        const projection: any = overlay.getProjection();
+        let d: any;
+        for (let i = 0; i < nodePositionObjects.length; i++) {
 
             pos = projection.fromDivPixelToLatLng({ x: nodePositionObjects[i].x, y: nodePositionObjects[i].y })
             pos = { x: pos.lng() * F, y: pos.lat() * F };
@@ -515,11 +515,11 @@ function init() {
         intersectedLink = undefined;
         if (intersectedNode == undefined) {
             // test for hovering links
-            var l: any;
-            var sourceNPO: any, targetNPO: any;
-            var sourcePoint: google.maps.Point = new google.maps.Point(0, 0);
-            var targetPoint: google.maps.Point = new google.maps.Point(0, 0);
-            for (var i = 0; i < links.length; i++) {
+            let l: any;
+            let sourceNPO: any, targetNPO: any;
+            let sourcePoint: google.maps.Point = new google.maps.Point(0, 0);
+            let targetPoint: google.maps.Point = new google.maps.Point(0, 0);
+            for (let i = 0; i < links.length; i++) {
                 l = links[i]
 
                 if (!l.isVisible())
@@ -556,7 +556,7 @@ function init() {
         if (prevIntersectedNode != intersectedNode) {
             messenger.highlight('reset');
             if (intersectedNode != undefined) {
-                var newElement = new utils.ElementCompound();
+                const newElement = new utils.ElementCompound();
                 newElement.nodes = [intersectedNode]
                 messenger.highlight('set', newElement);
             }
@@ -567,7 +567,7 @@ function init() {
             messenger.highlight('reset');
             if (intersectedLink != undefined) {
                 intersectedNode == undefined;
-                var newElement = new utils.ElementCompound();
+                const newElement = new utils.ElementCompound();
                 newElement.nodes = [intersectedLink]
                 messenger.highlight('set', newElement);
             }
@@ -595,34 +595,34 @@ function init() {
 
 
 function createNodeLabel(npo: any) {
-    var locationLabel: String = '';
+    let locationLabel = '';
     if (npo.location != undefined && npo.location.label() != undefined)
     {
         locationLabel = ', ' + npo.location.label();
     }
 
-    var time: any = dgraph.time(npo.timeIds[0]);
-    var timeLabel:String = ''
+    const time: any = dgraph.time(npo.timeIds[0]);
+    let timeLabel = ''
     if (time)
         timeLabel = ' (' + moment.utc(time.unixTime()).format('MM/DD/YYYY') + ')';
 
     return npo.node.label() + locationLabel + timeLabel;
 }
 
-var hittestRect: google.maps.LatLngBounds = new google.maps.LatLngBounds();
-var hittestRadius = 20;
+let hittestRect: google.maps.LatLngBounds = new google.maps.LatLngBounds();
+const hittestRadius = 20;
 
 function displayLocationsWindow(currentProjection: google.maps.MapCanvasProjection, point: google.maps.Point, latLng: google.maps.LatLng): boolean {
     // define hit-test rectangle
-    var projection = currentProjection;
+    const projection = currentProjection;
     // if we have drifted outside the original, then hide the location div
     if (!hittestRect.isEmpty() && !hittestRect.contains(projection.fromContainerPixelToLatLng(point))) {
         $(locationsPanelDiv).addClass('hidden').removeClass('shown');
     }
-    var southwest: google.maps.Point = new google.maps.Point(
+    const southwest: google.maps.Point = new google.maps.Point(
         point.x - hittestRadius,
         point.y + hittestRadius);
-    var northeast: google.maps.Point = new google.maps.Point(
+    const northeast: google.maps.Point = new google.maps.Point(
         point.x + hittestRadius,
         point.y - hittestRadius);
 
@@ -632,37 +632,37 @@ function displayLocationsWindow(currentProjection: google.maps.MapCanvasProjecti
 
     // hit-test against every location we know about
     //      
-    var foundLocations: Array<dynamicgraph.Location> = [];
+    const foundLocations: Array<dynamicgraph.Location> = [];
     locations.forEach(function (v, i, arr): void {
-        var latlng = new google.maps.LatLng(v.latitude(), v.longitude());
+        const latlng = new google.maps.LatLng(v.latitude(), v.longitude());
         if (hittestRect.contains(latlng))
             foundLocations.push(v);
     });
     // if there are any locations, then we need to find the
     // associated nodes
-    var foundNodes: Array<dynamicgraph.Node>;
+    let foundNodes: Array<dynamicgraph.Node>;
     if (foundLocations.length > 0) {
         foundNodes = hittestNodeGeoPositions(hittestRect);
     } else {
         return false;
     }
 
-    var locationGroups: Array<{ loc: dynamicgraph.Location, nodes: Array<dynamicgraph.Node> }> = [];
+    const locationGroups: Array<{ loc: dynamicgraph.Location, nodes: Array<dynamicgraph.Node> }> = [];
     foundLocations.forEach(function (v, i, arr) {
         locationGroups.push({
             loc: v,
             nodes: foundNodes.filter(function (v2, i2, arr2): boolean {
-                var nodeLoc = getNodeLocation(v2);
+                const nodeLoc = getNodeLocation(v2);
                 return nodeLoc !== null && nodeLoc.label() == v.label();
             })
         });
     });
     // so now we have the locations and the nodes, so we fill out the locationPanel
     //
-    var panelContents: any;
+    let panelContents: any;
 
     $(locationsPanelDiv).html('');
-    var locListItemSelection = d3.select(locationsPanelDiv)
+    const locListItemSelection = d3.select(locationsPanelDiv)
         .selectAll('.locListItem')
         .data(locationGroups)
         .enter()
@@ -684,7 +684,7 @@ function displayLocationsWindow(currentProjection: google.maps.MapCanvasProjecti
         .append('nobr')
         .text(function (d: any) { return d.label(); })
 
-    var translatePoint: google.maps.Point = projection.fromLatLngToDivPixel(latLng);
+    const translatePoint: google.maps.Point = projection.fromLatLngToDivPixel(latLng);
     translatePoint.x += 20;
     translatePoint.y -= 30;
     // and then show it at the correct location
@@ -699,15 +699,15 @@ function displayLocationsWindow(currentProjection: google.maps.MapCanvasProjecti
 
 
 function hittestNodeGeoPositions(bounds: google.maps.LatLngBounds): Array<dynamicgraph.Node> {
-    var pos: google.maps.Point = new google.maps.Point(0, 0);
-    var result: Array<dynamicgraph.Node> = [];
-    var n, locations;
-    var llpos;
-    for (var i = 0; i < dgraph.nodes().length; i++) {
+    const pos: google.maps.Point = new google.maps.Point(0, 0);
+    const result: Array<dynamicgraph.Node> = [];
+    let n, locations;
+    let llpos;
+    for (let i = 0; i < dgraph.nodes().length; i++) {
         n = dgraph.node(i);
         if (n) {
             locations = n.locations(time_start, time_end).toArray();
-            for (var j = 0; j < locations.length; j++) {
+            for (let j = 0; j < locations.length; j++) {
                 llpos = new google.maps.LatLng(locations[j].latitude(), locations[j].longitude());
                 if (bounds.contains(llpos))
                     result.push(n); // BEFORE dgraph.node(i);
@@ -745,9 +745,9 @@ function getNodeLocation(node: dynamicgraph.Node): dynamicgraph.Location | null 
 
 function updateGeoNodePositions() {
 
-    var pos: google.maps.Point;
-    var npo: NodePositionObject;
-    for (var i = 0; i < nodePositionObjects.length; i++) {
+    let pos: google.maps.Point;
+    let npo: NodePositionObject;
+    for (let i = 0; i < nodePositionObjects.length; i++) {
         npo = nodePositionObjects[i];
 
         pos = geoProjection.fromLatLngToDivPixel(npo.geoPos);
@@ -767,7 +767,7 @@ function updateLinks(highlightId?: number) {
     visualLinks
         .transition().duration(100)
         .style('stroke', function (d: any) {
-            var color = utils.getPriorityColor(d);
+            let color = utils.getPriorityColor(d);
             if(highlightId && highlightId == d._id){
                 return 'orange';
             }
@@ -779,7 +779,7 @@ function updateLinks(highlightId?: number) {
             if(highlightId && highlightId == d._id){
                 return 1;
             }
-            var visible = d.isVisible();
+            const visible = d.isVisible();
             if (!visible || !d.presentIn(time_start, time_end))
                 return 0;
 
@@ -799,8 +799,8 @@ function updateLinks(highlightId?: number) {
 
         })
         .style('stroke-width', function (d: any) {
-            var weight = linkWeightScale(d.weights(time_start, time_end).mean()) * LINK_WIDTH_SCALE;
-            var thisSelection = d3.select(this);
+            let weight = linkWeightScale(d.weights(time_start, time_end).mean()) * LINK_WIDTH_SCALE;
+            const thisSelection = d3.select(this);
             if (weight < 0) {
                 weight = -weight;
                 thisSelection.attr('stroke-dasharray', '1,2') // BEFORE this ??
@@ -832,9 +832,9 @@ function marker(color: any)
         .style("fill", color);
 
     return "url(" + color + ")";
-};
+}
 
-var visibleLabels: any[] = []
+let visibleLabels: any[] = []
 function updateNodes(highlightId?: number) {
 
     visibleLabels = [];
@@ -855,7 +855,7 @@ function updateNodes(highlightId?: number) {
             || n.node.neighbors().highlighted().length > 0
         )
         .style('fill', (d: any) => {
-            var color: any;
+            let color: any;
             if (d.node.isHighlighted()) {
                 color = COLOR_HIGHLIGHT;
             }
@@ -885,25 +885,25 @@ function updateNodes(highlightId?: number) {
     // update node labels
     vNodeLabels
         .attr('visibility', (n: any) => {
-            var visible: any = n.node.isHighlighted()
+            let visible: any = n.node.isHighlighted()
                 || intersectedLink && n == intersectedLink.sourceNPO
                 || intersectedLink && n == intersectedLink.targetNPO;
 
-            var npo1: any, npo2: any;
+            let npo1: any, npo2: any;
             if (visible) {
                 // test collision with other visible labels
-                for (var i = 0; i < visibleLabels.length; i++) {
+                for (let i = 0; i < visibleLabels.length; i++) {
                     npo1 = n;
                     npo2 = visibleLabels[i];
-                    var l1: any = npo1.x + LABEL_OFFSET_X;
-                    var r1: any = npo1.x + LABEL_OFFSET_X + npo1.node.label().length * 8;
-                    var t1: any = npo1.y - 7;
-                    var b1: any = npo1.y + 7;
+                    const l1: any = npo1.x + LABEL_OFFSET_X;
+                    const r1: any = npo1.x + LABEL_OFFSET_X + npo1.node.label().length * 8;
+                    const t1: any = npo1.y - 7;
+                    const b1: any = npo1.y + 7;
 
-                    var l2: any = npo2.x + LABEL_OFFSET_X;
-                    var r2: any = npo2.x + LABEL_OFFSET_X + npo2.node.label().length * 8;
-                    var t2: any = npo2.y - 7;
-                    var b2: any = npo2.y + 7;
+                    const l2: any = npo2.x + LABEL_OFFSET_X;
+                    const r2: any = npo2.x + LABEL_OFFSET_X + npo2.node.label().length * 8;
+                    const t2: any = npo2.y - 7;
+                    const b2: any = npo2.y + 7;
 
                     // check overlap
                     visible = r1 < l2 || r2 < l1 || t1 > b2 || t2 > b1;
@@ -919,8 +919,8 @@ function updateNodes(highlightId?: number) {
                     } else {
                         // resolve overlap by flipping label to other side of node
                         // 1. decide which one to flip 
-                        var leftFlip: any = npo1;
-                        var rightFlip: any = npo2;
+                        let leftFlip: any = npo1;
+                        let rightFlip: any = npo2;
                         if (l1 > l2) {
                             rightFlip = npo1;
                             leftFlip = npo2;
@@ -967,8 +967,8 @@ function updateNodes(highlightId?: number) {
 function updateLocationMarkers() {
     d3.selectAll('.locationMarker')
         .attr("transform", function (d: any) {
-            var pos: google.maps.LatLng = new google.maps.LatLng(d.latitude(), d.longitude());
-            var pixelpos: google.maps.Point = geoProjection.fromLatLngToDivPixel(pos);
+            const pos: google.maps.LatLng = new google.maps.LatLng(d.latitude(), d.longitude());
+            const pixelpos: google.maps.Point = geoProjection.fromLatLngToDivPixel(pos);
             return 'translate(' + (pixelpos.x) + ',' + (pixelpos.y) + ')';
         })
 }
@@ -976,23 +976,23 @@ function updateLocationMarkers() {
 // Calculates curve paths for links
 function updateLinkPaths() {
 
-    var path: any, dir: any, offset: any;
-    var center: any;
-    var link, link2: dynamicgraph.Link | any;
-    var sourceNPO: any, targetNPO: any;
-    var EDGE_GAP: any = 5
-    var cx1: any, cy1: any, cx2: any, cy2: any;
+    let path: any, dir: any, offset: any;
+    let center: any;
+    let link, link2: dynamicgraph.Link | any;
+    let sourceNPO: any, targetNPO: any;
+    const EDGE_GAP: any = 5
+    let cx1: any, cy1: any, cx2: any, cy2: any;
     
     // reinit geoMultiLinks
     geoMultiLinks = [];
-    var geoMultiLink:GeoMultiLink;
-    for (var i = 0; i < dgraph.links().length; i++) 
+    let geoMultiLink:GeoMultiLink;
+    for (let i = 0; i < dgraph.links().length; i++)
     {
         link = dgraph.link(i);
         (<any>link).geoMultiLink = undefined;        
     }
 
-    for (var i = 0; i < dgraph.links().length; i++) 
+    for (let i = 0; i < dgraph.links().length; i++)
     {
 
         link = dgraph.link(i);
@@ -1018,7 +1018,7 @@ function updateLinkPaths() {
         (<any>link).targetNPO = targetNPO;
         
         // check for geomultilinks
-        for (var j = 0; j < i; j++)
+        for (let j = 0; j < i; j++)
         {
             link2 = dgraph.link(j);
             if(linkOverlapTest(link, link2))
@@ -1039,7 +1039,7 @@ function updateLinkPaths() {
     }
     console.log('>> TOTAL MULTILINKS:', geoMultiLinks.length);
 
-    for (var i = 0; i < dgraph.links().length; i++) 
+    for (let i = 0; i < dgraph.links().length; i++)
     {
         link = dgraph.link(i);
         sourceNPO = link?.sourceNPO;
@@ -1077,13 +1077,13 @@ function updateLinkPaths() {
             cy1 = center.y;
         
             // let linkLength : number = Math.sqrt(dir.x * dir.x + dir.y * dir.y);
-            let multiplier: number = 0;
+            let multiplier = 0;
             if((<any>link).geoMultiLink)
             {
-                let multiLink:GeoMultiLink = (<GeoMultiLink>(<any>link).geoMultiLink); 
+                const multiLink:GeoMultiLink = (<GeoMultiLink>(<any>link).geoMultiLink); 
                 multiplier = multiLink.linkIndex(link);            
             }
-            let stretch = multiplier * LINK_GAP;
+            const stretch = multiplier * LINK_GAP;
             (link as any)['path'] = [
                 { x: sourceNPO.x, y: sourceNPO.y },
                 { x: center.x + (offset[0] * stretch), y: center.y + (offset[1] * stretch)},
@@ -1161,21 +1161,22 @@ function setRelationTypeVisibility(relType: any, b: any) {
 
 /// TIMELINE/SLIDER
 
-var timeSvg: any = d3.select('#timelineDiv')
+const timeSvg: any = d3.select('#timelineDiv')
     .append('svg')
     .attr('width', width)
     .attr('height', TIMELINE_HEIGHT)
 
 
-var OVERLAP_SLIDER_WIDTH = 100;
+const OVERLAP_SLIDER_WIDTH = 100;
+let timeSlider: timeslider.TimeSlider;
 if (dgraph.times().size() > 1) {
-    var timeSlider: timeslider.TimeSlider = new timeslider.TimeSlider(dgraph, width - OVERLAP_SLIDER_WIDTH - 20);
+    timeSlider = new timeslider.TimeSlider(dgraph, width - OVERLAP_SLIDER_WIDTH - 20);
     timeSlider.appendTo(timeSvg);
     messenger.addEventListener('timeRange', timeChangedHandler);
 }
 
 // OVERLAP SLIDER    
-var menuDiv = d3.select('#menuDiv');
+let menuDiv = d3.select('#menuDiv');
 ui.makeSlider(menuDiv, 'Node Overlap', 100, MENU_HEIGHT, OVERLAP_FRACTION, -.05, 3, function (value: number) {
     OVERLAP_FRACTION = value;
     updateNodePositions();
@@ -1185,7 +1186,7 @@ ui.makeSlider(menuDiv, 'Edge Gap', 100, MENU_HEIGHT, LINK_GAP, 0, 10, function (
     updateLinkPaths();
 })
 // LINK OPACITY SLIDER    
-var menuDiv = d3.select('#menuDiv');
+menuDiv = d3.select('#menuDiv');
 ui.makeSlider(menuDiv, 'Link Opacity', 100, MENU_HEIGHT, LINK_OPACITY, 0, 1, function (value: number) {
     LINK_OPACITY = value;
     updateLinks();
@@ -1196,19 +1197,19 @@ ui.makeSlider(menuDiv, 'Link Width', 100, MENU_HEIGHT, LINK_WIDTH_SCALE, 0, 10, 
 })
 
 // NON-POSITIONED NODES OPACITY SLIDER    
-var menuDiv = d3.select('#menuDiv');
+menuDiv = d3.select('#menuDiv');
 ui.makeSlider(menuDiv, 'Positionless Nodes', 150, MENU_HEIGHT, LINK_OPACITY, 0, 1, function (value: number) {
     NODE_UNPOSITIONED_OPACITY = value;
     updateNodes();
 })
 
 function stretchVector(vec: any, finalLength: any) {
-    var len = 0
-    for (var i = 0; i < vec.length; i++) {
+    let len = 0
+    for (let i = 0; i < vec.length; i++) {
         len += Math.pow(vec[i], 2)
     }
     len = Math.sqrt(len)
-    for (var i = 0; i < vec.length; i++) {
+    for (let i = 0; i < vec.length; i++) {
         vec[i] = vec[i] / len * finalLength
     }
 
@@ -1219,7 +1220,8 @@ function timeChangedHandler(m: messenger.TimeRangeMessage) {
 
     time_start = times[0];
     time_end = times[times.length - 1];
-    for (var i = 0; i < times.length; i++) {
+    let i = 0;
+    for (i; i < times.length; i++) {
         if (times[i].unixTime() > m.startUnix) {
             time_start = times[i - 1];
             break;
@@ -1258,15 +1260,15 @@ function reorderLabels() {
 
 function updateNodePositions() {
 
-    var npo: any;
-    for (var i = 0; i < nodePositionObjects.length; i++) 
+    let npo: any;
+    for (let i = 0; i < nodePositionObjects.length; i++)
     {
         npo = nodePositionObjects[i];
         npo.x = npo.xOrig + npo.displacementVector[0] * OVERLAP_FRACTION;
         npo.y = npo.yOrig + npo.displacementVector[1] * OVERLAP_FRACTION;
     }
 
-    for (var i = 0; i < nodePositionObjects.length; i++) 
+    for (let i = 0; i < nodePositionObjects.length; i++)
     {
         if (!nodePositionObjects[i].fixedPosition) 
         {
@@ -1318,13 +1320,13 @@ function updateNodePositions() {
 function updateNodeDisplacementVectors() {
 
     // calculate angles: 
-    var l: dynamicgraph.Location;
-    var localNPOs: any[];
-    for (var i = 0; i < locations.length; i++) {
+    let l: dynamicgraph.Location;
+    let localNPOs: any[];
+    for (let i = 0; i < locations.length; i++) {
         l = locations[i];
         localNPOs = []
         // filter npos present in this time
-        for (var j = 0; j < (l as any)['npos'].length; j++) {
+        for (let j = 0; j < (l as any)['npos'].length; j++) {
             if ((l as any)['npos'][j].timeIds[0] <= time_end.id()
                 && (l as any)['npos'][j].timeIds[(l as any)['npos'][j].timeIds.length - 1] >= time_start.id()) {
                 localNPOs.push((l as any)['npos'][j]);
@@ -1335,10 +1337,10 @@ function updateNodeDisplacementVectors() {
             localNPOs[0].displacementVector[1] = 0;
         } else {
             // calculate andle
-            var alpha: number = Math.PI * 2 / localNPOs.length;
-            var npo: any;
-            var radius: number = localNPOs.length * NODE_SIZE / Math.PI;
-            for (var j = 0; j < localNPOs.length; j++) {
+            const alpha: number = Math.PI * 2 / localNPOs.length;
+            let npo: any;
+            const radius: number = localNPOs.length * NODE_SIZE / Math.PI;
+            for (let j = 0; j < localNPOs.length; j++) {
                 npo = localNPOs[j]
                 npo.displacementVector[0] = Math.sin(alpha * j) * radius;
                 npo.displacementVector[1] = Math.cos(alpha * j) * radius;
@@ -1350,13 +1352,12 @@ function updateNodeDisplacementVectors() {
 }
 
 function getNodePositionObjectsForLocation(n: dynamicgraph.Node, long: number, lat: number): NodePositionObject {
-    var s: any = nodePositionObjectsLookupTable[n.id()]
-    var npo: any;
+    const s: any = nodePositionObjectsLookupTable[n.id()]
     long = Math.round(long * 100) / 100
     lat = Math.round(lat * 100) / 100
-    var a: any, b: any;
+    let a: any, b: any;
     if (s != undefined) {
-        for (var t in s.serie) {
+        for (const t in s.serie) {
             a = Math.round(s.serie[t].geoPos.lng() * 100) / 100
             b = Math.round(s.serie[t].geoPos.lat() * 100) / 100
             if (a == long && b == lat) {
@@ -1365,7 +1366,7 @@ function getNodePositionObjectsForLocation(n: dynamicgraph.Node, long: number, l
         }
     }
     // init node positions
-    npo = new NodePositionObject();
+    const npo : any = new NodePositionObject();
     npo.node = n,
         npo.x = 0,
         npo.y = 0,
@@ -1380,8 +1381,8 @@ function getNodePositionObjectsForLocation(n: dynamicgraph.Node, long: number, l
 
 
 function getNodePositionObjectAtTime(n: dynamicgraph.Node, tId: number): Object {
-    var s: any = nodePositionObjectsLookupTable[n.id()]
-    var npo: any;
+    const s: any = nodePositionObjectsLookupTable[n.id()]
+    let npo: any;
 
     if (s.serie[tId] == undefined) {
         // check if empty node object exist for n
@@ -1422,11 +1423,11 @@ function dist2(v: any, w: any) {
     return sqr(v.x - w.x) + sqr(v.y - w.y)
 }
 function distToSegmentSquared(p: any, v: any, w: any) {
-    var l2: number = dist2(v, w);
+    const l2: number = dist2(v, w);
 
     if (l2 == 0) return dist2(p, v);
 
-    var t: number = ((p.x - v.x) * (w.x - v.x) + (p.y - v.y) * (w.y - v.y)) / l2;
+    const t: number = ((p.x - v.x) * (w.x - v.x) + (p.y - v.y) * (w.y - v.y)) / l2;
 
     if (t < 0) return dist2(p, v);
     if (t > 1) return dist2(p, w);
@@ -1449,7 +1450,7 @@ $(document).ready(function () { init(); })
 function setStateHandler(m: messenger.SetStateMessage){
     if (m.viewType=="map"){
 
-    var state: messenger.MapControls = m.state as messenger.MapControls;    
+    const state: messenger.MapControls = m.state as messenger.MapControls;    
     // unpack / query that state object
 
     OVERLAP_FRACTION = state.nodeOverlap;
@@ -1475,7 +1476,7 @@ function setStateHandler(m: messenger.SetStateMessage){
 function getStateHandler( m: messenger.GetStateMessage){
     if (m.viewType=="map"){
 
-        var mapNetwork: messenger.NetworkControls=new messenger.MapControls("map",time_start.unixTime(),time_end.unixTime(),OVERLAP_FRACTION,LINK_OPACITY,NODE_UNPOSITIONED_OPACITY);
+        const mapNetwork: messenger.NetworkControls=new messenger.MapControls("map",time_start.unixTime(),time_end.unixTime(),OVERLAP_FRACTION,LINK_OPACITY,NODE_UNPOSITIONED_OPACITY);
       /*   var bookmarksArray=JSON.parse(localStorage.getItem("vistorianBookmarks") || "[]");
 
       if (m.bookmarkIndex!=bookmarksArray.length-1){
