@@ -1,4 +1,4 @@
-/// <reference path="./lib/d3.d.ts"/>
+import * as d3 from "d3";
 
 export class Slider {
 
@@ -44,23 +44,21 @@ export class Slider {
     bar: any;
     knob: any;
     rect: any;
-    appendTo(svg: D3.Selection) {
+    appendTo(svg: d3.Selection<any,any,any,any>) {
 
         this.svg = svg;
 
-        // this.rect = (this.svg as any)['_groups'][0][0].getBoundingClientRect(); // D3 V4
-        this.rect = (this.svg as any)[0][0].getBoundingClientRect();
+        this.rect = (this.svg as any)['_groups'][0][0].getBoundingClientRect();
 
-
-        this.valueRange = d3.scale.linear()
+        this.valueRange = d3.scaleLinear()
             .domain([0, this.width])
             .range([this.min, this.max])
 
 
-        this.drag = d3.behavior.drag()
-            .origin(Object)
-            .on("dragstart", () => { this.dragStart() }) // d3 v4 is only "start"
-            .on("drag", () => { this.dragMove() })
+        this.drag = d3.drag()
+            //.origin(Object) //???
+            .on("start", (ev) => { this.dragStart(ev.sourceEvent) })
+            .on("drag", (ev) => { this.dragMove(ev.sourceEvent) })
 
         this.svg = svg;
 
@@ -92,14 +90,14 @@ export class Slider {
     dragStartXBar: any;
     dragObj: any;
     currentBarLength: any;
-    dragStart() {
-        this.dragStartXMouse = Math.max(this.LEFT, Math.min(this.width - this.RIGHT, this.getRelX()))
-        const sourceEvent = d3.event.sourceEvent; // (d3.event as d3.BaseEvent)
-        this.dragObj = sourceEvent ? sourceEvent.target : undefined;
+    dragStart(ev: MouseEvent) {
+        this.dragStartXMouse = Math.max(this.LEFT, Math.min(this.width - this.RIGHT, this.getRelX(ev)))
+       // var sourceEvent = d3.event.sourceEvent; // (d3.event as d3.BaseEvent)
+        this.dragObj = ev ? ev.target : undefined;
     }
 
-    dragMove() {
-        d3.select(this.dragObj).attr("cx", Math.max(this.LEFT, Math.min(this.width - this.RIGHT, this.getRelX())));
+    dragMove(ev: MouseEvent) {
+        d3.select(this.dragObj).attr("cx", Math.max(this.LEFT, Math.min(this.width - this.RIGHT, this.getRelX(ev))));
         this.dragEnd()
     }
 
@@ -110,9 +108,8 @@ export class Slider {
     }
 
 
-    getRelX(): number {
-        const sourceEvent = d3.event.sourceEvent;
-        const pageX = sourceEvent ? (sourceEvent).pageX : 0; // <MouseEvent>
+    getRelX(ev: MouseEvent): number {
+        const pageX = ev ? (ev).pageX : 0; // <MouseEvent>
         return pageX - this.LEFT - this.x - this.rect.left;
     }
 

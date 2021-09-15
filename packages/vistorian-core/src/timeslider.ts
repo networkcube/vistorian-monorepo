@@ -1,4 +1,4 @@
-/// <reference path="./lib/d3.d.ts"/>
+import * as d3 from "d3";
 
 import * as dynamicgraph from "./dynamicgraph";
 import * as messenger from "./messenger";
@@ -79,17 +79,17 @@ export class TimeSlider {
         if (callBack)
             this.callBack = callBack
 
-        this.tickScale = d3.time.scale.utc()
+        this.tickScale = d3.scaleUtc()
             .range([this.MARGIN_SLIDER_LEFT, this.MARGIN_SLIDER_LEFT + this.sliderWidth])
             .domain([unixTimeSlider, lastDummyYear.valueOf()]);
 
 
-        this.tickHeightFunction = d3.scale.linear()
+        this.tickHeightFunction = d3.scaleLinear()
             .range([4, this.SLIDER_TOP - 10])
             .domain([dgraph.gran_min, dgraph.gran_max]);
     }
 
-    appendTo(svg: D3.Selection, x?: number, y?: number) {
+    appendTo(svg: d3.Selection<any,any,any,any>, x?: number, y?: number) {
 
         if (!x) x = 0
         if (!y) y = 0
@@ -100,7 +100,7 @@ export class TimeSlider {
         g.append("g")
             .attr('transform', 'translate(0,' + this.SLIDER_TOP + ')')
             .attr("class", "x axis")
-            .call(d3.svg.axis().scale(this.tickScale).orient("top"));
+            .call(d3.axisTop(this.tickScale));
 
         this.labelStart = g.append('text')
             .attr('y', this.SLIDER_TOP + 20)
@@ -140,9 +140,9 @@ export class TimeSlider {
     }
 
 
-    drawTickmarks(granularity: number, tickTimes: dynamicgraph.Time[], svg: D3.Selection) {
+    drawTickmarks(granularity: number, tickTimes: dynamicgraph.Time[], svg: d3.Selection<any,any,any,any>) {
         let time: dynamicgraph.Time;
-        let displayLabelSpacing = 1; // display every label
+        let displayLabelSpacing: number = 1; // display every label
         while (Math.floor(this.sliderWidth / this.TICK_LABEL_GAP) < (tickTimes.length / displayLabelSpacing) && displayLabelSpacing < 100) {
             displayLabelSpacing++;
         }

@@ -1,4 +1,4 @@
-/// <reference path="./lib/d3.d.ts"/>
+import * as d3 from "d3";
 
 import * as dynamicgraph from "./dynamicgraph";
 import * as moment from "moment";
@@ -133,13 +133,13 @@ export class Timeline {
         }
 
         // create mapping functions
-        this.position_x = d3.scale.linear()
+        this.position_x = d3.scaleLinear()
             .domain([0, this.timeGranularities.length - 1])
             .range([this.x + 1, this.x + this.WIDTH - 1]);
-        this.position_y = d3.scale.linear()
+        this.position_y = d3.scaleLinear()
             .domain([this.minGran - 1, this.maxGran])
             .range([-this.HEIGHT, 0]);
-        this.label_opacity = d3.scale.linear()
+        this.label_opacity = d3.scaleLinear()
             .domain([this.minGran - 1, this.maxGran])
             .range([.2, 1]);
 

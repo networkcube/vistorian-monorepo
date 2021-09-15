@@ -1,3 +1,5 @@
+import * as d3 from "d3";
+
 import {
     DataSet, LinkSchema, NodeSchema
 } from './datamanager'
@@ -9,7 +11,7 @@ import * as main from './main'
 
 export function loadDyson(url: string, callback: Function) 
 {
-    d3.json(url, (data: any) => {
+    d3.json(url).then((data: any) => {
         // create node table
         const nodeTable = []
         const nodeSchema = { id: 0, label: 1 }
@@ -175,7 +177,7 @@ export function loadXML(url: string, callBack: Function): void {
     let d: DataSet;
     let dataset;
 
-    d3.xml(url, (data: any) => { // "application/xml",
+    d3.xml(url).then((data: any) => { // "application/xml",
         const nodes = data.documentElement.getElementsByTagName("node")
         const nodeTable = [];
         const nodeIds = []
@@ -218,7 +220,7 @@ export function loadJson(url: string, callBack: Function, dataName?: string): vo
     let d: DataSet;
     let dataset;
 
-    d3.json(url, (data) => {
+    d3.json(url).then((data: any) => {
         if (!data)
             return;
 
@@ -355,7 +357,7 @@ export function loadJsonList(url: string, callBack: Function): void {
     let d: DataSet;
     let dataset;
 
-    d3.json(url, (data) => {
+    d3.json(url).then((data: any) => {
         if (!data)
             return;
 
@@ -421,7 +423,7 @@ export function loadNCube(url: string, callBack: Function): void {
     let d: DataSet;
     let dataset;
 
-    d3.json(url, (data) => {
+    d3.json(url).then((data: any) => {
 
         const nodeTable: any[][] = [];
         const linkTable: any[][] = [];
