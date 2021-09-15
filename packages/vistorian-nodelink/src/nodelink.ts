@@ -1,4 +1,4 @@
-/// <reference path="./lib/d3.d.ts"/>
+import * as d3 from "d3";
 
 import * as dynamicgraph from 'vistorian-core/src/dynamicgraph';
 import * as utils from 'vistorian-core/src/utils';
@@ -8,70 +8,70 @@ import * as messenger from 'vistorian-core/src/messenger';
 import * as ui from 'vistorian-core/src/ui';
 import * as timeslider from 'vistorian-core/src/timeslider';
 
-var COLOR_DEFAULT_LINK: string = '#999999';
-var COLOR_DEFAULT_NODE: string = '#333333';
-var COLOR_HIGHLIGHT: string = '#ff8800';
-var LINK_OPACITY: number = .5;
-var NODE_OPACITY: number = 1;
-var LINK_WIDTH_SCALE: number = 1;
-var OFFSET_LABEL = { x: 5, y: 4 }
-var LINK_GAP: number = 2;
+const COLOR_DEFAULT_LINK = '#999999';
+const COLOR_DEFAULT_NODE = '#333333';
+const COLOR_HIGHLIGHT = '#ff8800';
+let LINK_OPACITY = .5;
+let NODE_OPACITY = 1;
+let LINK_WIDTH_SCALE = 1;
+const OFFSET_LABEL = { x: 5, y: 4 }
+let LINK_GAP = 2;
 // var LAYOUT_TIMEOUT: number = 3000;
 // var LABELBACKGROUND_OPACITY: number = 1;
-var LABELDISTANCE: number = 10;
-var SLIDER_WIDTH: number = 100
-var SLIDER_HEIGHT: number = 35;
-var NODE_SIZE: number = 10;
+const LABELDISTANCE = 10;
+const SLIDER_WIDTH = 100
+const SLIDER_HEIGHT = 35;
+let NODE_SIZE = 10;
 
-var width: number = window.innerWidth
-var height: number = window.innerHeight - 100;
+const width = window.innerWidth
+const height = window.innerHeight - 100;
 
 interface Bounds {
     left: number;
     top: number;
 }
 // var margin: Bounds = { left: 20, top: 20 };
-var TIMELINE_HEIGHT: number = 50;
+const TIMELINE_HEIGHT = 50;
 
-var currentLayout: string = 'forceDirected';
-var positions: Object = new Object();
+const positions: Object = new Object();
 (positions as any)['forceDirected'] = [];
 
 // get dynamic graph
-var dgraph: dynamicgraph.DynamicGraph = main.getDynamicGraph();
-var times: dynamicgraph.Time[] = dgraph.times().toArray();
-var time_start: dynamicgraph.Time = times[0];
-var time_end: dynamicgraph.Time = times[times.length - 1];
-var directed = dgraph.directed;
+const dgraph: dynamicgraph.DynamicGraph = main.getDynamicGraph();
+const times: dynamicgraph.Time[] = dgraph.times().toArray();
+let time_start: dynamicgraph.Time = times[0];
+let time_end: dynamicgraph.Time = times[times.length - 1];
+const directed = dgraph.directed;
 
-var nodes: any = dgraph.nodes().toArray();
-var nodesOrderedByDegree: dynamicgraph.Node[] = dgraph.nodes().toArray().sort((n1: any, n2: any) => n2.neighbors().length - n1.neighbors().length);
+const nodes: any = dgraph.nodes().toArray();
+const nodesOrderedByDegree: dynamicgraph.Node[] = dgraph.nodes().toArray().sort((n1: any, n2: any) => n2.neighbors().length - n1.neighbors().length);
 
 // var nodePairs: dynamicgraph.NodePairQuery = dgraph.nodePairs();
-var links: any = dgraph.links().toArray();
-var linkArrays = dgraph.linkArrays;
+let links: any = dgraph.links().toArray();
+const linkArrays = dgraph.linkArrays;
 links = addDirectionToLinks(links, linkArrays);
 // var nodeLength: number = nodes.length;
 
 //When a link row is hovered over in dataview.ts, a message is received here to highlight the corresponding link.
-var bcLink = new BroadcastChannel('row_hovered_over_link');
+const bcLink = new BroadcastChannel('row_hovered_over_link');
 bcLink.onmessage = function (ev) {
     updateLinks(ev.data.id)
 };
 
 //When a node row is hovered over in dataview.ts, a message is received here to highlight the corresponding link.
-var bcNode = new BroadcastChannel('row_hovered_over_node');
+const bcNode = new BroadcastChannel('row_hovered_over_node');
 bcNode.onmessage = function (ev) {
     updateNodes(ev.data.id)
 };
 
 // states
 // var mouseDownNode = undefined;
-var hiddenLabels: any = [];
-var LABELING_STRATEGY: number = 0;
+let hiddenLabels: any = [];
+let LABELING_STRATEGY = 0;
 
 
-var linkWeightScale = d3.scale.linear().range([1, 1]);
+const linkWeightScale = d3.scaleLinear().range([1, 1]);
+
 if(dgraph.links().weights().max() > 1){
     linkWeightScale.range([1, 3]) // if this is a weighted graph, the largest link is three times as thick as the normal (non-weighted) one.
 }
@@ -87,7 +87,7 @@ messenger.addEventListener(messenger.MESSAGE_GET_STATE, getStateHandler);
 
 
 // MENU
-var menuDiv = d3.select('#menuDiv');
+const menuDiv = d3.select('#menuDiv');
 /* widget/ui.js */
 ui.makeSlider(menuDiv, 'Link Opacity', SLIDER_WIDTH, SLIDER_HEIGHT, LINK_OPACITY, 0, 1, function (value: number) {
     LINK_OPACITY = value;
@@ -114,9 +114,9 @@ makeDropdown(menuDiv, 'Labeling', ['Automatic', 'Hide All', 'Show All', 'Neighbo
     updateLabelVisibility();
 })
 
-function makeDropdown(d3parent: any, name: string, values: String[], callback: Function) 
+function makeDropdown(d3parent: any, name: string, values: string[], callback: Function)
 {
-    var s: any = d3parent.append('select')
+    const s: any = d3parent.append('select')
         .attr('id', "selection-input_" + name)
         .attr('onchange','trace.event(\'vis_9\',\'Node Link\',\'selection-input_' + name + '\',this.value)')
 
@@ -128,14 +128,14 @@ function makeDropdown(d3parent: any, name: string, values: String[], callback: F
     })
 
     s.on('change', () => {
-        var e = document.getElementById("selection-input_" + name) as HTMLSelectElement;
+        const e = document.getElementById("selection-input_" + name) as HTMLSelectElement;
         callback(e.options[e.selectedIndex].value);
     })
 }
 
 function addDirectionToLinks(links: any, linkArrays: any) {
-    for(var i=0 ; i <links.length ; i++){
-        var directionValue = linkArrays.directed[i];
+    for(let i=0 ; i <links.length ; i++){
+        const directionValue = linkArrays.directed[i];
 
         if (["yes","true"].indexOf(directionValue) > -1 || directed){
             links[i].directed = true;
@@ -149,13 +149,14 @@ function addDirectionToLinks(links: any, linkArrays: any) {
 }
 
 // TIMELINE
-var timeSvg: any = d3.select('#timelineDiv')
+const timeSvg: any = d3.select('#timelineDiv')
     .append('svg')
     .attr('width', width)
     .attr('height', TIMELINE_HEIGHT)
 
+let timeSlider: timeslider.TimeSlider;
 if (dgraph.times().size() > 1) {
-    var timeSlider: timeslider.TimeSlider = new timeslider.TimeSlider(dgraph, width - 50);
+    timeSlider = new timeslider.TimeSlider(dgraph, width - 50);
     timeSlider.appendTo(timeSvg);
     messenger.addEventListener('timeRange', timeChangedHandler)
 }
@@ -165,19 +166,19 @@ if (dgraph.times().size() > 1) {
 $('#visDiv').append('<svg id="visSvg" width="' + (width - 20) + '" height="' + (height - 20) + '"></svg>');
 
 console.log(dgraph);
-var mouseStart: number[];
-var mouseEnd: number[];
+let mouseStart: number[];
+let mouseEnd: number[];
 
-var panOffsetLocal: number[] = [0, 0];
-var panOffsetGlobal: number[] = [0, 0];
+let panOffsetLocal: number[] = [0, 0];
+let panOffsetGlobal: number[] = [0, 0];
 
-var isMouseDown: boolean = false;
-var globalZoom: number = 1;
+let isMouseDown = false;
+let globalZoom = 1;
 
 let shiftDown = false;
 
 
-var parentSvg: any = d3.select('#visSvg');
+const parentSvg: any = d3.select('#visSvg');
 
 const svg = parentSvg.append('g')
     .attr('width', width)
@@ -193,18 +194,18 @@ const selectionRect = svg
     .style("opacity", 0.2);
 
 parentSvg
-    .on('mousedown', () => {
+    .on('mousedown', (ev: MouseEvent) => {
         isMouseDown = true;
         // <MouseEvent>
-        mouseStart = [(d3.event).x, (d3.event).y];
+        mouseStart = [ev.clientX, ev.clientY]; // todo: is a .sourceEvent needed?
     })
-    .on('mousemove', () => {
+    .on('mousemove', (ev: MouseEvent) => {
         if (isMouseDown && !shiftDown) {
-            panOffsetLocal[0] = ((d3.event).x - mouseStart[0]) * globalZoom;
-            panOffsetLocal[1] = ((d3.event).y - mouseStart[1]) * globalZoom;
+            panOffsetLocal[0] = (ev.clientX - mouseStart[0]) * globalZoom;
+            panOffsetLocal[1] = (ev.clientY - mouseStart[1]) * globalZoom;
             svg.attr("transform", "translate(" + (panOffsetGlobal[0] + panOffsetLocal[0]) + ',' + (panOffsetGlobal[1] + panOffsetLocal[1]) + ")");
         } else if (isMouseDown){
-            mouseEnd = [(d3.event).x, (d3.event).y];
+            mouseEnd = [ev.clientX, ev.clientY];
 
             // mouse positions are  clientX/clientY in local (DOM content) cooordinates - NOT relative to the parent SVG
             // @ts-ignore
@@ -222,10 +223,10 @@ parentSvg
                 .attr("height", r_h);
         }
     })
-    .on('mouseup', () => {
+    .on('mouseup', (ev: MouseEvent) => {
         isMouseDown = false;
         if (shiftDown){
-            mouseEnd = [(d3.event).x, (d3.event).y];
+            mouseEnd = [ev.clientX, ev.clientY];
 
             // mouse positions are  clientX/clientY in local (DOM content) cooordinates - NOT relative to the parent SVG
             // @ts-ignore
@@ -266,16 +267,16 @@ parentSvg
             panOffsetGlobal[1] += panOffsetLocal[1];
         }
     })
-    .on('wheel.zoom', () => {
+    .on('wheel.zoom', (ev: WheelEvent) => {
         // zoom
-        (<any>d3.event).preventDefault();
-        (<any>d3.event).stopPropagation();
+        ev.preventDefault();
+        ev.stopPropagation();
 
         // The WheelEvent has a deltaMode attribute, which specifies unit for the delta values
         // https://www.w3.org/TR/uievents/#idl-wheelevent
         // It seems that Chrome provides values in pixels, whereas Firefox provides values in lines.
-        const deltaMode = (<any>d3.event).deltaMode;
-        const deltaY = (<any>d3.event).deltaY;
+        const deltaMode = ev.deltaMode; //TODO: does this need a sourceEvent?
+        const deltaY = ev.deltaY;
         let deltaPixels = 0;
         if (deltaMode === 1) {
             deltaPixels = deltaY * 16;
@@ -286,11 +287,11 @@ parentSvg
             deltaPixels = 0;
         }
 
-        var globalZoom = 1 - deltaPixels / 1000;
+        const globalZoom = 1 - deltaPixels / 1000;
 
-        var mouse = [(d3.event).x - panOffsetGlobal[0], (d3.event).y - panOffsetGlobal[1]];
+        const mouse = [ev.clientX - panOffsetGlobal[0], ev.clientY - panOffsetGlobal[1]];
         var d: any, n: any;
-        for (var i = 0; i < nodes.length; i++) {
+        for (let i = 0; i < nodes.length; i++) {
             n = nodes[i]
             n.x = mouse[0] + (n.x - mouse[0]) * globalZoom;
             n.y = mouse[1] + (n.y - mouse[1]) * globalZoom;
@@ -328,24 +329,23 @@ document.addEventListener("keyup", (event) => {
 });
 
 
-var linkLayer: any = svg.append('g')
-var nodeLayer: any = svg.append('g')
-var labelLayer: any = svg.append('g')
+const linkLayer: any = svg.append('g')
+const nodeLayer: any = svg.append('g')
+const labelLayer: any = svg.append('g')
 
 
 
-var visualNodes: any;
-var nodeLabels: any;
-var nodeLabelOutlines: any;
-var visualLinks: any;
-var layout: any;
+let visualNodes: any;
+let nodeLabels: any;
+let nodeLabelOutlines: any;
+let visualLinks: any;
 
 // line function for straight links
-var lineFunction: any = d3.svg.line() // only line() d3 v4
+const lineFunction: any = d3.line()
     .x(function (d: any) { return d.x; })
     .y(function (d: any) { return d.y; })
-    .interpolate("bundle")
-    
+    .curve(d3.curveBundle)
+
 function marker(color: any) 
 {
     svg.append("svg:defs").append("svg:marker")
@@ -360,40 +360,17 @@ function marker(color: any)
         .attr("d", "M0,-5L10,0L0,5")
         .style("fill", color);
     return "url(" + color + ")";
-};
+}
 
-for (var i = 0; i < nodes.length; i++) {
+for (let i = 0; i < nodes.length; i++) {
     (nodes as any)[i]['width'] = getNodeRadius(nodes[i]) * 2;
     (nodes as any)[i]['height'] = getNodeRadius(nodes[i]) * 2;
 }
 
-/* d3 v3 */
-layout = d3.layout.force()
-    .linkDistance(30)
-    .size([width, height])
-    .nodes(nodes)
-    .links(links)
-    .on('end', () => {
-        unshowMessage();
-        updateNodes();
-        updateLinks();
-        updateLayout();
-        // package layout coordinates
-        var coords = []
-        for (var i = 0; i < nodes.length; i++) {
-            coords.push({ x: (nodes[i] as any).x, y: (nodes[i] as any).y })
-        }
-        messenger.sendMessage('layout', { coords: coords })
-    })
-    .start()
-
-
-/* d3 v4 */
-/*
-layout = d3.forceSimulation()
-    .force("link", d3.forceLink().distance(30).strength(0.1))
-    .nodes(nodes)
-    .force("link", d3.forceLink().links(links))
+d3.forceSimulation(nodes)
+    .force("link", d3.forceLink(links)) // .distance(30).strength(0.1)
+    .force("charge", d3.forceManyBody())
+    .force("center", d3.forceCenter(width / 2, height / 2))
     .on('end', () => {
         unshowMessage();
 
@@ -401,13 +378,12 @@ layout = d3.forceSimulation()
         updateLinks();
         updateLayout();
         // package layout coordinates
-        var coords: any = []
-        for (var i = 0; i < nodes.length; i++) {
+        let coords: any = []
+        for (let i = 0; i < nodes.length; i++) {
             coords.push({ x: (nodes[i] as any).x, y: (nodes[i] as any).y })
         }
         messenger.sendMessage('layout', { coords: coords })
     })
-*/
 
 // show layout-message
 showMessage('Calculating<br/>layout');
@@ -421,17 +397,17 @@ function init() {
         .enter()
         .append('path')
         // @ts-ignore
-        .attr('d', (n: dynamicgraph.Node) => d3.svg.symbol().type(getNodeShape(n))())
+        .attr('d', (n: dynamicgraph.Node) => d3.symbol().type(getNodeShape(n))())
         .attr('class', 'nodes')
         .style('fill', (n: dynamicgraph.Node) => getNodeColor(n)) 
         .attr('onclick','trace.event(\'vis_29\',document.location.pathname,\'Node\',\'Click\')')
         .attr('onmouseover','trace.event(\'vis_30\',document.location.pathname,\'Node\',\'Mouse Over\')')
         .on('mouseover', mouseOverNode)
         .on('mouseout', mouseOutNode)
-        .on('click', (d: any) => {
-            var selections = d.getSelections();
-            var currentSelection = dgraph.getCurrentSelection();
-            for (var j = 0; j < selections.length; j++) {
+        .on('click', (ev: MouseEvent, d: any) => {
+            const selections = d.getSelections();
+            const currentSelection = dgraph.getCurrentSelection();
+            for (let j = 0; j < selections.length; j++) {
                 if (selections[j] == currentSelection) {
                     messenger.selection('remove', <utils.ElementCompound>{ nodes: [d] });
                     return;
@@ -478,16 +454,16 @@ function init() {
         .attr('onclick','trace.event(\'vis_31\',document.location.pathname,\'Link\',\'Click\')')
         .attr('onmouseover','trace.event(\'vis_32\',document.location.pathname,\'Link\',\'Mouse Over\')')
         .style('opacity', LINK_OPACITY)
-        .on('mouseover', (d: any, i: any) => {
+        .on('mouseover', (ev: MouseEvent, d: any) => {
             messenger.highlight('set', <utils.ElementCompound>{ links: [d] })
         })
-        .on('mouseout', (d: any) => {
+        .on('mouseout', () => {
             messenger.highlight('reset')
         })
-        .on('click', (d: any) => {
-            var selections = d.getSelections();
-            var currentSelection = dgraph.getCurrentSelection();
-            for (var j = 0; j < selections.length; j++) {
+        .on('click', (ev: MouseEvent, d: any) => {
+            const selections = d.getSelections();
+            const currentSelection = dgraph.getCurrentSelection();
+            for (let j = 0; j < selections.length; j++) {
                 if (selections[j] == currentSelection) {
                     messenger.selection('remove', <utils.ElementCompound>{ links: [d] });
                     return;
@@ -543,7 +519,7 @@ function getNodeRadius(n: dynamicgraph.Node) {
 
 function getNodeColor(n: dynamicgraph.Node) 
 {
-    var c
+    let c
     if (n.color().split('#')[0] !== ",") {
         c = n.color().split('#')[1];
     }
@@ -554,24 +530,33 @@ function getNodeColor(n: dynamicgraph.Node)
 }
 
 function getNodeShape(n: dynamicgraph.Node) {
-    var shape = n.shape()
-    if(!shape){
-        shape = 'circle';
+    const shape = n.shape()
+
+    const shapes : Record<string, d3.SymbolType> = {
+        circle: d3.symbolCircle,
+        cross: d3.symbolCross,
+        diamond: d3.symbolDiamond,
+        square: d3.symbolSquare,
+        star: d3.symbolStar,
+        triangle: d3.symbolTriangle,
+        wye: d3.symbolWye
     }
+
+    return shapes[shape] ? shapes[shape] : d3.symbolCircle;
+
     // console.log('node shape', shape)
     // temporaryly this function is not working until the proper setting of node shape has been fixed.
-    return 'circle';
 }
 
 function updateLabelVisibility() {
     hiddenLabels = [];
     if (LABELING_STRATEGY == 0) { // automatic
-        var n1: any, n2: any;
-        for (var i = 0; i < nodesOrderedByDegree.length; i++) {
+        let n1: any, n2: any;
+        for (let i = 0; i < nodesOrderedByDegree.length; i++) {
             n1 = nodesOrderedByDegree[i];
             if (hiddenLabels.indexOf(n1) > -1)
                 continue;
-            for (var j = i + 1; j < nodesOrderedByDegree.length; j++) {
+            for (let j = i + 1; j < nodesOrderedByDegree.length; j++) {
                 n2 = nodesOrderedByDegree[j];
                 if (hiddenLabels.indexOf(n2) > -1)
                     continue;
@@ -598,14 +583,14 @@ function updateLabelVisibility() {
 
 
 function areNodeLabelsOverlapping(n1: any, n2: any) {
-    var n1e = n1.x + getLabelWidth(n1) / 2 + LABELDISTANCE;
-    var n2e = n2.x + getLabelWidth(n2) / 2 + LABELDISTANCE;
-    var n1w = n1.x - getLabelWidth(n1) / 2 - LABELDISTANCE;
-    var n2w = n2.x - getLabelWidth(n2) / 2 - LABELDISTANCE;
-    var n1n = n1.y + getLabelHeight(n1) / 2 + LABELDISTANCE;
-    var n2n = n2.y + getLabelHeight(n2) / 2 + LABELDISTANCE;
-    var n1s = n1.y - getLabelHeight(n1) / 2 - LABELDISTANCE;
-    var n2s = n2.y - getLabelHeight(n2) / 2 - LABELDISTANCE;
+    const n1e = n1.x + getLabelWidth(n1) / 2 + LABELDISTANCE;
+    const n2e = n2.x + getLabelWidth(n2) / 2 + LABELDISTANCE;
+    const n1w = n1.x - getLabelWidth(n1) / 2 - LABELDISTANCE;
+    const n2w = n2.x - getLabelWidth(n2) / 2 - LABELDISTANCE;
+    const n1n = n1.y + getLabelHeight(n1) / 2 + LABELDISTANCE;
+    const n2n = n2.y + getLabelHeight(n2) / 2 + LABELDISTANCE;
+    const n1s = n1.y - getLabelHeight(n1) / 2 - LABELDISTANCE;
+    const n2s = n2.y - getLabelHeight(n2) / 2 - LABELDISTANCE;
 
     return (n1e > n2w && n1w < n2e && n1s < n2n && n1n > n2s)
         || (n1e > n2w && n1w < n2e && n1n > n2s && n1s < n2n)
@@ -614,10 +599,10 @@ function areNodeLabelsOverlapping(n1: any, n2: any) {
 }
 
 function isHidingNode(n1: any, n2: any) {
-    var n1e = n1.x + getLabelWidth(n1) / 2 + LABELDISTANCE;
-    var n1w = n1.x - getLabelWidth(n1) / 2 - LABELDISTANCE;
-    var n1n = n1.y + getLabelHeight(n1) / 2 + LABELDISTANCE;
-    var n1s = n1.y - getLabelHeight(n1) / 2 - LABELDISTANCE;
+    const n1e = n1.x + getLabelWidth(n1) / 2 + LABELDISTANCE;
+    const n1w = n1.x - getLabelWidth(n1) / 2 - LABELDISTANCE;
+    const n1n = n1.y + getLabelHeight(n1) / 2 + LABELDISTANCE;
+    const n1s = n1.y - getLabelHeight(n1) / 2 - LABELDISTANCE;
     return n1w < n2.x && n1e > n2.x && n1n < n2.y && n1s > n2.y;
 }
 
@@ -626,14 +611,14 @@ function isHidingNode(n1: any, n2: any) {
 //// INTERACTION ////
 /////////////////////
 
-function mouseOverNode(n: any) {
-    var newElementCompound: utils.ElementCompound = new utils.ElementCompound();
+function mouseOverNode(ev: MouseEvent, n: any) {
+    const newElementCompound: utils.ElementCompound = new utils.ElementCompound();
     newElementCompound.nodes = [n]
     messenger.highlight('set', newElementCompound)
     // BEFORE
     // messenger.highlight('set', { nodes: [n] })
 }
-function mouseOutNode(n: any) {
+function mouseOutNode() {
     messenger.highlight('reset')
 }
 
@@ -648,7 +633,7 @@ function mouseOutNode(n: any) {
 function setStateHandler(m: messenger.SetStateMessage){
     if (m.viewType=="nodelink" ){
 
-    var state: messenger.NodeLinkControls = m.state as messenger.NodeLinkControls;    
+    const state: messenger.NodeLinkControls = m.state as messenger.NodeLinkControls;    
     // unpack / query that state object
     // e.g., var params = state.params.
     // set the parameters below:...
@@ -701,8 +686,7 @@ function setStateHandler(m: messenger.SetStateMessage){
 function getStateHandler( m: messenger.GetStateMessage){
     
     if (m.viewType=="nodelink" ){
-        var nlNetwor: messenger.NetworkControls;
-        nlNetwor=new messenger.NodeLinkControls("nodelink",time_start.unixTime(),time_end.unixTime(),globalZoom,panOffsetLocal,panOffsetGlobal,LINK_OPACITY,NODE_OPACITY,NODE_SIZE,LINK_GAP,LINK_WIDTH_SCALE,LABELING_STRATEGY);
+        const nlNetwor: messenger.NetworkControls = new messenger.NodeLinkControls("nodelink",time_start.unixTime(),time_end.unixTime(),globalZoom,panOffsetLocal,panOffsetGlobal,LINK_OPACITY,NODE_OPACITY,NODE_SIZE,LINK_GAP,LINK_WIDTH_SCALE,LABELING_STRATEGY);
         messenger.stateCreated(nlNetwor,m.bookmarkIndex,m.viewType,m.isNewBookmark,m.typeOfMultiView);
 
         //  var states=JSON.parse(localStorage.getItem("currentCapturedStates") || "[]" ) ;
@@ -738,7 +722,8 @@ function timeChangedHandler(m: messenger.TimeRangeMessage) {
     time_start = times[0];
     time_end = times[times.length - 1];
 
-    for (var i = 0; i < times.length; i++) {
+    let i = 0;
+    for (i; i < times.length; i++) {
         if (times[i].unixTime() > m.startUnix) {
             time_start = times[i - 1];
             break;
@@ -766,13 +751,13 @@ function updateNodeSize() {
     visualNodes
         // .attr('r', (n: any) => getNodeRadius(n))
         //@ts-ignore
-        .attr('d', (n: any) => d3.svg.symbol().size(getNodeRadius(n)).type(getNodeShape(n))())
+        .attr('d', (n: any) => d3.symbol().size(getNodeRadius(n)).type(getNodeShape(n))())
 }
 
 function updateNodes(highlightId?: number) {
     visualNodes
         .style('fill', (d: any) => {
-            var color: string | undefined;
+            let color: string | undefined;
             if(highlightId && highlightId == d._id){
                 color = COLOR_HIGHLIGHT;
             }
@@ -787,7 +772,7 @@ function updateNodes(highlightId?: number) {
             return color;
         })
         .style('opacity', (d: any) => {
-            var visible: boolean = d.isVisible();
+            const visible: boolean = d.isVisible();
             if (!visible)
                 return 0;
             else
@@ -802,7 +787,7 @@ function updateNodes(highlightId?: number) {
             ? 'visible' : 'hidden')
 
         .style('color', (d: any) => {
-            var color: string | undefined; // BEFORE string
+            let color: string | undefined; // BEFORE string
             if (d.isHighlighted()) {
                 color = COLOR_HIGHLIGHT;
             } else {
@@ -827,7 +812,7 @@ function updateLinks(highlightId?: number){
     visualLinks
         .attr('marker-end',function (d: any) {
             if(d.directed){
-                var color = utils.getPriorityColor(d);
+                let color = utils.getPriorityColor(d);
                 if(!color)
                     color = COLOR_DEFAULT_LINK;
                 if(highlightId && highlightId == d._id) {
@@ -837,7 +822,7 @@ function updateLinks(highlightId?: number){
             }
         })
         .style('stroke', function (d: any) {
-            var color = utils.getPriorityColor(d);
+            let color = utils.getPriorityColor(d);
             if (!color)
                 color = COLOR_DEFAULT_LINK;
             if(highlightId && highlightId == d._id) {
@@ -846,7 +831,7 @@ function updateLinks(highlightId?: number){
             return color;
         })
         .style('opacity', (d: any) => {
-            var visible: boolean = d.isVisible();
+            const visible: boolean = d.isVisible();
             if (!visible
                 || !d.source.isVisible()
                 || !d.target.isVisible())
@@ -862,7 +847,7 @@ function updateLinks(highlightId?: number){
             }
         })
         .style('stroke-width', function (d: any) {
-            var w: any = linkWeightScale(d.weights(time_start, time_end).mean()) * LINK_WIDTH_SCALE;
+            const w: any = linkWeightScale(d.weights(time_start, time_end).mean()) * LINK_WIDTH_SCALE;
             // console.log('mean weight for this link ', w);
             return d.isHighlighted() ? w * 2 : w;
         })
@@ -872,9 +857,9 @@ function updateLinks(highlightId?: number){
 
 function calculateCurvedLinks()
 {
-    var path: any, dir: any, offset: any, offset2: any, nodePair: dynamicgraph.NodePair | undefined;
-    var links: dynamicgraph.Link[];
-    for (var i = 0; i < dgraph.nodePairs().length; i++) 
+    let path: any, dir: any, offset: any, offset2: any, nodePair: dynamicgraph.NodePair | undefined;
+    let links: dynamicgraph.Link[];
+    for (let i = 0; i < dgraph.nodePairs().length; i++) 
     {
         nodePair = dgraph.nodePair(i);
         if (nodePair) 
@@ -904,8 +889,8 @@ function calculateCurvedLinks()
                 // Draw self-links as back-link
                 if (nodePair.source == nodePair.target)
                 {
-                    var minGap = getNodeRadius(nodePair.source) / 2 + 4;
-                    for (var j = 0; j < links.length; j++) {
+                    const minGap = getNodeRadius(nodePair.source) / 2 + 4;
+                    for (let j = 0; j < links.length; j++) {
                         (links as any)[j]['path'] = [
                             { x: (nodePair.source as any).x, y: (nodePair.source as any).y },
                             { x: (nodePair.source as any).x, y: (nodePair.source as any).y - minGap - (j * LINK_GAP) },
@@ -926,7 +911,7 @@ function calculateCurvedLinks()
                     offset2 = stretchVector([dir.x, dir.y], LINK_GAP)
 
                     // calculate paths
-                    for (var j = 0; j < links.length; j++) {
+                    for (let j = 0; j < links.length; j++) {
                         if (links[j] as any) {
                             (links[j] as any)['path'] = [
                                 {x: (nodePair.source as any).x, y: (nodePair.source as any).y},
@@ -950,12 +935,12 @@ function calculateCurvedLinks()
     }
 }
 function stretchVector(vec: any, finalLength: any) {
-    var len: number = 0
-    for (var i: number = 0; i < vec.length; i++) {
+    let len = 0
+    for (let i = 0; i < vec.length; i++) {
         len += Math.pow(vec[i], 2)
     }
     len = Math.sqrt(len)
-    for (var i: number = 0; i < vec.length; i++) {
+    for (let i = 0; i < vec.length; i++) {
         vec[i] = vec[i] / len * finalLength
     }
 

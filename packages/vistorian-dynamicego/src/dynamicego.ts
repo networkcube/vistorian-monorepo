@@ -1,4 +1,4 @@
-/// <reference path="./lib/d3.d.ts"/>
+import * as d3 from "d3";
 
 import * as dynamicgraph from 'vistorian-core/src/dynamicgraph';
 import * as messenger from 'vistorian-core/src/messenger';
@@ -48,8 +48,8 @@ const TABLE_TOP = 50;
 
 // VIS ELEMENTS
 let svg: any;
-const nodeYPosFunction: any = d3.scale.linear();
-const timeXFunction: any = d3.scale.linear();
+const nodeYPosFunction: any = d3.scaleLinear();
+const timeXFunction: any = d3.scaleLinear();
 let bar: any;
 let nodeLabel: any;
 
@@ -79,10 +79,10 @@ for (let i = 0; i < globalNodeOrder.length; i++) {
 }
 
 // VIS FUNCTIONS
-const lineFunction: any = d3.svg.line() // only d3.line() in v4
+const lineFunction: any = d3.line()
     .x((d: any) => { return d.x; })
     .y((d: any) => { return d.y; })
-    .interpolate("basis"); // change to .curve(d3.curveBases) in v4
+    .curve(d3.curveBasis);
 
 
 // UI SETUP
@@ -180,13 +180,13 @@ export function createNodes() {
         .attr('class', 'nodeLabel')
         .style('font-weight', NODE_LABEL_WEIGHT)
         .style('fill', NODE_LABEL_COLOR)
-        .on('mouseover', (d: any, i: any) => {
+        .on('mouseover', (ev: MouseEvent, d: any, i: any) => {
             messenger.highlight('set', <utils.ElementCompound>{ nodes: [d] });
         })
-        .on('mouseout', (d: any, i: any) => {
+        .on('mouseout', (ev: MouseEvent, d: any, i: any) => {
             messenger.highlight('reset');
         })
-        .on('click', (d: any, i: any) => {
+        .on('click', (ev: MouseEvent, d: any, i: any) => {
             showEgoNetwork(d)
         });
 
@@ -286,10 +286,12 @@ export function createLinks() {
         .style('stroke-width', 1)
         .style('opacity', .3)
         .on('mouseover', (d: any, i: any) => {
+            // N.B glutils uses callback functions with same signatures as *old* d3 format
             messenger.highlight('set', <utils.ElementCompound>{ links: [d] });
             timeline.highlight(d.times().get(0).unixTime())
         })
         .on('mouseout', (d: any, i: any) => {
+            // N.B glutils uses callback functions with same signatures as *old* d3 format
             messenger.highlight('reset');
         })
 }

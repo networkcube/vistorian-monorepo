@@ -6,7 +6,6 @@ module.exports = {
     entry: './web/src/index.ts',
     devtool: 'inline-source-map',
     externals: {
-        d3: 'd3',
         science: 'science',
         express: 'express'
     },

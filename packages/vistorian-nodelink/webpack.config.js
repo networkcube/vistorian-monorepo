@@ -6,7 +6,6 @@ module.exports = {
     entry: './src/index.ts',
     devtool: 'inline-source-map',
     externals: {
-        d3: 'd3',
         jquery: 'jquery',
         science: 'science',
         jstorage: 'jstorage',
