@@ -367,7 +367,7 @@ for (let i = 0; i < nodes.length; i++) {
     (nodes as any)[i]['height'] = getNodeRadius(nodes[i]) * 2;
 }
 
-layout = d3.forceSimulation(nodes)
+d3.forceSimulation(nodes)
     .force("link", d3.forceLink(links)) // .distance(30).strength(0.1)
     .force("charge", d3.forceManyBody())
     .force("center", d3.forceCenter(width / 2, height / 2))
