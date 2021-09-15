@@ -1,4 +1,4 @@
-/// <reference path="./lib/d3.d.ts"/>
+import * as d3 from "d3";
 
 import * as THREE from 'three';
 
@@ -224,7 +224,7 @@ class MatrixOverview {
       .attr("fill", this.focusColor)
       .attr("fill-opacity", .2);
 
-    this.zoom = d3.behavior.zoom()
+    this.zoom = d3.zoom()
       // .scaleExtent([0.2, 4])
       .on('zoom', this.zoomed);
 
@@ -232,10 +232,8 @@ class MatrixOverview {
 
   }
 
-  private zoomed = () => {
-    const z: number = this.zoom.scale();
-    const tr : any[] = this.zoom.translate();
-    this.updateTransform(z, tr);
+  private zoomed = (ev: d3.D3ZoomEvent<any, any>) => {
+    this.updateTransform(ev.transform.k, [ev.transform.x, ev.transform.y]);
   }
 
   setCanvasRatio(canvasRatio: number) {
@@ -261,8 +259,7 @@ class MatrixOverview {
     tr[1] = this.ratio !== 0 ? -tr[1] / this.ratio : 0;
     this.ratio = this.height !== 0 ? r / this.height : 0;
 
-    this.zoom.scale(z);
-    this.zoom.translate(tr);
+    this.zoom.transform(this.focus, {k: z, x: tr[0], y: tr[1]});
 
     const focusX = matrixX0 * this.width;
     const focusY = matrixY0 * this.height;
@@ -324,13 +321,13 @@ class MatrixLabels {
       .attr('alignment-baseline', 'middle')
       .attr('x', this.margin.left - 10)
       .attr('y', (d: any, i: any) => { return leftLabelPosition(d.id()) })
-      .on('mouseover', (d: any, i: any) => {
+      .on('mouseover', (ev: MouseEvent, d: any) => {
         messenger.highlight('set', <utils.ElementCompound>{ nodes: [d] });
       })
-      .on('mouseout', (d: any, i: any) => {
+      .on('mouseout', () => {
         messenger.highlight('reset');
       })
-      .on('click', (d: any, i: any) => {
+      .on('click', (ec: MouseEvent, d: any) => {
         this.matrix.nodeClicked(d);
       });
 
@@ -356,13 +353,13 @@ class MatrixLabels {
       .attr('x', (d: any, i: any) => { return topLabelPosition(d.id()) })
       .attr('y', this.margin.left - 10)
       .attr('transform', (d: any, i: any) => { return 'rotate(-90, ' + (this.margin.top + cellSize * i + cellSize / 2) + ', ' + (this.margin.left - 10) + ')' })
-      .on('mouseover', (d: any, i: any) => {
+      .on('mouseover', (ev: MouseEvent, d: any, i: any) => {
         this.matrix.highlightNodes([d.id()]);
       })
-      .on('mouseout', (d: any, i: any) => {
+      .on('mouseout', () => {
         this.matrix.highlightNodes([]);
       })
-      .on('click', (d: any, i: any) => {
+      .on('click', (ev: MouseEvent, d: any, i: any) => {
         this.matrix.nodeClicked(d);
       });
 
@@ -430,7 +427,6 @@ class MatrixVisualization {
   private previousHoveredLinks: number[] | undefined;
   private canvas: any; // HTMLCanvasElement = new HTMLCanvasElement();
   private view: any; // BEFORE D3.Selection;
-  private zoom: any; // BEFORE D3.Behavior.Zoom;
   private scene: any; // BEFORE THREE.Scene = new THREE.Scene();
   private camera: any; // BEFORE THREE.OrthographicCamera;
   private renderer: any; // BEFORE THREE.WebGLRenderer = new THREE.WebGLRenderer();
@@ -465,7 +461,7 @@ class MatrixVisualization {
     this.mouseDownCell = { row: 0, col: 0 };
     this.cellHighlightFrames = dynamicgraph.array(undefined, matrix.numberOfLinks());
     this.cellSelectionFrames = dynamicgraph.array(undefined, matrix.numberOfLinks());
-    this.linkWeightScale = d3.scale.linear().range([0.1, 1])
+    this.linkWeightScale = d3.scaleLinear().range([0.1, 1])
       .domain([0, matrix.maxWeight()]);
 
     //When a node row is hovered over in dataview.ts, a message is received here to highlight the corresponding link.
@@ -480,8 +476,6 @@ class MatrixVisualization {
     this.initWebGL();
     this.elem.node().appendChild(this.canvas);
     this.view = d3.select(this.canvas);
-    this.zoom = d3.behavior.zoom();
-    this.view.call(this.zoom);//.on('zoom', this.zoomed));
     this.initGeometry();
     this.cellSize = this.matrix.cellSize;
 
@@ -565,10 +559,6 @@ class MatrixVisualization {
     this.ncols = ncols;
     this.offset = offset;
     this.cellSize = cellSize;
-
-
-    this.zoom.scale(scale);
-    this.zoom.translate(tr);
 
     if (this.geometry) {
       this.scene.remove(this.mesh);
@@ -821,7 +811,6 @@ class MatrixVisualization {
   }
   private mouseDownHandler = (e: MouseEvent) => {
     if (e.shiftKey) {
-      this.view.on('mousedown.zoom', null);
       this.mouseDown = true;
       this.mouseDownPos = glutils.getMousePos(this.canvas, e.clientX, e.clientY);
       this.mouseDownCell = this.posToCell(this.mouseDownPos);
@@ -829,7 +818,6 @@ class MatrixVisualization {
   }
   private mouseUpHandler = (e: Event) => {
     this.mouseDown = false;
-    this.view.call(this.zoom);//.on('zoom', this.zoomed));
     if (this.hoveredLinks)
       for (const id of this.hoveredLinks) {
         if (this.cellHighlightFrames[id])
@@ -843,17 +831,9 @@ class MatrixVisualization {
     console.log("click");
   }
 
-  private zoomed = () => {
-    const z: number = this.zoom.scale();
-    const tr: number[] = this.zoom.translate();
-    this.updateTransform(z, tr);
-  }
-
   updateTransform(z: any, tr: any) {
     tr[0] = Math.min(0, tr[0]);
     tr[1] = Math.min(0, tr[1]);
-    this.zoom.scale(z);
-    this.zoom.translate(tr);
     this.matrix.updateTransform(z, tr);
   }
 }
