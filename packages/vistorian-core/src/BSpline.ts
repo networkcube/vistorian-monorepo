@@ -4,13 +4,13 @@ export class BSpline {
     degree: any;
     dimension: any;
     baseFunc: any;
-    baseFuncRangeInt: number = 0; // INIT??
+    baseFuncRangeInt = 0; // INIT??
 
 
     constructor(points: any, degree: any, copy?: any) {
         if (copy) {
             this.points = []
-            for (var i = 0; i < points.length; i++) {
+            for (let i = 0; i < points.length; i++) {
                 this.points.push(points[i]);
             }
         } else {
@@ -35,8 +35,8 @@ export class BSpline {
 
     //BSpline.prototype.seqAt = function(dim: any): any{
     seqAt(dim: any): any {
-        var points: any = this.points;
-        var margin: any = this.degree + 1;
+        const points: any = this.points;
+        const margin: any = this.degree + 1;
         return function (n: any) {
             if (n < margin) {
                 return points[0][dim];
@@ -46,7 +46,7 @@ export class BSpline {
                 return points[n - margin][dim];
             }
         };
-    };
+    }
 
     //BSpline.prototype.basisDeg2 = function(x: any): number{
     basisDeg2(x: any): number {
@@ -59,7 +59,7 @@ export class BSpline {
         } else {
             return 0;
         }
-    };
+    }
 
     //BSpline.prototype.basisDeg3 = function(x: any): number{
     basisDeg3(x: any): number {
@@ -74,7 +74,7 @@ export class BSpline {
         } else {
             return 0;
         }
-    };
+    }
 
     //BSpline.prototype.basisDeg4 = function(x: any): number{
     basisDeg4(x: any): number {
@@ -91,7 +91,7 @@ export class BSpline {
         } else {
             return 0;
         }
-    };
+    }
 
     //BSpline.prototype.basisDeg5 = function(x: any): number{
     basisDeg5(x: any): number {
@@ -110,19 +110,19 @@ export class BSpline {
         } else {
             return 0;
         }
-    };
+    }
 
     //BSpline.prototype.getInterpol = function(seq: any, t: any): number{
     getInterpol(seq: any, t: any): number {
-        var f: any = this.baseFunc;
-        var rangeInt: any = this.baseFuncRangeInt;
-        var tInt: number = Math.floor(t);
-        var result: number = 0;
-        for (var i = tInt - rangeInt; i <= tInt + rangeInt; i++) {
+        const f: any = this.baseFunc;
+        const rangeInt: any = this.baseFuncRangeInt;
+        const tInt: number = Math.floor(t);
+        let result = 0;
+        for (let i = tInt - rangeInt; i <= tInt + rangeInt; i++) {
             result += seq(i) * f(t - i);
         }
         return result;
-    };
+    }
 
     //BSpline.prototype.calcAt = function(t: any): any{
     calcAt(t: any): any {
@@ -132,13 +132,13 @@ export class BSpline {
         } else if (this.dimension == 3) {
             return [this.getInterpol(this.seqAt(0), t), this.getInterpol(this.seqAt(1), t), this.getInterpol(this.seqAt(2), t)];
         } else {
-            var res = [];
-            for (var i = 0; i < this.dimension; i++) {
+            const res = [];
+            for (let i = 0; i < this.dimension; i++) {
                 res.push(this.getInterpol(this.seqAt(i), t));
             }
             return res;
         }
-    };
+    }
 }
 
 /*

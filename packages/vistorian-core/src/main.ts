@@ -9,7 +9,7 @@ import { DynamicGraph, DataManager, DataManagerOptions } from './dynamicgraph'
  * */
 
 // must agree with var of same name in DynamicGraph.initDynamicGraph()
-export var TIME_FORMAT: string = 'YYYY-MM-DD hh:mm:ss';
+export const TIME_FORMAT = 'YYYY-MM-DD hh:mm:ss';
 /**
  * Returns the networkcube standart time format
  * @return {[type]} [description]
@@ -20,8 +20,8 @@ export function timeFormat() {
 
 
 // GLOBAL VARIABLES
-var dataManager: DataManager = new DataManager();
-var session: string;
+const dataManager: DataManager = new DataManager();
+let session: string;
 
 export function getSessionId() {
     return session;
@@ -54,7 +54,7 @@ export function clearAllDataManagerSessionCaches() {
 
 
 export function getDynamicGraph(dataName?: string, sessionName?: string): DynamicGraph {
-    var vars = getUrlVars();
+    const vars = getUrlVars();
     if (!dataName)
         dataName = (vars as any)['datasetName'];
     if (!sessionName)
@@ -86,16 +86,16 @@ export function createTabVisualizations(parentId: string, visSpec: any[], sessio
     width: number,
     height: number, visParams?: any) {
 
-    var parent = $('#' + parentId);
+    const parent = $('#' + parentId);
 
-    var tabDiv = $('<div></div>')
+    const tabDiv = $('<div></div>')
     parent.append(tabDiv)
 
-    var visDiv = $('<div></div>')
+    const visDiv = $('<div></div>')
     parent.append(visDiv)
 
 
-    var ul = $('<ul class="networkcube-tabs"\
+    const ul = $('<ul class="networkcube-tabs"\
                 style="\
                     list-style-type: none;\
                     margin: 0;\
@@ -107,7 +107,7 @@ export function createTabVisualizations(parentId: string, visSpec: any[], sessio
     tabDiv.append(ul)
 
     // create tabs and divs
-    for (var i = 0; i < visSpec.length; i++) {
+    for (let i = 0; i < visSpec.length; i++) {
         visSpec[i].name = visSpec[i].name.replace(' ', '-')
         ul.append($('<li style="float: left;"><a style="\
                 display: inline-block;\
@@ -128,24 +128,21 @@ export function createTabVisualizations(parentId: string, visSpec: any[], sessio
 }
 
 export function switchVisTab(evt: any, visName: string) {
-    // Declare all variables
-    var i, tabcontent, tablinks;
-
     // Get all elements with class="tabcontent" and hide them
-    tabcontent = document.getElementsByClassName("networkcube-visTabContent") as HTMLCollectionOf<HTMLElement>;
-    for (i = 0; i < tabcontent.length; i++) {
+    const tabcontent = document.getElementsByClassName("networkcube-visTabContent") as HTMLCollectionOf<HTMLElement>;
+    for (let i = 0; i < tabcontent.length; i++) {
         tabcontent[i].style.display = "none";
     }
 
     // Get all elements with class="tablinks" and remove the class "active"
-    tablinks = document.getElementsByClassName("networkcube-tablinks");
-    for (i = 0; i < tablinks.length; i++) {
+    const tablinks = document.getElementsByClassName("networkcube-tablinks");
+    for (let i = 0; i < tablinks.length; i++) {
         tablinks[i].className = tablinks[i].className.replace(" active", "");
     }
 
     // Show the current tab, and add an "active" class to the link that opened the tab
     // ADD IF GETELEMENT IS NULL
-    var element =  document.getElementById('networkcube-visTab-' + visName);
+    const element =  document.getElementById('networkcube-visTab-' + visName);
     if(element) {
         element.style.display = "block";
     }
@@ -163,19 +160,20 @@ export function createVisualizationIFrame(parentId: string, visUri: string, sess
         .attr('width', width)
         .attr('height', height)
 
-    var iframe = $('#' + parentId + '> iframe')
+    const iframe = $('#' + parentId + '> iframe')
 
-    var visParamString = '';
-    for (var prop in visParams) {
+    let visParamString = '';
+    for (const prop in visParams) {
         visParamString += '&' + prop + '=' + visParams[prop];
     }
 
     if(!visUri.startsWith('http'))
     {
+        let server;
         if (window.location.port)
-            var server = location.protocol + '//' + window.location.hostname + ':' + window.location.port + '' + window.location.pathname;
+            server = location.protocol + '//' + window.location.hostname + ':' + window.location.port + '' + window.location.pathname;
         else
-            var server = location.protocol + '//' + window.location.hostname + '' + window.location.pathname;
+            server = location.protocol + '//' + window.location.hostname + '' + window.location.pathname;
         visUri = server + "/node_modules/vistorian-" + visUri + "/web/index.html";
     }
 
@@ -202,14 +200,15 @@ function openView(session: string, visUri: string, dataname: string, tab: boolea
 {    
     if(!visUri.startsWith('http'))
     {
+        let server;
         if (window.location.port)
-            var server = location.protocol + '//' + window.location.hostname + ':' + window.location.port + '' + window.location.pathname;
+            server = location.protocol + '//' + window.location.hostname + ':' + window.location.port + '' + window.location.pathname;
         else
-            var server = location.protocol + '//' + window.location.hostname + '' + window.location.pathname;
+            server = location.protocol + '//' + window.location.hostname + '' + window.location.pathname;
         visUri = server + "/node_modules/vistorian-" + visUri + "/web/index.html";
     }
 
-    var url = visUri + '?session=' + session + '&datasetName=' + dataname;
+    const url = visUri + '?session=' + session + '&datasetName=' + dataname;
 
     if (tab)
         window.open(url, '_blank');
@@ -222,15 +221,15 @@ export function getURLString(dataName: string) {
 }
 
 /// UTILITY FUNCTIONS
-export enum OrderType { Local, Global, Data };
+export enum OrderType { Local, Global, Data }
 
-export function isTrackingEnabled(): Boolean {
-    var value = localStorage.getItem("NETWORKCUBE_IS_TRACKING_ENABLED");
+export function isTrackingEnabled(): boolean {
+    const value = localStorage.getItem("NETWORKCUBE_IS_TRACKING_ENABLED");
     return value == 'true' ? true : false;
 }
 
-export function isTrackingSet(): Boolean {
-    var value = localStorage.getItem("NETWORKCUBE_IS_TRACKING_ENABLED");
+export function isTrackingSet(): boolean {
+    const value = localStorage.getItem("NETWORKCUBE_IS_TRACKING_ENABLED");
     return value === null ? false : true;
 }
 

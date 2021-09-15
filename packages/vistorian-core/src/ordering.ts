@@ -9,14 +9,14 @@ import * as reorder from 'reorder.js'
 * @return {[type]}              [description]
 */
 export function orderNodes(graph: DynamicGraph, config?: OrderingConfiguration): number[] {
-    var max: number = 0;
-    var similarityMatrix: number[][] = [];
-    var order: number[] = graph.nodes().ids();
-    var distance: any;
-    var nodes: Node[];
-    var links: Link[];
-    var start: Time;
-    var end: Time;
+    const max = 0;
+    const similarityMatrix: number[][] = [];
+    const order: number[] = graph.nodes().ids();
+    let distance: any;
+    let nodes: Node[];
+    let links: Link[];
+    let start: Time;
+    let end: Time;
 
     if (config != undefined) {
         distance = config.distance ? config.distance : distance.manhattan;
@@ -34,20 +34,20 @@ export function orderNodes(graph: DynamicGraph, config?: OrderingConfiguration):
     }
 
     // init similarity matrix with all 0.
-    var arr: number[];
-    for (var i = 0; i < nodes.length; i++) {
+    let arr: number[];
+    for (let i = 0; i < nodes.length; i++) {
         arr = []
         similarityMatrix.push(arr);
-        for (var j = 0; j < nodes.length; j++) {
+        for (let j = 0; j < nodes.length; j++) {
             similarityMatrix[i].push(0);
         }
     }
     // fill matrix
-    var weight = 0;
-    var l: Link;
-    var s: number;
-    var t: number;
-    for (var i = 0; i < links.length; i++) {
+    let weight = 0;
+    let l: Link;
+    let s: number;
+    let t: number;
+    for (let i = 0; i < links.length; i++) {
         weight = 0;
         // check if nodes are in allowed nodes
         s = nodes.indexOf(links[i].source)
@@ -66,7 +66,7 @@ export function orderNodes(graph: DynamicGraph, config?: OrderingConfiguration):
     }
 
     // Reorder
-    var leafOrder = reorder
+    const leafOrder = reorder
         .optimal_leaf_order()
         //.distance(distance)
         .reorder(similarityMatrix);

@@ -5,9 +5,9 @@ import { BSpline } from './BSpline';
 //module glutils {
 
 export function makeAlphaBuffer(array: number[], stretch: number) {
-    var buffer: Float32Array = new Float32Array(array.length * stretch); // three components per vertex
-    for (var i = 0; i < array.length; i++) {
-        for (var j = 0; j < stretch; j++) {
+    const buffer: Float32Array = new Float32Array(array.length * stretch); // three components per vertex
+    for (let i = 0; i < array.length; i++) {
+        for (let j = 0; j < stretch; j++) {
             buffer[i * stretch + j] = array[i];
         }
     }
@@ -15,14 +15,14 @@ export function makeAlphaBuffer(array: number[], stretch: number) {
 }
 
 export function addBufferedHatchedRect(vertexArray: number[][], x: number, y: number, z: number, width: number, height: number, colorArray: number[][], c: number[]) {
-    var HATCH_NUM = 3;
-    var LINE_WIDTH = 1;
-    var hatchWidth = width / HATCH_NUM;
+    const HATCH_NUM = 3;
+    const LINE_WIDTH = 1;
+    const hatchWidth = width / HATCH_NUM;
     width = width / 2;
     height = height / 2;
-    var startX: number = x + width;
-    var startY: number = y - height;
-    for (var i = 1; i <= HATCH_NUM; i++) {
+    const startX: number = x + width;
+    const startY: number = y - height;
+    for (let i = 1; i <= HATCH_NUM; i++) {
 
         vertexArray.push(
             [startX - hatchWidth * i, startY, z],
@@ -65,9 +65,9 @@ export function addBufferedRect(vertexArray: number[][], x: number, y: number, z
 }
 
 export function addBufferedCirlce(vertexArray: number[][], x: number, y: number, z: number, radius: number, colorArray: number[][], c: number[]) {
-    var segments: number = 11;
-    var angle: number = Math.PI / (segments / 2)
-    for (var i = 0; i < segments; i++) {
+    const segments = 11;
+    const angle: number = Math.PI / (segments / 2)
+    for (let i = 0; i < segments; i++) {
         vertexArray.push(
             [x + Math.cos(i * angle) * radius, y + Math.sin(i * angle) * radius, z],
             [x + Math.cos((i + 1) * angle) * radius, y + Math.sin((i + 1) * angle) * radius, z],
@@ -105,7 +105,7 @@ export function addBufferedDiamond(vertexArray: number[][], x: number, y: number
 export function createRectFrame(w: number, h: number, color: number, lineThickness: number): THREE.Line {
     w = w / 2
     h = h / 2
-    var geom: THREE.Geometry = new THREE.Geometry();
+    const geom: THREE.Geometry = new THREE.Geometry();
     geom.vertices = [
         new THREE.Vector3(-w, -h, 0),
         new THREE.Vector3(-w, h, 0),
@@ -114,7 +114,7 @@ export function createRectFrame(w: number, h: number, color: number, lineThickne
         new THREE.Vector3(-w, -h, 0)
     ]
 
-    var material: THREE.LineBasicMaterial = new THREE.LineBasicMaterial({
+    const material: THREE.LineBasicMaterial = new THREE.LineBasicMaterial({
         color: color,
         // linewidth: lineThickness,
     });
@@ -125,7 +125,7 @@ export function createRectFrame(w: number, h: number, color: number, lineThickne
 export function createDiagonalCross(w: number, h: number, color: number, lineThickness: number): THREE.Line {
     w = w / 2
     h = h / 2
-    var geom: THREE.Geometry = new THREE.Geometry();
+    const geom: THREE.Geometry = new THREE.Geometry();
     geom.vertices = [
         new THREE.Vector3(-w, -h, 0),
         new THREE.Vector3(-w, h, 0),
@@ -138,7 +138,7 @@ export function createDiagonalCross(w: number, h: number, color: number, lineThi
         new THREE.Vector3(w, -h, 0)
     ];
 
-    var material: THREE.LineBasicMaterial = new THREE.LineBasicMaterial({
+    const material: THREE.LineBasicMaterial = new THREE.LineBasicMaterial({
         color: color,
         linewidth: lineThickness,
     });
@@ -147,8 +147,8 @@ export function createDiagonalCross(w: number, h: number, color: number, lineThi
 }
 
 export function makeBuffer3f(array: number[][]): Float32Array {
-    var buffer: Float32Array = new Float32Array(array.length * 3); // three components per vertex
-    for (var i = 0; i < array.length; i++) {
+    const buffer: Float32Array = new Float32Array(array.length * 3); // three components per vertex
+    for (let i = 0; i < array.length; i++) {
         buffer[i * 3 + 0] = array[i][0];
         buffer[i * 3 + 1] = array[i][1];
         buffer[i * 3 + 2] = array[i][2];
@@ -156,8 +156,8 @@ export function makeBuffer3f(array: number[][]): Float32Array {
     return buffer
 }
 export function makeBuffer4f(array: number[][]): Float32Array {
-    var buffer: Float32Array = new Float32Array(array.length * 4); // three components per vertex
-    for (var i = 0; i < array.length; i++) {
+    const buffer: Float32Array = new Float32Array(array.length * 4); // three components per vertex
+    for (let i = 0; i < array.length; i++) {
         buffer[i * 4 + 0] = array[i][0];
         buffer[i * 4 + 1] = array[i][1];
         buffer[i * 4 + 2] = array[i][2];
@@ -168,8 +168,8 @@ export function makeBuffer4f(array: number[][]): Float32Array {
 
 
 export function updateBuffer(buffer: number[], array: number[][], size: number) {
-    for (var i = 0; i < array.length; i++) {
-        for (var j = 0; j < size; j++) {
+    for (let i = 0; i < array.length; i++) {
+        for (let j = 0; j < size; j++) {
             buffer[i * size + j] = array[i][j];
         }
     }
@@ -177,19 +177,19 @@ export function updateBuffer(buffer: number[], array: number[][], size: number) 
 
 
 
-export function createText(string: string, x: number, y: number, z: number, size: number, color: string, weight: string = 'normal', align: string = 'left'): THREE.Mesh {
-    var textGeom: THREE.TextGeometry = new THREE.TextGeometry(string, {
+export function createText(string: string, x: number, y: number, z: number, size: number, color: string, weight = 'normal', align = 'left'): THREE.Mesh {
+    const textGeom: THREE.TextGeometry = new THREE.TextGeometry(string, {
         // font: 'helvetiker', // IT'S NOT CORRECT FORMAT
         size: size,
         height: 1,
         curveSegments: 1,
     })
-    var textMaterial: THREE.MeshBasicMaterial = new THREE.MeshBasicMaterial({ color: color });
-    var label: THREE.Mesh = new THREE.Mesh(textGeom, textMaterial)
+    const textMaterial: THREE.MeshBasicMaterial = new THREE.MeshBasicMaterial({ color: color });
+    const label: THREE.Mesh = new THREE.Mesh(textGeom, textMaterial)
 
     if (align == 'right') {
         label.geometry.computeBoundingBox();
-        var bounds: THREE.Box3 = label.geometry.boundingBox;
+        const bounds: THREE.Box3 = label.geometry.boundingBox;
         x -= bounds.max.x - bounds.min.x;
     }
 
@@ -198,7 +198,7 @@ export function createText(string: string, x: number, y: number, z: number, size
 }
 
 export function getMousePos(canvas: any, x: any, y: any) {
-    var rect = canvas.getBoundingClientRect();
+    const rect = canvas.getBoundingClientRect();
     return {
         x: x - rect.left,
         y: y - rect.top
@@ -216,7 +216,7 @@ export function getMousePos(canvas: any, x: any, y: any) {
 
 // SETUP
 
-var txtCanvas = document.createElement("canvas")
+let txtCanvas = document.createElement("canvas")
 
 export class WebGL {
     /* INIT ?????? */
@@ -239,7 +239,7 @@ export class WebGL {
         // var begin = d.getTime()
 
         // check which webgl groups must be updated
-        for (var i = 0; i < this.elementQueries.length; i++) {
+        for (let i = 0; i < this.elementQueries.length; i++) {
             if (this.elementQueries[i].updateAttributes || this.elementQueries[i].updateStyle) {
                 this.elementQueries[i].set();
             }
@@ -289,7 +289,7 @@ export class WebGL {
 
 }
 
-var webgl: WebGL;
+let webgl: WebGL;
 
 export function initWebGL(parentId: string, width: number, height: number, params?: Object): WebGL {
 
@@ -323,7 +323,7 @@ export function initWebGL(parentId: string, width: number, height: number, param
     webgl.interactor = new WebGLInteractor(webgl.scene, webgl.canvas, webgl.camera);
 
 
-    var light: THREE.PointLight = new THREE.PointLight(0x000000, 1, 100);
+    const light: THREE.PointLight = new THREE.PointLight(0x000000, 1, 100);
     light.position.set(0, 0, 1000);
     webgl.scene.add(light);
 
@@ -343,7 +343,7 @@ export function setWebGL(scene: THREE.Scene, camera: THREE.OrthographicCamera, r
 /// SELECTIONS in the style of D3
 
 export function selectAll(): WebGLElementQuery {
-    var q: WebGLElementQuery = new WebGLElementQuery();
+    const q: WebGLElementQuery = new WebGLElementQuery();
     webgl.elementQueries.push(q)
     return q;
 }
@@ -374,12 +374,12 @@ export class WebGLElementQuery {
     strokewidth: number[] = [];
     opacity: number[] = [];
 
-    shape: string = ''; // INIT ??
+    shape = ''; // INIT ??
 
-    updateAttributes: boolean = false
-    updateStyle: boolean = false
+    updateAttributes = false
+    updateStyle = false
 
-    IS_SHADER: boolean = false
+    IS_SHADER = false
 
     constructor() {
         this.scene = webgl.scene;
@@ -391,7 +391,7 @@ export class WebGLElementQuery {
     }
 
     append(shape: string): WebGLElementQuery {
-        var elements: any[] = []
+        let elements: any[] = []
         switch (shape) {
             // case 'circle': elements = createCirclesNoShader(this.dataElements, this.scene); break
             case 'circle': createCirclesWithBuffers(this, this.scene); break
@@ -407,7 +407,7 @@ export class WebGLElementQuery {
 
         // init position arrays
         if (!this.IS_SHADER) {
-            for (var i = 0; i < elements.length; i++) {
+            for (let i = 0; i < elements.length; i++) {
                 this.x.push(0);
                 this.y.push(0);
                 this.z.push(0);
@@ -435,28 +435,28 @@ export class WebGLElementQuery {
     }
 
     filter(f: Function): WebGLElementQuery {
-        var arr: any[] = [];
-        var visArr: any[] = []
-        for (var i = 0; i < this.dataElements.length; i++) {
+        const arr: any[] = [];
+        const visArr: any[] = []
+        for (let i = 0; i < this.dataElements.length; i++) {
             if (f(this.dataElements[i], i)) {
                 arr.push(this.dataElements[i])
                 visArr.push(this.visualElements[i])
             }
         }
-        var q: WebGLElementQuery = new WebGLElementQuery().data(arr);
+        const q: WebGLElementQuery = new WebGLElementQuery().data(arr);
         q.visualElements = visArr;
         return q;
     }
 
     // geometric attributes
     attr(name: string, v: any): WebGLElementQuery {
-        var l = this.visualElements.length;
+        const l = this.visualElements.length;
         if (this.IS_SHADER) {
-            for (var i = 0; i < this.dataElements.length; i++) {
+            for (let i = 0; i < this.dataElements.length; i++) {
                 (this as any)[name][i] = v instanceof Function ? v(this.dataElements[i], i) : v
             }
         } else {
-            for (var i = 0; i < l; i++) {
+            for (let i = 0; i < l; i++) {
                 this.setAttr(this.visualElements[i], name, v instanceof Function ? v(this.dataElements[i], i) : v, i);
                 if (this.visualElements[i].hasOwnProperty('wireframe')) {
                     this.setAttr(this.visualElements[i].wireframe, name, v instanceof Function ? v(this.dataElements[i], i) : v, i);
@@ -469,14 +469,14 @@ export class WebGLElementQuery {
 
     // style attributes
     style(name: string, v: any): WebGLElementQuery {
-        var l = this.visualElements.length;
+        const l = this.visualElements.length;
         if (this.IS_SHADER) {
             name = name.replace('-', '');
-            for (var i = 0; i < this.dataElements.length; i++) {
+            for (let i = 0; i < this.dataElements.length; i++) {
                 (this as any)[name][i] = v instanceof Function ? v(this.dataElements[i], i) : v
             }
         } else {
-            for (var i = 0; i < l; i++) {
+            for (let i = 0; i < l; i++) {
                 setStyle(this.visualElements[i], name, v instanceof Function ? v(this.dataElements[i], i) : v, this);
             }
         }
@@ -490,17 +490,17 @@ export class WebGLElementQuery {
         if (!this.IS_SHADER)
             return this;
 
-        var l = this.visualElements.length;
-        var vertexPositionBuffer: any[] = []
-        var vertexColorBuffer: any[] = []
-        var c
+        const l = this.visualElements.length;
+        const vertexPositionBuffer: any[] = []
+        const vertexColorBuffer: any[] = []
+        let c
         if (this.shape == 'circle') {
-            for (var i = 0; i < this.dataElements.length; i++) {
+            for (let i = 0; i < this.dataElements.length; i++) {
                 c = new THREE.Color(this.fill[i])
                 addBufferedCirlce(vertexPositionBuffer, this.x[i], this.y[i], this.z[i], this.r[i], vertexColorBuffer, [c.r, c.g, c.b, this.opacity[i]])
             }
         }
-        var geometry: any = this.mesh.geometry;
+        const geometry: any = this.mesh.geometry;
         geometry.addAttribute('position', new THREE.BufferAttribute(makeBuffer3f(vertexPositionBuffer), 3));
         geometry.addAttribute('customColor', new THREE.BufferAttribute(makeBuffer4f(vertexColorBuffer), 4));
         geometry.needsUpdate = true;
@@ -514,8 +514,8 @@ export class WebGLElementQuery {
     }
 
     text(v: any): WebGLElementQuery {
-        var l = this.visualElements.length;
-        for (var i = 0; i < l; i++) {
+        const l = this.visualElements.length;
+        for (let i = 0; i < l; i++) {
             this.visualElements[i]['text'] = v instanceof Function ? v(this.dataElements[i], i) : v
             if (this.visualElements[i]['text'] == undefined)
                 continue;
@@ -539,7 +539,7 @@ export class WebGLElementQuery {
     }
 
     call(method: string, dataElement: any, event: any): WebGLElementQuery {
-        var i = this.dataElements.indexOf(dataElement);
+        const i = this.dataElements.indexOf(dataElement);
         switch (method) {
             case 'mouseover': this.mouseOverHandler(dataElement, i, event); break;
             case 'mousemove': this.mouseMoveHandler(dataElement, i, event); break;
@@ -577,7 +577,7 @@ export class WebGLElementQuery {
     }
 
     removeAll() {
-        for (var i = 0; i < this.visualElements.length; i++) {
+        for (let i = 0; i < this.visualElements.length; i++) {
             if (this.visualElements[i].wireframe)
                 this.scene.remove(this.visualElements[i].wireframe)
             this.scene.remove(this.visualElements[i]);
@@ -633,7 +633,7 @@ export function setStyle(element: any, attr: string, v: any, query: WebGLElement
 
 // var textCtx
 export function setText(mesh: any, text: string, parConfig?: any) {
-    var config = parConfig;
+    let config = parConfig;
     if (config == undefined) {
         config = {};
     }
@@ -641,13 +641,13 @@ export function setText(mesh: any, text: string, parConfig?: any) {
         config.color = '#000000'
 
     mesh['text'] = text;
-    var backgroundMargin = 10;
-    var txtCanvas = document.createElement("canvas");
+    const backgroundMargin = 10;
+    const txtCanvas = document.createElement("canvas");
 
-    var context = txtCanvas.getContext("2d");
+    const context = txtCanvas.getContext("2d");
 
-    var SIZE: number = 30;
-    var WIDTH: number = 0; // ????????
+    const SIZE = 30;
+    let WIDTH = 0; // ????????
     if (context) {
         context.font = SIZE + "pt Helvetica";
         WIDTH = context.measureText(text).width;
@@ -663,7 +663,7 @@ export function setText(mesh: any, text: string, parConfig?: any) {
         context.fillText(text, 0, txtCanvas.height / 2);
     }
 
-    var tex = new THREE.Texture(txtCanvas);
+    const tex = new THREE.Texture(txtCanvas);
     tex.minFilter = THREE.LinearFilter
     tex.flipY = true;
     tex.needsUpdate = true;
@@ -770,9 +770,9 @@ export function setY2(mesh: THREE.Mesh, v: any) {
 // }
 
 export function createG(dataElements: any[], scene: THREE.Scene) {
-    var visualElements = []
+    const visualElements = []
     // create group element for every data element
-    for (var i = 0; i < dataElements.length; i++) {
+    for (let i = 0; i < dataElements.length; i++) {
         visualElements.push(new GroupElement());
     }
     return visualElements;
@@ -784,11 +784,11 @@ export class GroupElement {
 }
 
 export function createCirclesNoShader(dataElements: any[], scene: THREE.Scene) {
-    var material: any;
-    var geometry: any;
-    var visualElements: any[] = []
-    var c: any;
-    for (var i = 0; i < dataElements.length; i++) {
+    let material: any;
+    let geometry: any;
+    const visualElements: any[] = []
+    let c: any;
+    for (let i = 0; i < dataElements.length; i++) {
         material = new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true });
         geometry = new THREE.CircleGeometry(1, 10);
         geometry.dynamic = true;
@@ -802,7 +802,7 @@ export function createCirclesNoShader(dataElements: any[], scene: THREE.Scene) {
 }
 
 // SHADERS
-var vertexShaderProgram = "\
+const vertexShaderProgram = "\
         attribute vec4 customColor;\
         varying vec4 vColor;\
         void main() {\
@@ -811,19 +811,19 @@ var vertexShaderProgram = "\
         }";
 
 
-var fragmentShaderProgram = "\
+const fragmentShaderProgram = "\
         varying vec4 vColor;\
         void main() {\
             gl_FragColor = vec4(vColor[0], vColor[1], vColor[2], vColor[3]);\
         }";
 
 export function createCirclesWithBuffers(query: WebGLElementQuery, scene: THREE.Scene) {
-    var dataElements: Object[] = query.dataElements;
+    const dataElements: Object[] = query.dataElements;
     query.IS_SHADER = true;
-    var attributes: any = {
+    const attributes: any = {
         customColor: { type: 'c', value: [] }
     }
-    var shaderMaterial: THREE.ShaderMaterial = new THREE.ShaderMaterial({
+    const shaderMaterial: THREE.ShaderMaterial = new THREE.ShaderMaterial({
         // attributes: attributes, // attributes doesn't exists
         vertexShader: vertexShaderProgram,
         fragmentShader: fragmentShaderProgram,
@@ -835,15 +835,15 @@ export function createCirclesWithBuffers(query: WebGLElementQuery, scene: THREE.
     shaderMaterial.side = THREE.DoubleSide;
 
 
-    var visualElements: any[] = []
-    var c: any;
-    var vertexPositionBuffer: any[] = []
-    var vertexColorBuffer: any[] = []
-    var geometry: THREE.BufferGeometry = new THREE.BufferGeometry();
+    const visualElements: any[] = []
+    let c: any;
+    const vertexPositionBuffer: any[] = []
+    const vertexColorBuffer: any[] = []
+    const geometry: THREE.BufferGeometry = new THREE.BufferGeometry();
     // geometry.vertices.push(new THREE.Vector3(10, -10,0))
     addBufferedRect([], 0, 0, 0, 10, 10, [], [0, 0, 1, .5])
 
-    for (var i = 0; i < dataElements.length; i++) {
+    for (let i = 0; i < dataElements.length; i++) {
         // addBufferedCirlce(vertexPositionBuffer, Math.random()*10,Math.random()*10,0,2, vertexColorBuffer, [0,0,1,.5] )
         query.x.push(0)
         query.y.push(0)
@@ -868,12 +868,12 @@ export function createCirclesWithBuffers(query: WebGLElementQuery, scene: THREE.
 }
 
 export function createRectangles(dataElements: any[], scene: THREE.Scene) {
-    var material: any;
-    var geometry: any;
-    var visualElements: any[] = []
-    var c: any;
-    for (var i = 0; i < dataElements.length; i++) {
-        var rectShape = new THREE.Shape();
+    let material: any;
+    let geometry: any;
+    const visualElements: any[] = []
+    let c: any;
+    for (let i = 0; i < dataElements.length; i++) {
+        const rectShape = new THREE.Shape();
         rectShape.moveTo(0, 0);
         rectShape.lineTo(0, -1);
         rectShape.lineTo(1, -1);
@@ -894,7 +894,7 @@ export function createRectangles(dataElements: any[], scene: THREE.Scene) {
             new THREE.Vector3(1, 0, 0),
             new THREE.Vector3(0, 0, 0)
         );
-        var wireframe = new THREE.Line(geometry, new THREE.LineBasicMaterial({ color: 0x000000, transparent: true, linewidth: 1 }));
+        const wireframe = new THREE.Line(geometry, new THREE.LineBasicMaterial({ color: 0x000000, transparent: true, linewidth: 1 }));
         (c as any)['wireframe'] = wireframe;
         wireframe.position.set(0, 0, 1.1)
         scene.add(wireframe);
@@ -903,11 +903,11 @@ export function createRectangles(dataElements: any[], scene: THREE.Scene) {
 }
 
 export function createPaths(dataElements: any[], scene: THREE.Scene) {
-    var material: any;
-    var geometry: any;
-    var visualElements: any[] = []
-    var c: any, p: any;
-    for (var i = 0; i < dataElements.length; i++) {
+    let material: any;
+    let geometry: any;
+    const visualElements: any[] = []
+    let c: any, p: any;
+    for (let i = 0; i < dataElements.length; i++) {
         geometry = new THREE.Geometry();
         c = new THREE.Line(geometry, new THREE.LineBasicMaterial({ color: 0x000000, transparent: true }));
         c.position.set(0, 0, 0)
@@ -918,11 +918,11 @@ export function createPaths(dataElements: any[], scene: THREE.Scene) {
 }
 
 export function createPolygons(dataElements: any[], scene: THREE.Scene) {
-    var material: any;
-    var geometry: any;
-    var visualElements: any[] = []
-    var c: any, p: any;
-    for (var i = 0; i < dataElements.length; i++) {
+    let material: any;
+    let geometry: any;
+    const visualElements: any[] = []
+    let c: any, p: any;
+    for (let i = 0; i < dataElements.length; i++) {
         geometry = new THREE.Geometry();
         // geometry.vertices.push(
         //     new THREE.Vector3(5, 0, 0 ),
@@ -940,11 +940,11 @@ export function createPolygons(dataElements: any[], scene: THREE.Scene) {
 }
 
 export function createLines(dataElements: any[], scene: THREE.Scene) {
-    var material: any;
-    var geometry: any;
-    var visualElements: any[] = []
-    var c: any, p: any;
-    for (var i = 0; i < dataElements.length; i++) {
+    let material: any;
+    let geometry: any;
+    const visualElements: any[] = []
+    let c: any, p: any;
+    for (let i = 0; i < dataElements.length; i++) {
         geometry = new THREE.Geometry();
         geometry.vertices.push(
             new THREE.Vector3(-10, 0, 0),
@@ -958,9 +958,9 @@ export function createLines(dataElements: any[], scene: THREE.Scene) {
 }
 
 export function createWebGLText(dataElements: any[], scene: THREE.Scene) {
-    var visualElements = []
-    var mesh: any;
-    for (var i = 0; i < dataElements.length; i++) {
+    const visualElements = []
+    let mesh: any;
+    for (let i = 0; i < dataElements.length; i++) {
         mesh = new THREE.Mesh(new THREE.PlaneGeometry(1000, 100), new THREE.MeshBasicMaterial());
         mesh.doubleSided = true;
         visualElements.push(mesh);
@@ -971,15 +971,15 @@ export function createWebGLText(dataElements: any[], scene: THREE.Scene) {
 
 export function createPath(mesh: THREE.Mesh, points: any[]) {
     (mesh.geometry as THREE.Geometry).vertices = []
-    for (var i = 0; i < points.length; i++) {
+    for (let i = 0; i < points.length; i++) {
         (mesh.geometry as THREE.Geometry).vertices.push(new THREE.Vector3(points[i].x, points[i].y, 0));
     }
     (mesh.geometry as THREE.Geometry).verticesNeedUpdate = true;
 }
 
 export function createPolygon(mesh: THREE.Mesh, points: THREE.Vector2[]) {
-    var vectors = []
-    var shape = new THREE.Shape(points);
+    const vectors = []
+    const shape = new THREE.Shape(points);
     mesh.geometry = new THREE.ShapeGeometry(shape);
     mesh.geometry.verticesNeedUpdate = true;
 }
@@ -999,15 +999,15 @@ export class WebGLInteractor {
     raycaster: any;
     mouse: any[] = [];
     mouseStart: any[] = []
-    mouseDown: boolean = false;
+    mouseDown = false;
     cameraStart: any[] = []
     panOffset: any[] = []
     lastIntersectedSelections: any[] = []
     lastIntersectedElements: any[] = []
-    isPanEnabled: boolean = true;
-    isHorizontalPanEnabled: boolean = true;
+    isPanEnabled = true;
+    isHorizontalPanEnabled = true;
 
-    isLassoEnabled: boolean = true;
+    isLassoEnabled = true;
     lassoPoints: any[] = []
     lassoStartHandler: any; // BEFORE Function;
     lassoMoveHandler: any; // BEFORE Function;
@@ -1058,7 +1058,7 @@ export class WebGLInteractor {
         }
     }
 
-    addEventListener(eventName: String, f: Function) {
+    addEventListener(eventName: string, f: Function) {
         if (eventName == 'lassoStart')
             this.lassoStartHandler = f;
         if (eventName == 'lassoEnd')
@@ -1077,11 +1077,11 @@ export class WebGLInteractor {
             if (this.lassoMoveHandler)
                 this.lassoMoveHandler(this.lassoPoints);
         } else {
-            var intersectedVisualElements: any[] = []
+            let intersectedVisualElements: any[] = []
 
             // remove previous highlighting
-            for (var i = 0; i < this.lastIntersectedSelections.length; i++) {
-                for (var j = 0; j < this.lastIntersectedElements[i].length; j++) {
+            for (let i = 0; i < this.lastIntersectedSelections.length; i++) {
+                for (let j = 0; j < this.lastIntersectedElements[i].length; j++) {
                     this.lastIntersectedSelections[i].call('mouseout', this.lastIntersectedElements[i][j])
                 }
             }
@@ -1089,17 +1089,17 @@ export class WebGLInteractor {
             this.lastIntersectedSelections = []
             this.lastIntersectedElements = []
 
-            var nothingIntersected = true;
+            let nothingIntersected = true;
 
             // call mouseover on all elements with a mouse over handler
-            for (var i = 0; i < this.mouseOverSelections.length; i++) {
+            for (let i = 0; i < this.mouseOverSelections.length; i++) {
                 // If selecton is SHADER, check manually
                 intersectedVisualElements = this.intersect(this.mouseOverSelections[i], this.mouse[0], this.mouse[1]);
                 if (intersectedVisualElements.length > 0) {
                     this.lastIntersectedElements.push(intersectedVisualElements);
                     this.lastIntersectedSelections.push(this.mouseOverSelections[i])
                 }
-                for (var j = 0; j < intersectedVisualElements.length; j++) {
+                for (let j = 0; j < intersectedVisualElements.length; j++) {
                     this.mouseOverSelections[i].call('mouseover', intersectedVisualElements[j], e)
                 }
                 if (intersectedVisualElements.length > 0)
@@ -1107,9 +1107,9 @@ export class WebGLInteractor {
             }
 
             // call mousemove on all elements with a mouse move handler
-            for (var i = 0; i < this.mouseMoveSelections.length; i++) {
+            for (let i = 0; i < this.mouseMoveSelections.length; i++) {
                 intersectedVisualElements = this.intersect(this.mouseMoveSelections[i], this.mouse[0], this.mouse[1]);
-                for (var j = 0; j < intersectedVisualElements.length; j++) {
+                for (let j = 0; j < intersectedVisualElements.length; j++) {
                     this.mouseMoveSelections[i].call('mousemove', intersectedVisualElements[j], e)
                 }
                 if (intersectedVisualElements.length > 0)
@@ -1134,12 +1134,12 @@ export class WebGLInteractor {
     clickHandler(e: any) {
         this.mouse = mouseToWorldCoordinates(e.clientX, e.clientY)
 
-        var intersectedVisualElements: any[] = []
+        let intersectedVisualElements: any[] = []
 
         // call mouseclick on all elements with a mouse over handler
-        for (var i = 0; i < this.clickSelections.length; i++) {
+        for (let i = 0; i < this.clickSelections.length; i++) {
             intersectedVisualElements = this.intersect(this.clickSelections[i], this.mouse[0], this.mouse[1]);
-            for (var j = 0; j < intersectedVisualElements.length; j++) {
+            for (let j = 0; j < intersectedVisualElements.length; j++) {
                 this.clickSelections[i].call('click', intersectedVisualElements[j], e)
             }
         }
@@ -1151,10 +1151,10 @@ export class WebGLInteractor {
         this.mouseStart = [e.clientX, e.clientY]
         this.cameraStart = [webgl.camera.position.x, webgl.camera.position.y];
         this.mouseDown = true;
-        var intersectedVisualElements: any[] = []
-        for (var i = 0; i < this.mouseDownSelections.length; i++) {
+        let intersectedVisualElements: any[] = []
+        for (let i = 0; i < this.mouseDownSelections.length; i++) {
             intersectedVisualElements = this.intersect(this.mouseDownSelections[i], this.mouse[0], this.mouse[1]);
-            for (var j = 0; j < intersectedVisualElements.length; j++) {
+            for (let j = 0; j < intersectedVisualElements.length; j++) {
                 this.mouseDownSelections[i].call('mousedown', intersectedVisualElements[j], e)
             }
         }
@@ -1166,10 +1166,10 @@ export class WebGLInteractor {
     }
     mouseUpHandler(e: any) {
         this.mouse = mouseToWorldCoordinates(e.clientX, e.clientY)
-        var intersectedVisualElements: any[] = []
-        for (var i = 0; i < this.mouseUpSelections.length; i++) {
+        let intersectedVisualElements: any[] = []
+        for (let i = 0; i < this.mouseUpSelections.length; i++) {
             intersectedVisualElements = this.intersect(this.mouseUpSelections[i], this.mouse[0], this.mouse[1]);
-            for (var j = 0; j < intersectedVisualElements.length; j++) {
+            for (let j = 0; j < intersectedVisualElements.length; j++) {
                 this.mouseUpSelections[i].call('mouseup', intersectedVisualElements[j], e)
             }
         }
@@ -1192,9 +1192,9 @@ export class WebGLInteractor {
     // returns list of data elements 
 
     intersectCircles(selection: WebGLElementQuery): any[] {
-        var intersectedElements = []
-        var d;
-        for (var i = 0; i < selection.dataElements.length; i++) {
+        const intersectedElements = []
+        let d;
+        for (let i = 0; i < selection.dataElements.length; i++) {
             d = Math.sqrt(Math.pow(this.mouse[0] - selection.x[i], 2) + Math.pow(this.mouse[1] - selection.y[i], 2))
             if (d <= selection.r[i])
                 intersectedElements.push(selection.dataElements[i]);
@@ -1203,10 +1203,10 @@ export class WebGLInteractor {
         return intersectedElements;
     }
     intersectRects(selection: WebGLElementQuery): any[] {
-        var intersectedElements = []
-        var d;
-        var e;
-        for (var i = 0; i < selection.visualElements.length; i++) {
+        const intersectedElements = []
+        let d;
+        let e;
+        for (let i = 0; i < selection.visualElements.length; i++) {
             e = selection.visualElements[i];
             if (this.mouse[0] >= e.position.x && this.mouse[0] <= e.position.x + e.geometry.vertices[0].x * e.scale.x
                 && this.mouse[1] <= e.position.y && this.mouse[1] >= e.position.y + e.geometry.vertices[1].y * e.scale.y
@@ -1216,14 +1216,14 @@ export class WebGLInteractor {
         return intersectedElements;
     }
     intersectPaths(selection: WebGLElementQuery): any[] {
-        var intersectedElements = []
-        var e;
-        var v1, v2
-        var x, y
-        var found = false
-        for (var i = 0; i < selection.visualElements.length; i++) {
+        const intersectedElements = []
+        let e;
+        let v1, v2
+        let x, y
+        let found = false
+        for (let i = 0; i < selection.visualElements.length; i++) {
             e = selection.visualElements[i];
-            for (var j = 1; j < e.geometry.vertices.length; j++) {
+            for (let j = 1; j < e.geometry.vertices.length; j++) {
                 v1 = e.geometry.vertices[j - 1]
                 v1 = {
                     x: v1.x + selection.x[i],
@@ -1253,11 +1253,11 @@ export class WebGLInteractor {
             return sqr(v.x - w.x) + sqr(v.y - w.y)
         }
         function distToSegmentSquared(p: any, v: any, w: any) {
-            var l2 = dist2(v, w);
+            const l2 = dist2(v, w);
 
             if (l2 == 0) return dist2(p, v);
 
-            var t = ((p.x - v.x) * (w.x - v.x) + (p.y - v.y) * (w.y - v.y)) / l2;
+            const t = ((p.x - v.x) * (w.x - v.x) + (p.y - v.y) * (w.y - v.y)) / l2;
 
             if (t < 0) return dist2(p, v);
             if (t > 1) return dist2(p, w);
@@ -1275,25 +1275,25 @@ export class WebGLInteractor {
 
 // Calculate intersection
 export function mouseToWorldCoordinates(mouseX: any, mouseY: any) {
-    var rect = webgl.canvas.getBoundingClientRect();
-    var x = webgl.camera.position.x + webgl.camera.left / webgl.camera.zoom + (mouseX - rect.left) / webgl.camera.zoom;
-    var y = webgl.camera.position.y + webgl.camera.top / webgl.camera.zoom - (mouseY - rect.top) / webgl.camera.zoom;            // this.mouse[1] *= -1
+    const rect = webgl.canvas.getBoundingClientRect();
+    const x = webgl.camera.position.x + webgl.camera.left / webgl.camera.zoom + (mouseX - rect.left) / webgl.camera.zoom;
+    const y = webgl.camera.position.y + webgl.camera.top / webgl.camera.zoom - (mouseY - rect.top) / webgl.camera.zoom;            // this.mouse[1] *= -1
     return [x, y];
 }
 
 
 
 export function curve(points: any[]): any[] {
-    var arrayPoints: any[] = []
-    for (var i = 0; i < points.length; i++) {
+    const arrayPoints: any[] = []
+    for (let i = 0; i < points.length; i++) {
         if (!isNaN(points[i].x))
             arrayPoints.push([points[i].x, points[i].y])
     }
 
-    var spline = new BSpline(arrayPoints, 3); //making BSpline
-    var curvePoints = []
-    for (var t = 0; t <= 1; t += 0.01) {
-        var p = spline.calcAt(t);
+    const spline = new BSpline(arrayPoints, 3); //making BSpline
+    const curvePoints = []
+    for (let t = 0; t <= 1; t += 0.01) {
+        const p = spline.calcAt(t);
         curvePoints.push({ x: p[0], y: p[1] })
     }
     return curvePoints;
@@ -1305,7 +1305,7 @@ export function curve(points: any[]): any[] {
 ///////////////////
 
 export class CheckBox {
-    selected: boolean = false;
+    selected = false;
     changeCallBack: any; // BEFORE Function;
     circle: any;
     frame: any;
@@ -1370,15 +1370,15 @@ export class THREEx {
      * @param {Number} height height of the canvas
     */
     constructor(width: number, height: number) {
-        var canvas = document.createElement('canvas')
+        const canvas = document.createElement('canvas')
         canvas.width = width
         canvas.height = height
         this.canvas = canvas
 
-        var context = canvas.getContext('2d')
+        const context = canvas.getContext('2d')
         this.context = context
 
-        var texture = new THREE.Texture(canvas)
+        const texture = new THREE.Texture(canvas)
         this.texture = texture
     }
 
@@ -1421,7 +1421,7 @@ export class THREEx {
         if (contextFont !== undefined) this.context.font = contextFont;
         // if x isnt provided 
         if (x === undefined || x === null) {
-            var textSize = this.context.measureText(text);
+            const textSize = this.context.measureText(text);
             x = (this.canvas.width - textSize.width) / 2;
         }
         // actually draw the text
@@ -1431,13 +1431,13 @@ export class THREEx {
         this.texture.needsUpdate = true;
         // for chained API 
         return this;
-    };
+    }
 
     drawTextCooked(text: string, options: any) {
-        var context = this.context
-        var canvas = this.canvas
+        const context = this.context
+        const canvas = this.canvas
         options = options || {}
-        var params = {
+        const params = {
             margin: options.margin !== undefined ? options.margin : 0.1,
             lineHeight: options.lineHeight !== undefined ? options.lineHeight : 0.1,
             align: options.align !== undefined ? options.align : 'left',
@@ -1446,19 +1446,19 @@ export class THREEx {
         context.save()
         context.fillStyle = params.fillStyle;
 
-        var y = (params.lineHeight + params.margin) * canvas.height
+        let y = (params.lineHeight + params.margin) * canvas.height
         while (text.length > 0) {
             // compute the text for specifically this line
-            var maxText = computeMaxTextLength(text)
+            const maxText = computeMaxTextLength(text)
             // update the remaining text
             text = text.substr(maxText.length)
 
             // compute x based on params.align
-            var textSize = context.measureText(maxText);
+            const textSize = context.measureText(maxText);
 
             // new variable to recognize if x exists or not
-            var computeX: boolean = true;
-            var x: number = 0;
+            let computeX = true;
+            let x = 0;
             if (params.align === 'left') {
                 x = params.margin * canvas.width
             } else if (params.align === 'right') {
@@ -1486,10 +1486,10 @@ export class THREEx {
         return this;
 
         function computeMaxTextLength(text: string) {
-            var maxText = ''
-            var maxWidth = (1 - params.margin * 2) * canvas.width
+            let maxText = ''
+            const maxWidth = (1 - params.margin * 2) * canvas.width
             while (maxText.length !== text.length) {
-                var textSize = context.measureText(maxText);
+                const textSize = context.measureText(maxText);
                 if (textSize.width > maxWidth) break;
                 maxText += text.substr(maxText.length, 1)
             }
@@ -1676,12 +1676,12 @@ export function length(v1: any[]) {
 }
 
 export function normalize(v: number[]) {
-    var l = length(v)
+    const l = length(v)
     return [v[0] / l, v[1] / l]
 }
 
 export function setLength(v: number[], l: number) {
-    var len = length(v)
+    const len = length(v)
     return [l * v[0] / len, l * v[1] / len]
 }
 

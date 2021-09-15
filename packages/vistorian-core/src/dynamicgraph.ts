@@ -2,10 +2,10 @@ import { DataSet, Selection, isValidIndex } from './datamanager'
 import * as moment from 'moment'
 import * as LZString from "lz-string";
 
-export var GRANULARITY: moment.unitOfTime.Base[] = ['millisecond', 'second', 'minute', 'hour', 'day', 'week', 'month', 'year']; //, 'decade', 'century', 'millenium'];
+export const GRANULARITY: moment.unitOfTime.Base[] = ['millisecond', 'second', 'minute', 'hour', 'day', 'week', 'month', 'year']; //, 'decade', 'century', 'millenium'];
 
-export var DGRAPH_SUB: string = "[*dgraph*]";
-export var DGRAPH_SER_VERBOSE_LOGGING = false;
+export const DGRAPH_SUB = "[*dgraph*]";
+export const DGRAPH_SER_VERBOSE_LOGGING = false;
 
 export function dgraphReviver(dgraph: DynamicGraph, key: any, value: any): any {
     if (value == DGRAPH_SUB)
@@ -29,27 +29,27 @@ export function dgraphReplacer(key: string, value: any): any {
 export class DynamicGraph {
 
     private default_colors(i: number): string {
-        var colors = ["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99", "#aaaa11", "#6633cc", "#e67300", "#8b0707", "#651067", "#329262", "#5574a6", "#3b3eac"];
+        const colors = ["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99", "#aaaa11", "#6633cc", "#e67300", "#8b0707", "#651067", "#329262", "#5574a6", "#3b3eac"];
         return colors[i % colors.length];
     }
 
     // BOOKMARK_COLORS: string[] = colorSchemes.schema5;
     BOOKMARK_COLORS: (i: number) => string = this.default_colors;
-    selectionColor_pointer: number = 0;
+    selectionColor_pointer = 0;
 
     //data: DataSet;
-    name: string = ''; // INIT??
+    name = ''; // INIT??
 
     // data meta data
-    gran_min: number = 0; // INIT?
+    gran_min = 0; // INIT?
     gran_max: number = Number.MAX_VALUE; // INIT?
 
-    minWeight: number = 10000000;
-    maxWeight: number = -10000000;
+    minWeight = 10000000;
+    maxWeight = -10000000;
 
     _nodes: Node[] = [];
     _links: Link[] = [];
-    directed: boolean = false;
+    directed = false;
     _nodePairs: NodePair[] = [];
     _locations: Location[] = [];
     // Contains all time objects for this dynamic graph
@@ -99,7 +99,7 @@ export class DynamicGraph {
     // highlighted objects
     highlightArrays: IDCompound = new IDCompound();
 
-    currentSelection_id: number = 0;
+    currentSelection_id = 0;
 
     /* INIT OK?? */
     defaultLinkSelection: Selection = this.createSelection('link');
@@ -109,7 +109,7 @@ export class DynamicGraph {
     // ACCESSOR FUNCTIONS
     // universal accesor
     attr(field: string, id: number, type: string) {
-        var r: any;
+        let r: any;
         try {
             r = (this.attributeArrays as any)[type][field][id]
         } catch (e) {
@@ -120,23 +120,23 @@ export class DynamicGraph {
 
     // storage keys /////////////////////////////////
     //
-    gran_min_NAME: string = "gran_min";
-    gran_max_NAME: string = "gran_max_NAME";
+    gran_min_NAME = "gran_min";
+    gran_max_NAME = "gran_max_NAME";
 
-    directed_NAME: string = "directed_NAME";
+    directed_NAME = "directed_NAME";
 
-    minWeight_NAME: string = "minWeight_NAME";
-    maxWeight_NAME: string = "maxWeight_NAME";
+    minWeight_NAME = "minWeight_NAME";
+    maxWeight_NAME = "maxWeight_NAME";
 
-    matrix_NAME: string = "matrix_NAME";
+    matrix_NAME = "matrix_NAME";
 
-    nodeArrays_NAME: string = "nodeArrays_NAME";
-    linkArrays_NAME: string = "linkArrays_NAME";
-    nodePairArrays_NAME: string = "nodePairArrays_NAME";
-    timeArrays_NAME: string = "timeArrays_NAME";
-    linkTypeArrays_NAME: string = "linkTypeArrays_NAME";
-    nodeTypeArrays_NAME: string = "nodeTypeArrays_NAME";
-    locationArrays_NAME: string = "locationArrays_NAME";
+    nodeArrays_NAME = "nodeArrays_NAME";
+    linkArrays_NAME = "linkArrays_NAME";
+    nodePairArrays_NAME = "nodePairArrays_NAME";
+    timeArrays_NAME = "timeArrays_NAME";
+    linkTypeArrays_NAME = "linkTypeArrays_NAME";
+    nodeTypeArrays_NAME = "nodeTypeArrays_NAME";
+    locationArrays_NAME = "locationArrays_NAME";
     //
     // end storage keys //////////////////////////////
 
@@ -211,8 +211,7 @@ export class DynamicGraph {
             case '':
                 return copyPropsShallow(v, new TimeArray());
             case 'time':
-                var vAsArray: string[] = v;
-                return vAsArray.map(function (s, i) { return moment.utc(s); });
+                return (v as string[]).map(function (s, i) { return moment.utc(s); });
             default:
                 return v;
         }
@@ -247,47 +246,47 @@ export class DynamicGraph {
     loadDynamicGraph(dataMgr: DataManager, dataSetName: string): void {
         this.clearSelections();
         this.name = dataSetName;
-        var thisGraph = this;
+        const thisGraph = this;
 
         // CACHEGRAPH : load from storage the entire state of the graph
 
-        var gran_min_storage = dataMgr.getFromStorage<number>(this.name, this.gran_min_NAME);
+        const gran_min_storage = dataMgr.getFromStorage<number>(this.name, this.gran_min_NAME);
         if (gran_min_storage != undefined)
             this.gran_min = gran_min_storage;
 
-        var gran_max_storage = dataMgr.getFromStorage<number>(this.name, this.gran_max_NAME);
+        const gran_max_storage = dataMgr.getFromStorage<number>(this.name, this.gran_max_NAME);
         if (gran_max_storage != undefined)
             this.gran_max = gran_max_storage;
 
-        var directed_storage = dataMgr.getFromStorage<boolean>(this.name, this.directed_NAME);
+        const directed_storage = dataMgr.getFromStorage<boolean>(this.name, this.directed_NAME);
         if (directed_storage != undefined)
             this.directed = directed_storage;
 
-        var minWeight_storage = dataMgr.getFromStorage<number>(this.name, this.minWeight_NAME);
+        const minWeight_storage = dataMgr.getFromStorage<number>(this.name, this.minWeight_NAME);
         if (minWeight_storage != undefined)
             this.minWeight = minWeight_storage;
 
-        var maxWeight_storage = dataMgr.getFromStorage<number>(this.name, this.maxWeight_NAME);
+        const maxWeight_storage = dataMgr.getFromStorage<number>(this.name, this.maxWeight_NAME);
         if (maxWeight_storage != undefined)
             this.maxWeight = maxWeight_storage;
 
-        var matrix_storage = dataMgr.getFromStorage<number[][]>(this.name, this.matrix_NAME);
+        const matrix_storage = dataMgr.getFromStorage<number[][]>(this.name, this.matrix_NAME);
         if (matrix_storage != undefined)
             this.matrix = matrix_storage;
 
-        var nodeArrays_storage = dataMgr.getFromStorage<NodeArray>(this.name, this.nodeArrays_NAME, DynamicGraph.nodeArrayReviver);
+        const nodeArrays_storage = dataMgr.getFromStorage<NodeArray>(this.name, this.nodeArrays_NAME, DynamicGraph.nodeArrayReviver);
         if (nodeArrays_storage != undefined)
             this.nodeArrays = nodeArrays_storage;
 
-        var linkArrays_storage = dataMgr.getFromStorage<LinkArray>(this.name, this.linkArrays_NAME, DynamicGraph.linkArrayReviver);
+        const linkArrays_storage = dataMgr.getFromStorage<LinkArray>(this.name, this.linkArrays_NAME, DynamicGraph.linkArrayReviver);
         if (linkArrays_storage != undefined)
             this.linkArrays = linkArrays_storage;
 
-        var nodePairArrays_storage = dataMgr.getFromStorage<NodePairArray>(this.name, this.nodePairArrays_NAME, DynamicGraph.nodePairArrayReviver);
+        const nodePairArrays_storage = dataMgr.getFromStorage<NodePairArray>(this.name, this.nodePairArrays_NAME, DynamicGraph.nodePairArrayReviver);
         if (nodePairArrays_storage != undefined)
             this.nodePairArrays = nodePairArrays_storage;
 
-        var timeArrays_storage = dataMgr.getFromStorage<TimeArray>(this.name, this.timeArrays_NAME, DynamicGraph.timeArrayReviver);
+        const timeArrays_storage = dataMgr.getFromStorage<TimeArray>(this.name, this.timeArrays_NAME, DynamicGraph.timeArrayReviver);
         if (timeArrays_storage != undefined)
             this.timeArrays = timeArrays_storage;
 
@@ -296,8 +295,8 @@ export class DynamicGraph {
             this.timeArrays = new TimeArray();
         }
         else if ('momentTime' in this.timeArrays && 'unixTime' in this.timeArrays) {
-            var ta = this.timeArrays['momentTime'];
-            for (var i = 0; i < ta.length; i++) {
+            const ta = this.timeArrays['momentTime'];
+            for (let i = 0; i < ta.length; i++) {
                 ta[i] = moment.utc(this.timeArrays['unixTime'][i]);
             }
         }
@@ -313,15 +312,15 @@ export class DynamicGraph {
             (this.timeArrays as any)['momentTime'] = []
         }
 
-        var linkTypeArrays_storage = dataMgr.getFromStorage<LinkTypeArray>(this.name, this.linkTypeArrays_NAME, DynamicGraph.linkTypeArrayReviver);
+        const linkTypeArrays_storage = dataMgr.getFromStorage<LinkTypeArray>(this.name, this.linkTypeArrays_NAME, DynamicGraph.linkTypeArrayReviver);
         if (linkTypeArrays_storage != undefined)
             this.linkTypeArrays = linkTypeArrays_storage;
 
-        var nodeTypeArrays_storage = dataMgr.getFromStorage<NodeTypeArray>(this.name, this.nodeTypeArrays_NAME, DynamicGraph.nodeTypeArrayReviver);
+        const nodeTypeArrays_storage = dataMgr.getFromStorage<NodeTypeArray>(this.name, this.nodeTypeArrays_NAME, DynamicGraph.nodeTypeArrayReviver);
         if (nodeTypeArrays_storage != undefined)
             this.nodeTypeArrays = nodeTypeArrays_storage;
 
-        var locationArrays_storage = dataMgr.getFromStorage<LocationArray>(this.name, this.locationArrays_NAME, DynamicGraph.locationArrayReviver);
+        const locationArrays_storage = dataMgr.getFromStorage<LocationArray>(this.name, this.locationArrays_NAME, DynamicGraph.locationArrayReviver);
         if (locationArrays_storage != undefined)
             this.locationArrays = locationArrays_storage;
 
@@ -419,7 +418,7 @@ export class DynamicGraph {
     }
 
     debugCompareTo(other: DynamicGraph): boolean {
-        var result: boolean = true;
+        let result = true;
 
         if (this.name != other.name) {
             console.log("name different");
@@ -547,7 +546,7 @@ export class DynamicGraph {
 
 
         // must agree with version in main.ts
-        var TIME_FORMAT: string = 'YYYY-MM-DD hh:mm:ss';
+        const TIME_FORMAT = 'YYYY-MM-DD hh:mm:ss';
 
         this.clearSelections();
         console.log('[dynamicgraph.ts] Create dynamic graph for ', data.name, data)
@@ -562,16 +561,16 @@ export class DynamicGraph {
         this.gran_min = 0;
         this.gran_max = 0;
 
+        let timeLabel: string;
+        const unixTimes: number[] = [];
+        let unixTime: number;
+
         if (isValidIndex(data.linkSchema.time)) {
-            var timeLabels: number[] = [];
-            var timeLabel: string;
-            var unixTimes: number[] = [];
-            var unixTime: number;
 
             // get unix times for all times
             console.log("GEtting unix times for all times - linktable")
             console.log(data.linkTable)
-            for (var i = 0; i < data.linkTable.length; i++) {
+            for (let i = 0; i < data.linkTable.length; i++) {
                 timeLabel = data.linkTable[i][data.linkSchema.time];
                 console.log(data.linkTable[i])
                 unixTime = parseInt(moment.utc(timeLabel, TIME_FORMAT).format('x'));
@@ -585,12 +584,12 @@ export class DynamicGraph {
             // obtain granularity
             unixTimes.sort(sortNumber)
 
-            var diff = 99999999999999;
-            for (var i = 0; i < unixTimes.length - 2; i++) {
+            let diff = 99999999999999;
+            for (let i = 0; i < unixTimes.length - 2; i++) {
                 diff = Math.min(diff, unixTimes[i + 1] - unixTimes[i]);
             }
 
-            var diff_min = diff;
+            const diff_min = diff;
             if (diff >= 1000) this.gran_min = 1;
             if (diff >= 1000 * 60) this.gran_min = 2;
             if (diff >= 1000 * 60 * 60) this.gran_min = 3;
@@ -626,7 +625,7 @@ export class DynamicGraph {
 
             // var curr_t = start;
             // this._times = [];
-            for (var i = 0; i < unixTimes.length; i++) {
+            for (let i = 0; i < unixTimes.length; i++) {
                 this.timeArrays.id.push(i);
                 this.timeArrays.momentTime.push(moment.utc(unixTimes[i]));
                 this.timeArrays.label.push(this.timeArrays.momentTime[i].format(TIME_FORMAT));
@@ -647,7 +646,7 @@ export class DynamicGraph {
             // In fact, those structures are created on-demand, i.e.
             // the first time they are needed.
             // Here, we only create the meta-structure
-            for (var g = 0; g <= GRANULARITY.length; g++) {
+            for (let g = 0; g <= GRANULARITY.length; g++) {
                 this.timeObjects.push([]) // AQUIIIII
             }
         }
@@ -668,14 +667,14 @@ export class DynamicGraph {
 
 
         // CREATE LOCATIONS
-        var id_loc;
-        var location: Location;
+        let id_loc;
+        let location: Location;
 
         // if there is a location table, then there needs to be locationSchema
         console.assert(!data.locationTable || isValidIndex(data.locationSchema.id));
 
         if (data.locationTable) {
-            for (var i = 0; i < data.locationTable.length; i++) {
+            for (let i = 0; i < data.locationTable.length; i++) {
                 this.locationArrays.id.push(data.locationTable[i][data.locationSchema.id]);
                 this.locationArrays.label.push(data.locationTable[i][data.locationSchema.label]);
                 this.locationArrays.longitude.push(data.locationTable[i][data.locationSchema.longitude]);
@@ -691,17 +690,20 @@ export class DynamicGraph {
 
 
         // CREATE NODES
-        var row: any[];
-        var nodeId_data; // node id in data set
-        var nodeId_table; // node id in table
-        var attribute: any;
-        var time: Time;
+        let row: any[];
+        let nodeId_data; // node id in data set
+        let nodeId_table; // node id in table
+        let attribute: any;
+        let time: Time;
         console.assert(data.nodeTable.length == 0 || isValidIndex(data.nodeSchema.id),
             'either there is no nodeTable data, or we have a schema for the nodetable');
 
-        var nodeUserProperties = []
+        let typeName: string;
+        let typeId: number;
+
+        const nodeUserProperties = []
         // Get user-properties on links, if exist
-        for (var prop in data.nodeSchema) {
+        for (const prop in data.nodeSchema) {
             if (data.nodeSchema.hasOwnProperty(prop)
                 && prop != 'id'
                 && prop != 'label'
@@ -716,7 +718,7 @@ export class DynamicGraph {
             }
         }
 
-        for (var i = 0; i < data.nodeTable.length; i++) {
+        for (let i = 0; i < data.nodeTable.length; i++) {
             row = data.nodeTable[i];
 
             // check if id already exists
@@ -755,7 +757,7 @@ export class DynamicGraph {
                 console.log(TIME_FORMAT)
                 console.log(moment.utc(timeLabel, TIME_FORMAT))
                 console.log(moment.utc(timeLabel, TIME_FORMAT).format('x'))
-                var timeIdForUnixTime = this.getTimeIdForUnixTime(parseInt(moment.utc(timeLabel, TIME_FORMAT).format('x')))
+                const timeIdForUnixTime = this.getTimeIdForUnixTime(parseInt(moment.utc(timeLabel, TIME_FORMAT).format('x')))
                 if (timeLabel == undefined || timeIdForUnixTime == undefined) {//} || timeStamp.indexOf('null')) {
                     time = this._times[0];
                 } else {
@@ -769,7 +771,7 @@ export class DynamicGraph {
 
             // check locations
             if (isValidIndex(data.nodeSchema.location)) {
-                var locId = row[data.nodeSchema.location];
+                const locId = row[data.nodeSchema.location];
                 if (locId == null || locId == undefined)
                     continue;
                 this.nodeArrays.locations[nodeId_data].set(time, locId);
@@ -777,7 +779,7 @@ export class DynamicGraph {
 
             // check shapes
             if (isValidIndex(data.nodeSchema.shape)) {
-                var shape = row[data.nodeSchema.shape];
+                const shape = row[data.nodeSchema.shape];
                 this.nodeArrays.shape.push(shape);
             }
 
@@ -795,8 +797,8 @@ export class DynamicGraph {
             }
 
             // gather user-properties:
-            for (var p = 0; p < nodeUserProperties.length; p++) {
-                prop = nodeUserProperties[p];
+            for (let p = 0; p < nodeUserProperties.length; p++) {
+                const prop = nodeUserProperties[p];
                 (this.nodeArrays as any)[prop].push(row[(data.nodeSchema as any)[prop]]);
             }
 
@@ -855,7 +857,7 @@ export class DynamicGraph {
 
         // create matrix and initialize with -1, i.e. nodes are not connected.
         if ('id' in this.nodeArrays) {
-            for (var i = 0; i < this.nodeArrays.id.length; i++) {
+            for (let i = 0; i < this.nodeArrays.id.length; i++) {
                 this.matrix.push(array(undefined, this.nodeArrays.id.length));
             }
         }
@@ -863,17 +865,15 @@ export class DynamicGraph {
 
         // CREATE LINKS
 
-        var s: number, t: number;
-        var id: number;
-        var timeId: number;
-        var nodePairId: number;
-        var linkId: number;
-        var typeName: string;
-        var typeId: number;
+        let s: number, t: number;
+        let id: number;
+        let timeId: number;
+        let nodePairId: number;
+        let linkId: number;
 
-        var linkUserProperties = []
+        const linkUserProperties = []
         // Get user-properties on links, if exist
-        for (var prop in data.linkSchema) {
+        for (const prop in data.linkSchema) {
             if (data.linkSchema.hasOwnProperty(prop)
                 && prop != 'id'
                 && prop != 'linkType'
@@ -897,7 +897,7 @@ export class DynamicGraph {
             && isValidIndex(data.linkSchema.target)),
             'either there are no links, or the linkschema is defined');
 
-        for (var i = 0; i < data.linkTable.length; i++) {
+        for (let i = 0; i < data.linkTable.length; i++) {
             row = data.linkTable[i];
             linkId = row[data.linkSchema.id];
             this.linkArrays.directed.push(false); // this is default and can be overwritten in the following.
@@ -921,7 +921,7 @@ export class DynamicGraph {
             if (isValidIndex(data.linkSchema.time)) {
                 timeLabel = data.linkTable[i][data.linkSchema.time];
                 unixTime = parseInt(moment.utc(timeLabel, TIME_FORMAT).format('x'));
-                var timeIdForUnixTime = this.getTimeIdForUnixTime(unixTime);
+                const timeIdForUnixTime = this.getTimeIdForUnixTime(unixTime);
                 if (timeIdForUnixTime != undefined) {
                     timeId = timeIdForUnixTime;
                 }
@@ -1018,8 +1018,8 @@ export class DynamicGraph {
             }
 
             // gather user-properties:
-            for (var p = 0; p < linkUserProperties.length; p++) {
-                prop = linkUserProperties[p];
+            for (let p = 0; p < linkUserProperties.length; p++) {
+                const prop = linkUserProperties[p];
                 (this.linkArrays as any)[prop].push(row[(data.linkSchema as any)[prop]]);
             }
         }
@@ -1027,8 +1027,8 @@ export class DynamicGraph {
         // For every time, store a pointer to all its links:
         // var allLinks = links().toArray();
         // var allTimes = this.g.times().toArray();
-        for (var i = 0; i < this.linkArrays.length; i++) {
-            for (var j = 0; j < this.timeArrays.length; j++) {
+        for (let i = 0; i < this.linkArrays.length; i++) {
+            for (let j = 0; j < this.timeArrays.length; j++) {
                 if(this.linkArrays.weights[i]) {
                     if (this.linkArrays.weights[i].toArray().hasOwnProperty(this.timeArrays.id[j].toString())) {
                         this.timeArrays.links[j].push(this.linkArrays.id[i]);
@@ -1039,35 +1039,35 @@ export class DynamicGraph {
 
         //Build a color mapping
         const colorSet = new Set(['#e4549b', '#a33a36', '#bd6221', '#dfba47', '#b5b867', '#479b7f', '#335b8e', '#78387d']);
-        var colorMappings: { [color: string]: string; } = {};
+        const colorMappings: { [color: string]: string; } = {};
         this.nodeArrays.color.forEach(function (color: any) {
             if (!colorMappings[color]) {
-                let colorSetAsArray = Array.from(colorSet)
-                var generatedColor = colorSetAsArray[Math.floor(Math.random() * colorSetAsArray.length)]
+                const colorSetAsArray = Array.from(colorSet)
+                const generatedColor = colorSetAsArray[Math.floor(Math.random() * colorSetAsArray.length)]
                 colorMappings[color] = generatedColor;
                 colorSet.delete(generatedColor);
             }
         });
 
         //Add color values to nodeArray colors
-        for(var i=0; i<this.nodeArrays.color.length; i++) {
+        for(let i=0; i<this.nodeArrays.color.length; i++) {
             this.nodeArrays.color[i] = this.nodeArrays.color[i], colorMappings[this.nodeArrays.color[i]];
         }
 
         //Build a shape mapping
         const shapeSet = new Set(['cross', 'diamond', 'square', 'triangle-down', 'triangle-up']);
-        var shapeMappings: { [shape: string]: string; } = {};
+        const shapeMappings: { [shape: string]: string; } = {};
         this.nodeArrays.shape.forEach(function (shape: any) {
             if (!shapeMappings[shape]) {
-                let shapeSetAsArray = Array.from(shapeSet)
-                var generatedShape = shapeSetAsArray[Math.floor(Math.random() * shapeSetAsArray.length)]
+                const shapeSetAsArray = Array.from(shapeSet)
+                const generatedShape = shapeSetAsArray[Math.floor(Math.random() * shapeSetAsArray.length)]
                 shapeMappings[shape] = generatedShape;
                 shapeSet.delete(generatedShape);
             }
         });
 
         //Add shapes to nodeArray shapes
-        for(var i=0; i<this.nodeArrays.shape.length; i++) {
+        for(let i=0; i<this.nodeArrays.shape.length; i++) {
             this.nodeArrays.shape[i] = this.nodeArrays.shape[i], shapeMappings[this.nodeArrays.shape[i]];
         }
         console.log(" TEST ")
@@ -1075,7 +1075,7 @@ export class DynamicGraph {
 
 
         // create color map for link types
-        var linkTypeCount: number = this.linkTypeArrays.length;
+        const linkTypeCount: number = this.linkTypeArrays.length;
 
         console.log('[Dynamic Graph] Dynamic Graph created: ', this.nodeArrays.length);
         console.log('[Dynamic Graph]    - Nodes: ', this.nodeArrays.length);
@@ -1104,22 +1104,22 @@ export class DynamicGraph {
                 this.nodePairArrays = new NodePairArray();
             }
             this.nodeArrays.selections = new Array(this.nodeArrays.length);
-            for (var i = 0; i < this.nodeArrays.selections.length; i++) {
+            for (let i = 0; i < this.nodeArrays.selections.length; i++) {
                 this.nodeArrays.selections[i] = [];
             }
 
             this.linkArrays.selections = new Array(this.linkArrays.length);
-            for (var i = 0; i < this.linkArrays.selections.length; i++) {
+            for (let i = 0; i < this.linkArrays.selections.length; i++) {
                 this.linkArrays.selections[i] = [];
             }
 
             this.timeArrays.selections = new Array(this.timeArrays.length);
-            for (var i = 0; i < this.timeArrays.selections.length; i++) {
+            for (let i = 0; i < this.timeArrays.selections.length; i++) {
                 this.timeArrays.selections[i] = [];
             }
 
             this.nodePairArrays.selections = new Array(this.nodePairArrays.length);
-            for (var i = 0; i < this.nodePairArrays.selections.length; i++) {
+            for (let i = 0; i < this.nodePairArrays.selections.length; i++) {
                 this.nodePairArrays.selections[i] = [];
             }
         }
@@ -1127,7 +1127,7 @@ export class DynamicGraph {
         // create default selections for each type
         this.defaultNodeSelection = this.createSelection('node');
         this.defaultNodeSelection.name = 'Unselected';
-        for (var i = 0; i < this._nodes.length; i++) {
+        for (let i = 0; i < this._nodes.length; i++) {
             this.defaultNodeSelection.elementIds.push(i);
             this.addToAttributeArraysSelection(this.defaultNodeSelection, 'node', this._nodes[i].id());
         }
@@ -1139,7 +1139,7 @@ export class DynamicGraph {
 
         this.defaultLinkSelection = this.createSelection('link');
         this.defaultLinkSelection.name = 'Unselected';
-        for (var i = 0; i < this._links.length; i++) {
+        for (let i = 0; i < this._links.length; i++) {
             this.defaultLinkSelection.elementIds.push(i);
             this.addToAttributeArraysSelection(this.defaultLinkSelection, 'link', this._links[i].id());
         }
@@ -1149,12 +1149,12 @@ export class DynamicGraph {
         this.selectionColor_pointer--;
 
         // create selections for node types
-        var types: string[] = []
-        var type, index;
-        var selection: Selection;
-        var nodeSelections: Selection[] = [];
+        let types: string[] = []
+        let type, index;
+        let selection: Selection;
+        const nodeSelections: Selection[] = [];
 
-        for (var i = 0; i < this.nodeArrays.nodeType.length; i++) {
+        for (let i = 0; i < this.nodeArrays.nodeType.length; i++) {
             type = this.nodeArrays.nodeType[i];
             if (type == undefined || type.length == 0 || type == 'undefined')
                 continue;
@@ -1177,8 +1177,8 @@ export class DynamicGraph {
 
         // create selections for link type
         types = [];
-        var linkSelections: Selection[] = [];
-        for (var i = 0; i < this.linkArrays.linkType.length; i++) {
+        const linkSelections: Selection[] = [];
+        for (let i = 0; i < this.linkArrays.linkType.length; i++) {
             type = this.linkArrays.linkType[i];
             if (!type || type == 'undefined')
                 continue;
@@ -1246,13 +1246,13 @@ export class DynamicGraph {
 
         // measure time:
         console.log('[DynamicNetwork:createGraph()] >>> ')
-        var d = Date.now();
+        const d = Date.now();
 
         // POPULATE WINDOW GRAPH
 
         // populate locations
         if (this.locationArrays && 'id' in this.locationArrays) {
-            for (var i = 0; i < this.locationArrays.id.length; i++) {
+            for (let i = 0; i < this.locationArrays.id.length; i++) {
                 this._locations.push(new Location(this.locationArrays.id[i], this));
             }
         }
@@ -1261,20 +1261,20 @@ export class DynamicGraph {
         }
 
         // Populate nodes
-        var nodes: Node[] = [];
-        var locations;
+        const nodes: Node[] = [];
+        let locations;
         if ('nodeArrays' in this && this.nodeArrays) {
-            for (var i = 0; i < this.nodeArrays.id.length; i++) {
+            for (let i = 0; i < this.nodeArrays.id.length; i++) {
                 nodes.push(new Node(i, this));
             }
         }
 
         // Populate links
-        var links: Link[] = [];
-        var link: Link;
-        var source: Node, target: Node;
+        const links: Link[] = [];
+        let link: Link;
+        let source: Node, target: Node;
         if ('linkArrays' in this && this.linkArrays) {
-            for (var i = 0; i < this.linkArrays.source.length; i++) {
+            for (let i = 0; i < this.linkArrays.source.length; i++) {
 
                 link = new Link(i, this);
                 links.push(link);
@@ -1283,13 +1283,13 @@ export class DynamicGraph {
         }
 
         // Populate node pairs
-        var s: number, t: number;
-        var pairLinks: number[];
-        var pair: NodePair;
-        var pairLinkId: number;
-        var thisGraphNodePairIds: number[] = [];
+        let s: number, t: number;
+        let pairLinks: number[];
+        let pair: NodePair;
+        let pairLinkId: number;
+        const thisGraphNodePairIds: number[] = [];
         if ('nodePairArrays' in this && this.nodePairArrays) {
-            for (var i = 0; i < this.nodePairArrays.length; i++) {
+            for (let i = 0; i < this.nodePairArrays.length; i++) {
                 pairLinks = this.nodePairArrays.links[i];
                 this._nodePairs.push(new NodePair(i, this));
                 // for (var j = 0; j < pairLinks.length; j++) {
@@ -1328,7 +1328,7 @@ export class DynamicGraph {
 
         if (shouldCreateTimes) {// && 'timesArrays' in this && this.timeArrays) {
             this._times = [];
-            for (var i = 0; i < this.timeArrays.length; i++)
+            for (let i = 0; i < this.timeArrays.length; i++)
                 this._times.push(new Time(i, this));
         }
 
@@ -1409,16 +1409,16 @@ export class DynamicGraph {
         //     }
         // }
         if (action == 'add') {
-            for (var type in idCompound) {
-                for (var i = 0; i < (idCompound as any)[type].length; i++) {
+            for (const type in idCompound) {
+                for (let i = 0; i < (idCompound as any)[type].length; i++) {
                     (this.highlightArrays as any)[type].push((idCompound as any)[type][i]);
                 }
             }
         } else
             if (action == 'remove') {
-                var index: number;
-                for (var type in idCompound) {
-                    for (var i = 0; i < (idCompound as any)[type].length; i++) {
+                let index: number;
+                for (const type in idCompound) {
+                    for (let i = 0; i < (idCompound as any)[type].length; i++) {
                         index = (this.highlightArrays as any)[type].indexOf((idCompound as any)[type][i]);
                         if (index >= 0)
                             (this.highlightArrays as any)[type].splice(index, 1);
@@ -1434,15 +1434,15 @@ export class DynamicGraph {
         if (selectionId == undefined)
             selectionId = this.currentSelection_id;
 
-        var selection: any = this.getSelection(selectionId);
+        const selection: any = this.getSelection(selectionId);
         if (!selection) {
             console.error('[DynamicGraph] Selection with ', selectionId, 'not found in ', this.selections);
             return; // WITH RETURN ?
         }
 
-        var self: DynamicGraph = this;
+        const self: DynamicGraph = this;
         if (action == 'set') {
-            var c: IDCompound = new IDCompound();
+            const c: IDCompound = new IDCompound();
             (c as any)[selection.acceptedType] = selection.elementIds;
             this.selection('remove', c, selectionId);
             this.selection('add', idCompound, selectionId);
@@ -1464,8 +1464,8 @@ export class DynamicGraph {
     // SELFIX : delegate to dgraph
     addToAttributeArraysSelection(selection: Selection, type: string, id: number) {
         // check for priority of selections, then add where appropriate
-        var elementSelections = (this.attributeArrays as any)[type].selections[id];
-        for (var i = 0; i < elementSelections.length; i++) {
+        const elementSelections = (this.attributeArrays as any)[type].selections[id];
+        for (let i = 0; i < elementSelections.length; i++) {
             if (elementSelections[i].priority > selection.priority) {
                 (this.attributeArrays as any)[type].selections[id].splice(i, 0, selection);
                 return;
@@ -1478,8 +1478,8 @@ export class DynamicGraph {
 
     // SELFIX : delegate to dgraph
     removeFromAttributeArraysSelection(selection: Selection, type: string, id: number) {
-        var arr = (this.attributeArrays as any)[type].selections[id];
-        for (var i = 0; i < arr.length; i++) {
+        const arr = (this.attributeArrays as any)[type].selections[id];
+        for (let i = 0; i < arr.length; i++) {
             if (arr[i] == selection)
                 (this.attributeArrays as any)[type].selections[id].splice(i, 1);
         }
@@ -1527,7 +1527,7 @@ export class DynamicGraph {
         //             e.addToSelection(selection);
         // >>>>>>> api
         // remove from default selection
-        var i;
+        let i;
         if (type == 'node') {
             i = this.defaultNodeSelection.elementIds.indexOf(id);
             if (i > -1) {
@@ -1556,7 +1556,7 @@ export class DynamicGraph {
         // =======
         //         removeFromSelection(selection: Selection, id:number, elementType:string) {
         // >>>>>>> api
-        var i = selection.elementIds.indexOf(id)
+        const i = selection.elementIds.indexOf(id)
         if (i == -1)
             return;
 
@@ -1587,7 +1587,7 @@ export class DynamicGraph {
 
 
     filterSelection(selectionId: number, filter: boolean) {
-        var selection: any = this.getSelection(selectionId);
+        const selection: any = this.getSelection(selectionId);
         if (selection != undefined) {
             selection.filter = filter;
         }
@@ -1618,7 +1618,7 @@ export class DynamicGraph {
     }
 
     addSelection(id: number, color: string, acceptedType: string, priority: number) {
-        var s: Selection = this.createSelection(acceptedType);
+        const s: Selection = this.createSelection(acceptedType);
         s.id = id;
         s.color = color;
         s.priority = priority;
@@ -1626,7 +1626,7 @@ export class DynamicGraph {
 
     // creates a selection for the passed type.
     createSelection(type: string): Selection {
-        var s = new Selection(this.selections.length, type);
+        const s = new Selection(this.selections.length, type);
         s.color = this.BOOKMARK_COLORS(this.selectionColor_pointer % 10);
         this.selectionColor_pointer++;
         this.selections.push(s);
@@ -1634,7 +1634,7 @@ export class DynamicGraph {
     }
 
     deleteSelection(selectionId: number): void {
-        var s = this.getSelection(selectionId);
+        const s = this.getSelection(selectionId);
 
         // remove all elements from this selection
         // <<<<<<< HEAD
@@ -1645,7 +1645,7 @@ export class DynamicGraph {
 
         // remove
         if (s != undefined) {
-            var idCompound: IDCompound = new IDCompound();
+            const idCompound: IDCompound = new IDCompound();
             (idCompound as any)[s.acceptedType + 'Ids'] = s.elementIds.slice(0);
             console.log('Delete selection->remove elemeents', s.elementIds.slice(0))
             this.selection('remove', idCompound, s.id)
@@ -1657,16 +1657,16 @@ export class DynamicGraph {
     }
 
     setSelectionColor(id: number, color: string) {
-        var s = this.getSelection(id);
+        const s = this.getSelection(id);
         if (!s) {
             return;
         }
         s.color = color;
     }
     getSelections(type?: string) {
-        var selections: Selection[] = [];
+        const selections: Selection[] = [];
         if (type) {
-            for (var i = 0; i < this.selections.length; i++) {
+            for (let i = 0; i < this.selections.length; i++) {
                 if ((<Selection>this.selections[i]).acceptsType(type))
                     selections.push(this.selections[i])
             }
@@ -1676,7 +1676,7 @@ export class DynamicGraph {
         }
     }
     getSelection(id: number): Selection | undefined { // before only Selection return
-        for (var i = 0; i < this.selections.length; i++) {
+        for (let i = 0; i < this.selections.length; i++) {
             if (id == this.selections[i].id)
                 return this.selections[i];
         }
@@ -1693,7 +1693,7 @@ export class DynamicGraph {
 
     // internal utils
     getTimeIdForUnixTime(unixTime: number): number | undefined { // before only number
-        var timeId: number;
+        let timeId: number;
         console.log("unixTime: ")
         console.log(unixTime)
         for (timeId = 0; timeId < this.timeArrays.length; timeId++) {
@@ -1712,17 +1712,17 @@ export class DynamicGraph {
 
     // go into dynamicgraph
     addNodeOrdering(name: string, order: number[]) {
-        for (var i = 0; i < this.nodeOrders.length; i++) {
+        for (let i = 0; i < this.nodeOrders.length; i++) {
             if (this.nodeOrders[i].name == name) {
                 console.error('Ordering', name, 'already exists');
                 return;
             }
         }
-        var o = new Ordering(name, order);
+        const o = new Ordering(name, order);
         this.nodeOrders.push(o);
     }
     setNodeOrdering(name: string, order: number[]) {
-        for (var i = 0; i < this.nodeOrders.length; i++) {
+        for (let i = 0; i < this.nodeOrders.length; i++) {
             if (this.nodeOrders[i].name == name) {
                 this.nodeOrders[i].order = order;
                 return;
@@ -1731,14 +1731,14 @@ export class DynamicGraph {
         console.error('Ordering', name, 'does not exist');
     }
     removeNodeOrdering(name: string, order: number[]) {
-        for (var i = 0; i < this.nodeOrders.length; i++) {
+        for (let i = 0; i < this.nodeOrders.length; i++) {
             if (this.nodeOrders[i].name == name) {
                 this.nodeOrders.splice(i, 1);
             }
         }
     }
     getNodeOrder(name: string) {
-        for (var i = 0; i < this.nodeOrders.length; i++) {
+        for (let i = 0; i < this.nodeOrders.length; i++) {
             if (this.nodeOrders[i].name == name) {
                 return this.nodeOrders[i];
             }
@@ -1767,14 +1767,14 @@ export class DynamicGraph {
 
 
     linksBetween(n1: Node, n2: Node): LinkQuery {
-        var nodePairId = this.matrix[n1.id()][n2.id()];
+        let nodePairId = this.matrix[n1.id()][n2.id()];
         if (nodePairId == undefined)
             nodePairId = this.matrix[n2.id()][n1.id()];
         if (nodePairId == undefined)
             return new LinkQuery([], this);
 
         /* UNDEFINED? */
-        var node_pair: any = this.nodePair(nodePairId);
+        const node_pair: any = this.nodePair(nodePairId);
         if (node_pair != undefined)
             return new LinkQuery(node_pair.links().toArray(), this);
         else
@@ -1811,32 +1811,32 @@ export class DynamicGraph {
 
     // returns the node with ID
     node(id: number) {
-        for (var i = 0; i < this._nodes.length; i++) {
+        for (let i = 0; i < this._nodes.length; i++) {
             if (this._nodes[i].id() == id)
                 return this._nodes[i];
         }
     }
 
     link(id: number) {
-        for (var i = 0; i < this._links.length; i++) {
+        for (let i = 0; i < this._links.length; i++) {
             if (this._links[i].id() == id)
                 return this._links[i];
         }
     }
     time(id: number) {
-        for (var i = 0; i < this._times.length; i++) {
+        for (let i = 0; i < this._times.length; i++) {
             if (this._times[i].id() == id)
                 return this._times[i];
         }
     }
     location(id: number) {
-        for (var i = 0; i < this._locations.length; i++) {
+        for (let i = 0; i < this._locations.length; i++) {
             if (this._locations[i].id() == id)
                 return this._locations[i];
         }
     }
     nodePair(id: number) {
-        for (var i = 0; i < this._nodePairs.length; i++) {
+        for (let i = 0; i < this._nodePairs.length; i++) {
             if (this._nodePairs[i].id() == id)
                 return this._nodePairs[i];
         }
@@ -1962,7 +1962,7 @@ export class Query {
 
     constructor(elements?: number[]) {
         if (elements) {
-            for (var i = 0; i < elements.length; i++) {
+            for (let i = 0; i < elements.length; i++) {
                 if (elements[i] != undefined)
                     this._elements.push(elements[i]);
             }
@@ -1980,13 +1980,13 @@ export class Query {
         this._elements.push(element);
     }
     addAll(elements: number[]): void {
-        for (var i = 0; i < elements.length; i++) {
+        for (let i = 0; i < elements.length; i++) {
             if (elements[i] != undefined)
                 this._elements.push(elements[i]);
         }
     }
     addAllUnique(elements: number[]): void {
-        for (var i = 0; i < elements.length; i++) {
+        for (let i = 0; i < elements.length; i++) {
             this.addUnique(elements[i]);
         }
     }
@@ -1994,28 +1994,28 @@ export class Query {
     /** @returns numbr of elements in this query. Same as size(). */
     get length(): number {
         return this._elements.length
-    };
+    }
 
     /** @returns numbr of elements in this query. Same as length getter. */
-    size(): number { return this._elements.length };
+    size(): number { return this._elements.length }
 
     /** @returns all ids in this query. */
     ids(): number[] {
         return this._elements;
     }
     removeDuplicates(): Query {
-        var elements = this._elements.slice(0)
+        const elements = this._elements.slice(0)
         this._elements = [];
-        for (var i = 0; i < elements.length; i++) {
+        for (let i = 0; i < elements.length; i++) {
             if (this._elements.indexOf(elements[i]) == -1)
                 this._elements.push(elements[i])
         }
         return this;
     }
     generic_intersection(q: Query): Query {
-        var intersection = [];
-        for (var i = 0; i < this._elements.length; i++) {
-            for (var j = 0; j < q._elements.length; j++) {
+        const intersection = [];
+        for (let i = 0; i < this._elements.length; i++) {
+            for (let j = 0; j < q._elements.length; j++) {
                 if (this._elements[i] == q._elements[j]) {
                     intersection.push(this._elements[i])
                 }
@@ -2043,8 +2043,8 @@ export class GraphElementQuery extends Query {
      * @param filter - function evaluating if the attribute's value is valid.
       */
     generic_filter(filter: Function): any[] {
-        var arr: any[] = [];
-        for (var i = 0; i < this._elements.length; i++) {
+        const arr: any[] = [];
+        for (let i = 0; i < this._elements.length; i++) {
             try {
                 if (filter(this.g.get(this.elementType, this._elements[i]))) {
                     arr.push(this._elements[i])
@@ -2058,9 +2058,9 @@ export class GraphElementQuery extends Query {
      * one selection.
      */
     generic_selected(): any[] {
-        var arr: any[] = [];
-        for (var i = 0; i < this._elements.length; i++) {
-            var element = this.g.get(this.elementType, this._elements[i]);
+        const arr: any[] = [];
+        for (let i = 0; i < this._elements.length; i++) {
+            const element = this.g.get(this.elementType, this._elements[i]);
             if (element != undefined && element.isSelected()) {
                 arr.push(this._elements[i])
             }
@@ -2070,9 +2070,9 @@ export class GraphElementQuery extends Query {
     /** @returns a query with visible elements.
      */
     generic_visible(): any[] {
-        var arr: any[] = [];
-        for (var i = 0; i < this._elements.length; i++) {
-            var element = this.g.get(this.elementType, this._elements[i]);
+        const arr: any[] = [];
+        for (let i = 0; i < this._elements.length; i++) {
+            const element = this.g.get(this.elementType, this._elements[i]);
             if (element != undefined && element.isVisible()) {
                 arr.push(this._elements[i])
             }
@@ -2082,9 +2082,9 @@ export class GraphElementQuery extends Query {
     /** @returns a query with highighted elements.
      */
     generic_highlighted(): any[] {
-        var arr: any[] = [];
-        for (var i = 0; i < this._elements.length; i++) {
-            var element = this.g.get(this.elementType, this._elements[i]);
+        const arr: any[] = [];
+        for (let i = 0; i < this._elements.length; i++) {
+            const element = this.g.get(this.elementType, this._elements[i]);
             if (element != undefined && element.isHighlighted()) {
                 arr.push(this._elements[i]);
             }
@@ -2095,9 +2095,9 @@ export class GraphElementQuery extends Query {
      * or period.
      */
     generic_presentIn(start: Time, end?: Time): any[] {
-        var arr: any[] = [];
-        for (var i = 0; i < this._elements.length; i++) {
-            var element = this.g.get(this.elementType, this._elements[i]);
+        const arr: any[] = [];
+        for (let i = 0; i < this._elements.length; i++) {
+            const element = this.g.get(this.elementType, this._elements[i]);
             if (element != undefined && element.presentIn(start, end)) {
                 arr.push(this._elements[i]);
             }
@@ -2109,12 +2109,12 @@ export class GraphElementQuery extends Query {
         if (this._elements.length == 0) {
             return this;
         }
-        var array = this._elements.slice(0);
+        const array = this._elements.slice(0);
 
         // ITS POSSIBLE AN UNDEFINED VALUE??
         array.sort((e1, e2) => {
-            var e1_get = this.g.get(this.elementType, e1);
-            var e2_get = this.g.get(this.elementType, e2);
+            const e1_get = this.g.get(this.elementType, e1);
+            const e2_get = this.g.get(this.elementType, e2);
             if (e1_get != undefined && e2_get != undefined) {
                 return attributeSort(
                     e1_get,
@@ -2131,8 +2131,8 @@ export class GraphElementQuery extends Query {
         return this;
     }
     generic_removeDuplicates(): GraphElementQuery {
-        var uniqueElements = [];
-        for (var i = 0; i < this._elements.length; i++) {
+        const uniqueElements = [];
+        for (let i = 0; i < this._elements.length; i++) {
             // for(var j=i+1 ; j <this._elements.length ; j++){
             //     if(this._elements[i]==this._elements[j])
             //         this._elements.slice(j,1);
@@ -2213,8 +2213,8 @@ export class BasicElement {
      * @param selection - the Selection objects
      */
     removeFromSelection(b: Selection): void {
-        var arr: Selection[] = (this.g.attributeArrays as any)[this.type].selections[this._id];
-        for (var i = 0; i < arr.length; i++) {
+        const arr: Selection[] = (this.g.attributeArrays as any)[this.type].selections[this._id];
+        for (let i = 0; i < arr.length; i++) {
             if (arr[i] == b)
                 (this.g.attributeArrays as any)[this.type].selections[this._id].splice(i, 1);
         }
@@ -2235,8 +2235,8 @@ export class BasicElement {
         if (!selection)
             return this.getSelections().length > 0;
 
-        var selections = (this.g.attributeArrays as any)[this.type].selections[this._id];
-        for (var i = 0; i < selections.length; i++) { // start with 1 to avoid default selection.
+        const selections = (this.g.attributeArrays as any)[this.type].selections[this._id];
+        for (let i = 0; i < selections.length; i++) { // start with 1 to avoid default selection.
             if (selections[i] == this.g.defaultNodeSelection || selections[i] == this.g.defaultLinkSelection) {
                 continue;
             }
@@ -2258,10 +2258,10 @@ export class BasicElement {
 
     /** @returns true if this object is visible. */
     isVisible(): boolean {
-        var selections = this.getSelections();
+        const selections = this.getSelections();
         if (selections.length == 0)
             return true;
-        for (var i = 0; i < selections.length; i++) {
+        for (let i = 0; i < selections.length; i++) {
             if (selections[i].filter)
                 return false;
         }
@@ -2279,10 +2279,10 @@ export class BasicElement {
      * object is present between start and end.
      */
     presentIn(start: Time, end?: Time): boolean {
-        var presence: number[] = this.attr('presence');
+        const presence: number[] = this.attr('presence');
         if (!end)
             end = start;
-        for (var i = start._id; i <= end._id; i++) {
+        for (let i = start._id; i <= end._id; i++) {
             if (presence.indexOf(i) > -1)
                 return true;
         }
@@ -2299,10 +2299,10 @@ export class ScalarTimeSeries<T>{
 
     /** @returns a ScalarTimeSeries for the specified period. */
     period(t1: Time, t2: Time): ScalarTimeSeries<T> {
-        var t1id = t1.id();
-        var t2id = t2.id();
-        var s = new ScalarTimeSeries<T>();
-        for (var prop in this.serie) {
+        const t1id = t1.id();
+        const t2id = t2.id();
+        const s = new ScalarTimeSeries<T>();
+        for (const prop in this.serie) {
             if (parseInt(prop) >= t1id
                 && parseInt(prop) <= t2id) {
                 s.serie[prop] = this.serie[prop];
@@ -2337,13 +2337,13 @@ export class ScalarTimeSeries<T>{
     toArray(removeDuplicates?: boolean): T[] {
         if (removeDuplicates == undefined)
             removeDuplicates = false;
-        var a: T[] = [];
+        const a: T[] = [];
         if (removeDuplicates) {
-            for (var prop in this.serie) {
+            for (const prop in this.serie) {
                 a.push(this.serie[prop])
             }
         } else {
-            for (var prop in this.serie) {
+            for (const prop in this.serie) {
                 if (a.indexOf(this.serie[prop]) == -1)
                     a.push(this.serie[prop])
             }
@@ -2361,10 +2361,10 @@ export class ArrayTimeSeries<T>{
     serie: Object = {};
 
     period(t1: Time, t2: Time): ArrayTimeSeries<T> {
-        var t1id = t1.id();
-        var t2id = t1.id();
-        var s = new ArrayTimeSeries<T>();
-        for (var prop in this.serie) {
+        const t1id = t1.id();
+        const t2id = t1.id();
+        const s = new ArrayTimeSeries<T>();
+        for (const prop in this.serie) {
             if (parseInt(prop) >= t1id
                 && parseInt(prop) <= t1id) {
                 (s.serie as any)[prop] = (this.serie as any)[prop];
@@ -2387,8 +2387,8 @@ export class ArrayTimeSeries<T>{
     }
 
     toArray(): T[][] {
-        var a: T[][] = [];
-        for (var prop in this.serie) {
+        const a: T[][] = [];
+        for (const prop in this.serie) {
             a.push((this.serie as any)[prop]);
         }
         return a;
@@ -2397,9 +2397,9 @@ export class ArrayTimeSeries<T>{
     toFlatArray(removeDuplicates?: boolean): T[] {
         if (removeDuplicates == undefined)
             removeDuplicates = false;
-        var a: T[] = [];
-        for (var prop in this.serie) {
-            for (var i = 0; i < (this.serie as any)[prop].length; i++) {
+        const a: T[] = [];
+        for (const prop in this.serie) {
+            for (let i = 0; i < (this.serie as any)[prop].length; i++) {
                 if (!removeDuplicates || (removeDuplicates && a.indexOf((this.serie as any)[prop]) == -1)) {
                     a.push((this.serie as any)[prop][i]);
                 }
@@ -2418,13 +2418,13 @@ export class TimeQuery extends GraphElementQuery {
         //this.elementType = 'time';
         if (elements.length > 0 && elements[0] instanceof Time) {
             this._elements = []
-            for (var i = 0; i < elements.length; i++) {
+            for (let i = 0; i < elements.length; i++) {
                 this._elements.push(elements[i].id());
             }
         }
         if (elements.length > 0 && typeof elements[0] == 'number') {
             this._elements = []
-            for (var i = 0; i < elements.length; i++) {
+            for (let i = 0; i < elements.length; i++) {
                 this._elements.push(elements[i]);
             }
         }
@@ -2454,7 +2454,7 @@ export class TimeQuery extends GraphElementQuery {
     }
 
     links(): LinkQuery {
-        var links: number[] = [];
+        let links: number[] = [];
         // var allLinks = this.g.links().toArray();
         // var allTimes = this.g.times().toArray();
         // for(var i=0 ; i<allLinks.length ; i++){
@@ -2465,7 +2465,7 @@ export class TimeQuery extends GraphElementQuery {
         //     }
         // }
         // }
-        for (var i = 0; i < this._elements.length; i++) {
+        for (let i = 0; i < this._elements.length; i++) {
             links = links.concat(this.g.attr('links', this._elements[i], 'time'));
         }
         return new LinkQuery(links, this.g);
@@ -2478,9 +2478,9 @@ export class TimeQuery extends GraphElementQuery {
 
     // return array of times
     toArray(): Time[] {
-        var a: Time[] = [];
-        var allTimes = this.g._times;
-        for (var i = 0; i < this._elements.length; i++) {
+        const a: Time[] = [];
+        const allTimes = this.g._times;
+        for (let i = 0; i < this._elements.length; i++) {
             a.push(allTimes[this._elements[i]]);
         }
         return a;
@@ -2489,19 +2489,19 @@ export class TimeQuery extends GraphElementQuery {
         // create and init new attribute array if necessary
         if ((this.g.timeArrays as any)[attrName] == undefined) {
             (this.g.timeArrays as any)[attrName] = []
-            for (var i = 0; i < this.g._times.length; i++) {
+            for (let i = 0; i < this.g._times.length; i++) {
                 (this.g.timeArrays as any)[attrName].push();
             }
         }
-        for (var i = 0; i < this._elements.length; i++) {
+        for (let i = 0; i < this._elements.length; i++) {
             (this.g.timeArrays as any)[attrName][this._elements[i]] = f(this.g._times[this._elements[i]]);
         }
         return this;
     }
     unixTimes(): number[] {
-        var unixTimes: number[] = [];
-        for (var i = 0; i < this._elements.length; i++) {
-            var time = this.g.time(this._elements[i]); // UNDEFINED ??
+        const unixTimes: number[] = [];
+        for (let i = 0; i < this._elements.length; i++) {
+            const time = this.g.time(this._elements[i]); // UNDEFINED ??
             if (time != undefined) {
                 unixTimes.push(time.unixTime());
             }
@@ -2513,7 +2513,7 @@ export class TimeQuery extends GraphElementQuery {
         return new TimeQuery(this.generic_intersection(q)._elements, this.g);
     }
     forEach(f: Function): TimeQuery {
-        for (var i = 0; i < this._elements.length; i++) {
+        for (let i = 0; i < this._elements.length; i++) {
             f(this.g.time(this._elements[i]), i);
         }
         return this;
@@ -2538,7 +2538,7 @@ export class Time extends BasicElement {
     time(): moment.Moment { return this.attr('momentTime'); }
     moment(): moment.Moment { return this.attr('momentTime'); }
 
-    label(): String { return this.attr('label') }
+    label(): string { return this.attr('label') }
 
     /** @returns the unix time for this time object. */
     unixTime(): number { return this.attr('unixTime'); }
@@ -2578,13 +2578,13 @@ export class LocationQuery extends GraphElementQuery {
         // this.elementType = 'location';
         if (elements.length > 0 && elements[0] instanceof Location) {
             this._elements = []
-            for (var i = 0; i < elements.length; i++) {
+            for (let i = 0; i < elements.length; i++) {
                 this._elements = elements[i].id();
             }
         }
         if (elements.length > 0 && typeof elements[0] == 'number') {
             this._elements = []
-            for (var i = 0; i < elements.length; i++) {
+            for (let i = 0; i < elements.length; i++) {
                 this._elements.push(elements[i]);
             }
         }
@@ -2620,8 +2620,8 @@ export class LocationQuery extends GraphElementQuery {
 
     // return array of locations
     toArray(): Location[] {
-        var a: Location[] = [];
-        for (var i = 0; i < this._elements.length; i++) {
+        const a: Location[] = [];
+        for (let i = 0; i < this._elements.length; i++) {
             a.push(this.g._locations[this._elements[i]]);
         }
         return a;
@@ -2630,11 +2630,11 @@ export class LocationQuery extends GraphElementQuery {
         // create and init new attribute array if necessary
         if ((this.g.locationArrays as any)[attrName] == undefined) {
             (this.g.locationArrays as any)[attrName] = []
-            for (var i = 0; i < this.g._locations.length; i++) {
+            for (let i = 0; i < this.g._locations.length; i++) {
                 (this.g.locationArrays as any)[attrName].push();
             }
         }
-        for (var i = 0; i < this._elements.length; i++) {
+        for (let i = 0; i < this._elements.length; i++) {
             (this.g.locationArrays as any)[attrName][this._elements[i]] = f(this.g._locations[this._elements[i]]);
         }
         return this;
@@ -2647,7 +2647,7 @@ export class LocationQuery extends GraphElementQuery {
         return new LocationQuery(this.generic_removeDuplicates()._elements, this.g);
     }
     forEach(f: Function): LocationQuery {
-        for (var i = 0; i < this._elements.length; i++) {
+        for (let i = 0; i < this._elements.length; i++) {
             f(this.g.location(this._elements[i]), i);
         }
         return this;
@@ -2668,16 +2668,16 @@ export class NumberQuery extends Query {
 
     min(): number {
         this._elements = this.makeNumbers(this._elements);
-        var min: number = parseInt(this._elements[0]+'');
-        for (var i = 1; i < this._elements.length; i++) {
+        let min: number = parseInt(this._elements[0]+'');
+        for (let i = 1; i < this._elements.length; i++) {
             if (this._elements[i] != undefined)
                 min = Math.min(min, parseInt(this._elements[i]+''));
         }
         return min;
     }
     max(): number {
-        var max: number = parseInt(this._elements[0]+'');
-        for (var i = 1; i < this._elements.length; i++) {
+        let max: number = parseInt(this._elements[0]+'');
+        for (let i = 1; i < this._elements.length; i++) {
             if (this._elements[i] != undefined)
                 max = Math.max(max,  parseInt(this._elements[i]+''));
         }
@@ -2685,9 +2685,9 @@ export class NumberQuery extends Query {
     }
     mean(): number {
         this._elements = this.makeNumbers(this._elements);
-        var v = 0;
-        var count = 0;
-        for (var i = 0; i < this._elements.length; i++) {
+        let v = 0;
+        let count = 0;
+        for (let i = 0; i < this._elements.length; i++) {
             if (typeof this._elements[i] == 'number') {
                 v += parseInt(this._elements[i]+'');
                 count++;
@@ -2696,8 +2696,8 @@ export class NumberQuery extends Query {
         return v / count;
     }
     sum() {
-        var sum = 0;
-        for (var i = 0; i < this._elements.length; i++) {
+        let sum = 0;
+        for (let i = 0; i < this._elements.length; i++) {
             if (typeof this._elements[i] == 'number') {
                 sum += parseInt(this._elements[i]+'');
             }
@@ -2714,7 +2714,7 @@ export class NumberQuery extends Query {
     }
 
     forEach(f: Function): NumberQuery {
-        for (var i = 0; i < this._elements.length; i++) {
+        for (let i = 0; i < this._elements.length; i++) {
             f(this._elements[i], i);
         }
         return this;
@@ -2723,10 +2723,10 @@ export class NumberQuery extends Query {
     makeNumbers(elements:number[]): number[] 
     {
         if(elements && elements.length > 0){
-            var first = elements[0]
+            const first = elements[0]
             if(typeof first == 'string'){
-                var numberElements:number[] = []
-                for (var i = 0; i < elements.length; i++){
+                const numberElements:number[] = []
+                for (let i = 0; i < elements.length; i++){
                     numberElements.push(parseFloat(elements[i]+''))
                 }
                 console.log('string array converted', numberElements)
@@ -2748,7 +2748,7 @@ export class Location extends BasicElement {
 
     // SPECIFIC ATTRIBUTE QUERIES
 
-    label(): String { return this.attr('label') + ''; }
+    label(): string { return this.attr('label') + ''; }
     longitude(): number { return this.attr('longitude'); }
     latitude(): number { return this.attr('latitude'); }
     x(): number { return this.attr('x'); }
@@ -2766,13 +2766,13 @@ export class NodePairQuery extends GraphElementQuery {
         //this.elementType = 'nodePair';
         if (elements.length > 0 && elements[0] instanceof NodePair) {
             this._elements = []
-            for (var i = 0; i < elements.length; i++) {
+            for (let i = 0; i < elements.length; i++) {
                 this._elements.push(elements[i].id());
             }
         }
         if (elements.length > 0 && typeof elements[0] == 'number') {
             this._elements = []
-            for (var i = 0; i < elements.length; i++) {
+            for (let i = 0; i < elements.length; i++) {
                 this._elements.push(elements[i]);
             }
         }
@@ -2809,8 +2809,8 @@ export class NodePairQuery extends GraphElementQuery {
 
     // returns array of NodePair
     toArray(): NodePair[] {
-        var a: NodePair[] = [];
-        for (var i = 0; i < this._elements.length; i++) {
+        const a: NodePair[] = [];
+        for (let i = 0; i < this._elements.length; i++) {
             a.push(this.g._nodePairs[this._elements[i]]);
         }
         return a;
@@ -2819,11 +2819,11 @@ export class NodePairQuery extends GraphElementQuery {
         // create and init new attribute array if necessary
         if ((this.g.nodePairArrays as any)[attrName] == undefined) {
             (this.g.nodePairArrays as any)[attrName] = []
-            for (var i = 0; i < this.g._nodePairs.length; i++) {
+            for (let i = 0; i < this.g._nodePairs.length; i++) {
                 (this.g.nodePairArrays as any)[attrName].push();
             }
         }
-        for (var i = 0; i < this._elements.length; i++) {
+        for (let i = 0; i < this._elements.length; i++) {
             (this.g.nodePairArrays as any)[attrName][this._elements[i]] = f(this.g._nodePairs[this._elements[i]]);
         }
         return this;
@@ -2835,7 +2835,7 @@ export class NodePairQuery extends GraphElementQuery {
         return new NodePairQuery(this.generic_removeDuplicates()._elements, this.g);
     }
     forEach(f: Function): NodePairQuery {
-        for (var i = 0; i < this._elements.length; i++) {
+        for (let i = 0; i < this._elements.length; i++) {
             f(this.g.nodePair(this._elements[i]), i);
         }
         return this;
@@ -2858,7 +2858,7 @@ export class NodePair extends BasicElement {
     nodeType(): string { return this.attr('nodeType'); }
 
     presentIn(start: Time, end?: Time): boolean {
-        for (var i = 0; i < this.links.length; i++) {
+        for (let i = 0; i < this.links.length; i++) {
             if ((this.links as any)[i].presentIn(start, end))
                 return true;
         }
@@ -2887,25 +2887,25 @@ export class StringQuery {
         this._elements.push(element);
     }
     addAll(elements: string[]): void {
-        for (var i = 0; i < elements.length; i++) {
+        for (let i = 0; i < elements.length; i++) {
             if (elements[i] != undefined)
                 this._elements.push(elements[i]);
         }
     }
     addAllUnique(elements: string[]): void {
-        for (var i = 0; i < elements.length; i++) {
+        for (let i = 0; i < elements.length; i++) {
             this.addUnique(elements[i]);
         }
     }
 
-    get length(): number { return this._elements.length };
-    size(): number { return this._elements.length };
+    get length(): number { return this._elements.length }
+    size(): number { return this._elements.length }
 
     toArray(): string[] {
         return this._elements.slice(0);
     }
     forEach(f: Function): StringQuery {
-        for (var i = 0; i < this._elements.length; i++) {
+        for (let i = 0; i < this._elements.length; i++) {
             f(this._elements[i], i);
         }
         return this;
@@ -2914,9 +2914,9 @@ export class StringQuery {
 }
 
 function getBulkAttributes(attrName: string, ids: number[], type: string, g: DynamicGraph, t1?: Time, t2?: Time): any[] {
-    var a: any[] = [];
-    var temp: any[];
-    for (var i = 0; i < ids.length; i++) {
+    let a: any[] = [];
+    let temp: any[];
+    for (let i = 0; i < ids.length; i++) {
         if (t2 != undefined && t1 != undefined) {
             temp = (<ScalarTimeSeries<number>>g.attr(attrName, ids[i], type)).period(t1, t2).toArray();
         } else
@@ -2925,7 +2925,7 @@ function getBulkAttributes(attrName: string, ids: number[], type: string, g: Dyn
             } else {
                 temp = (<ScalarTimeSeries<number>>g.attr(attrName, ids[i], type)).toArray();
             }
-        for (var j = 0; j < temp.length; j++) {
+        for (let j = 0; j < temp.length; j++) {
             if (temp[j] instanceof Array) {
                 a = a.concat(temp[j]);
             } else {
@@ -2944,13 +2944,13 @@ export class NodeQuery extends GraphElementQuery {
         super(elements, g, 'node');
         if (elements.length > 0 && elements[0] instanceof Node) {
             this._elements = []
-            for (var i = 0; i < elements.length; i++) {
+            for (let i = 0; i < elements.length; i++) {
                 this._elements.push(elements[i].id());
             }
         } else
             if (elements.length > 0 && typeof elements[0] == 'number') {
                 this._elements = []
-                for (var i = 0; i < elements.length; i++) {
+                for (let i = 0; i < elements.length; i++) {
                     this._elements.push(elements[i]);
                 }
             }
@@ -2985,8 +2985,8 @@ export class NodeQuery extends GraphElementQuery {
     // proper functions
 
     label(): StringQuery {
-        var q: StringQuery = new StringQuery();
-        for (var i = 0; i < this._elements.length; i++) {
+        const q: StringQuery = new StringQuery();
+        for (let i = 0; i < this._elements.length; i++) {
             q.add('' + this.g.attr('label', this._elements[i], 'node'))
         }
         return q;
@@ -3001,8 +3001,8 @@ export class NodeQuery extends GraphElementQuery {
         return new LocationQuery(getBulkAttributes('locations', this._elements, 'node', this.g, t1, t2), this.g);
     }
     nodeTypes(): StringQuery {
-        var q: StringQuery = new StringQuery();
-        for (var i = 0; i < this._elements.length; i++) {
+        const q: StringQuery = new StringQuery();
+        for (let i = 0; i < this._elements.length; i++) {
             q.add(this.g.attr('nodeType', this._elements[i], 'node'))
         }
         return q;
@@ -3015,8 +3015,8 @@ export class NodeQuery extends GraphElementQuery {
 
     // returns array of nodes
     toArray(): Node[] {
-        var a: Node[] = [];
-        for (var i = 0; i < this._elements.length; i++) {
+        const a: Node[] = [];
+        for (let i = 0; i < this._elements.length; i++) {
             a.push(this.g._nodes[this._elements[i]]);
         }
         return a;
@@ -3025,11 +3025,11 @@ export class NodeQuery extends GraphElementQuery {
         // create and init news attribute array if necessary
         if ((this.g.nodeArrays as any)[attrName] == undefined) {
             (this.g.nodeArrays as any)[attrName] = []
-            for (var i = 0; i < this.g._nodes.length; i++) {
+            for (let i = 0; i < this.g._nodes.length; i++) {
                 (this.g.nodeArrays as any)[attrName].push();
             }
         }
-        for (var i = 0; i < this._elements.length; i++) {
+        for (let i = 0; i < this._elements.length; i++) {
             (this.g.nodeArrays as any)[attrName][this._elements[i]] = f(this.g._nodes[this._elements[i]]);
         }
         return this;
@@ -3043,7 +3043,7 @@ export class NodeQuery extends GraphElementQuery {
     }
 
     forEach(f: Function): NodeQuery {
-        for (var i = 0; i < this._elements.length; i++) {
+        for (let i = 0; i < this._elements.length; i++) {
             f(this.g.node(this._elements[i]), i);
         }
         return this;
@@ -3147,7 +3147,7 @@ export class Node extends BasicElement {
         return new LocationQuery((<ScalarTimeSeries<number>>this.attr('locations')).toArray(), this.g);
     }
     locationSerie(t1?: Time, t2?: Time): ScalarTimeSeries<Location> {
-        var serie: ScalarTimeSeries<number>;
+        let serie: ScalarTimeSeries<number>;
         if (t2 != undefined && t1 != undefined)
             serie = (<ScalarTimeSeries<number>>this.attr('locations')).period(t1, t2);
             // return this.attr('locations').period(t1, t2);
@@ -3158,12 +3158,12 @@ export class Node extends BasicElement {
             serie = (<ScalarTimeSeries<number>>this.attr('locations'));
             // return this.attr('locations');
 
-        var serie2 = serie.getSerie();
+        const serie2 = serie.getSerie();
         // replace numbers by locations
-        var serie3 = new ScalarTimeSeries<Location>();
-        for (var t in serie2) {
-            var time = this.g.time(parseInt(t));
-            var location = this.g.location((serie2 as any)[t]);
+        const serie3 = new ScalarTimeSeries<Location>();
+        for (const t in serie2) {
+            const time = this.g.time(parseInt(t));
+            const location = this.g.location((serie2 as any)[t]);
             if (time != undefined && location != undefined) {
                 serie3.set(time, location);
             }
@@ -3173,10 +3173,10 @@ export class Node extends BasicElement {
 
 
     linksBetween(n: Node): LinkQuery {
-        var links = this.links().toArray();
-        var finalLinks = []
-        var l
-        for (var i = 0; i < links.length; i++) {
+        const links = this.links().toArray();
+        const finalLinks = []
+        let l
+        for (let i = 0; i < links.length; i++) {
             l = links[i]
             if (l.source == n || l.target == n)
                 finalLinks.push(l)
@@ -3201,13 +3201,13 @@ export class LinkQuery extends GraphElementQuery {
         super(elements, g, 'link');
         if (elements.length > 0 && elements[0] instanceof Link) {
             this._elements = []
-            for (var i = 0; i < elements.length; i++) {
+            for (let i = 0; i < elements.length; i++) {
                 this._elements.push(elements[i].id());
             }
         }
         if (elements.length > 0 && typeof elements[0] == 'number') {
             this._elements = []
-            for (var i = 0; i < elements.length; i++) {
+            for (let i = 0; i < elements.length; i++) {
                 this._elements.push(elements[i]);
             }
         }
@@ -3243,17 +3243,17 @@ export class LinkQuery extends GraphElementQuery {
 
     // returns array of links
     toArray(): Link[] {
-        var a: Link[] = [];
-        for (var i = 0; i < this._elements.length; i++) {
+        const a: Link[] = [];
+        for (let i = 0; i < this._elements.length; i++) {
             a.push(this.g._links[this._elements[i]]);
         }
         return a;
     }
 
     weights(start?: Time, end?: Time): NumberQuery {
-        var s: NumberQuery = new NumberQuery();
-        for (var i = 0; i < this._elements.length; i++) {
-            var gLink = this.g.link(i);
+        const s: NumberQuery = new NumberQuery();
+        for (let i = 0; i < this._elements.length; i++) {
+            const gLink = this.g.link(i);
             if (gLink != undefined)
                 s.addAll(gLink.weights(start, end).toArray());
             // ELSE ???
@@ -3265,20 +3265,20 @@ export class LinkQuery extends GraphElementQuery {
         // create and init new attribute array if necessary
         if ((this.g.linkArrays as any)[attrName] == undefined) {
             (this.g.linkArrays as any)[attrName] = []
-            for (var i = 0; i < this.g._links.length; i++) {
+            for (let i = 0; i < this.g._links.length; i++) {
                 (this.g.linkArrays as any)[attrName].push();
             }
         }
-        for (var i = 0; i < this._elements.length; i++) {
+        for (let i = 0; i < this._elements.length; i++) {
             (this.g.linkArrays as any)[attrName][this._elements[i]] = f(this.g._links[this._elements[i]]);
         }
         return this;
     }
-    linkTypes(): String[] {
-        var linkTypes: String[] = [];
-        var s;
-        for (var i = 0; i < this._elements.length; i++) {
-            var gLink = this.g.link(this._elements[i]);
+    linkTypes(): string[] {
+        const linkTypes: string[] = [];
+        let s;
+        for (let i = 0; i < this._elements.length; i++) {
+            const gLink = this.g.link(this._elements[i]);
             if (gLink != undefined) {
                 s = gLink.linkType();
                 if (linkTypes.indexOf(s) == -1)
@@ -3290,9 +3290,9 @@ export class LinkQuery extends GraphElementQuery {
     }
 
     sources(): NodeQuery {
-        var nodes: number[] = []
-        var link;
-        for (var i = 0; i < this._elements.length; i++) {
+        const nodes: number[] = []
+        let link;
+        for (let i = 0; i < this._elements.length; i++) {
             link = this.g.link(this._elements[i]);
             if (link != undefined) { // UNDEFINED??
                 if (nodes.indexOf(link.source.id()) == -1) // ID??
@@ -3303,9 +3303,9 @@ export class LinkQuery extends GraphElementQuery {
     }
 
     targets(): NodeQuery {
-        var nodes: number[] = []
-        var link;
-        for (var i = 0; i < this._elements.length; i++) {
+        const nodes: number[] = []
+        let link;
+        for (let i = 0; i < this._elements.length; i++) {
             link = this.g.link(this._elements[i]);
             if (link != undefined) { // UNDEFINED??
                 if (nodes.indexOf(link.target.id()) == -1) // ID??
@@ -3322,7 +3322,7 @@ export class LinkQuery extends GraphElementQuery {
         return new LinkQuery(this.generic_removeDuplicates()._elements, this.g);
     }
     forEach(f: Function): LinkQuery {
-        for (var i = 0; i < this._elements.length; i++) {
+        for (let i = 0; i < this._elements.length; i++) {
             f(this.g.link(this._elements[i]), i);
         }
         return this;
@@ -3370,7 +3370,7 @@ export class Link extends BasicElement {
     }
 
     presentIn(start: Time, end?: Time): boolean {
-        var presence: number[] = this.weights(start, end).toArray();
+        const presence: number[] = this.weights(start, end).toArray();
         return presence.length > 0;
     }
     /** Returns all times in which this link's weight != 0  */
@@ -3402,8 +3402,8 @@ export class LinkType implements LegendElement {
 /* used by dynamicgraph, but not used none of utils*/
 
 export function attributeSort(a: BasicElement, b: BasicElement, attributeName: string, asc?: boolean): number {
-    var value = a.attr(attributeName);
-    var result;
+    const value = a.attr(attributeName);
+    let result;
     if (typeof value == 'string') {
         result = a.attr(attributeName).localeCompare(b.attr(attributeName));
     }
@@ -3436,7 +3436,7 @@ export interface LegendElement {
 /******** MOVED FROM UTILS TO DYNAMICGRAPH *********/
 
 export function copyPropsShallow(source: any, target: any): any {
-    for (var p in source) {
+    for (const p in source) {
         if (source.hasOwnProperty(p))
             target[p] = source[p];
     }
@@ -3444,9 +3444,9 @@ export function copyPropsShallow(source: any, target: any): any {
 }
 
 export function copyTimeseriesPropsShallow(source: any, target: any): any {
-    for (var q in source) {
+    for (const q in source) {
         if (source.hasOwnProperty(q)) {
-            for (var p in source[q]) {
+            for (const p in source[q]) {
                 if (source[q].hasOwnProperty(p)) {
                     target[q][p] = source[q][p];
                 }
@@ -3457,15 +3457,15 @@ export function copyTimeseriesPropsShallow(source: any, target: any): any {
 }
 
 export function copyTimeSeries<TElement>(arr: any[], ctorFunc: () => TElement): TElement[] {
-    var arrayClone: TElement[] = [];
-    for (var elem in arr) {
+    const arrayClone: TElement[] = [];
+    for (const elem in arr) {
         arrayClone.push(copyTimeseriesPropsShallow(arr[elem], ctorFunc()));
     }
     return arrayClone;
 }
 
 export function compareTypesDeep(a: any, b: any, depth: number): boolean {
-    var result = true;
+    let result = true;
     if (a == null || b == null)
         return a == b;
     if (typeof a != typeof b)
@@ -3476,7 +3476,7 @@ export function compareTypesDeep(a: any, b: any, depth: number): boolean {
         return false;
     else {
         if (depth > 0) {
-            for (var key in a) {
+            for (const key in a) {
                 if (key in b
                     && a.hasOwnProperty(key)
                     && b.hasOwnProperty(key)
@@ -3495,16 +3495,16 @@ export function sortNumber(a: any, b: any) {
 }
 
 export function array(value: any, size: number): any[] {
-    var array: any[] = []
+    const array: any[] = []
     while (size--) array[size] = value;
     return array;
 }
 
 export function doubleArray(size1: number, size2?: number, value?: any): any[] {
-    var array: any[] = []
+    const array: any[] = []
     if (value == undefined)
         value = []
-    var a: any[] = [];
+    const a: any[] = [];
 
     if (size2) {
         while (size2--) a[size2] = value;
@@ -3541,18 +3541,18 @@ export class DataManager {
     // The second time, it's just retrieved.
     dynamicGraph?: DynamicGraph;
 
-    keepOnlyOneSession: boolean = false;
-    session: string = '';
+    keepOnlyOneSession = false;
+    session = '';
 
-    sessionDataPrefix: string = "ncubesession";
+    sessionDataPrefix = "ncubesession";
     // sessionDataPrefix: string = "";
 
     clearSessionData(session: string): void {
-        var searchPrefix = this.sessionDataPrefix + this.SEP + session;
+        const searchPrefix = this.sessionDataPrefix + this.SEP + session;
         // var searchPrefix = session;
-        var keysToClear: string[] = [];
-        for (var i = 0; i < localStorage.length; i++) {
-            var key = localStorage.key(i);
+        const keysToClear: string[] = [];
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
             if (!key) continue;
             if (key.indexOf(searchPrefix) == 0)
                 keysToClear.push(key);
@@ -3561,8 +3561,8 @@ export class DataManager {
             else if (key.indexOf('connectoscope1') == 0)
                 keysToClear.push(key);
         }
-        for (var i = 0; i < keysToClear.length; i++) {
-            var k = keysToClear[i];
+        for (let i = 0; i < keysToClear.length; i++) {
+            const k = keysToClear[i];
             localStorage.removeItem(k);
         }
     }
@@ -3572,10 +3572,10 @@ export class DataManager {
     }
 
     isSessionCached(session: string, dataSetName: string): boolean {
-        var prefix = this.sessionDataPrefix + this.SEP + session + this.SEP + dataSetName;
+        const prefix = this.sessionDataPrefix + this.SEP + session + this.SEP + dataSetName;
         //var firstSessionKey: string = null;
-        for (var i = 0; i < localStorage.length; i++) {
-            var key = localStorage.key(i);
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
             if (key && key.indexOf(prefix) == 0) {
                 return true;
             }
@@ -3611,14 +3611,14 @@ export class DataManager {
         }
 
         // format data
-        for (var i = 0; i < data.nodeTable.length; i++) {
-            for (var j = 0; j < data.nodeTable[i].length; j++) {
+        for (let i = 0; i < data.nodeTable.length; i++) {
+            for (let j = 0; j < data.nodeTable[i].length; j++) {
                 if (typeof data.nodeTable[i][j] == 'string')
                     data.nodeTable[i][j] = data.nodeTable[i][j].trim();
             }
         }
-        for (var i = 0; i < data.linkTable.length; i++) {
-            for (var j = 0; j < data.linkTable[i].length; j++) {
+        for (let i = 0; i < data.linkTable.length; i++) {
+            for (let j = 0; j < data.linkTable[i].length; j++) {
                 if (typeof data.linkTable[i][j] == 'string')
                     data.linkTable[i][j] = data.linkTable[i][j].trim();
             }
@@ -3641,15 +3641,15 @@ export class DataManager {
             if (this.keepOnlyOneSession)
                 this.clearAllSessionData();
 
-            var graphForCaching: DynamicGraph = new DynamicGraph();
+            const graphForCaching: DynamicGraph = new DynamicGraph();
             graphForCaching.initDynamicGraph(data);
             // CACHEGRAPH store DynamicGraph in localstorage
             graphForCaching.saveDynamicGraph(this);
 
             // CACHEGRAPH : this code is strictly for diagnostics;
-            var doubleCheckSave = false;
+            const doubleCheckSave = false;
             if (doubleCheckSave) {
-                var testGraph: DynamicGraph = new DynamicGraph();
+                const testGraph: DynamicGraph = new DynamicGraph();
                 testGraph.loadDynamicGraph(this, data.name);
                 testGraph.debugCompareTo(graphForCaching);
             }
@@ -3659,7 +3659,7 @@ export class DataManager {
     }
 
     // Strings used to access local storage
-    SEP: string = "_";
+    SEP = "_";
     // NODE_TABLE: string = 'networkcube.nodetable';
     // LINK_TABLE: string = 'networkcube.linktable';
     // NODE_SCHEMA: string = 'networkcube.nodeschema';
@@ -3675,9 +3675,9 @@ export class DataManager {
             console.log('attempting to save undefined value. aborting', dataName, valueName);
             return;
         }
-        var stringifyResult = JSON.stringify(value, replacer);
+        const stringifyResult = JSON.stringify(value, replacer);
 
-        var stringToSave;
+        let stringToSave;
         if (stringifyResult.length > 1024 * 1024 * 4)
             stringToSave = LZString.compress(stringifyResult);
         else
@@ -3697,7 +3697,7 @@ export class DataManager {
 
         console.assert(this.session != '');
 
-        var statefulReviver;
+        let statefulReviver;
         if (reviver)
             statefulReviver = function (key: any, value: any): any {
                 return reviver(key, value, state);
@@ -3705,7 +3705,7 @@ export class DataManager {
         else
             statefulReviver = undefined;
 
-        var storedResult = localStorage[
+        const storedResult = localStorage[
             this.sessionDataPrefix
             + this.SEP + this.session
             + this.SEP + dataName
@@ -3715,7 +3715,7 @@ export class DataManager {
         if (storedResult && storedResult != "undefined") {
             // we try to detect whether the string was compressed or not. Given that it is
             // JSON, we would expect it to begin with either a quote, a bracket, or a curly-brace
-            var parseText;
+            let parseText;
             if(storedResult == "true"){
                 parseText = true;
             }

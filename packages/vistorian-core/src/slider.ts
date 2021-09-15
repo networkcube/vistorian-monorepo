@@ -3,13 +3,13 @@ import * as d3 from "d3";
 export class Slider {
 
     /* VISUALIZATION PARAMETERS */
-    BAR_WIDTH: number = 5;
-    RADIUS_HANDLE: number = 5;
+    BAR_WIDTH = 5;
+    RADIUS_HANDLE = 5;
 
     LEFT: number = this.RADIUS_HANDLE;
     RIGHT: number = this.RADIUS_HANDLE;
-    HEIGHT: number = 10;
-    TOP: number = 0;
+    HEIGHT = 10;
+    TOP = 0;
 
     max: number;
     min: number;
@@ -109,7 +109,6 @@ export class Slider {
 
 
     getRelX(ev: MouseEvent): number {
-       // var sourceEvent = d3.event.sourceEvent;
         const pageX = ev ? (ev).pageX : 0; // <MouseEvent>
         return pageX - this.LEFT - this.x - this.rect.left;
     }

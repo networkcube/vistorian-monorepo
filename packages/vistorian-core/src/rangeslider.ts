@@ -3,19 +3,19 @@ import * as d3 from "d3";
 export class RangeSlider {
 
     /* VISUALIZATION PARAMETERS */
-    BAR_WIDTH: number = 5;
-    RADIUS_HANDLE: number = 4;
+    BAR_WIDTH = 5;
+    RADIUS_HANDLE = 4;
 
     LEFT: number = this.RADIUS_HANDLE;
     RIGHT: number = this.RADIUS_HANDLE;
-    HEIGHT: number = 10;
-    TOP: number = 0;
+    HEIGHT = 10;
+    TOP = 0;
 
     max: number;
     min: number;
     stepWidth: number;
     hasTickmarks: boolean;
-    isInverted: boolean = false;
+    isInverted = false;
 
     svg: any; // BEFORE d3.Selection<d3.BaseType, {}, HTMLElement, any>; // ???????????????
     x: number;
@@ -96,8 +96,8 @@ export class RangeSlider {
                 .domain([this.min, this.max])
                 .range([this.LEFT, this.width - this.RIGHT - this.LEFT]);
 
-            for (var i = this.min; i <= this.max; i += this.stepWidth) {
-                var x = this.val2spaceScale(i);
+            for (let i = this.min; i <= this.max; i += this.stepWidth) {
+                const x = this.val2spaceScale(i);
                 this.g.append("line")
                     .attr('class', 'rangeTick')
                     .attr("x1", x)
@@ -168,21 +168,21 @@ export class RangeSlider {
             .call(this.drag);
     }
 
-    dragStartXMouse: number = 0; // BEFORE number;
-    dragStartXBar: number = 0; // BEFORE number;
+    dragStartXMouse = 0; // BEFORE number;
+    dragStartXBar = 0; // BEFORE number;
     dragObj: any;
-    currentBarLength: number = 0; // BEFORE number;
+    currentBarLength = 0; // BEFORE number;
 
     dragStart(ev: MouseEvent) {
         this.dragStartXMouse = Math.max(this.LEFT, Math.min(this.width - this.RIGHT, this.getRelX(ev)));
-        var sourceEvent =  ev; //(ev).sourceEvent; //(d3.event as D3.BaseEvent)
+        const sourceEvent =  ev; //(ev).sourceEvent; //(d3.event as D3.BaseEvent)
         this.dragObj = sourceEvent ? sourceEvent.target : undefined;
         if (this.isInverted) {
             // determine whether we are left of min, in between, or right of max
             // the startxbar is the left end of whichever segment we are in, 
             // and the barlength is same
-            var minPos: number = parseInt(this.circleMin.attr('cx'));
-            var maxPos: number = parseInt(this.circleMax.attr('cx'));
+            const minPos: number = parseInt(this.circleMin.attr('cx'));
+            const maxPos: number = parseInt(this.circleMax.attr('cx'));
             if (this.dragStartXMouse < minPos) {
                 this.dragStartXBar = this.LEFT;
                 this.currentBarLength = minPos - this.LEFT;
@@ -202,8 +202,8 @@ export class RangeSlider {
     dragMove(ev: MouseEvent) {
         // if we are dragging the entire bar
         if (!this.isInverted && this.dragObj.id == this.bar0.attr('id')) {
-            var xOffset = Math.max(this.LEFT, Math.min(this.width - this.RIGHT, this.getRelX(ev))) - this.dragStartXMouse;
-            var x1 = Math.max(this.LEFT, Math.min(this.width - this.RIGHT - this.currentBarLength, this.dragStartXBar + xOffset))
+            const xOffset = Math.max(this.LEFT, Math.min(this.width - this.RIGHT, this.getRelX(ev))) - this.dragStartXMouse;
+            const x1 = Math.max(this.LEFT, Math.min(this.width - this.RIGHT - this.currentBarLength, this.dragStartXBar + xOffset))
             this.bar0.attr('x', x1)
             this.circleMin.attr("cx", x1)
             this.circleMax.attr("cx", x1 + this.currentBarLength);

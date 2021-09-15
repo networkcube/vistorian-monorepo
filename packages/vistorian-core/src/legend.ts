@@ -12,7 +12,7 @@ export class Legend {
         top: 20
     }
 
-    height: number = 0; // INIT ???? 
+    height = 0; // INIT ???? 
 
     constructor(data: dynamicgraph.LegendElement[], handlerFunction?: Function) {
         this.data = data;

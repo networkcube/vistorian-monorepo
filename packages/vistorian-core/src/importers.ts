@@ -13,20 +13,20 @@ export function loadDyson(url: string, callback: Function)
 {
     d3.json(url).then((data: any) => {
         // create node table
-        var nodeTable = []
-        var nodeSchema = { id: 0, label: 1 }
-        var nodes = data.nodes;
-        for (var i = 0; i < nodes.length; i++) {
+        const nodeTable = []
+        const nodeSchema = { id: 0, label: 1 }
+        const nodes = data.nodes;
+        for (let i = 0; i < nodes.length; i++) {
             nodeTable.push([i, nodes[i].name]);
         }
-        var linkTable = []
-        var linkSchema = { id: 0, source: 1, target: 2, weight: 3, time: 4 }
-        var times = data.times;
-        var m
-        for (var i = 0; i < times.length; i++) {
+        const linkTable = []
+        const linkSchema = { id: 0, source: 1, target: 2, weight: 3, time: 4 }
+        const times = data.times;
+        let m
+        for (let i = 0; i < times.length; i++) {
             m = times[i].matrix;
-            for (var s = 0; s < m.length; s++) {
-                for (var t = 0; t < m.length; t++) {
+            for (let s = 0; s < m.length; s++) {
+                for (let t = 0; t < m.length; t++) {
                     linkTable.push([s * m.length + t, s, t, m[s][t], i])
                 }
             }
@@ -68,30 +68,30 @@ export function loadLinkTable(
     }
 
     $.get(url, (linkData) => {
-        var array = []
-        var rows = linkData.split('\r\n')
-        for(var i=1 ; i<rows.length ; i++){
+        const array = []
+        const rows = linkData.split('\r\n')
+        for(let i=1 ; i<rows.length ; i++){
             array.push(rows[i].split(delimiter));
         }
         linkData = array;
         // get references to tables
-        var nodeTable: any[] = [];
+        const nodeTable: any[] = [];
 
         // var nodeIds: number[] = [];
-        var names: string[] = [];
-        var nodeTimes: number[][] = [];
+        const names: string[] = [];
+        const nodeTimes: number[][] = [];
 
-        var nodeSchema: NodeSchema = new NodeSchema(0);
+        const nodeSchema: NodeSchema = new NodeSchema(0);
         nodeSchema.label = 1;
-        var id_source: number;
-        var id_target: number;
-        var name: string;
+        let id_source: number;
+        let id_target: number;
+        let name: string;
 
-        var linkTable: any[] = []
-        var newLinkSchema: LinkSchema = new LinkSchema(0, 1, 2);
+        const linkTable: any[] = []
+        const newLinkSchema: LinkSchema = new LinkSchema(0, 1, 2);
         // fill new link schema
-        var colCount = 3
-        for (var prop in linkSchema) {
+        let colCount = 3
+        for (let prop in linkSchema) {
             if (prop != 'source' && prop != 'target')
                 (newLinkSchema as any)[prop] = colCount++;
         }
@@ -100,8 +100,8 @@ export function loadLinkTable(
         // skip first row, as 1st row contains header information
         linkData.shift();
 
-        var linkRow;
-        for (var i = 0; i < linkData.length; i++) {
+        let linkRow;
+        for (let i = 0; i < linkData.length; i++) {
             if (linkData[i].length == 0 || linkData[i][0].length == 0) {
                 continue;
             }
@@ -113,7 +113,7 @@ export function loadLinkTable(
 
             // remove whitespace in table entries
 
-            for (var j = 0; j < linkData[i].length; j++) {
+            for (let j = 0; j < linkData[i].length; j++) {
                 linkData[i][j] = linkData[i][j].trim();
             }
 
@@ -144,7 +144,7 @@ export function loadLinkTable(
                 linkRow[newLinkSchema.time] = moment.utc(linkData[i][linkSchema.time], timeFormat).format(main.timeFormat())
             }
             // copy remaining attributes (linkType, weight, etc..)
-            for (var prop in linkSchema) {
+            for (const prop in linkSchema) {
                 if (prop != 'source' && prop != 'target' && prop != 'time' && prop != 'weight') {
                     linkRow[(newLinkSchema as any)[prop]] = linkData[i][(linkSchema as any)[prop]];
                 }
@@ -153,11 +153,11 @@ export function loadLinkTable(
         }
 
         // create node table from node name list
-        for (var i = 0; i < names.length; i++) {
+        for (let i = 0; i < names.length; i++) {
             nodeTable.push([i, names[i]])
         }
 
-        var dataSet = new DataSet({
+        const dataSet = new DataSet({
             nodeTable: nodeTable,
             linkTable: linkTable,
             linkSchema: newLinkSchema,
@@ -174,28 +174,26 @@ export function loadLinkTable(
 }
 
 export function loadXML(url: string, callBack: Function): void {
-    var d: DataSet;
-    var url = url;
-    var dataset;
-    var callBack = callBack;
+    let d: DataSet;
+    let dataset;
 
     d3.xml(url).then((data: any) => { // "application/xml",
-        var nodes = data.documentElement.getElementsByTagName("node")
-        var nodeTable = [];
-        var nodeIds = []
-        var nodeSchema = { id: 0, label: 1, nodeType: 2 }
-        for (var i = 0; i < nodes.length; i++) {
+        const nodes = data.documentElement.getElementsByTagName("node")
+        const nodeTable = [];
+        const nodeIds = []
+        const nodeSchema = { id: 0, label: 1, nodeType: 2 }
+        for (let i = 0; i < nodes.length; i++) {
             nodeTable.push([nodeTable.length, nodes[i].getAttribute('name'), nodes[i].getAttribute('type')])
             nodeIds.push(nodes[i].id)
         }
-        var linkTable = [];
-        var line = [];
-        var link;
-        var linkSchema = new LinkSchema(0, 1, 2);
-        var links = data.documentElement.getElementsByTagName("edge")
-        var s, t;
-        var sPrev, tPrev;
-        for (var i = 0; i < links.length; i++) {
+        const linkTable = [];
+        const line = [];
+        let link;
+        const linkSchema = new LinkSchema(0, 1, 2);
+        const links = data.documentElement.getElementsByTagName("edge")
+        let s, t;
+        let sPrev, tPrev;
+        for (let i = 0; i < links.length; i++) {
             s = nodeIds.indexOf(links[i].getAttribute('source'));
             t = nodeIds.indexOf(links[i].getAttribute('through'));
             if (sPrev == s && tPrev == t) {
@@ -219,17 +217,15 @@ export function loadXML(url: string, callBack: Function): void {
  * The json must have a 'nodes/vertices' and a 'links/edge/connections/relations' array.
 */
 export function loadJson(url: string, callBack: Function, dataName?: string): void {
-    var d: DataSet;
-    var url = url;
-    var dataset;
-    var callBack = callBack;
+    let d: DataSet;
+    let dataset;
 
     d3.json(url).then((data: any) => {
         if (!data)
             return;
 
         // fill edge table
-        var links = data.links
+        let links = data.links
         if (!links)
             links = data.edges;
         if (!links)
@@ -237,16 +233,16 @@ export function loadJson(url: string, callBack: Function, dataName?: string): vo
         if (!links)
             links = data.relations;
 
-        var linkTable = [];
-        var line: any[] = [];
-        var link;
-        var linkSchema = { id: 0, source: 1, target: 2, weight: 3 };
-        var weight;
-        var linkUserProps = []
-        var prop;
+        const linkTable = [];
+        let line: any[] = [];
+        let link;
+        const linkSchema = { id: 0, source: 1, target: 2, weight: 3 };
+        let weight;
+        const linkUserProps = []
+        let prop;
 
         // check for user-properties to complete schema
-        for (var i = 0; i < links.length; i++) {
+        for (let i = 0; i < links.length; i++) {
             link = links[i]
             for (prop in link) {
                 if (link.hasOwnProperty(prop)
@@ -266,14 +262,14 @@ export function loadJson(url: string, callBack: Function, dataName?: string): vo
             }
         }
         // collect data from links
-        for (var i = 0; i < links.length; i++) {
+        for (let i = 0; i < links.length; i++) {
             link = links[i]
             weight = 1;
             if (link.weight != undefined)
                 weight = link.weight;
 
             line = [i, link.source, link.target, weight];
-            for (var p = 0; p < linkUserProps.length; p++) {
+            for (let p = 0; p < linkUserProps.length; p++) {
                 prop = linkUserProps[p];
                 if (link[prop] == undefined) {
                     line.push(undefined)
@@ -285,18 +281,18 @@ export function loadJson(url: string, callBack: Function, dataName?: string): vo
         }
 
         // fill node table
-        var nodes = data.nodes
+        let nodes = data.nodes
         if (!nodes)
             nodes = data.vertices;
 
-        var node;
-        var nodeTable = [];
-        var locationTable: any[] = []; // location table in case there are locations
-        var locationSchema = { id: 0, longitude: 1, latitude: 2 }; // location table in case there are locations
-        var locationEntry = [];
-        var nodeSchema = { id: 0, label: 1 };
-        var nodeUserProperties = []
-        for (var i = 0; i < nodes.length; i++) {
+        let node;
+        const nodeTable = [];
+        const locationTable: any[] = []; // location table in case there are locations
+        const locationSchema = { id: 0, longitude: 1, latitude: 2 }; // location table in case there are locations
+        const locationEntry = [];
+        const nodeSchema = { id: 0, label: 1 };
+        const nodeUserProperties = []
+        for (let i = 0; i < nodes.length; i++) {
             node = nodes[i];
             for (prop in node) {
                 if (node.hasOwnProperty(prop)
@@ -314,7 +310,7 @@ export function loadJson(url: string, callBack: Function, dataName?: string): vo
                 }
             }
         }
-        for (var i = 0; i < nodes.length; i++) {
+        for (let i = 0; i < nodes.length; i++) {
             node = nodes[i]
             line = [i];
             if (node.name) {
@@ -332,7 +328,7 @@ export function loadJson(url: string, callBack: Function, dataName?: string): vo
             // }
 
             // check for user-properties
-            for (var p = 0; p < nodeUserProperties.length; p++) {
+            for (let p = 0; p < nodeUserProperties.length; p++) {
                 prop = nodeUserProperties[p];
                 if (node[prop] == undefined) {
                     line.push(undefined)
@@ -358,26 +354,24 @@ export function loadJson(url: string, callBack: Function, dataName?: string): vo
 
 }
 export function loadJsonList(url: string, callBack: Function): void {
-    var d: DataSet;
-    var url = url;
-    var dataset;
-    var callBack = callBack;
+    let d: DataSet;
+    let dataset;
 
     d3.json(url).then((data: any) => {
         if (!data)
             return;
 
         // fill node and link table
-        var linkTable = [];
-        var line = [];
-        var link;
-        var linkSchema = new LinkSchema(0, 1, 2);
-        var nodes = data;
-        var node;
-        var nodeTable = [];
-        var nodeSchema = new NodeSchema(0);
-        var nodeNames = []
-        for (var i = 0; i < nodes.length; i++) {
+        const linkTable = [];
+        let line = [];
+        let link;
+        const linkSchema = new LinkSchema(0, 1, 2);
+        const nodes = data;
+        let node;
+        const nodeTable = [];
+        const nodeSchema = new NodeSchema(0);
+        const nodeNames = []
+        for (let i = 0; i < nodes.length; i++) {
             node = nodes[i]
             line = [i];
             if (node.name) {
@@ -392,9 +386,9 @@ export function loadJsonList(url: string, callBack: Function): void {
             nodeTable.push(line)
         }
         // links
-        var s, t;
-        for (var i = 0; i < nodes.length; i++) {
-            for (var j = 0; j < nodes[i].imports.length; j++) {
+        let s, t;
+        for (let i = 0; i < nodes.length; i++) {
+            for (let j = 0; j < nodes[i].imports.length; j++) {
                 s = nodeNames.indexOf(nodes[i].name);
                 t = nodeNames.indexOf(nodes[i].imports[j])
                 if (s == -1 || t == -1)
@@ -426,23 +420,21 @@ function loadTables(url: string, callBack: Function): void {
 }
 
 export function loadNCube(url: string, callBack: Function): void {
-    var d: DataSet;
-    var url = url;
-    var dataset;
-    var callBack = callBack;
+    let d: DataSet;
+    let dataset;
 
     d3.json(url).then((data: any) => {
 
-        var nodeTable: any[][] = [];
-        var linkTable: any[][] = [];
+        const nodeTable: any[][] = [];
+        const linkTable: any[][] = [];
 
-        var nodeSchema: NodeSchema = new NodeSchema(0);
+        const nodeSchema: NodeSchema = new NodeSchema(0);
         nodeSchema.id = 0;
         nodeSchema.label = 1;
         nodeSchema.nodeType = 2;
 
         // create node table:
-        for (var i = 0; i < data.nodes.length; i++) {
+        for (let i = 0; i < data.nodes.length; i++) {
             console.log('data.nodes[i].name.substring(0,3)', data.nodes[i].name.substring(0, 3))
             nodeTable.push(
                 [
@@ -453,7 +445,7 @@ export function loadNCube(url: string, callBack: Function): void {
             )
         }
 
-        var linkSchema: LinkSchema = new LinkSchema(0, 1, 2);
+        const linkSchema: LinkSchema = new LinkSchema(0, 1, 2);
         linkSchema.id = 0;
         linkSchema.source = 1;
         linkSchema.target = 2;
@@ -462,7 +454,7 @@ export function loadNCube(url: string, callBack: Function): void {
 
         // create link table
         // data.edges = data.edges.slice(0,20000);
-        for (var i = 0; i < data.edges.length; i++) {
+        for (let i = 0; i < data.edges.length; i++) {
             linkTable.push(
                 [
                     data.edges[i].edgeId,
@@ -485,20 +477,18 @@ export function loadNCube(url: string, callBack: Function): void {
 }
 
 export function loadPajek(url: string, callBack: Function): void {
-    var d: DataSet;
-    var url = url;
-    var dataset;
-    var callBack = callBack;
+    let d: DataSet;
+    let dataset;
 
     $.get(url, (data) => {
-        var lines = data.split('\n')
-        var nodeTable = []
-        var nodeSchema = { id: 0, label: 1 }
-        var linkTable = []
-        var linkSchema = { id: 0, source: 1, target: 2, directed: 3 }
-        var parseType = ''
-        var line;
-        for (var i = 0; i < lines.length; i++) {
+        const lines = data.split('\n')
+        const nodeTable = []
+        const nodeSchema = { id: 0, label: 1 }
+        const linkTable = []
+        const linkSchema = { id: 0, source: 1, target: 2, directed: 3 }
+        let parseType = ''
+        let line;
+        for (let i = 0; i < lines.length; i++) {
             line = lines[i];
 
             // define data type
@@ -518,7 +508,7 @@ export function loadPajek(url: string, callBack: Function): void {
             // prepare and clean line
             line = line.trim();
             line = line.split(' ')
-            for (var j = 0; j < line.length; j) {
+            for (let j = 0; j < line.length; j) {
                 if (line[j].length == 0) {
                     line.splice(j, 1)
                 } else {
@@ -551,22 +541,20 @@ export function loadPajek(url: string, callBack: Function): void {
 }
 
 export function loadMat(url: string, callBack: Function): void {
-    var d: DataSet;
-    var url = url;
-    var dataset;
-    var callBack = callBack;
+    let d: DataSet;
+    let dataset;
 
     $.get(url, (data) => {
-        var lines = data.split('\n')
-        var nodeTable = []
-        var nodeSchema = { id: 0, label: 1 }
-        var linkTable = []
-        var linkSchema = { id: 0, source: 1, target: 2 }
-        var parseType = '';
-        var line;
-        var rowCount = 0;
-        var currRow = 0;
-        for (var i = 0; i < lines.length; i++) {
+        const lines = data.split('\n')
+        const nodeTable = []
+        const nodeSchema = { id: 0, label: 1 }
+        const linkTable = []
+        const linkSchema = { id: 0, source: 1, target: 2 }
+        let parseType = '';
+        let line;
+        let rowCount = 0;
+        let currRow = 0;
+        for (let i = 0; i < lines.length; i++) {
             line = lines[i];
 
             // define data type
@@ -600,7 +588,7 @@ export function loadMat(url: string, callBack: Function): void {
                     nodeTable.push([nodeTable.length, line[0]])
                 } else
                     if (parseType.indexOf('links') > -1) {
-                        for (var j = 0; j < line.length; j++) {
+                        for (let j = 0; j < line.length; j++) {
                             if (parseInt(line[j]) == 1) {
                                 linkTable.push([linkTable.length, currRow, rowCount + 1])
                             }
@@ -620,29 +608,28 @@ export function loadMat(url: string, callBack: Function): void {
 
 
 export function loadGEDCOM(url: string, callBack: Function): void {
-    var d: DataSet;
-    var url = url;
-    var dataset;
-    var callBack = callBack;
-    var nodeTable: any[] = []
-    var nodeSchema = { id: 0, label: 1, nodeType: 2 }
-    var linkTable: any[] = []
-    var linkSchema = { id: 0, source: 1, target: 2 }
-    var line;
-    var s, t;
+    let d: DataSet;
+    let dataset;
+
+    const nodeTable: any[] = []
+    const nodeSchema = { id: 0, label: 1, nodeType: 2 }
+    const linkTable: any[] = []
+    const linkSchema = { id: 0, source: 1, target: 2 }
+    let line;
+    let s, t;
 
     $.get(url, (data) => {
         data = data.split('\n');
-        var singleLine: any;
-        var line: any[];
-        var currPersonId;
-        var personIds = [];
-        var personSex = [];
-        var familiyIds: any[] = []
-        var familiyChildren: any[][] = []
-        var familiyHusband: any[] = []
-        var familiyWife: any[] = []
-        for (var i = 0; i < data.length; i++) {
+        let singleLine: any;
+        let line: any[];
+        let currPersonId;
+        const personIds = [];
+        const personSex = [];
+        const familiyIds: any[] = []
+        const familiyChildren: any[][] = []
+        const familiyHusband: any[] = []
+        const familiyWife: any[] = []
+        for (let i = 0; i < data.length; i++) {
             singleLine = data[i].replace(/@/g, '');
             line = singleLine.split(' ')
             // parsing persons
@@ -678,18 +665,18 @@ export function loadGEDCOM(url: string, callBack: Function): void {
                                 }
         }
 
-        for (var fi = 0; fi < personIds.length; fi++) {
+        for (let fi = 0; fi < personIds.length; fi++) {
             nodeTable.push([fi, personIds[fi], personSex[fi]]);
         }
 
 
-        var hi, wi, ci
-        var nodeNames = [];
-        for (var fi = 0; fi < familiyIds.length; fi++) {
+        let hi, wi, ci
+        const nodeNames = [];
+        for (let fi = 0; fi < familiyIds.length; fi++) {
             hi = personIds.indexOf(familiyHusband[fi]);
             wi = personIds.indexOf(familiyWife[fi]);
             console.log('-->', hi, wi, familiyHusband[fi], familiyWife[fi])
-            for (var i = 0; i < familiyChildren[fi].length; i++) {
+            for (let i = 0; i < familiyChildren[fi].length; i++) {
                 ci = personIds.indexOf(familiyChildren[fi][i]);
                 if (ci == undefined || ci == -1)
                     continue;
@@ -711,37 +698,36 @@ export function loadGEDCOM(url: string, callBack: Function): void {
 }
 
 export function loadLinkList(url: string, callBack: Function): void {
-    var d: DataSet;
-    var url = url;
-    var dataset;
-    var callBack = callBack;
+    let d: DataSet;
+    let dataset;
 
     $.get(url, (data) => {
-        var lines = data.split('\n')
-        var nodeTable = []
-        var nodeSchema = { id: 0, label: 1 }
-        var linkTable = []
-        var linkSchema = { id: 0, source: 1, target: 2, weight: 3 };
-        var line
-        var s, t;
-        for (var i = 0; i < lines.length; i++) {
+        const lines = data.split('\n')
+        const nodeTable = []
+        const nodeSchema = { id: 0, label: 1 }
+        const linkTable = []
+        const linkSchema = { id: 0, source: 1, target: 2, weight: 3 };
+        let line
+        let s, t;
+        let i = 0;
+        for (i; i < lines.length; i++) {
             line = lines[i];
             if (line.indexOf('#') == -1) {
                 break;
             }
         }
-        var DEL = ' ';
+        let DEL = ' ';
         if (lines[i].indexOf(',') > -1)
             DEL = ','
         else if (lines[i].indexOf('\t') > -1)
             DEL = '\t'
 
-        var nodeLabels = [];
-        var weight;
+        const nodeLabels = [];
+        let weight;
         for (i; i < lines.length; i++) {
             line = lines[i]
             line = line.split(DEL);
-            for (var j = 0; j < line.length; j) {
+            for (let j = 0; j < line.length; j) {
                 if (line[j].length == 0) {
                     line.splice(j, 1)
                 } else {
@@ -755,7 +741,7 @@ export function loadLinkList(url: string, callBack: Function): void {
             if (s == undefined || s == '')
                 continue;
 
-            var si = nodeLabels.indexOf(s)
+            let si = nodeLabels.indexOf(s)
             if (si == -1) {
                 si = nodeLabels.length;
                 nodeLabels.push(s)
@@ -765,7 +751,7 @@ export function loadLinkList(url: string, callBack: Function): void {
             if (t == undefined)
                 continue;
             t = t.trim();
-            var ti = nodeLabels.indexOf(t)
+            let ti = nodeLabels.indexOf(t)
             if (ti == -1) {
                 ti = nodeLabels.length;
                 nodeLabels.push(t)
@@ -790,32 +776,30 @@ export function loadLinkList(url: string, callBack: Function): void {
 }
 
 export function loadMatrix(url: string, callBack: Function): void {
-    var d: DataSet;
-    var url = url;
-    var dataset;
-    var callBack = callBack;
+    let d: DataSet;
+    let dataset;
 
     $.get(url, (data) => {
-        var lines = data.split('\n')
-        var nodeTable = []
-        var nodeSchema = { id: 0, label: 1 }
-        var linkTable = []
-        var linkSchema = { id: 0, source: 1, target: 2 }
-        var parseType = '';
-        var line;
-        var rowCount = 0;
-        var currRow = 0;
-        var nodeNames = [];
-        var label
+        const lines = data.split('\n')
+        const nodeTable = []
+        const nodeSchema = { id: 0, label: 1 }
+        const linkTable = []
+        const linkSchema = { id: 0, source: 1, target: 2 }
+        const parseType = '';
+
+        const rowCount = 0;
+        const currRow = 0;
+        const nodeNames = [];
+        let label
         // get nodes from rows
-        var line = lines[0].trim().split(',')
-        for (var i = 0; i < line.length; i++) {
+        let line = lines[0].trim().split(',')
+        for (let i = 0; i < line.length; i++) {
             label = line[i].trim();
             nodeTable.push([nodeTable.length, label])
             nodeNames.push(label)
         }
-        var t;
-        for (var i = 1; i < lines.length; i++) {
+        let t;
+        for (let i = 1; i < lines.length; i++) {
             line = lines[i];
             line = line.trim();
             line = line.split(',');
@@ -824,7 +808,7 @@ export function loadMatrix(url: string, callBack: Function): void {
                 console.error('Node', line[0], 'not defined')
                 continue;
             }
-            for (var j = 1; j < line.length; j++) {
+            for (let j = 1; j < line.length; j++) {
                 if (line[j].length > 0 && parseInt(line[j].replace(/\s/g, '')) > 300000) {
                     linkTable.push([linkTable.length, t, j - 1])
                 }
@@ -854,12 +838,12 @@ export function loadMatrix(url: string, callBack: Function): void {
  * Currently: returns simple list of node index pairs.
  */
 export function exportCSV(graph: DynamicGraph): string {
-    var csv: string = '';
-    var DEL = ',';
-    var ST = '';
-    var BR = '\n';
-    for (var i = 0; i < graph.links().length; i++) {
-        var graph_link = graph.link(i);
+    let csv = '';
+    const DEL = ',';
+    const ST = '';
+    const BR = '\n';
+    for (let i = 0; i < graph.links().length; i++) {
+        const graph_link = graph.link(i);
         if (graph_link != undefined) {
             csv += ST + graph_link.source.id() + ST + DEL
                 + ST + graph_link.target.id() + ST + BR
@@ -874,9 +858,9 @@ export function exportCSV(graph: DynamicGraph): string {
 
 /** Downloads a string as file.*/
 export function downloadText(text: string, filename: string) {
-    var textFileAsBlob = new Blob([text], { type: 'text/text' });
-    var fileNameToSaveAs = filename;
-    var downloadLink = document.createElement("a")
+    const textFileAsBlob = new Blob([text], { type: 'text/text' });
+    const fileNameToSaveAs = filename;
+    const downloadLink = document.createElement("a")
     downloadLink.download = fileNameToSaveAs;
     downloadLink.href = (window as any).webkitURL.createObjectURL(textFileAsBlob);
     downloadLink.click();

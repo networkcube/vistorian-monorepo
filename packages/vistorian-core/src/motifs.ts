@@ -7,19 +7,19 @@ export function findTemplate(nodes: Node[],
     template: MotifTemplate,
     config?: Object) {
 
-    var nodeCount = template.nodes.length;
-    var linkCount = template.links.length;
+    const nodeCount = template.nodes.length;
+    const linkCount = template.links.length;
     // test every node if it matches one of the nodes in the motif
-    var n;
-    var links
-    var candidateNodes = []
-    for (var i = 0; i < nodes.length; i++) {
+    let n;
+    let links
+    const candidateNodes = []
+    for (let i = 0; i < nodes.length; i++) {
         links = nodes[i].links().toArray();
-        for (var j = 0; j < nodeCount; j++) {
-            for (var k = 0; k < linkCount; k++) {
+        for (let j = 0; j < nodeCount; j++) {
+            for (let k = 0; k < linkCount; k++) {
                 if (template.links[k][0] == template.nodes[j])
 
-                    for (var l = 0; l < linkCount; l++) {
+                    for (let l = 0; l < linkCount; l++) {
                     }
             }
         }
@@ -33,32 +33,32 @@ export function findClusters(nodes: Node[], config?: Object) {
     if (nodes.length == 0)
         return []
 
-    var g: DynamicGraph = nodes[0].g
-    var links: any[] = nodes[0].g.links().toArray()
-    for (var i = 0; i < links.length; i++) {
+    const g: DynamicGraph = nodes[0].g
+    const links: any[] = nodes[0].g.links().toArray()
+    for (let i = 0; i < links.length; i++) {
         links[i].value = links[i].weights().sum() // VALUE ???
     }
-    var clusters = netClustering.cluster(nodes, links);
+    const clusters = netClustering.cluster(nodes, links);
 
-    var motifs = []
-    var clusterArray = []
+    const motifs = []
+    const clusterArray = []
     // replace ids with nodes
 
-    var clusterLinks: any[] = []
-    var cl;
-    var s, t
-    for (var c = 0; c < clusters.length; c++) {
+    let clusterLinks: any[] = []
+    let cl;
+    let s, t
+    for (let c = 0; c < clusters.length; c++) {
         clusterLinks = []
         cl = clusters[c]
         // exclude clusters with less than 4 nodes
         if (cl.length < 4)
             continue;
 
-        for (var j = 0; j < cl.length; j++) {
+        for (let j = 0; j < cl.length; j++) {
             cl[j] = g.node(parseInt(cl[j]))
         }
-        for (var i = 0; i < cl.length; i++) {
-            for (var j = i + 1; j < cl.length; j++) {
+        for (let i = 0; i < cl.length; i++) {
+            for (let j = i + 1; j < cl.length; j++) {
                 clusterLinks = clusterLinks.concat(cl[i].linksBetween(cl[j]).toArray())
             }
         }
@@ -116,7 +116,7 @@ function bronKerbosch(nodes: Node[], r: any[], p: any[], x: any[], cliques: any[
     }
 
     p.forEach(function (v) {
-        var tempR = r.splice(0);
+        const tempR = r.splice(0);
         tempR.push(v);
         bronKerbosch(nodes, tempR, p.filter(function (temp) {
             return v.neighbors().contains(temp);
@@ -206,18 +206,18 @@ function bronKerboschIterative(nodes: Node[], config: Object): any[] {
 */
 
 export function findFullEgoNetwork(nodes: Node[], config?: Object): Motif[] {
-    var motifs: Motif[] = [];
-    var ns;
-    var ls;
-    var finalLinks;
-    var n;
-    for (var i = 0; i < nodes.length; i++) {
+    const motifs: Motif[] = [];
+    let ns;
+    let ls;
+    let finalLinks;
+    let n;
+    for (let i = 0; i < nodes.length; i++) {
         n = nodes[i];
         finalLinks = [];
         ns = n.neighbors().removeDuplicates()
         ls = ns.links().removeDuplicates().toArray();
         ns = ns.toArray().concat(n);
-        for (var j = 0; j < ls.length; j++) {
+        for (let j = 0; j < ls.length; j++) {
             if (ls[j] == undefined)
                 continue;
             if (ns.indexOf(ls[j].source) > -1 && ns.indexOf(ls[j].target) > -1) {
