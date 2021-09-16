@@ -434,7 +434,7 @@ export class WebGLElementQuery {
         return this.dataElements.length;
     }
 
-    filter(f: Function): WebGLElementQuery {
+    filter(f: (obj: object, n: number) => boolean): WebGLElementQuery {
         const arr: any[] = [];
         const visArr: any[] = []
         for (let i = 0; i < this.dataElements.length; i++) {
@@ -525,7 +525,7 @@ export class WebGLElementQuery {
     }
 
     // interaction
-    on(event: string, f: Function): WebGLElementQuery {
+    on(event: string, f: (this: any, event: any, d: any) => void): WebGLElementQuery {
         switch (event) {
             case 'mouseover': this.mouseOverHandler = f; break;
             case 'mousemove': this.mouseMoveHandler = f; break;
@@ -1058,7 +1058,7 @@ export class WebGLInteractor {
         }
     }
 
-    addEventListener(eventName: string, f: Function) {
+    addEventListener(eventName: string, f: (points: any[]) => void) {
         if (eventName == 'lassoStart')
             this.lassoStartHandler = f;
         if (eventName == 'lassoEnd')
@@ -1306,7 +1306,7 @@ export function curve(points: any[]): any[] {
 
 export class CheckBox {
     selected = false;
-    changeCallBack: any; // BEFORE Function;
+    changeCallBack: () => void = () => null; // BEFORE Function;
     circle: any;
     frame: any;
 
@@ -1346,7 +1346,7 @@ export class CheckBox {
 
     }
 
-    on(eventType: string, fn: Function) {
+    on(eventType: string, fn: () => void) {
         switch (eventType) {
             case 'change': this.changeCallBack = fn;
         }

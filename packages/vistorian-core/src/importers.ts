@@ -9,7 +9,7 @@ import {
 import * as moment from 'moment'
 import * as main from './main'
 
-export function loadDyson(url: string, callback: Function) 
+export function loadDyson(url: string, callback: (dataset: DataSet) => void)
 {
     d3.json(url).then((data: any) => {
         // create node table
@@ -47,7 +47,7 @@ export function loadDyson(url: string, callback: Function)
 // does not check for locations
 export function loadLinkTable(
     url: string,
-    callBack: Function,
+    callBack: (dataset: DataSet) => void,
     linkSchema: LinkSchema,
     delimiter: string,
     timeFormat?: string
@@ -173,7 +173,7 @@ export function loadLinkTable(
     }, 'text')
 }
 
-export function loadXML(url: string, callBack: Function): void {
+export function loadXML(url: string, callBack: (dataset: DataSet) => void): void {
     let d: DataSet;
     let dataset;
 
@@ -216,7 +216,7 @@ export function loadXML(url: string, callBack: Function): void {
 /** Loads a .json file from the indicated url. 
  * The json must have a 'nodes/vertices' and a 'links/edge/connections/relations' array.
 */
-export function loadJson(url: string, callBack: Function, dataName?: string): void {
+export function loadJson(url: string, callBack: (dataset: DataSet) => void, dataName?: string): void {
     let d: DataSet;
     let dataset;
 
@@ -353,7 +353,7 @@ export function loadJson(url: string, callBack: Function, dataName?: string): vo
     })
 
 }
-export function loadJsonList(url: string, callBack: Function): void {
+export function loadJsonList(url: string, callBack: (dataset: DataSet) => void): void {
     let d: DataSet;
     let dataset;
 
@@ -410,16 +410,16 @@ export function loadJsonList(url: string, callBack: Function): void {
 }
 
 /** Loads a .graphML file from the indicated url*/
-function loadGraphML(url: string, callBack: Function): void {
+function loadGraphML(url: string, callBack: (dataset: DataSet) => void): void {
 
 }
 
 /** Loads a .tables file from the indicated url.
 */
-function loadTables(url: string, callBack: Function): void {
+function loadTables(url: string, callBack: (dataset: DataSet) => void): void {
 }
 
-export function loadNCube(url: string, callBack: Function): void {
+export function loadNCube(url: string, callBack: (dataset: DataSet) => void): void {
     let d: DataSet;
     let dataset;
 
@@ -476,7 +476,7 @@ export function loadNCube(url: string, callBack: Function): void {
     });
 }
 
-export function loadPajek(url: string, callBack: Function): void {
+export function loadPajek(url: string, callBack: (dataset: DataSet) => void): void {
     let d: DataSet;
     let dataset;
 
@@ -540,7 +540,7 @@ export function loadPajek(url: string, callBack: Function): void {
     });
 }
 
-export function loadMat(url: string, callBack: Function): void {
+export function loadMat(url: string, callBack: (dataset: DataSet) => void): void {
     let d: DataSet;
     let dataset;
 
@@ -607,7 +607,7 @@ export function loadMat(url: string, callBack: Function): void {
 }
 
 
-export function loadGEDCOM(url: string, callBack: Function): void {
+export function loadGEDCOM(url: string, callBack: (dataset: DataSet) => void): void {
     let d: DataSet;
     let dataset;
 
@@ -697,7 +697,7 @@ export function loadGEDCOM(url: string, callBack: Function): void {
     })
 }
 
-export function loadLinkList(url: string, callBack: Function): void {
+export function loadLinkList(url: string, callBack: (dataset: DataSet) => void): void {
     let d: DataSet;
     let dataset;
 
@@ -775,7 +775,7 @@ export function loadLinkList(url: string, callBack: Function): void {
     })
 }
 
-export function loadMatrix(url: string, callBack: Function): void {
+export function loadMatrix(url: string, callBack: (dataset: DataSet) => void): void {
     let d: DataSet;
     let dataset;
 

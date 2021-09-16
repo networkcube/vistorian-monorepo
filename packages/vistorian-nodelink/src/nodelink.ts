@@ -114,7 +114,7 @@ makeDropdown(menuDiv, 'Labeling', ['Automatic', 'Hide All', 'Show All', 'Neighbo
     updateLabelVisibility();
 })
 
-function makeDropdown(d3parent: any, name: string, values: string[], callback: Function)
+function makeDropdown(d3parent: any, name: string, values: string[], callback: (selection: any) => void)
 {
     const s: any = d3parent.append('select')
         .attr('id', "selection-input_" + name)

@@ -378,13 +378,13 @@ export function downloadPNGfromSVG(name: string, svgId: string) {
 
 // creates an image blob from the passed svg and calls the 
 // callback function with the blob as parameter
-export function getBlobFromSVG(name: string, svgId: string, callback?: Function) {
+export function getBlobFromSVG(name: string, svgId: string, callback?: (blob: any, name: string) => void) {
     const width = $('#' + svgId).width();
     const height = $('#' + svgId).height();
     if (callback != undefined) // UNDEFINED ?? 
         getBlobFromSVGString(name, getSVGString(d3.select('#' + svgId).node()), width, height, callback) // what happend if callback undefinied (example above)
 }
-export function getBlobFromSVGNode(name: string, svgNode: any, callback: Function, backgroundColor?: string) {
+export function getBlobFromSVGNode(name: string, svgNode: any, callback: (blob: any, name: string) => void, backgroundColor?: string) {
     const string = getSVGString(svgNode);
     let width = svgNode.getAttribute('width')
     let height = svgNode.getAttribute('height')
@@ -396,7 +396,7 @@ export function getBlobFromSVGNode(name: string, svgNode: any, callback: Functio
     }
     getBlobFromSVGString(name, string, width, height, callback, backgroundColor)
 }
-export function getBlobFromSVGString(name: string, svgString: string, width: number, height: number, callback: Function, backgroundColor?: string) {
+export function getBlobFromSVGString(name: string, svgString: string, width: number, height: number, callback: (blob: any, name: string) => void, backgroundColor?: string) {
     // get SVG string
     // CREATE PNG
     //var format: any = format ? format : 'png';

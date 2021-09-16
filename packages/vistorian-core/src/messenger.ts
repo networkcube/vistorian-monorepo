@@ -49,22 +49,17 @@ const messageHandlers: MessageHandler[] = [];
 // contains handlers for passing messages to the
 // visualization.
 class MessageHandler {
-
-    /* DEFAULT VALUES ?? */
-    highlightUpdate: Function = () => { return; };
-    selectionUpdate: Function = () => { return; };
-
 }
 const messageHandler: MessageHandler = new MessageHandler();
 
 let previousMessageId = -1;
 
 // register an event handler
-export function addEventListener(messageType: string, handler: Function) {
+export function addEventListener(messageType: string, handler: (m: any) => any) {
     (messageHandler as any)[messageType] = handler;
 }
 
-export function setDefaultEventListener(handler: Function) {
+export function setDefaultEventListener(handler: (m: any) => any) {
     for (let i = 0; i < MESSAGE_HANDLERS.length; i++) {
         (messageHandler as any)[MESSAGE_HANDLERS[i]] = handler;
     }

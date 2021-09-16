@@ -806,7 +806,7 @@ export function uploadLinkTable(e: any) {
     }
 }
 
-export function uploadFiles(handler: Function) {
+export function uploadFiles(handler: () => void) {
     vistorian.loadCSV(filesToUpload, () => {
         handler();
     }, SESSION_NAME);
@@ -1157,7 +1157,7 @@ export function checkRequests(callBack: any, locationsFound: any) {
 export function updateLocationCoordinates(
     userLocationTable: vistorian.VTable, 
     locationSchema: datamanager.LocationSchema, 
-    callBack: Function) 
+    callBack: (locationsFound: any) => void)
 {
     console.log('UPDATE-LOCATION-TABLE-COORDINATES')
     // saveCurrentNetwork(false);

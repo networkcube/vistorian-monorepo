@@ -10,7 +10,7 @@ export function makeSlider(
     value: number,
     min: number,
     max: number,
-    handler: Function): void 
+    handler: (value: number) => void): void
 {
 
         const slider: Slider = new Slider(5, height - 5, width, min, max, .01);
@@ -41,7 +41,7 @@ export class RadioButton {
 
     RADIUS = 7;
 
-    clickHandler: any; // BEFORE Function;
+    clickHandler: () => void = () => null; // BEFORE Function;
 
     constructor(color: string, text?: string) {
         this.color = color;
@@ -95,20 +95,20 @@ export class RadioButton {
         return this.checked;
     }
 
-    addClickHandler(f: Function) {
+    addClickHandler(f: () => void) {
         this.clickHandler = f;
     }
 }
 
 
-export function makeCheckBox(d3parent: any, label: string, callback: Function) {
+export function makeCheckBox(d3parent: any, label: string, callback: (this: any, event: any, d: any) => void) {
     d3parent.append('input')
         .attr('type', 'checkbox')
         .on('change', callback);
     d3parent.append('b').attr('class', 'sliderLabel').html(label);
 }
 
-export function makeButton(d3parent: any, label: string, callback: Function) {
+export function makeButton(d3parent: any, label: string, callback: (this: any, event: any, d: any) => void) {
     d3parent.append('input')
         .attr('type', 'button')
         .attr('value', label)

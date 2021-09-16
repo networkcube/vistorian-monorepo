@@ -22,7 +22,7 @@ export class Slider {
     width: number;
     g: any; // BEFORE d3.Selection<SVGElement, {}, HTMLElement, any>; // ?????????????
 
-    dragEndCallBackFn: any; // BEFORE Function
+    dragEndCallBackFn: (value: number) => void = (value) => null;
 
     constructor(x: number, y: number, width: number, minValue: number, maxValue: number, stepWidth: number) {
         this.x = x;
@@ -34,7 +34,7 @@ export class Slider {
         this.stepWidth = stepWidth;
     }
 
-    setDragEndCallBack(fn: Function) {
+    setDragEndCallBack(fn: (value: number) => void) {
         this.dragEndCallBackFn = fn;
     }
 

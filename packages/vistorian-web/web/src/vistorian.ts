@@ -125,7 +125,7 @@ export class Network {
 
 // FUNCTIONS
 
-export function loadCSV(files: File[], callBack: Function, sessionid: string) {
+export function loadCSV(files: File[], callBack: () => void, sessionid: string) {
 
     var loadCount: number = 0;
     var table: any;

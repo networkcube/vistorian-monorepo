@@ -23,7 +23,7 @@ export class RangeSlider {
     width: number;
     g: any; // BEFORE d3.Selection<d3.BaseType, {}, HTMLElement, any>; // ???????????????
 
-    dragEndCallBackFn: any; // BEFORE Function;
+    dragEndCallBackFn: (min: number, max: number) => void = () => null; // BEFORE Function;
 
     constructor(
         x: number,
@@ -46,7 +46,7 @@ export class RangeSlider {
             this.hasTickmarks = false;
     }
 
-    setDragEndCallBack(fn: Function) {
+    setDragEndCallBack(fn: (min: number, max: number) => void) {
         this.dragEndCallBackFn = fn;
     }
 

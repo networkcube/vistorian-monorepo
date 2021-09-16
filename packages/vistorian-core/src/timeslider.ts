@@ -32,7 +32,7 @@ export class TimeSlider {
     times: dynamicgraph.Time[];
     sliderWidth: number;
     widgetWidth: number;
-    callBack: Function | undefined = undefined;
+    callBack: ((min: any, max: any, single: any) => void) | undefined = undefined;
 
     // function that is called when this time slider's time is changed
     propagateButton: RadioButton = new RadioButton('#000000');
@@ -41,9 +41,9 @@ export class TimeSlider {
     labelEnd: any; // BEFORE d3.Selection<d3.BaseType, {}, HTMLElement, any>; 
 
     tickScale: any;
-    tickHeightFunction: Function;
+    tickHeightFunction: (x: number) => number;
 
-    constructor(dgraph: dynamicgraph.DynamicGraph, width: number, callBack?: Function) {
+    constructor(dgraph: dynamicgraph.DynamicGraph, width: number, callBack?: (min: any, max: any, single: any) => void) {
         this.dgraph = dgraph;
         this.times = dgraph.times().toArray();
         this.widgetWidth = width;
@@ -142,7 +142,7 @@ export class TimeSlider {
 
     drawTickmarks(granularity: number, tickTimes: dynamicgraph.Time[], svg: d3.Selection<any,any,any,any>) {
         let time: dynamicgraph.Time;
-        let displayLabelSpacing: number = 1; // display every label
+        let displayLabelSpacing = 1; // display every label
         while (Math.floor(this.sliderWidth / this.TICK_LABEL_GAP) < (tickTimes.length / displayLabelSpacing) && displayLabelSpacing < 100) {
             displayLabelSpacing++;
         }

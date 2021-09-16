@@ -2042,7 +2042,7 @@ export class GraphElementQuery extends Query {
      * @param attribute - name of attribute that is used on filter
      * @param filter - function evaluating if the attribute's value is valid.
       */
-    generic_filter(filter: Function): any[] {
+    generic_filter(filter: (d: any) => boolean): any[] {
         const arr: any[] = [];
         for (let i = 0; i < this._elements.length; i++) {
             try {
@@ -2443,7 +2443,7 @@ export class TimeQuery extends GraphElementQuery {
     selected(): TimeQuery {
         return new TimeQuery(super.generic_selected(), this.g);
     }
-    filter(filter: Function): TimeQuery {
+    filter(filter: (d: any) => boolean): TimeQuery {
         return new TimeQuery(super.generic_filter(filter), this.g);
     }
     presentIn(t1: Time, t2: Time): TimeQuery {
@@ -2485,7 +2485,7 @@ export class TimeQuery extends GraphElementQuery {
         }
         return a;
     }
-    createAttribute(attrName: string, f: Function): TimeQuery {
+    createAttribute(attrName: string, f: (t: Time) => void): TimeQuery {
         // create and init new attribute array if necessary
         if ((this.g.timeArrays as any)[attrName] == undefined) {
             (this.g.timeArrays as any)[attrName] = []
@@ -2512,7 +2512,7 @@ export class TimeQuery extends GraphElementQuery {
     intersection(q: TimeQuery): TimeQuery {
         return new TimeQuery(this.generic_intersection(q)._elements, this.g);
     }
-    forEach(f: Function): TimeQuery {
+    forEach(f: (t: Time | undefined, i: number) => void): TimeQuery {
         for (let i = 0; i < this._elements.length; i++) {
             f(this.g.time(this._elements[i]), i);
         }
@@ -2603,7 +2603,7 @@ export class LocationQuery extends GraphElementQuery {
     selected(): LocationQuery {
         return new LocationQuery(super.generic_selected(), this.g);
     }
-    filter(filter: Function): LocationQuery {
+    filter(filter: (d: any) => boolean): LocationQuery {
         return new LocationQuery(super.generic_filter(filter), this.g);
     }
     presentIn(t1: Time, t2: Time): LocationQuery {
@@ -2626,7 +2626,7 @@ export class LocationQuery extends GraphElementQuery {
         }
         return a;
     }
-    createAttribute(attrName: string, f: Function): LocationQuery {
+    createAttribute(attrName: string, f: (l: Location) => void): LocationQuery {
         // create and init new attribute array if necessary
         if ((this.g.locationArrays as any)[attrName] == undefined) {
             (this.g.locationArrays as any)[attrName] = []
@@ -2646,7 +2646,7 @@ export class LocationQuery extends GraphElementQuery {
     removeDuplicates(): LocationQuery {
         return new LocationQuery(this.generic_removeDuplicates()._elements, this.g);
     }
-    forEach(f: Function): LocationQuery {
+    forEach(f: (l: Location | undefined, i: number) => any): LocationQuery {
         for (let i = 0; i < this._elements.length; i++) {
             f(this.g.location(this._elements[i]), i);
         }
@@ -2713,7 +2713,7 @@ export class NumberQuery extends Query {
         return this._elements[index];
     }
 
-    forEach(f: Function): NumberQuery {
+    forEach(f: (n: number, i: number) => any): NumberQuery {
         for (let i = 0; i < this._elements.length; i++) {
             f(this._elements[i], i);
         }
@@ -2792,7 +2792,7 @@ export class NodePairQuery extends GraphElementQuery {
     selected(): NodePairQuery {
         return new NodePairQuery(super.generic_selected(), this.g);
     }
-    filter(filter: Function): NodePairQuery {
+    filter(filter: (d: any) => boolean): NodePairQuery {
         return new NodePairQuery(super.generic_filter(filter), this.g);
     }
     presentIn(t1: Time, t2: Time): NodePairQuery {
@@ -2815,7 +2815,7 @@ export class NodePairQuery extends GraphElementQuery {
         }
         return a;
     }
-    createAttribute(attrName: string, f: Function): NodePairQuery {
+    createAttribute(attrName: string, f: (np: NodePair) => void): NodePairQuery {
         // create and init new attribute array if necessary
         if ((this.g.nodePairArrays as any)[attrName] == undefined) {
             (this.g.nodePairArrays as any)[attrName] = []
@@ -2834,7 +2834,7 @@ export class NodePairQuery extends GraphElementQuery {
     removeDuplicates(): NodePairQuery {
         return new NodePairQuery(this.generic_removeDuplicates()._elements, this.g);
     }
-    forEach(f: Function): NodePairQuery {
+    forEach(f: (np: NodePair | undefined, i: number) => any): NodePairQuery {
         for (let i = 0; i < this._elements.length; i++) {
             f(this.g.nodePair(this._elements[i]), i);
         }
@@ -2904,7 +2904,7 @@ export class StringQuery {
     toArray(): string[] {
         return this._elements.slice(0);
     }
-    forEach(f: Function): StringQuery {
+    forEach(f: (s: string, i: number) => void): StringQuery {
         for (let i = 0; i < this._elements.length; i++) {
             f(this._elements[i], i);
         }
@@ -2972,7 +2972,7 @@ export class NodeQuery extends GraphElementQuery {
     selected(): NodeQuery {
         return new NodeQuery(super.generic_selected(), this.g);
     }
-    filter(filter: Function): NodeQuery {
+    filter(filter: (d: any) => boolean): NodeQuery {
         return new NodeQuery(super.generic_filter(filter), this.g);
     }
     presentIn(t1: Time, t2: Time): NodeQuery {
@@ -3021,7 +3021,7 @@ export class NodeQuery extends GraphElementQuery {
         }
         return a;
     }
-    createAttribute(attrName: string, f: Function): NodeQuery {
+    createAttribute(attrName: string, f: (n: Node) => any): NodeQuery {
         // create and init news attribute array if necessary
         if ((this.g.nodeArrays as any)[attrName] == undefined) {
             (this.g.nodeArrays as any)[attrName] = []
@@ -3042,7 +3042,7 @@ export class NodeQuery extends GraphElementQuery {
         return new NodeQuery(this.generic_removeDuplicates()._elements, this.g);
     }
 
-    forEach(f: Function): NodeQuery {
+    forEach(f: (n: Node | undefined, i: number) => void): NodeQuery {
         for (let i = 0; i < this._elements.length; i++) {
             f(this.g.node(this._elements[i]), i);
         }
@@ -3226,7 +3226,7 @@ export class LinkQuery extends GraphElementQuery {
     selected(): LinkQuery {
         return new LinkQuery(super.generic_selected(), this.g);
     }
-    filter(filter: Function): LinkQuery {
+    filter(filter: (d: any) => boolean): LinkQuery {
         return new LinkQuery(super.generic_filter(filter), this.g);
     }
     presentIn(t1: Time, t2?: Time): LinkQuery {
@@ -3261,7 +3261,7 @@ export class LinkQuery extends GraphElementQuery {
         return s;
     }
 
-    createAttribute(attrName: string, f: Function): LinkQuery {
+    createAttribute(attrName: string, f: (link: Link) => any): LinkQuery {
         // create and init new attribute array if necessary
         if ((this.g.linkArrays as any)[attrName] == undefined) {
             (this.g.linkArrays as any)[attrName] = []
@@ -3321,7 +3321,7 @@ export class LinkQuery extends GraphElementQuery {
     removeDuplicates(): LinkQuery {
         return new LinkQuery(this.generic_removeDuplicates()._elements, this.g);
     }
-    forEach(f: Function): LinkQuery {
+    forEach(f: (link: Link | undefined, i: number) => void): LinkQuery {
         for (let i = 0; i < this._elements.length; i++) {
             f(this.g.link(this._elements[i]), i);
         }

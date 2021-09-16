@@ -25,7 +25,7 @@ export class SmartSlider {
     width: number;
     g: any; // BEFORE d3.Selection<d3.BaseType, {}, HTMLElement, any>;
 
-    dragEndCallBackFn: any; // BEFORE Function;
+    dragEndCallBackFn: (min: number, max: number, valueRange: any) => void = () => null; // BEFORE Function;
 
     constructor(
         x: number,
@@ -48,7 +48,7 @@ export class SmartSlider {
             this.hasTickmarks = false;
     }
 
-    setDragEndCallBack(fn: Function) {
+    setDragEndCallBack(fn: (min: number, max: number, valueRange: any) => void) {
         this.dragEndCallBackFn = fn;
     }
 
