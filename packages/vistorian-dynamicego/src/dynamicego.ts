@@ -528,11 +528,7 @@ export function compareFunc(a: any, b: any) {
     return a.label() < b.label() ? -1 : 1;
 }
 
-interface Point {
-    x: number
-    y: number
-}
-export function makeArcPath(link: dynamicgraph.Link): Point[] {
+export function makeArcPath(link: dynamicgraph.Link): Record<'x'|'y', number>[] {
     const y1p: any = nodeYPosFunction(currentNodeOrder[link.source.id()]);
     const y2p: any = nodeYPosFunction(currentNodeOrder[link.target.id()]);
     const y1: number = Math.min(y1p, y2p)

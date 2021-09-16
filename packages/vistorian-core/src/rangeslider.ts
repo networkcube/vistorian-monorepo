@@ -46,7 +46,7 @@ export class RangeSlider {
             this.hasTickmarks = false;
     }
 
-    setDragEndCallBack(fn: (min: number, max: number) => void) {
+    setDragEndCallBack(fn: (min: number, max: number) => void): void {
         this.dragEndCallBackFn = fn;
     }
 
@@ -173,7 +173,7 @@ export class RangeSlider {
     dragObj: any;
     currentBarLength = 0; // BEFORE number;
 
-    dragStart(ev: MouseEvent) {
+    dragStart(ev: MouseEvent): void {
         this.dragStartXMouse = Math.max(this.LEFT, Math.min(this.width - this.RIGHT, this.getRelX(ev)));
         const sourceEvent =  ev; //(ev).sourceEvent; //(d3.event as D3.BaseEvent)
         this.dragObj = sourceEvent ? sourceEvent.target : undefined;
@@ -199,7 +199,7 @@ export class RangeSlider {
         }
     }
 
-    dragMove(ev: MouseEvent) {
+    dragMove(ev: MouseEvent): void {
         // if we are dragging the entire bar
         if (!this.isInverted && this.dragObj.id == this.bar0.attr('id')) {
             const xOffset = Math.max(this.LEFT, Math.min(this.width - this.RIGHT, this.getRelX(ev))) - this.dragStartXMouse;
@@ -231,7 +231,7 @@ export class RangeSlider {
     }
 
 
-    dragEnd() {
+    dragEnd(): void {
         this.min = this.valueRange(this.circleMin.attr("cx"));
         this.max = this.valueRange(this.circleMax.attr("cx"));
         this.dragEndCallBackFn(this.min, this.max);
@@ -245,7 +245,7 @@ export class RangeSlider {
 
 
 
-    set(min: number, max: number) {
+    set(min: number, max: number): void {
         // seems like this would make sense, 
         // this.min = min;
         // this.max = max;

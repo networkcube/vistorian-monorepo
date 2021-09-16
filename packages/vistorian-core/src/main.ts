@@ -14,7 +14,7 @@ export const TIME_FORMAT = 'YYYY-MM-DD hh:mm:ss';
  * Returns the networkcube standart time format
  * @return {[type]} [description]
  */
-export function timeFormat() {
+export function timeFormat(): string {
     return TIME_FORMAT;
 }
 
@@ -23,7 +23,7 @@ export function timeFormat() {
 const dataManager: DataManager = new DataManager();
 let session: string;
 
-export function getSessionId() {
+export function getSessionId(): string {
     return session;
 }
 
@@ -31,7 +31,7 @@ export function setDataManagerOptions(options: DataManagerOptions): void {
     dataManager.setOptions(options);
 }
 
-export function isSessionCached(session: string, dataSetName: string) {
+export function isSessionCached(session: string, dataSetName: string): boolean {
     return dataManager.isSessionCached(session, dataSetName);
 }
 
@@ -42,13 +42,13 @@ export function isSessionCached(session: string, dataSetName: string) {
  * @param  {DataSet} data    [description]
  * @return {[type]}          [description]
  */
-export function importData(sessionName: string, data: DataSet) {
+export function importData(sessionName: string, data: DataSet): void {
     console.log('[n3] Import data', data.name);
     session = sessionName;
     dataManager.importData(sessionName, data);
 }
 
-export function clearAllDataManagerSessionCaches() {
+export function clearAllDataManagerSessionCaches(): void {
     dataManager.clearAllSessionData();
 }
 
@@ -71,20 +71,20 @@ export function getDynamicGraph(dataName?: string, sessionName?: string): Dynami
 
 // opens a new window and loads a visualization of type vistype,
 // // with the data set dataname
-export function openVisualizationWindow(session: string, visUri: string, dataName: string) {
+export function openVisualizationWindow(session: string, visUri: string, dataName: string): void {
     openView(session, visUri, dataName, false);
 }
 
 // opens a new tab and loads a visualization of type vistype,
 // // with the data set dataname
-export function openVisualizationTab(session: string, visUri: string, dataName: string) {
+export function openVisualizationTab(session: string, visUri: string, dataName: string): void {
     openView(session, visUri, dataName, true);
 }
 
 // create a tab that shows one of the specified visualizations at a time
 export function createTabVisualizations(parentId: string, visSpec: any[], session: string, dataName: string,
     width: number,
-    height: number, visParams?: any) {
+    height: number, visParams?: any): void {
 
     const parent = $('#' + parentId);
 
@@ -127,7 +127,7 @@ export function createTabVisualizations(parentId: string, visSpec: any[], sessio
     }
 }
 
-export function switchVisTab(evt: any, visName: string) {
+export function switchVisTab(evt: any, visName: string): void {
     // Get all elements with class="tabcontent" and hide them
     const tabcontent = document.getElementsByClassName("networkcube-visTabContent") as HTMLCollectionOf<HTMLElement>;
     for (let i = 0; i < tabcontent.length; i++) {
@@ -153,7 +153,7 @@ export function switchVisTab(evt: any, visName: string) {
 // with the data set dataname
 export function createVisualizationIFrame(parentId: string, visUri: string, session: string, dataName: string,
     width: number,
-    height: number, visParams?: any) {
+    height: number, visParams?: any): JQuery {
 
     $('#' + parentId)
         .append('<iframe></iframe>')
@@ -216,7 +216,7 @@ function openView(session: string, visUri: string, dataname: string, tab: boolea
         window.open(url);
 }
 
-export function getURLString(dataName: string) {
+export function getURLString(dataName: string): string {
     return '?session=' + session + '&datasetName=' + dataName;
 }
 
@@ -233,7 +233,7 @@ export function isTrackingSet(): boolean {
     return value === null ? false : true;
 }
 
-export function deleteData(dataSetName: string){
+export function deleteData(dataSetName: string): void {
     // deletes a network
     getDynamicGraph(dataSetName).delete(dataManager);
 }

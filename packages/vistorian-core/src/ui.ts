@@ -51,7 +51,7 @@ export class RadioButton {
 
 
 
-    appendTo(x: number, y: number, svg: d3.Selection<any,any,any,any>) {
+    appendTo(x: number, y: number, svg: d3.Selection<any,any,any,any>): void {
         const g = svg.append('g')
             .attr('transform', 'translate(' + x + ',' + y + ')');
 
@@ -95,20 +95,20 @@ export class RadioButton {
         return this.checked;
     }
 
-    addClickHandler(f: () => void) {
+    addClickHandler(f: () => void): void {
         this.clickHandler = f;
     }
 }
 
 
-export function makeCheckBox(d3parent: any, label: string, callback: (this: any, event: any, d: any) => void) {
+export function makeCheckBox(d3parent: any, label: string, callback: (this: any, event: any, d: any) => void): void {
     d3parent.append('input')
         .attr('type', 'checkbox')
         .on('change', callback);
     d3parent.append('b').attr('class', 'sliderLabel').html(label);
 }
 
-export function makeButton(d3parent: any, label: string, callback: (this: any, event: any, d: any) => void) {
+export function makeButton(d3parent: any, label: string, callback: (this: any, event: any, d: any) => void): void {
     d3parent.append('input')
         .attr('type', 'button')
         .attr('value', label)

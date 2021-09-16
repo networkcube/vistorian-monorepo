@@ -108,7 +108,7 @@ export class DynamicGraph {
 
     // ACCESSOR FUNCTIONS
     // universal accesor
-    attr(field: string, id: number, type: string) {
+    attr(field: string, id: number, type: string): any {
         let r: any;
         try {
             r = (this.attributeArrays as any)[type][field][id]
@@ -387,7 +387,7 @@ export class DynamicGraph {
     }
 
     // Removes this graph from the cache.
-    delete(dataMgr: DataManager) {
+    delete(dataMgr: DataManager): void {
         dataMgr.removeFromStorage(this.name, this.gran_min_NAME);
         dataMgr.removeFromStorage(this.name, this.gran_max_NAME);
         dataMgr.removeFromStorage(this.name, this.directed_NAME);
@@ -1429,7 +1429,7 @@ export class DynamicGraph {
 
 
     // SELECT
-    selection(action: string, idCompound: IDCompound, selectionId?: number) {
+    selection(action: string, idCompound: IDCompound, selectionId?: number): void {
 
         if (selectionId == undefined)
             selectionId = this.currentSelection_id;
@@ -1462,7 +1462,7 @@ export class DynamicGraph {
 
 
     // SELFIX : delegate to dgraph
-    addToAttributeArraysSelection(selection: Selection, type: string, id: number) {
+    addToAttributeArraysSelection(selection: Selection, type: string, id: number): void {
         // check for priority of selections, then add where appropriate
         const elementSelections = (this.attributeArrays as any)[type].selections[id];
         for (let i = 0; i < elementSelections.length; i++) {
@@ -1477,7 +1477,7 @@ export class DynamicGraph {
     }
 
     // SELFIX : delegate to dgraph
-    removeFromAttributeArraysSelection(selection: Selection, type: string, id: number) {
+    removeFromAttributeArraysSelection(selection: Selection, type: string, id: number): void {
         const arr = (this.attributeArrays as any)[type].selections[id];
         for (let i = 0; i < arr.length; i++) {
             if (arr[i] == selection)
@@ -1485,11 +1485,11 @@ export class DynamicGraph {
         }
     }
 
-    addElementToSelection(selection: Selection, e: BasicElement) {
+    addElementToSelection(selection: Selection, e: BasicElement): void {
         this.addToSelectionByTypeAndId(selection, e.type, e.id());
     }
 
-    addToSelectionByTypeAndId(selection: Selection, type: string, id: number) {
+    addToSelectionByTypeAndId(selection: Selection, type: string, id: number): void {
         if (type != selection.acceptedType) {
             console.log('attempting to put object of the wrong type into a selection');
             return; // don't proceed with selection;
@@ -1546,11 +1546,11 @@ export class DynamicGraph {
     }
     // <<<<<<< HEAD
 
-    removeElementFromSelection(selection: Selection, e: BasicElement) {
+    removeElementFromSelection(selection: Selection, e: BasicElement): void {
         this.removeFromSelectionByTypeAndId(selection, e.type, e.id());
     }
 
-    removeFromSelectionByTypeAndId(selection: Selection, type: string, id: number) {
+    removeFromSelectionByTypeAndId(selection: Selection, type: string, id: number): void {
         // selection.elements.push(compound[field][i])
         // e.addToSelection(selection);
         // =======
@@ -1586,7 +1586,7 @@ export class DynamicGraph {
     }
 
 
-    filterSelection(selectionId: number, filter: boolean) {
+    filterSelection(selectionId: number, filter: boolean): void {
         const selection: any = this.getSelection(selectionId);
         if (selection != undefined) {
             selection.filter = filter;
@@ -1597,16 +1597,16 @@ export class DynamicGraph {
         return (this.attributeArrays as any)[type + 's'].filter;
     }
 
-    isHighlighted(id: number, type: string) {
+    isHighlighted(id: number, type: string): boolean {
         return (this.highlightArrays as any)[type + 'Ids'].indexOf(id) > -1;
     }
 
-    getHighlightedIds(type: string) {
+    getHighlightedIds(type: string): any {
         return (this.highlightArrays as any)[type + 'Ids'];
     }
 
 
-    setCurrentSelection(id: number) {
+    setCurrentSelection(id: number): void {
         // [bbach] why should we ignore them?
         // if (id < 2) // i.e. either default node or link selection..
         //     return;  // ignore
@@ -1617,7 +1617,7 @@ export class DynamicGraph {
         return this.getSelection(this.currentSelection_id);
     }
 
-    addSelection(id: number, color: string, acceptedType: string, priority: number) {
+    addSelection(id: number, color: string, acceptedType: string, priority: number): void {
         const s: Selection = this.createSelection(acceptedType);
         s.id = id;
         s.color = color;
@@ -1656,14 +1656,14 @@ export class DynamicGraph {
         }
     }
 
-    setSelectionColor(id: number, color: string) {
+    setSelectionColor(id: number, color: string): void {
         const s = this.getSelection(id);
         if (!s) {
             return;
         }
         s.color = color;
     }
-    getSelections(type?: string) {
+    getSelections(type?: string): Selection[] {
         const selections: Selection[] = [];
         if (type) {
             for (let i = 0; i < this.selections.length; i++) {
@@ -1685,7 +1685,7 @@ export class DynamicGraph {
         return undefined;
     }
 
-    clearSelections() {
+    clearSelections(): void {
         this.selections = [];
     }
 
@@ -1711,7 +1711,7 @@ export class DynamicGraph {
 
 
     // go into dynamicgraph
-    addNodeOrdering(name: string, order: number[]) {
+    addNodeOrdering(name: string, order: number[]): void {
         for (let i = 0; i < this.nodeOrders.length; i++) {
             if (this.nodeOrders[i].name == name) {
                 console.error('Ordering', name, 'already exists');
@@ -1721,7 +1721,7 @@ export class DynamicGraph {
         const o = new Ordering(name, order);
         this.nodeOrders.push(o);
     }
-    setNodeOrdering(name: string, order: number[]) {
+    setNodeOrdering(name: string, order: number[]): void {
         for (let i = 0; i < this.nodeOrders.length; i++) {
             if (this.nodeOrders[i].name == name) {
                 this.nodeOrders[i].order = order;
@@ -1730,14 +1730,14 @@ export class DynamicGraph {
         }
         console.error('Ordering', name, 'does not exist');
     }
-    removeNodeOrdering(name: string, order: number[]) {
+    removeNodeOrdering(name: string, order: number[]): void {
         for (let i = 0; i < this.nodeOrders.length; i++) {
             if (this.nodeOrders[i].name == name) {
                 this.nodeOrders.splice(i, 1);
             }
         }
     }
-    getNodeOrder(name: string) {
+    getNodeOrder(name: string): Ordering | undefined {
         for (let i = 0; i < this.nodeOrders.length; i++) {
             if (this.nodeOrders[i].name == name) {
                 return this.nodeOrders[i];
@@ -1810,32 +1810,32 @@ export class DynamicGraph {
     }
 
     // returns the node with ID
-    node(id: number) {
+    node(id: number): Node | undefined {
         for (let i = 0; i < this._nodes.length; i++) {
             if (this._nodes[i].id() == id)
                 return this._nodes[i];
         }
     }
 
-    link(id: number) {
+    link(id: number): Link | undefined {
         for (let i = 0; i < this._links.length; i++) {
             if (this._links[i].id() == id)
                 return this._links[i];
         }
     }
-    time(id: number) {
+    time(id: number): Time | undefined {
         for (let i = 0; i < this._times.length; i++) {
             if (this._times[i].id() == id)
                 return this._times[i];
         }
     }
-    location(id: number) {
+    location(id: number): Location | undefined {
         for (let i = 0; i < this._locations.length; i++) {
             if (this._locations[i].id() == id)
                 return this._locations[i];
         }
     }
-    nodePair(id: number) {
+    nodePair(id: number): NodePair | undefined {
         for (let i = 0; i < this._nodePairs.length; i++) {
             if (this._nodePairs[i].id() == id)
                 return this._nodePairs[i];
@@ -2312,7 +2312,7 @@ export class ScalarTimeSeries<T>{
     }
 
     /** Sets a value for a specified time point. */
-    set(t: Time, element: T) {
+    set(t: Time, element: T): void {
         this.serie[t.id()] = element
     }
     /** @returns the value for a specified time point. */
@@ -2373,7 +2373,7 @@ export class ArrayTimeSeries<T>{
         return s;
     }
 
-    add(t: Time, element: T) {
+    add(t: Time, element: T): void {
         if (t == undefined) {
             return;
         }
@@ -2556,14 +2556,14 @@ export class Time extends BasicElement {
     }
 
     // wrapper to moment.js
-    year() { return this.time().year(); }
-    month() { return this.time().month(); }
-    week() { return this.time().week(); }
-    day() { return this.time().day(); }
-    hour() { return this.time().hour(); }
-    minute() { return this.time().minute(); }
-    second() { return this.time().second(); }
-    millisecond() { return this.time().millisecond(); }
+    year(): number { return this.time().year(); }
+    month(): number { return this.time().month(); }
+    week(): number { return this.time().week(); }
+    day(): number { return this.time().day(); }
+    hour(): number { return this.time().hour(); }
+    minute(): number { return this.time().minute(); }
+    second(): number { return this.time().second(); }
+    millisecond(): number { return this.time().millisecond(); }
 
     format(format: string): string {
         return this.time().format(format)
@@ -2695,7 +2695,7 @@ export class NumberQuery extends Query {
         }
         return v / count;
     }
-    sum() {
+    sum(): number {
         let sum = 0;
         for (let i = 0; i < this._elements.length; i++) {
             if (typeof this._elements[i] == 'number') {
@@ -3490,7 +3490,7 @@ export function compareTypesDeep(a: any, b: any, depth: number): boolean {
     }
 }
 
-export function sortNumber(a: any, b: any) {
+export function sortNumber(a: number, b: number): number {
     return a - b;
 }
 
@@ -3588,7 +3588,7 @@ export class DataManager {
      * @param  {string}  session - current session id
      * @param  {DataSet} data    - a networkcube.DataSet
      */
-    importData(session: string, data: DataSet) {
+    importData(session: string, data: DataSet): void {
         this.session = session;
 
         // check if all data (tables + schemas) are there
@@ -3670,7 +3670,7 @@ export class DataManager {
 
     // storage primitives /////////////////////////////////////
     //
-    saveToStorage<T>(dataName: string, valueName: string, value: T, replacer?: (key: string, value: any) => any) {
+    saveToStorage<T>(dataName: string, valueName: string, value: T, replacer?: (key: string, value: any) => any): void {
         if (value == undefined) {
             console.log('attempting to save undefined value. aborting', dataName, valueName);
             return;

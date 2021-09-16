@@ -18,7 +18,7 @@ export class Motif {
         this.links = links.slice(0);
     }
 
-    print() {
+    print(): void {
         console.log('nodes:', this.nodes.length, 'links:', this.links.length)
     }
 }
@@ -35,7 +35,7 @@ export class MotifTemplate {
 
 export class MotifSequence {
     motifs: Motif[] = [];
-    push(m: Motif) {
+    push(m: Motif): void {
         this.motifs.push(m);
     }
 }

@@ -34,7 +34,7 @@ export class Slider {
         this.stepWidth = stepWidth;
     }
 
-    setDragEndCallBack(fn: (value: number) => void) {
+    setDragEndCallBack(fn: (value: number) => void): void {
         this.dragEndCallBackFn = fn;
     }
 
@@ -90,19 +90,19 @@ export class Slider {
     dragStartXBar: any;
     dragObj: any;
     currentBarLength: any;
-    dragStart(ev: MouseEvent) {
+    dragStart(ev: MouseEvent): void {
         this.dragStartXMouse = Math.max(this.LEFT, Math.min(this.width - this.RIGHT, this.getRelX(ev)))
        // var sourceEvent = d3.event.sourceEvent; // (d3.event as d3.BaseEvent)
         this.dragObj = ev ? ev.target : undefined;
     }
 
-    dragMove(ev: MouseEvent) {
+    dragMove(ev: MouseEvent): void {
         d3.select(this.dragObj).attr("cx", Math.max(this.LEFT, Math.min(this.width - this.RIGHT, this.getRelX(ev))));
         this.dragEnd()
     }
 
 
-    dragEnd() {
+    dragEnd(): void {
         this.value = this.valueRange(this.knob.attr("cx"));
         this.dragEndCallBackFn(this.value);
     }
@@ -115,7 +115,7 @@ export class Slider {
 
 
 
-    set(value: number) {
+    set(value: number): void {
         this.knob.attr("cx", this.valueRange.invert(value));
     }
 

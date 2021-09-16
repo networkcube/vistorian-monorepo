@@ -89,7 +89,7 @@ export class TimeSlider {
             .domain([dgraph.gran_min, dgraph.gran_max]);
     }
 
-    appendTo(svg: d3.Selection<any,any,any,any>, x?: number, y?: number) {
+    appendTo(svg: d3.Selection<any,any,any,any>, x?: number, y?: number): void {
 
         if (!x) x = 0
         if (!y) y = 0
@@ -140,7 +140,7 @@ export class TimeSlider {
     }
 
 
-    drawTickmarks(granularity: number, tickTimes: dynamicgraph.Time[], svg: d3.Selection<any,any,any,any>) {
+    drawTickmarks(granularity: number, tickTimes: dynamicgraph.Time[], svg: d3.Selection<any,any,any,any>): void {
         let time: dynamicgraph.Time;
         let displayLabelSpacing = 1; // display every label
         while (Math.floor(this.sliderWidth / this.TICK_LABEL_GAP) < (tickTimes.length / displayLabelSpacing) && displayLabelSpacing < 100) {
@@ -171,7 +171,7 @@ export class TimeSlider {
         }
     }
 
-    formatAtGranularity(time: m.Moment, granualarity: number) {
+    formatAtGranularity(time: m.Moment, granualarity: number): number {
         switch (granualarity) {
             case 0: return time.millisecond();
             case 1: return time.second();
@@ -184,7 +184,7 @@ export class TimeSlider {
         }
     }
 
-    formatForGranularities(time: dynamicgraph.Time, gran_min: number, gran_max: number) {
+    formatForGranularities(time: dynamicgraph.Time, gran_min: number, gran_max: number): string {
         let formatString = ''
         let format: string;
         while (gran_max >= gran_min) {
@@ -194,7 +194,7 @@ export class TimeSlider {
         return time.format(formatString.trim());
     }
 
-    getGranularityFormattingString(granualarity: any, separator: boolean) {
+    getGranularityFormattingString(granualarity: any, separator: boolean): string {
         switch (granualarity) {
             case 0: return 'SSS';
             case 1: return 'ss' + (separator ? '.' : '');
@@ -207,7 +207,7 @@ export class TimeSlider {
     }
 
 
-    updateTime(minUnix: number, maxUnix: number, single: number) {
+    updateTime(minUnix: number, maxUnix: number, single: number): void {
         // times are still correct here? 
 
         const format = function (d: any) { return d.toDateString(); };

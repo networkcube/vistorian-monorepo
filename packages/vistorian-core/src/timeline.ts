@@ -62,7 +62,7 @@ export class Timeline {
     }
 
     timeGranularities: any;
-    visualize() {
+    visualize(): void {
 
         /* MOVE TO CONSTRUCTOR */
         const times = this.network.times().toArray();
@@ -182,7 +182,7 @@ export class Timeline {
 
     }
 
-    update(startUnix: any, endUnix: any) {
+    update(startUnix: any, endUnix: any): void {
         // search for start:
         let startId: any, endId: any;
         let i = 0;
@@ -204,7 +204,7 @@ export class Timeline {
         this.updateWithIds(startId, endId)
     }
 
-    updateWithIds(minTimeId: any, maxTimeId: any) {
+    updateWithIds(minTimeId: any, maxTimeId: any): void {
 
         this.minTimeId = minTimeId;
         this.maxTimeId = maxTimeId;
@@ -314,7 +314,7 @@ export class Timeline {
         }
     }
 
-    formatTime(index: number): string {
+    formatTime(index: number): string | undefined {
         const t = this.timeObjects[index];
         const g = Math.min(Math.max(this.tick_minGran_visible, this.timeGranularities[index]), 7);
 
@@ -322,7 +322,7 @@ export class Timeline {
     }
 
     highlightId: any; // INIT ???
-    highlight(unixTime?: number) {
+    highlight(unixTime?: number): void {
 
         if (unixTime == undefined) {
             this.highlightPointer

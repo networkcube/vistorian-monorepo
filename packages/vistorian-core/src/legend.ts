@@ -18,7 +18,7 @@ export class Legend {
         this.data = data;
     }
 
-    setClickCallBack(handlerFunction: (this: any, event: any, d: any) => void) {
+    setClickCallBack(handlerFunction: (this: any, event: any, d: any) => void): void {
         this.clickCallBack = handlerFunction;
     }
 
@@ -26,7 +26,7 @@ export class Legend {
 
     clickCallBack: (this: any, event: any, d: any) => void = () => null; // BEFORE Function;
 
-    appendTo(svg: SVGSVGElement) {
+    appendTo(svg: SVGSVGElement): void {
 
         this.legendEntries = d3.select('#legendSvg')
             .selectAll('.legend')

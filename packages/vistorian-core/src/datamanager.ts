@@ -25,7 +25,7 @@ export class Selection {
         this.priority = id;
     }
 
-    acceptsType(type: string) {
+    acceptsType(type: string): boolean {
         return this.acceptedType == type;
     }
 }

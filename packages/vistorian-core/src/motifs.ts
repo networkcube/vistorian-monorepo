@@ -5,7 +5,7 @@ import netClustering from 'netclustering'
 
 export function findTemplate(nodes: Node[],
     template: MotifTemplate,
-    config?: Record<string, any>) {
+    config?: Record<string, any>): void {
 
     const nodeCount = template.nodes.length;
     const linkCount = template.links.length;
@@ -29,7 +29,7 @@ export function findTemplate(nodes: Node[],
 }
 
 
-export function findClusters(nodes: Node[], config?: Record<string, any>) {
+export function findClusters(nodes: Node[], config?: Record<string, any>): Record<string, any> {
     if (nodes.length == 0)
         return []
 

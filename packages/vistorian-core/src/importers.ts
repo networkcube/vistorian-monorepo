@@ -9,7 +9,7 @@ import {
 import * as moment from 'moment'
 import * as main from './main'
 
-export function loadDyson(url: string, callback: (dataset: DataSet) => void)
+export function loadDyson(url: string, callback: (dataset: DataSet) => void): void
 {
     d3.json(url).then((data: any) => {
         // create node table
@@ -857,7 +857,7 @@ export function exportCSV(graph: DynamicGraph): string {
 /// HELPER FUNCTIONS
 
 /** Downloads a string as file.*/
-export function downloadText(text: string, filename: string) {
+export function downloadText(text: string, filename: string): void {
     const textFileAsBlob = new Blob([text], { type: 'text/text' });
     const fileNameToSaveAs = filename;
     const downloadLink = document.createElement("a")
