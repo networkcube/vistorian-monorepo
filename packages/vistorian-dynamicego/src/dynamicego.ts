@@ -57,6 +57,7 @@ let nodeLabel: any;
 let startAnchors: glutils.WebGLElementQuery;
 let endAnchors: glutils.WebGLElementQuery;
 let arcs: glutils.WebGLElementQuery;
+let rowBars: any = [];
 
 const tickTimes: any[] = []
 let timeLabelHoverFields: any;
@@ -165,7 +166,6 @@ export function visualize() {
     webgl.render();
 }
 
-let rowBars: any;
 export function createNodes() {
 
     // DRAW NODES
