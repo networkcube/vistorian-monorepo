@@ -409,16 +409,6 @@ export function loadJsonList(url: string, callBack: (dataset: DataSet) => void):
 
 }
 
-/** Loads a .graphML file from the indicated url*/
-function loadGraphML(url: string, callBack: (dataset: DataSet) => void): void {
-
-}
-
-/** Loads a .tables file from the indicated url.
-*/
-function loadTables(url: string, callBack: (dataset: DataSet) => void): void {
-}
-
 export function loadNCube(url: string, callBack: (dataset: DataSet) => void): void {
     let d: DataSet;
     let dataset;
