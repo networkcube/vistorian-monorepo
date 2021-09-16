@@ -54,11 +54,11 @@ export class TimeSlider {
         const minGran: number = dgraph.gran_min;
         let minGranName: m.unitOfTime.DurationConstructor = 'milliseconds';
         switch (minGran) {
-            case 1: minGranName = 'milliseconds'; break;
-            case 2: minGranName = 'seconds'; break;
-            case 3: minGranName = 'minutes'; break;
-            case 4: minGranName = 'hours'; break;
-            case 5: minGranName = 'days'; break;
+            case 0: minGranName = 'milliseconds'; break;
+            case 1: minGranName = 'seconds'; break;
+            case 2: minGranName = 'minutes'; break;
+            case 3: minGranName = 'hours'; break;
+            case 4: minGranName = 'days'; break;
             case 5: minGranName = 'weeks'; break;
             case 6: minGranName = 'months'; break;
             case 7: minGranName = 'years'; break;
