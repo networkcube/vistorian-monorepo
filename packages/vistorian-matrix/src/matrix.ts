@@ -259,7 +259,7 @@ class MatrixOverview {
     tr[1] = this.ratio !== 0 ? -tr[1] / this.ratio : 0;
     this.ratio = this.height !== 0 ? r / this.height : 0;
 
-    this.zoom.transform(this.focus, {k: z, x: tr[0], y: tr[1]});
+    // this.zoom.transform(this.focus, {k: z, x: tr[0], y: tr[1]});
 
     const focusX = matrixX0 * this.width;
     const focusY = matrixY0 * this.height;
