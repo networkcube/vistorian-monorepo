@@ -86,7 +86,7 @@ export class DynamicGraph {
     locationArrays: LocationArray = new LocationArray();
 
     // points to all object arrays. For convenience
-    attributeArrays: Object = {
+    attributeArrays: Record<string, any> = {
         node: this.nodeArrays,
         link: this.linkArrays,
         time: this.timeArrays,
@@ -1866,7 +1866,7 @@ export class NodeArray extends AttributeArray {
     inNeighbors: ArrayTimeSeries<number>[] = [];   // contains node ids only, since every GRAPH has its own NODE object instance
     neighbors: ArrayTimeSeries<number>[] = [];
     selections: Selection[][] = [];
-    attributes: Object[] = []; // arbitrary attributes (key -> value)
+    attributes: Record<any, any>[] = []; // arbitrary attributes (key -> value)
     locations: ScalarTimeSeries<number>[] = []
     filter: boolean[] = [];
     nodeType: string[] = [];
@@ -1887,7 +1887,7 @@ export class LinkArray extends AttributeArray {
     weights: ScalarTimeSeries<any>[] = [];
     selections: Selection[][] = [];
     filter: boolean[] = [];
-    attributes: Object = new Object; // arbitrary attributes (key -> value)
+    attributes: Record<any, any> = new Object; // arbitrary attributes (key -> value)
 }
 
 export class NodePairArray extends AttributeArray {
@@ -2326,7 +2326,7 @@ export class ScalarTimeSeries<T>{
         return this.toArray().length;
     }
 
-    getSerie(): Object[]{
+    getSerie(): any[]{
         return this.serie;
     }
 
@@ -2358,7 +2358,7 @@ export class ScalarTimeSeries<T>{
 * steps in the format key->value. I.e. the value for the
 * time step with ID 3 is accessed by this.3   */
 export class ArrayTimeSeries<T>{
-    serie: Object = {};
+    serie: any = {};
 
     period(t1: Time, t2: Time): ArrayTimeSeries<T> {
         const t1id = t1.id();

@@ -138,7 +138,7 @@ export function loadCSV(files: File[], callBack: () => void, sessionid: string) 
         readers[i] = reader;
 
         reader.onload = function (f) {
-            var obj: Object = {
+            var obj = {
                 content: (<FileReader>f.target).result,
                 name: (f.target as any).filename
             }

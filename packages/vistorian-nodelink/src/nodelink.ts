@@ -33,9 +33,6 @@ interface Bounds {
 // var margin: Bounds = { left: 20, top: 20 };
 const TIMELINE_HEIGHT = 50;
 
-const positions: Object = new Object();
-(positions as any)['forceDirected'] = [];
-
 // get dynamic graph
 const dgraph: dynamicgraph.DynamicGraph = main.getDynamicGraph();
 const times: dynamicgraph.Time[] = dgraph.times().toArray();

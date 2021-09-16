@@ -229,7 +229,7 @@ export class WebGL {
 
     elementQueries: WebGLElementQuery[] = []
 
-    constructor(params?: Object) {
+    constructor(params?: Record<string, any>) {
         txtCanvas = document.createElement("canvas");
         txtCanvas.setAttribute('id', 'textCanvas');
     }
@@ -291,7 +291,7 @@ export class WebGL {
 
 let webgl: WebGL;
 
-export function initWebGL(parentId: string, width: number, height: number, params?: Object): WebGL {
+export function initWebGL(parentId: string, width: number, height: number, params?: Record<string, any>): WebGL {
 
     webgl = new WebGL(params);
 
@@ -350,10 +350,10 @@ export function selectAll(): WebGLElementQuery {
 
 
 export class WebGLElementQuery {
-    dataElements: Object[] = [];
+    dataElements: any[] = [];
     visualElements: any[] = [];
     mesh: THREE.Mesh = new THREE.Mesh();
-    children: Object[] = []
+    children: any[] = []
     scene: THREE.Scene = new THREE.Scene();
     mouseOverHandler: any; // BEFORE Function;
     mouseMoveHandler: any; // BEFORE Function;
@@ -385,7 +385,7 @@ export class WebGLElementQuery {
         this.scene = webgl.scene;
     }
 
-    data(arr: Object[]): WebGLElementQuery {
+    data(arr: any[]): WebGLElementQuery {
         this.dataElements = arr.slice(0);
         return this;
     }
@@ -434,7 +434,7 @@ export class WebGLElementQuery {
         return this.dataElements.length;
     }
 
-    filter(f: (obj: object, n: number) => boolean): WebGLElementQuery {
+    filter(f: (obj: Record<string, any>, n: number) => boolean): WebGLElementQuery {
         const arr: any[] = [];
         const visArr: any[] = []
         for (let i = 0; i < this.dataElements.length; i++) {
@@ -780,7 +780,7 @@ export function createG(dataElements: any[], scene: THREE.Scene) {
 
 export class GroupElement {
     position = { x: 0, y: 0, z: 0 };
-    children: Object = [];
+    children: any = [];
 }
 
 export function createCirclesNoShader(dataElements: any[], scene: THREE.Scene) {
@@ -818,7 +818,7 @@ const fragmentShaderProgram = "\
         }";
 
 export function createCirclesWithBuffers(query: WebGLElementQuery, scene: THREE.Scene) {
-    const dataElements: Object[] = query.dataElements;
+    const dataElements: Record<string, any>[] = query.dataElements;
     query.IS_SHADER = true;
     const attributes: any = {
         customColor: { type: 'c', value: [] }

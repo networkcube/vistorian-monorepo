@@ -93,8 +93,8 @@ export function sortByPriority(s1: any, s2: any) {
 }
 
 
-export function getUrlVars(): Object {
-    const vars: Object = {};
+export function getUrlVars(): Record<string, any> {
+    const vars: Record<string, any> = {};
     const params = window.location.search.replace("?", "").split('&');
     let tmp: any;
     let value: any;
@@ -296,12 +296,12 @@ export function arraysEqual(a: any, b: any) {
     return true;
 }
 
-export function encapsulate(array: any[], attrName?: string): Object[] {
+export function encapsulate(array: any[], attrName?: string): Record<string, any>[] {
     if (attrName == undefined) {
         attrName = 'element';
     }
     const a = []
-    let o: Object;
+    let o: Record<string, any>;
     for (let i = 0; i < array.length; i++) {
         o = {
             index: i,
