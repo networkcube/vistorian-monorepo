@@ -91,7 +91,7 @@ export function loadLinkTable(
         const newLinkSchema: LinkSchema = new LinkSchema(0, 1, 2);
         // fill new link schema
         let colCount = 3
-        for (let prop in linkSchema) {
+        for (const prop in linkSchema) {
             if (prop != 'source' && prop != 'target')
                 (newLinkSchema as any)[prop] = colCount++;
         }
