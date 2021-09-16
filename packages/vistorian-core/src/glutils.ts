@@ -1502,9 +1502,9 @@ export class THREEx {
      * execute the drawImage on the internal context
      * the arguments are the same the official context2d.drawImage
      */
-    drawImage(/* same params as context2d.drawImage */): THREEx {
+    drawImage(...args: any/* same params as context2d.drawImage */): THREEx {
         // call the drawImage
-        this.context.drawImage.apply(this.context, arguments)
+        this.context.drawImage.apply(...args)
         // make the texture as .needsUpdate
         this.texture.needsUpdate = true;
         // for chained API 
