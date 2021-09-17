@@ -2048,6 +2048,7 @@ export class GraphElementQuery extends Query {
                     arr.push(this._elements[i])
                 }
             } catch (ex) {
+                // TODO: catch this exception?
             }
         }
         return arr;
