@@ -132,7 +132,7 @@ class CellLabel {
       .append('text')
       .style('opacity', 0)
       .attr('z', -1)
-      .style('font-size', 12)
+      .style('font-size', "12px")
       .style('stroke', '#fff')
       .style('stroke-width', 2.5)
 
@@ -142,7 +142,7 @@ class CellLabel {
       .append('text')
       .style('opacity', 0)
       .attr('z', -1)
-      .style('font-size', 12)
+      .style('font-size', "12px")
   }
   hideCellLabel() {
     this.cellLabelBackground.style('opacity', 0);
@@ -157,14 +157,14 @@ class CellLabel {
       .style('opacity', 1)
       .text(val ? val : 0)
       .attr('z', 2)
-      .style('font-size', fw);
+      .style('font-size', fw + "px");
     this.cellLabelBackground
       .attr('x', mx + 40)
       .attr('y', -my)
       .style('opacity', 1)
       .text(val ? val : 0)
       .attr('z', 2)
-      .style('font-size', fw);
+      .style('font-size', fw + "px");
   }
 }
 class MatrixOverview {
@@ -395,7 +395,7 @@ class MatrixLabels {
         }
         return 100;
       })
-      .style('font-size', Math.min(this.cellSize, 20));
+      .style('font-size', Math.min(this.cellSize, 20)  + "px");
 
     for (let i = 0; i < highlightedLinks.length; i++) {
       d3.selectAll('#nodeLabel_left_' + highlightedLinks[i])
