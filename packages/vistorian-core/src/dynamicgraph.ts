@@ -246,7 +246,6 @@ export class DynamicGraph {
     loadDynamicGraph(dataMgr: DataManager, dataSetName: string): void {
         this.clearSelections();
         this.name = dataSetName;
-        const thisGraph = this;
 
         // CACHEGRAPH : load from storage the entire state of the graph
 
@@ -1440,22 +1439,21 @@ export class DynamicGraph {
             return; // WITH RETURN ?
         }
 
-        const self: DynamicGraph = this;
         if (action == 'set') {
             const c: IDCompound = new IDCompound();
             (c as any)[selection.acceptedType] = selection.elementIds;
             this.selection('remove', c, selectionId);
             this.selection('add', idCompound, selectionId);
         } else if (action == 'add') {
-            idCompound.linkIds.forEach((v, i, arr) => self.addToSelectionByTypeAndId(selection, 'link', v));
-            idCompound.nodeIds.forEach((v, i, arr) => self.addToSelectionByTypeAndId(selection, 'node', v));
-            idCompound.timeIds.forEach((v, i, arr) => self.addToSelectionByTypeAndId(selection, 'time', v));
-            idCompound.nodePairIds.forEach((v, i, arr) => self.addToSelectionByTypeAndId(selection, 'nodePair', v));
+            idCompound.linkIds.forEach((v, i, arr) => this.addToSelectionByTypeAndId(selection, 'link', v));
+            idCompound.nodeIds.forEach((v, i, arr) => this.addToSelectionByTypeAndId(selection, 'node', v));
+            idCompound.timeIds.forEach((v, i, arr) => this.addToSelectionByTypeAndId(selection, 'time', v));
+            idCompound.nodePairIds.forEach((v, i, arr) => this.addToSelectionByTypeAndId(selection, 'nodePair', v));
         } else if (action == 'remove') {
-            idCompound.linkIds.forEach((v, i, arr) => self.removeFromSelectionByTypeAndId(selection, 'link', v));
-            idCompound.nodeIds.forEach((v, i, arr) => self.removeFromSelectionByTypeAndId(selection, 'node', v));
-            idCompound.timeIds.forEach((v, i, arr) => self.removeFromSelectionByTypeAndId(selection, 'time', v));
-            idCompound.nodePairIds.forEach((v, i, arr) => self.removeFromSelectionByTypeAndId(selection, 'nodePair', v));
+            idCompound.linkIds.forEach((v, i, arr) => this.removeFromSelectionByTypeAndId(selection, 'link', v));
+            idCompound.nodeIds.forEach((v, i, arr) => this.removeFromSelectionByTypeAndId(selection, 'node', v));
+            idCompound.timeIds.forEach((v, i, arr) => this.removeFromSelectionByTypeAndId(selection, 'time', v));
+            idCompound.nodePairIds.forEach((v, i, arr) => this.removeFromSelectionByTypeAndId(selection, 'nodePair', v));
         }
     }
 
