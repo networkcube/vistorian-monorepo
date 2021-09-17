@@ -704,7 +704,7 @@ export class DynamicGraph {
         const nodeUserProperties = []
         // Get user-properties on links, if exist
         for (const prop in data.nodeSchema) {
-            if (data.nodeSchema.hasOwnProperty(prop)
+            if (Object.prototype.hasOwnProperty.call(data.nodeSchema, prop)
                 && prop != 'id'
                 && prop != 'label'
                 && prop != 'time'
@@ -874,7 +874,7 @@ export class DynamicGraph {
         const linkUserProperties = []
         // Get user-properties on links, if exist
         for (const prop in data.linkSchema) {
-            if (data.linkSchema.hasOwnProperty(prop)
+            if (Object.prototype.hasOwnProperty.call(data.linkSchema, prop)
                 && prop != 'id'
                 && prop != 'linkType'
                 && prop != 'time'
@@ -1030,7 +1030,7 @@ export class DynamicGraph {
         for (let i = 0; i < this.linkArrays.length; i++) {
             for (let j = 0; j < this.timeArrays.length; j++) {
                 if(this.linkArrays.weights[i]) {
-                    if (this.linkArrays.weights[i].toArray().hasOwnProperty(this.timeArrays.id[j].toString())) {
+                    if (Object.prototype.hasOwnProperty.call(this.linkArrays.weights[i].toArray(), this.timeArrays.id[j].toString())) {
                         this.timeArrays.links[j].push(this.linkArrays.id[i]);
                     }
                 }
@@ -3437,7 +3437,7 @@ export interface LegendElement {
 
 export function copyPropsShallow(source: any, target: any): any {
     for (const p in source) {
-        if (source.hasOwnProperty(p))
+        if (Object.prototype.hasOwnProperty.call(source, p))
             target[p] = source[p];
     }
     return target;
@@ -3445,9 +3445,9 @@ export function copyPropsShallow(source: any, target: any): any {
 
 export function copyTimeseriesPropsShallow(source: any, target: any): any {
     for (const q in source) {
-        if (source.hasOwnProperty(q)) {
+        if (Object.prototype.hasOwnProperty.call(source, q)) {
             for (const p in source[q]) {
-                if (source[q].hasOwnProperty(p)) {
+                if (Object.prototype.hasOwnProperty.call(source[q], p)) {
                     target[q][p] = source[q][p];
                 }
             }
@@ -3478,8 +3478,8 @@ export function compareTypesDeep(a: any, b: any, depth: number): boolean {
         if (depth > 0) {
             for (const key in a) {
                 if (key in b
-                    && a.hasOwnProperty(key)
-                    && b.hasOwnProperty(key)
+                    && Object.prototype.hasOwnProperty.call(a, key)
+                    && Object.prototype.hasOwnProperty.call(b, key)
                     && !compareTypesDeep(a[key], b[key], depth - 1)) {
                     console.log("compareFailed for key", key, a[key], b[key]);
                     result = false;

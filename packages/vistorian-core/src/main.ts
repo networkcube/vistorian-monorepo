@@ -188,7 +188,7 @@ export function createVisualizationIFrame(parentId: string, visUri: string, sess
     if (height)
         iframe.attr('height', height)
 
-    if (visParams != undefined && visParams.hasOwnProperty('scrolling')) {
+    if (visParams != undefined && Object.prototype.hasOwnProperty.call(visParams, 'scrolling')) {
         iframe.attr('scrolling', visParams.scrolling);
     }
 

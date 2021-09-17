@@ -459,7 +459,7 @@ export class WebGLElementQuery {
         } else {
             for (let i = 0; i < l; i++) {
                 this.setAttr(this.visualElements[i], name, v instanceof Function ? v(this.dataElements[i], i) : v, i);
-                if (this.visualElements[i].hasOwnProperty('wireframe')) {
+                if (Object.prototype.hasOwnProperty.call(this.visualElements[i], 'wireframe')) {
                     this.setAttr(this.visualElements[i].wireframe, name, v instanceof Function ? v(this.dataElements[i], i) : v, i);
                 }
             }
@@ -604,7 +604,7 @@ export function setStyle(element: any, attr: string, v: any, query: WebGLElement
                 element.material.color = new THREE.Color(v);
             break;
         case 'stroke':
-            if (element.hasOwnProperty('wireframe')) {
+            if (Object.prototype.hasOwnProperty.call(element, 'wireframe')) {
                 element.wireframe.material.color = new THREE.Color(v);
             } else {
                 element.material.color = new THREE.Color(v);
@@ -612,10 +612,10 @@ export function setStyle(element: any, attr: string, v: any, query: WebGLElement
             break;
         case 'opacity':
             element.material.opacity = v;
-            if (element.hasOwnProperty('wireframe')) element.wireframe.material.opacity = v;
+            if (Object.prototype.hasOwnProperty.call(element, 'wireframe')) element.wireframe.material.opacity = v;
             break;
         case 'stroke-width':
-            if (element.hasOwnProperty('wireframe'))
+            if (Object.prototype.hasOwnProperty.call(element, 'wireframe'))
                 element.wireframe.material.linewidth = v;
             else
                 element.material.linewidth = v;
@@ -628,7 +628,7 @@ export function setStyle(element: any, attr: string, v: any, query: WebGLElement
         default: console.error('Style', attr, 'does not exist.')
     }
     element.material.needsUpdate = true;
-    if (element.hasOwnProperty('wireframe'))
+    if (Object.prototype.hasOwnProperty.call(element, 'wireframe'))
         element.wireframe.material.needsUpdate = true;
 }
 

@@ -245,7 +245,7 @@ export function loadJson(url: string, callBack: (dataset: DataSet) => void, data
         for (let i = 0; i < links.length; i++) {
             link = links[i]
             for (prop in link) {
-                if (link.hasOwnProperty(prop)
+                if (Object.prototype.hasOwnProperty.call(link, prop)
                     && prop != 'id'
                     && prop != 'linkType'
                     && prop != 'time'
@@ -295,7 +295,7 @@ export function loadJson(url: string, callBack: (dataset: DataSet) => void, data
         for (let i = 0; i < nodes.length; i++) {
             node = nodes[i];
             for (prop in node) {
-                if (node.hasOwnProperty(prop)
+                if (Object.prototype.hasOwnProperty.call(node, prop)
                     && prop != 'id'
                     && prop != 'label'
                     && prop != 'time'
