@@ -49,22 +49,17 @@ const messageHandlers: MessageHandler[] = [];
 // contains handlers for passing messages to the
 // visualization.
 class MessageHandler {
-
-    /* DEFAULT VALUES ?? */
-    highlightUpdate: Function = () => { return; };
-    selectionUpdate: Function = () => { return; };
-
 }
 const messageHandler: MessageHandler = new MessageHandler();
 
 let previousMessageId = -1;
 
 // register an event handler
-export function addEventListener(messageType: string, handler: Function) {
+export function addEventListener(messageType: string, handler: (m: any) => any): void {
     (messageHandler as any)[messageType] = handler;
 }
 
-export function setDefaultEventListener(handler: Function) {
+export function setDefaultEventListener(handler: (m: any) => any): void {
     for (let i = 0; i < MESSAGE_HANDLERS.length; i++) {
         (messageHandler as any)[MESSAGE_HANDLERS[i]] = handler;
     }
@@ -89,7 +84,7 @@ export class Message {
 /////////////////////////////
 
 
-export function sendMessage(type: string, body: any) {
+export function sendMessage(type: string, body: any): void {
     const m = new Message(type)
     m.body = body;
     distributeMessage(m, true);
@@ -108,7 +103,7 @@ export function sendMessage(type: string, body: any) {
 
 function isEmpty(obj: any) {
     for (const key in obj) {
-        if (obj.hasOwnProperty(key))
+        if (Object.prototype.hasOwnProperty.call(obj, 'key'))
             return false;
     }
     return true;
@@ -189,7 +184,7 @@ export class SelectionMessage extends Message {
 
 // TIME CHANGE MESSAGES
 
-export function timeRange(startUnix: number, endUnix: number, single: Time, propagate?: boolean) {
+export function timeRange(startUnix: number, endUnix: number, single: Time, propagate?: boolean): void {
     const m: TimeRangeMessage = new TimeRangeMessage(startUnix, endUnix);
     if (propagate == undefined)
         propagate = false;
@@ -214,7 +209,7 @@ export class TimeRangeMessage extends Message {
 
 /// CREATE NEW SELECTION
 
-export function createSelection(type: string, name: string) {
+export function createSelection(type: string, name: string): Selection {
 
     const g: DynamicGraph = getDynamicGraph();
     const b = g.createSelection(type);
@@ -238,7 +233,7 @@ export class CreateSelectionMessage extends Message {
 // SET CURRENT SELECTION
 
 
-export function setCurrentSelection(b: Selection) {
+export function setCurrentSelection(b: Selection): void {
 
     const g: DynamicGraph = getDynamicGraph();
     const m = new SetCurrentSelectionIdMessage(b);
@@ -254,7 +249,7 @@ export class SetCurrentSelectionIdMessage extends Message {
 
 // CHANGE SELECTION COLOR
 
-export function showSelectionColor(selection: Selection, showColor: boolean) {
+export function showSelectionColor(selection: Selection, showColor: boolean): void {
 
     const m = new ShowSelectionColorMessage(selection, showColor)
     distributeMessage(m);
@@ -273,7 +268,7 @@ export class ShowSelectionColorMessage extends Message {
 /// FILTER SELECTION
 
 
-export function filterSelection(selection: Selection, filter: boolean) {
+export function filterSelection(selection: Selection, filter: boolean): void {
 
     const m = new FilterSelectionMessage(selection, filter);
     distributeMessage(m);
@@ -290,7 +285,7 @@ export class FilterSelectionMessage extends Message {
 
 /// SWAP PRIORITY
 
-export function swapPriority(s1: Selection, s2: Selection) {
+export function swapPriority(s1: Selection, s2: Selection): void {
 
     const m = new SelectionPriorityMessage(s1, s2, s2.priority, s1.priority);
     distributeMessage(m);
@@ -313,7 +308,7 @@ export class SelectionPriorityMessage extends Message {
 
 /// DELETE SELECTION
 
-export function deleteSelection(selection: Selection) {
+export function deleteSelection(selection: Selection): void {
 
     const m = new DeleteSelectionMessage(selection);
     distributeMessage(m);
@@ -331,7 +326,7 @@ export class DeleteSelectionMessage extends Message {
 
 /// SET SELECTION COLOR
 
-export function setSelectionColor(s: Selection, color: string) {
+export function setSelectionColor(s: Selection, color: string): void {
 
     distributeMessage(new SelectionColorMessage(s, color));
 }
@@ -349,7 +344,7 @@ class SelectionColorMessage extends Message {
 
 /// SEARCH SELECTION
 
-export function search(term: string, type?: string) {
+export function search(term: string, type?: string): void {
 
     const idCompound: IDCompound = searchForTerm(term, getDynamicGraph(), type);
     distributeMessage(new SearchResultMessage(term, idCompound));
@@ -453,7 +448,7 @@ export class SetStateMessage extends Message {
     }
 }
 
-export function setState(state: NetworkControls,viewType:string) {
+export function setState(state: NetworkControls,viewType:string): void {
     // is called from anywhere in vistorian by calling 
     // window.vc.messenger.setState(myState);
     distributeMessage(new SetStateMessage(state,viewType), true);
@@ -476,7 +471,7 @@ export class GetStateMessage extends Message {
     } 
 }
 
-export function getState(bookmarkIndex: number,viewType:string,isNewBookmark:boolean,typeOfMultiView: string){
+export function getState(bookmarkIndex: number,viewType:string,isNewBookmark:boolean,typeOfMultiView: string): void {
     // is called from anywhere in vistorian by calling 
     // window.vc.messenger.getState(bookmarkIndex);
 
@@ -500,7 +495,7 @@ export class StateCreatedMessage extends Message{
     }
 }
 
-export function stateCreated(state: NetworkControls,bookmarkIndex: number,viewType: string,isNewBookmark:boolean,typeOfMultiView: string){
+export function stateCreated(state: NetworkControls,bookmarkIndex: number,viewType: string,isNewBookmark:boolean,typeOfMultiView: string): void {
     // State created : to set the state after getting it from the selected network
 
     distributeMessage(new StateCreatedMessage(state,bookmarkIndex,viewType,isNewBookmark,typeOfMultiView), true);
@@ -515,7 +510,7 @@ export class ZoomInteractionMessage extends Message{
         this.ineractionType=ineractionType;
     }
 }
-export function zoomInteraction(visType:string,ineractionType:string){
+export function zoomInteraction(visType:string,ineractionType:string): void {
     // log zoom interactions
     distributeMessage(new ZoomInteractionMessage(visType,ineractionType), true);
 }
@@ -528,7 +523,7 @@ export function zoomInteraction(visType:string,ineractionType:string){
 const MESSAGE_KEY = 'networkcube_message';
 localStorage[MESSAGE_KEY] = undefined;
 
-export function distributeMessage(message: Message, ownView?: boolean) {
+export function distributeMessage(message: Message, ownView?: boolean): void {
 
     //VS: Link Function Use
     // trace.event(null, 'LinkFunctionUse', message.type, );

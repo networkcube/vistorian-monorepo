@@ -9,7 +9,7 @@ import {
 import * as moment from 'moment'
 import * as main from './main'
 
-export function loadDyson(url: string, callback: Function) 
+export function loadDyson(url: string, callback: (dataset: DataSet) => void): void
 {
     d3.json(url).then((data: any) => {
         // create node table
@@ -47,7 +47,7 @@ export function loadDyson(url: string, callback: Function)
 // does not check for locations
 export function loadLinkTable(
     url: string,
-    callBack: Function,
+    callBack: (dataset: DataSet) => void,
     linkSchema: LinkSchema,
     delimiter: string,
     timeFormat?: string
@@ -91,7 +91,7 @@ export function loadLinkTable(
         const newLinkSchema: LinkSchema = new LinkSchema(0, 1, 2);
         // fill new link schema
         let colCount = 3
-        for (let prop in linkSchema) {
+        for (const prop in linkSchema) {
             if (prop != 'source' && prop != 'target')
                 (newLinkSchema as any)[prop] = colCount++;
         }
@@ -173,7 +173,7 @@ export function loadLinkTable(
     }, 'text')
 }
 
-export function loadXML(url: string, callBack: Function): void {
+export function loadXML(url: string, callBack: (dataset: DataSet) => void): void {
     let d: DataSet;
     let dataset;
 
@@ -216,7 +216,7 @@ export function loadXML(url: string, callBack: Function): void {
 /** Loads a .json file from the indicated url. 
  * The json must have a 'nodes/vertices' and a 'links/edge/connections/relations' array.
 */
-export function loadJson(url: string, callBack: Function, dataName?: string): void {
+export function loadJson(url: string, callBack: (dataset: DataSet) => void, dataName?: string): void {
     let d: DataSet;
     let dataset;
 
@@ -245,7 +245,7 @@ export function loadJson(url: string, callBack: Function, dataName?: string): vo
         for (let i = 0; i < links.length; i++) {
             link = links[i]
             for (prop in link) {
-                if (link.hasOwnProperty(prop)
+                if (Object.prototype.hasOwnProperty.call(link, prop)
                     && prop != 'id'
                     && prop != 'linkType'
                     && prop != 'time'
@@ -295,7 +295,7 @@ export function loadJson(url: string, callBack: Function, dataName?: string): vo
         for (let i = 0; i < nodes.length; i++) {
             node = nodes[i];
             for (prop in node) {
-                if (node.hasOwnProperty(prop)
+                if (Object.prototype.hasOwnProperty.call(node, prop)
                     && prop != 'id'
                     && prop != 'label'
                     && prop != 'time'
@@ -353,7 +353,7 @@ export function loadJson(url: string, callBack: Function, dataName?: string): vo
     })
 
 }
-export function loadJsonList(url: string, callBack: Function): void {
+export function loadJsonList(url: string, callBack: (dataset: DataSet) => void): void {
     let d: DataSet;
     let dataset;
 
@@ -409,17 +409,7 @@ export function loadJsonList(url: string, callBack: Function): void {
 
 }
 
-/** Loads a .graphML file from the indicated url*/
-function loadGraphML(url: string, callBack: Function): void {
-
-}
-
-/** Loads a .tables file from the indicated url.
-*/
-function loadTables(url: string, callBack: Function): void {
-}
-
-export function loadNCube(url: string, callBack: Function): void {
+export function loadNCube(url: string, callBack: (dataset: DataSet) => void): void {
     let d: DataSet;
     let dataset;
 
@@ -476,7 +466,7 @@ export function loadNCube(url: string, callBack: Function): void {
     });
 }
 
-export function loadPajek(url: string, callBack: Function): void {
+export function loadPajek(url: string, callBack: (dataset: DataSet) => void): void {
     let d: DataSet;
     let dataset;
 
@@ -540,7 +530,7 @@ export function loadPajek(url: string, callBack: Function): void {
     });
 }
 
-export function loadMat(url: string, callBack: Function): void {
+export function loadMat(url: string, callBack: (dataset: DataSet) => void): void {
     let d: DataSet;
     let dataset;
 
@@ -607,7 +597,7 @@ export function loadMat(url: string, callBack: Function): void {
 }
 
 
-export function loadGEDCOM(url: string, callBack: Function): void {
+export function loadGEDCOM(url: string, callBack: (dataset: DataSet) => void): void {
     let d: DataSet;
     let dataset;
 
@@ -697,7 +687,7 @@ export function loadGEDCOM(url: string, callBack: Function): void {
     })
 }
 
-export function loadLinkList(url: string, callBack: Function): void {
+export function loadLinkList(url: string, callBack: (dataset: DataSet) => void): void {
     let d: DataSet;
     let dataset;
 
@@ -775,7 +765,7 @@ export function loadLinkList(url: string, callBack: Function): void {
     })
 }
 
-export function loadMatrix(url: string, callBack: Function): void {
+export function loadMatrix(url: string, callBack: (dataset: DataSet) => void): void {
     let d: DataSet;
     let dataset;
 
@@ -857,7 +847,7 @@ export function exportCSV(graph: DynamicGraph): string {
 /// HELPER FUNCTIONS
 
 /** Downloads a string as file.*/
-export function downloadText(text: string, filename: string) {
+export function downloadText(text: string, filename: string): void {
     const textFileAsBlob = new Blob([text], { type: 'text/text' });
     const fileNameToSaveAs = filename;
     const downloadLink = document.createElement("a")

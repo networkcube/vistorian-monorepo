@@ -14,19 +14,19 @@ export class Legend {
 
     height = 0; // INIT ???? 
 
-    constructor(data: dynamicgraph.LegendElement[], handlerFunction?: Function) {
+    constructor(data: dynamicgraph.LegendElement[], handlerFunction?: (this: any, event: any, d: any) => void) {
         this.data = data;
     }
 
-    setClickCallBack(handlerFunction: Function) {
+    setClickCallBack(handlerFunction: (this: any, event: any, d: any) => void): void {
         this.clickCallBack = handlerFunction;
     }
 
     legendEntries: any;
 
-    clickCallBack: any; // BEFORE Function;
+    clickCallBack: (this: any, event: any, d: any) => void = () => null; // BEFORE Function;
 
-    appendTo(svg: SVGSVGElement) {
+    appendTo(svg: SVGSVGElement): void {
 
         this.legendEntries = d3.select('#legendSvg')
             .selectAll('.legend')

@@ -32,7 +32,7 @@ export class TimeSlider {
     times: dynamicgraph.Time[];
     sliderWidth: number;
     widgetWidth: number;
-    callBack: Function | undefined = undefined;
+    callBack: ((min: any, max: any, single: any) => void) | undefined = undefined;
 
     // function that is called when this time slider's time is changed
     propagateButton: RadioButton = new RadioButton('#000000');
@@ -41,9 +41,9 @@ export class TimeSlider {
     labelEnd: any; // BEFORE d3.Selection<d3.BaseType, {}, HTMLElement, any>; 
 
     tickScale: any;
-    tickHeightFunction: Function;
+    tickHeightFunction: (x: number) => number;
 
-    constructor(dgraph: dynamicgraph.DynamicGraph, width: number, callBack?: Function) {
+    constructor(dgraph: dynamicgraph.DynamicGraph, width: number, callBack?: (min: any, max: any, single: any) => void) {
         this.dgraph = dgraph;
         this.times = dgraph.times().toArray();
         this.widgetWidth = width;
@@ -54,11 +54,11 @@ export class TimeSlider {
         const minGran: number = dgraph.gran_min;
         let minGranName: m.unitOfTime.DurationConstructor = 'milliseconds';
         switch (minGran) {
-            case 1: minGranName = 'milliseconds'; break;
-            case 2: minGranName = 'seconds'; break;
-            case 3: minGranName = 'minutes'; break;
-            case 4: minGranName = 'hours'; break;
-            case 5: minGranName = 'days'; break;
+            case 0: minGranName = 'milliseconds'; break;
+            case 1: minGranName = 'seconds'; break;
+            case 2: minGranName = 'minutes'; break;
+            case 3: minGranName = 'hours'; break;
+            case 4: minGranName = 'days'; break;
             case 5: minGranName = 'weeks'; break;
             case 6: minGranName = 'months'; break;
             case 7: minGranName = 'years'; break;
@@ -89,7 +89,7 @@ export class TimeSlider {
             .domain([dgraph.gran_min, dgraph.gran_max]);
     }
 
-    appendTo(svg: d3.Selection<any,any,any,any>, x?: number, y?: number) {
+    appendTo(svg: d3.Selection<any,any,any,any>, x?: number, y?: number): void {
 
         if (!x) x = 0
         if (!y) y = 0
@@ -140,9 +140,9 @@ export class TimeSlider {
     }
 
 
-    drawTickmarks(granularity: number, tickTimes: dynamicgraph.Time[], svg: d3.Selection<any,any,any,any>) {
+    drawTickmarks(granularity: number, tickTimes: dynamicgraph.Time[], svg: d3.Selection<any,any,any,any>): void {
         let time: dynamicgraph.Time;
-        let displayLabelSpacing: number = 1; // display every label
+        let displayLabelSpacing = 1; // display every label
         while (Math.floor(this.sliderWidth / this.TICK_LABEL_GAP) < (tickTimes.length / displayLabelSpacing) && displayLabelSpacing < 100) {
             displayLabelSpacing++;
         }
@@ -171,7 +171,7 @@ export class TimeSlider {
         }
     }
 
-    formatAtGranularity(time: m.Moment, granualarity: number) {
+    formatAtGranularity(time: m.Moment, granualarity: number): number {
         switch (granualarity) {
             case 0: return time.millisecond();
             case 1: return time.second();
@@ -184,7 +184,7 @@ export class TimeSlider {
         }
     }
 
-    formatForGranularities(time: dynamicgraph.Time, gran_min: number, gran_max: number) {
+    formatForGranularities(time: dynamicgraph.Time, gran_min: number, gran_max: number): string {
         let formatString = ''
         let format: string;
         while (gran_max >= gran_min) {
@@ -194,7 +194,7 @@ export class TimeSlider {
         return time.format(formatString.trim());
     }
 
-    getGranularityFormattingString(granualarity: any, separator: boolean) {
+    getGranularityFormattingString(granualarity: any, separator: boolean): string {
         switch (granualarity) {
             case 0: return 'SSS';
             case 1: return 'ss' + (separator ? '.' : '');
@@ -207,7 +207,7 @@ export class TimeSlider {
     }
 
 
-    updateTime(minUnix: number, maxUnix: number, single: number) {
+    updateTime(minUnix: number, maxUnix: number, single: number): void {
         // times are still correct here? 
 
         const format = function (d: any) { return d.toDateString(); };

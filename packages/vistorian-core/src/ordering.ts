@@ -9,7 +9,6 @@ import * as reorder from 'reorder.js'
 * @return {[type]}              [description]
 */
 export function orderNodes(graph: DynamicGraph, config?: OrderingConfiguration): number[] {
-    const max = 0;
     const similarityMatrix: number[][] = [];
     const order: number[] = graph.nodes().ids();
     let distance: any;

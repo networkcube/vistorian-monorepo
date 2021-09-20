@@ -86,7 +86,7 @@ export class DynamicGraph {
     locationArrays: LocationArray = new LocationArray();
 
     // points to all object arrays. For convenience
-    attributeArrays: Object = {
+    attributeArrays: Record<string, any> = {
         node: this.nodeArrays,
         link: this.linkArrays,
         time: this.timeArrays,
@@ -108,7 +108,7 @@ export class DynamicGraph {
 
     // ACCESSOR FUNCTIONS
     // universal accesor
-    attr(field: string, id: number, type: string) {
+    attr(field: string, id: number, type: string): any {
         let r: any;
         try {
             r = (this.attributeArrays as any)[type][field][id]
@@ -246,7 +246,6 @@ export class DynamicGraph {
     loadDynamicGraph(dataMgr: DataManager, dataSetName: string): void {
         this.clearSelections();
         this.name = dataSetName;
-        const thisGraph = this;
 
         // CACHEGRAPH : load from storage the entire state of the graph
 
@@ -387,7 +386,7 @@ export class DynamicGraph {
     }
 
     // Removes this graph from the cache.
-    delete(dataMgr: DataManager) {
+    delete(dataMgr: DataManager): void {
         dataMgr.removeFromStorage(this.name, this.gran_min_NAME);
         dataMgr.removeFromStorage(this.name, this.gran_max_NAME);
         dataMgr.removeFromStorage(this.name, this.directed_NAME);
@@ -704,7 +703,7 @@ export class DynamicGraph {
         const nodeUserProperties = []
         // Get user-properties on links, if exist
         for (const prop in data.nodeSchema) {
-            if (data.nodeSchema.hasOwnProperty(prop)
+            if (Object.prototype.hasOwnProperty.call(data.nodeSchema, prop)
                 && prop != 'id'
                 && prop != 'label'
                 && prop != 'time'
@@ -874,7 +873,7 @@ export class DynamicGraph {
         const linkUserProperties = []
         // Get user-properties on links, if exist
         for (const prop in data.linkSchema) {
-            if (data.linkSchema.hasOwnProperty(prop)
+            if (Object.prototype.hasOwnProperty.call(data.linkSchema, prop)
                 && prop != 'id'
                 && prop != 'linkType'
                 && prop != 'time'
@@ -1030,7 +1029,7 @@ export class DynamicGraph {
         for (let i = 0; i < this.linkArrays.length; i++) {
             for (let j = 0; j < this.timeArrays.length; j++) {
                 if(this.linkArrays.weights[i]) {
-                    if (this.linkArrays.weights[i].toArray().hasOwnProperty(this.timeArrays.id[j].toString())) {
+                    if (Object.prototype.hasOwnProperty.call(this.linkArrays.weights[i].toArray(), this.timeArrays.id[j].toString())) {
                         this.timeArrays.links[j].push(this.linkArrays.id[i]);
                     }
                 }
@@ -1055,7 +1054,7 @@ export class DynamicGraph {
         }
 
         //Build a shape mapping
-        const shapeSet = new Set(['cross', 'diamond', 'square', 'triangle-down', 'triangle-up']);
+        const shapeSet = new Set(['cross', 'diamond', 'square', 'triangle']);
         const shapeMappings: { [shape: string]: string; } = {};
         this.nodeArrays.shape.forEach(function (shape: any) {
             if (!shapeMappings[shape]) {
@@ -1429,7 +1428,7 @@ export class DynamicGraph {
 
 
     // SELECT
-    selection(action: string, idCompound: IDCompound, selectionId?: number) {
+    selection(action: string, idCompound: IDCompound, selectionId?: number): void {
 
         if (selectionId == undefined)
             selectionId = this.currentSelection_id;
@@ -1440,29 +1439,28 @@ export class DynamicGraph {
             return; // WITH RETURN ?
         }
 
-        const self: DynamicGraph = this;
         if (action == 'set') {
             const c: IDCompound = new IDCompound();
             (c as any)[selection.acceptedType] = selection.elementIds;
             this.selection('remove', c, selectionId);
             this.selection('add', idCompound, selectionId);
         } else if (action == 'add') {
-            idCompound.linkIds.forEach((v, i, arr) => self.addToSelectionByTypeAndId(selection, 'link', v));
-            idCompound.nodeIds.forEach((v, i, arr) => self.addToSelectionByTypeAndId(selection, 'node', v));
-            idCompound.timeIds.forEach((v, i, arr) => self.addToSelectionByTypeAndId(selection, 'time', v));
-            idCompound.nodePairIds.forEach((v, i, arr) => self.addToSelectionByTypeAndId(selection, 'nodePair', v));
+            idCompound.linkIds.forEach((v, i, arr) => this.addToSelectionByTypeAndId(selection, 'link', v));
+            idCompound.nodeIds.forEach((v, i, arr) => this.addToSelectionByTypeAndId(selection, 'node', v));
+            idCompound.timeIds.forEach((v, i, arr) => this.addToSelectionByTypeAndId(selection, 'time', v));
+            idCompound.nodePairIds.forEach((v, i, arr) => this.addToSelectionByTypeAndId(selection, 'nodePair', v));
         } else if (action == 'remove') {
-            idCompound.linkIds.forEach((v, i, arr) => self.removeFromSelectionByTypeAndId(selection, 'link', v));
-            idCompound.nodeIds.forEach((v, i, arr) => self.removeFromSelectionByTypeAndId(selection, 'node', v));
-            idCompound.timeIds.forEach((v, i, arr) => self.removeFromSelectionByTypeAndId(selection, 'time', v));
-            idCompound.nodePairIds.forEach((v, i, arr) => self.removeFromSelectionByTypeAndId(selection, 'nodePair', v));
+            idCompound.linkIds.forEach((v, i, arr) => this.removeFromSelectionByTypeAndId(selection, 'link', v));
+            idCompound.nodeIds.forEach((v, i, arr) => this.removeFromSelectionByTypeAndId(selection, 'node', v));
+            idCompound.timeIds.forEach((v, i, arr) => this.removeFromSelectionByTypeAndId(selection, 'time', v));
+            idCompound.nodePairIds.forEach((v, i, arr) => this.removeFromSelectionByTypeAndId(selection, 'nodePair', v));
         }
     }
 
 
 
     // SELFIX : delegate to dgraph
-    addToAttributeArraysSelection(selection: Selection, type: string, id: number) {
+    addToAttributeArraysSelection(selection: Selection, type: string, id: number): void {
         // check for priority of selections, then add where appropriate
         const elementSelections = (this.attributeArrays as any)[type].selections[id];
         for (let i = 0; i < elementSelections.length; i++) {
@@ -1477,7 +1475,7 @@ export class DynamicGraph {
     }
 
     // SELFIX : delegate to dgraph
-    removeFromAttributeArraysSelection(selection: Selection, type: string, id: number) {
+    removeFromAttributeArraysSelection(selection: Selection, type: string, id: number): void {
         const arr = (this.attributeArrays as any)[type].selections[id];
         for (let i = 0; i < arr.length; i++) {
             if (arr[i] == selection)
@@ -1485,11 +1483,11 @@ export class DynamicGraph {
         }
     }
 
-    addElementToSelection(selection: Selection, e: BasicElement) {
+    addElementToSelection(selection: Selection, e: BasicElement): void {
         this.addToSelectionByTypeAndId(selection, e.type, e.id());
     }
 
-    addToSelectionByTypeAndId(selection: Selection, type: string, id: number) {
+    addToSelectionByTypeAndId(selection: Selection, type: string, id: number): void {
         if (type != selection.acceptedType) {
             console.log('attempting to put object of the wrong type into a selection');
             return; // don't proceed with selection;
@@ -1546,11 +1544,11 @@ export class DynamicGraph {
     }
     // <<<<<<< HEAD
 
-    removeElementFromSelection(selection: Selection, e: BasicElement) {
+    removeElementFromSelection(selection: Selection, e: BasicElement): void {
         this.removeFromSelectionByTypeAndId(selection, e.type, e.id());
     }
 
-    removeFromSelectionByTypeAndId(selection: Selection, type: string, id: number) {
+    removeFromSelectionByTypeAndId(selection: Selection, type: string, id: number): void {
         // selection.elements.push(compound[field][i])
         // e.addToSelection(selection);
         // =======
@@ -1586,7 +1584,7 @@ export class DynamicGraph {
     }
 
 
-    filterSelection(selectionId: number, filter: boolean) {
+    filterSelection(selectionId: number, filter: boolean): void {
         const selection: any = this.getSelection(selectionId);
         if (selection != undefined) {
             selection.filter = filter;
@@ -1597,16 +1595,16 @@ export class DynamicGraph {
         return (this.attributeArrays as any)[type + 's'].filter;
     }
 
-    isHighlighted(id: number, type: string) {
+    isHighlighted(id: number, type: string): boolean {
         return (this.highlightArrays as any)[type + 'Ids'].indexOf(id) > -1;
     }
 
-    getHighlightedIds(type: string) {
+    getHighlightedIds(type: string): any {
         return (this.highlightArrays as any)[type + 'Ids'];
     }
 
 
-    setCurrentSelection(id: number) {
+    setCurrentSelection(id: number): void {
         // [bbach] why should we ignore them?
         // if (id < 2) // i.e. either default node or link selection..
         //     return;  // ignore
@@ -1617,7 +1615,7 @@ export class DynamicGraph {
         return this.getSelection(this.currentSelection_id);
     }
 
-    addSelection(id: number, color: string, acceptedType: string, priority: number) {
+    addSelection(id: number, color: string, acceptedType: string, priority: number): void {
         const s: Selection = this.createSelection(acceptedType);
         s.id = id;
         s.color = color;
@@ -1656,14 +1654,14 @@ export class DynamicGraph {
         }
     }
 
-    setSelectionColor(id: number, color: string) {
+    setSelectionColor(id: number, color: string): void {
         const s = this.getSelection(id);
         if (!s) {
             return;
         }
         s.color = color;
     }
-    getSelections(type?: string) {
+    getSelections(type?: string): Selection[] {
         const selections: Selection[] = [];
         if (type) {
             for (let i = 0; i < this.selections.length; i++) {
@@ -1685,7 +1683,7 @@ export class DynamicGraph {
         return undefined;
     }
 
-    clearSelections() {
+    clearSelections(): void {
         this.selections = [];
     }
 
@@ -1711,7 +1709,7 @@ export class DynamicGraph {
 
 
     // go into dynamicgraph
-    addNodeOrdering(name: string, order: number[]) {
+    addNodeOrdering(name: string, order: number[]): void {
         for (let i = 0; i < this.nodeOrders.length; i++) {
             if (this.nodeOrders[i].name == name) {
                 console.error('Ordering', name, 'already exists');
@@ -1721,7 +1719,7 @@ export class DynamicGraph {
         const o = new Ordering(name, order);
         this.nodeOrders.push(o);
     }
-    setNodeOrdering(name: string, order: number[]) {
+    setNodeOrdering(name: string, order: number[]): void {
         for (let i = 0; i < this.nodeOrders.length; i++) {
             if (this.nodeOrders[i].name == name) {
                 this.nodeOrders[i].order = order;
@@ -1730,14 +1728,14 @@ export class DynamicGraph {
         }
         console.error('Ordering', name, 'does not exist');
     }
-    removeNodeOrdering(name: string, order: number[]) {
+    removeNodeOrdering(name: string, order: number[]): void {
         for (let i = 0; i < this.nodeOrders.length; i++) {
             if (this.nodeOrders[i].name == name) {
                 this.nodeOrders.splice(i, 1);
             }
         }
     }
-    getNodeOrder(name: string) {
+    getNodeOrder(name: string): Ordering | undefined {
         for (let i = 0; i < this.nodeOrders.length; i++) {
             if (this.nodeOrders[i].name == name) {
                 return this.nodeOrders[i];
@@ -1810,32 +1808,32 @@ export class DynamicGraph {
     }
 
     // returns the node with ID
-    node(id: number) {
+    node(id: number): Node | undefined {
         for (let i = 0; i < this._nodes.length; i++) {
             if (this._nodes[i].id() == id)
                 return this._nodes[i];
         }
     }
 
-    link(id: number) {
+    link(id: number): Link | undefined {
         for (let i = 0; i < this._links.length; i++) {
             if (this._links[i].id() == id)
                 return this._links[i];
         }
     }
-    time(id: number) {
+    time(id: number): Time | undefined {
         for (let i = 0; i < this._times.length; i++) {
             if (this._times[i].id() == id)
                 return this._times[i];
         }
     }
-    location(id: number) {
+    location(id: number): Location | undefined {
         for (let i = 0; i < this._locations.length; i++) {
             if (this._locations[i].id() == id)
                 return this._locations[i];
         }
     }
-    nodePair(id: number) {
+    nodePair(id: number): NodePair | undefined {
         for (let i = 0; i < this._nodePairs.length; i++) {
             if (this._nodePairs[i].id() == id)
                 return this._nodePairs[i];
@@ -1866,7 +1864,7 @@ export class NodeArray extends AttributeArray {
     inNeighbors: ArrayTimeSeries<number>[] = [];   // contains node ids only, since every GRAPH has its own NODE object instance
     neighbors: ArrayTimeSeries<number>[] = [];
     selections: Selection[][] = [];
-    attributes: Object[] = []; // arbitrary attributes (key -> value)
+    attributes: Record<any, any>[] = []; // arbitrary attributes (key -> value)
     locations: ScalarTimeSeries<number>[] = []
     filter: boolean[] = [];
     nodeType: string[] = [];
@@ -1887,7 +1885,7 @@ export class LinkArray extends AttributeArray {
     weights: ScalarTimeSeries<any>[] = [];
     selections: Selection[][] = [];
     filter: boolean[] = [];
-    attributes: Object = new Object; // arbitrary attributes (key -> value)
+    attributes: Record<any, any> = new Object; // arbitrary attributes (key -> value)
 }
 
 export class NodePairArray extends AttributeArray {
@@ -2042,7 +2040,7 @@ export class GraphElementQuery extends Query {
      * @param attribute - name of attribute that is used on filter
      * @param filter - function evaluating if the attribute's value is valid.
       */
-    generic_filter(filter: Function): any[] {
+    generic_filter(filter: (d: any) => boolean): any[] {
         const arr: any[] = [];
         for (let i = 0; i < this._elements.length; i++) {
             try {
@@ -2050,6 +2048,7 @@ export class GraphElementQuery extends Query {
                     arr.push(this._elements[i])
                 }
             } catch (ex) {
+                // TODO: catch this exception?
             }
         }
         return arr;
@@ -2312,7 +2311,7 @@ export class ScalarTimeSeries<T>{
     }
 
     /** Sets a value for a specified time point. */
-    set(t: Time, element: T) {
+    set(t: Time, element: T): void {
         this.serie[t.id()] = element
     }
     /** @returns the value for a specified time point. */
@@ -2326,7 +2325,7 @@ export class ScalarTimeSeries<T>{
         return this.toArray().length;
     }
 
-    getSerie(): Object[]{
+    getSerie(): any[]{
         return this.serie;
     }
 
@@ -2358,7 +2357,7 @@ export class ScalarTimeSeries<T>{
 * steps in the format key->value. I.e. the value for the
 * time step with ID 3 is accessed by this.3   */
 export class ArrayTimeSeries<T>{
-    serie: Object = {};
+    serie: any = {};
 
     period(t1: Time, t2: Time): ArrayTimeSeries<T> {
         const t1id = t1.id();
@@ -2373,7 +2372,7 @@ export class ArrayTimeSeries<T>{
         return s;
     }
 
-    add(t: Time, element: T) {
+    add(t: Time, element: T): void {
         if (t == undefined) {
             return;
         }
@@ -2443,7 +2442,7 @@ export class TimeQuery extends GraphElementQuery {
     selected(): TimeQuery {
         return new TimeQuery(super.generic_selected(), this.g);
     }
-    filter(filter: Function): TimeQuery {
+    filter(filter: (d: any) => boolean): TimeQuery {
         return new TimeQuery(super.generic_filter(filter), this.g);
     }
     presentIn(t1: Time, t2: Time): TimeQuery {
@@ -2485,7 +2484,7 @@ export class TimeQuery extends GraphElementQuery {
         }
         return a;
     }
-    createAttribute(attrName: string, f: Function): TimeQuery {
+    createAttribute(attrName: string, f: (t: Time) => void): TimeQuery {
         // create and init new attribute array if necessary
         if ((this.g.timeArrays as any)[attrName] == undefined) {
             (this.g.timeArrays as any)[attrName] = []
@@ -2512,7 +2511,7 @@ export class TimeQuery extends GraphElementQuery {
     intersection(q: TimeQuery): TimeQuery {
         return new TimeQuery(this.generic_intersection(q)._elements, this.g);
     }
-    forEach(f: Function): TimeQuery {
+    forEach(f: (t: Time | undefined, i: number) => void): TimeQuery {
         for (let i = 0; i < this._elements.length; i++) {
             f(this.g.time(this._elements[i]), i);
         }
@@ -2556,14 +2555,14 @@ export class Time extends BasicElement {
     }
 
     // wrapper to moment.js
-    year() { return this.time().year(); }
-    month() { return this.time().month(); }
-    week() { return this.time().week(); }
-    day() { return this.time().day(); }
-    hour() { return this.time().hour(); }
-    minute() { return this.time().minute(); }
-    second() { return this.time().second(); }
-    millisecond() { return this.time().millisecond(); }
+    year(): number { return this.time().year(); }
+    month(): number { return this.time().month(); }
+    week(): number { return this.time().week(); }
+    day(): number { return this.time().day(); }
+    hour(): number { return this.time().hour(); }
+    minute(): number { return this.time().minute(); }
+    second(): number { return this.time().second(); }
+    millisecond(): number { return this.time().millisecond(); }
 
     format(format: string): string {
         return this.time().format(format)
@@ -2603,7 +2602,7 @@ export class LocationQuery extends GraphElementQuery {
     selected(): LocationQuery {
         return new LocationQuery(super.generic_selected(), this.g);
     }
-    filter(filter: Function): LocationQuery {
+    filter(filter: (d: any) => boolean): LocationQuery {
         return new LocationQuery(super.generic_filter(filter), this.g);
     }
     presentIn(t1: Time, t2: Time): LocationQuery {
@@ -2626,7 +2625,7 @@ export class LocationQuery extends GraphElementQuery {
         }
         return a;
     }
-    createAttribute(attrName: string, f: Function): LocationQuery {
+    createAttribute(attrName: string, f: (l: Location) => void): LocationQuery {
         // create and init new attribute array if necessary
         if ((this.g.locationArrays as any)[attrName] == undefined) {
             (this.g.locationArrays as any)[attrName] = []
@@ -2646,7 +2645,7 @@ export class LocationQuery extends GraphElementQuery {
     removeDuplicates(): LocationQuery {
         return new LocationQuery(this.generic_removeDuplicates()._elements, this.g);
     }
-    forEach(f: Function): LocationQuery {
+    forEach(f: (l: Location | undefined, i: number) => any): LocationQuery {
         for (let i = 0; i < this._elements.length; i++) {
             f(this.g.location(this._elements[i]), i);
         }
@@ -2695,7 +2694,7 @@ export class NumberQuery extends Query {
         }
         return v / count;
     }
-    sum() {
+    sum(): number {
         let sum = 0;
         for (let i = 0; i < this._elements.length; i++) {
             if (typeof this._elements[i] == 'number') {
@@ -2713,7 +2712,7 @@ export class NumberQuery extends Query {
         return this._elements[index];
     }
 
-    forEach(f: Function): NumberQuery {
+    forEach(f: (n: number, i: number) => any): NumberQuery {
         for (let i = 0; i < this._elements.length; i++) {
             f(this._elements[i], i);
         }
@@ -2792,7 +2791,7 @@ export class NodePairQuery extends GraphElementQuery {
     selected(): NodePairQuery {
         return new NodePairQuery(super.generic_selected(), this.g);
     }
-    filter(filter: Function): NodePairQuery {
+    filter(filter: (d: any) => boolean): NodePairQuery {
         return new NodePairQuery(super.generic_filter(filter), this.g);
     }
     presentIn(t1: Time, t2: Time): NodePairQuery {
@@ -2815,7 +2814,7 @@ export class NodePairQuery extends GraphElementQuery {
         }
         return a;
     }
-    createAttribute(attrName: string, f: Function): NodePairQuery {
+    createAttribute(attrName: string, f: (np: NodePair) => void): NodePairQuery {
         // create and init new attribute array if necessary
         if ((this.g.nodePairArrays as any)[attrName] == undefined) {
             (this.g.nodePairArrays as any)[attrName] = []
@@ -2834,7 +2833,7 @@ export class NodePairQuery extends GraphElementQuery {
     removeDuplicates(): NodePairQuery {
         return new NodePairQuery(this.generic_removeDuplicates()._elements, this.g);
     }
-    forEach(f: Function): NodePairQuery {
+    forEach(f: (np: NodePair | undefined, i: number) => any): NodePairQuery {
         for (let i = 0; i < this._elements.length; i++) {
             f(this.g.nodePair(this._elements[i]), i);
         }
@@ -2904,7 +2903,7 @@ export class StringQuery {
     toArray(): string[] {
         return this._elements.slice(0);
     }
-    forEach(f: Function): StringQuery {
+    forEach(f: (s: string, i: number) => void): StringQuery {
         for (let i = 0; i < this._elements.length; i++) {
             f(this._elements[i], i);
         }
@@ -2972,7 +2971,7 @@ export class NodeQuery extends GraphElementQuery {
     selected(): NodeQuery {
         return new NodeQuery(super.generic_selected(), this.g);
     }
-    filter(filter: Function): NodeQuery {
+    filter(filter: (d: any) => boolean): NodeQuery {
         return new NodeQuery(super.generic_filter(filter), this.g);
     }
     presentIn(t1: Time, t2: Time): NodeQuery {
@@ -3021,7 +3020,7 @@ export class NodeQuery extends GraphElementQuery {
         }
         return a;
     }
-    createAttribute(attrName: string, f: Function): NodeQuery {
+    createAttribute(attrName: string, f: (n: Node) => any): NodeQuery {
         // create and init news attribute array if necessary
         if ((this.g.nodeArrays as any)[attrName] == undefined) {
             (this.g.nodeArrays as any)[attrName] = []
@@ -3042,7 +3041,7 @@ export class NodeQuery extends GraphElementQuery {
         return new NodeQuery(this.generic_removeDuplicates()._elements, this.g);
     }
 
-    forEach(f: Function): NodeQuery {
+    forEach(f: (n: Node | undefined, i: number) => void): NodeQuery {
         for (let i = 0; i < this._elements.length; i++) {
             f(this.g.node(this._elements[i]), i);
         }
@@ -3226,7 +3225,7 @@ export class LinkQuery extends GraphElementQuery {
     selected(): LinkQuery {
         return new LinkQuery(super.generic_selected(), this.g);
     }
-    filter(filter: Function): LinkQuery {
+    filter(filter: (d: any) => boolean): LinkQuery {
         return new LinkQuery(super.generic_filter(filter), this.g);
     }
     presentIn(t1: Time, t2?: Time): LinkQuery {
@@ -3261,7 +3260,7 @@ export class LinkQuery extends GraphElementQuery {
         return s;
     }
 
-    createAttribute(attrName: string, f: Function): LinkQuery {
+    createAttribute(attrName: string, f: (link: Link) => any): LinkQuery {
         // create and init new attribute array if necessary
         if ((this.g.linkArrays as any)[attrName] == undefined) {
             (this.g.linkArrays as any)[attrName] = []
@@ -3321,7 +3320,7 @@ export class LinkQuery extends GraphElementQuery {
     removeDuplicates(): LinkQuery {
         return new LinkQuery(this.generic_removeDuplicates()._elements, this.g);
     }
-    forEach(f: Function): LinkQuery {
+    forEach(f: (link: Link | undefined, i: number) => void): LinkQuery {
         for (let i = 0; i < this._elements.length; i++) {
             f(this.g.link(this._elements[i]), i);
         }
@@ -3437,7 +3436,7 @@ export interface LegendElement {
 
 export function copyPropsShallow(source: any, target: any): any {
     for (const p in source) {
-        if (source.hasOwnProperty(p))
+        if (Object.prototype.hasOwnProperty.call(source, p))
             target[p] = source[p];
     }
     return target;
@@ -3445,9 +3444,9 @@ export function copyPropsShallow(source: any, target: any): any {
 
 export function copyTimeseriesPropsShallow(source: any, target: any): any {
     for (const q in source) {
-        if (source.hasOwnProperty(q)) {
+        if (Object.prototype.hasOwnProperty.call(source, q)) {
             for (const p in source[q]) {
-                if (source[q].hasOwnProperty(p)) {
+                if (Object.prototype.hasOwnProperty.call(source[q], p)) {
                     target[q][p] = source[q][p];
                 }
             }
@@ -3478,8 +3477,8 @@ export function compareTypesDeep(a: any, b: any, depth: number): boolean {
         if (depth > 0) {
             for (const key in a) {
                 if (key in b
-                    && a.hasOwnProperty(key)
-                    && b.hasOwnProperty(key)
+                    && Object.prototype.hasOwnProperty.call(a, key)
+                    && Object.prototype.hasOwnProperty.call(b, key)
                     && !compareTypesDeep(a[key], b[key], depth - 1)) {
                     console.log("compareFailed for key", key, a[key], b[key]);
                     result = false;
@@ -3490,7 +3489,7 @@ export function compareTypesDeep(a: any, b: any, depth: number): boolean {
     }
 }
 
-export function sortNumber(a: any, b: any) {
+export function sortNumber(a: number, b: number): number {
     return a - b;
 }
 
@@ -3588,7 +3587,7 @@ export class DataManager {
      * @param  {string}  session - current session id
      * @param  {DataSet} data    - a networkcube.DataSet
      */
-    importData(session: string, data: DataSet) {
+    importData(session: string, data: DataSet): void {
         this.session = session;
 
         // check if all data (tables + schemas) are there
@@ -3670,7 +3669,7 @@ export class DataManager {
 
     // storage primitives /////////////////////////////////////
     //
-    saveToStorage<T>(dataName: string, valueName: string, value: T, replacer?: (key: string, value: any) => any) {
+    saveToStorage<T>(dataName: string, valueName: string, value: T, replacer?: (key: string, value: any) => any): void {
         if (value == undefined) {
             console.log('attempting to save undefined value. aborting', dataName, valueName);
             return;

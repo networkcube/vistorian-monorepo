@@ -1,13 +1,13 @@
 
 export class BSpline {
-    points: any[] = [];
-    degree: any;
-    dimension: any;
-    baseFunc: any;
+    points: number[][] = [];
+    degree: number;
+    dimension: number;
+    baseFunc: (x: number) => number = () => 0;
     baseFuncRangeInt = 0; // INIT??
 
 
-    constructor(points: any, degree: any, copy?: any) {
+    constructor(points: number[][], degree: number, copy?: boolean) {
         if (copy) {
             this.points = []
             for (let i = 0; i < points.length; i++) {
@@ -34,10 +34,10 @@ export class BSpline {
     }
 
     //BSpline.prototype.seqAt = function(dim: any): any{
-    seqAt(dim: any): any {
-        const points: any = this.points;
-        const margin: any = this.degree + 1;
-        return function (n: any) {
+    seqAt(dim: number): (n: number) => number {
+        const points: number[][] = this.points;
+        const margin: number = this.degree + 1;
+        return function (n: number) {
             if (n < margin) {
                 return points[0][dim];
             } else if (points.length + margin <= n) {
@@ -49,7 +49,7 @@ export class BSpline {
     }
 
     //BSpline.prototype.basisDeg2 = function(x: any): number{
-    basisDeg2(x: any): number {
+    basisDeg2(x: number): number {
         if (-0.5 <= x && x < 0.5) {
             return 0.75 - x * x;
         } else if (0.5 <= x && x <= 1.5) {
@@ -62,7 +62,7 @@ export class BSpline {
     }
 
     //BSpline.prototype.basisDeg3 = function(x: any): number{
-    basisDeg3(x: any): number {
+    basisDeg3(x: number): number {
         if (-1 <= x && x < 0) {
             return 2.0 / 3.0 + (-1.0 - x / 2.0) * x * x;
         } else if (1 <= x && x <= 2) {
@@ -77,7 +77,7 @@ export class BSpline {
     }
 
     //BSpline.prototype.basisDeg4 = function(x: any): number{
-    basisDeg4(x: any): number {
+    basisDeg4(x: number): number {
         if (-1.5 <= x && x < -0.5) {
             return 55.0 / 96.0 + x * (-(5.0 / 24.0) + x * (-(5.0 / 4.0) + (-(5.0 / 6.0) - x / 6.0) * x));
         } else if (0.5 <= x && x < 1.5) {
@@ -94,7 +94,7 @@ export class BSpline {
     }
 
     //BSpline.prototype.basisDeg5 = function(x: any): number{
-    basisDeg5(x: any): number {
+    basisDeg5(x: number): number {
         if (-2 <= x && x < -1) {
             return 17.0 / 40.0 + x * (-(5.0 / 8.0) + x * (-(7.0 / 4.0) + x * (-(5.0 / 4.0) + (-(3.0 / 8.0) - x / 24.0) * x)));
         } else if (0 <= x && x < 1) {
@@ -113,9 +113,9 @@ export class BSpline {
     }
 
     //BSpline.prototype.getInterpol = function(seq: any, t: any): number{
-    getInterpol(seq: any, t: any): number {
-        const f: any = this.baseFunc;
-        const rangeInt: any = this.baseFuncRangeInt;
+    getInterpol(seq: (x: number) => number, t: number): number {
+        const f: (x: number) => number = this.baseFunc;
+        const rangeInt: number = this.baseFuncRangeInt;
         const tInt: number = Math.floor(t);
         let result = 0;
         for (let i = tInt - rangeInt; i <= tInt + rangeInt; i++) {
@@ -125,7 +125,7 @@ export class BSpline {
     }
 
     //BSpline.prototype.calcAt = function(t: any): any{
-    calcAt(t: any): any {
+    calcAt(t: number): number[] {
         t = t * ((this.degree + 1) * 2 + this.points.length);//t must be in [0,1]
         if (this.dimension == 2) {
             return [this.getInterpol(this.seqAt(0), t), this.getInterpol(this.seqAt(1), t)];

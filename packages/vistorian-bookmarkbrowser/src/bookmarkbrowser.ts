@@ -8,16 +8,15 @@ import * as datamanager from 'vistorian-core/src/datamanager';
 
 import $ from 'jquery';
 
-var RECT_SIZE: number = 13;
-var INTENT: number = 0;
-var LINE_HEIGHT: number = 13;
-var GAP_ICONS: number = 3;
-var OPACITY_ICONS: number = .2;
+const RECT_SIZE = 13;
+const INTENT = 0;
+const LINE_HEIGHT = 13;
+const GAP_ICONS = 3;
 
-var width: number = window.innerWidth;
+const width = window.innerWidth;
 
 // Get data	
-var dgraph: dynamicgraph.DynamicGraph = main.getDynamicGraph();
+const dgraph: dynamicgraph.DynamicGraph = main.getDynamicGraph();
 
 messenger.setDefaultEventListener(updateLists);
 messenger.addEventListener('searchResult', searchResultHandler);
@@ -35,9 +34,9 @@ createViewOnlyCategory('Node Shapes', 'nodeShape')
 
 updateLists();
 
-export function createSelectionCategory(name: string, type: string) {
+export function createSelectionCategory(name: string, type: string): void {
 
-	var nodeDiv: any = d3.select('body').append('div')
+	const nodeDiv: any = d3.select('body').append('div')
 		.attr('id', 'div_' + type)
 
 	nodeDiv.append('p')
@@ -53,9 +52,9 @@ export function createSelectionCategory(name: string, type: string) {
 
 }
 
-export function createViewOnlyCategory(name: string, type: string) {
+export function createViewOnlyCategory(name: string, type: string): void {
 
-	var nodeDiv: any = d3.select('body').append('div')
+	const nodeDiv: any = d3.select('body').append('div')
 		.attr('id', 'divViewOnly_' + type)
 
 	nodeDiv.append('p')
@@ -64,12 +63,14 @@ export function createViewOnlyCategory(name: string, type: string) {
 
 }
 
-export function updateViewOnlyList(type: string, name: string){
+export function updateViewOnlyList(type: string, name: string): void {
+	let tmp: any[] = [];
+	let trimmedColorsNoNulls: any[];
+	let trimmedShapesNoNulls: any[];
 
     if(type == "nodeColor" ) {
         //Remove duplicates
-        var tmp: any[] = [];
-        var trimmedColors = (dgraph.nodeArrays as any).color.filter(function (v: any) {
+        const trimmedColors = (dgraph.nodeArrays as any).color.filter(function (v: any) {
 			if(typeof v!='undefined' && v){
 				if (tmp.indexOf(v.toString()) < 0) {
 					tmp.push(v.toString());
@@ -78,8 +79,8 @@ export function updateViewOnlyList(type: string, name: string){
 			}
         });
         //Remove null/undefinted
-        var tmp: any[] = [];
-        var trimmedColorsNoNulls = trimmedColors.filter(function (v: any) {
+        tmp  = [];
+		trimmedColorsNoNulls = trimmedColors.filter(function (v: any) {
             if (v[0] != null) {
                 return v;
             }
@@ -88,8 +89,8 @@ export function updateViewOnlyList(type: string, name: string){
 
     if(type == "nodeShape" ) {
         //Remove duplicates
-        var tmp: any[] = [];
-        var trimmedShapes = (dgraph.nodeArrays as any).shape.filter(function (v: any) {
+        tmp  = [];
+        const trimmedShapes = (dgraph.nodeArrays as any).shape.filter(function (v: any) {
 			if(typeof v!='undefined' && v){
 				if (tmp.indexOf(v.toString()) < 0) {
 					tmp.push(v.toString());
@@ -98,8 +99,8 @@ export function updateViewOnlyList(type: string, name: string){
 			}
         });
         //Remove null/undefinted
-        var tmp: any[] = [];
-        var trimmedShapesNoNulls = trimmedShapes.filter(function (v: any) {
+        tmp  = [];
+		trimmedShapesNoNulls = trimmedShapes.filter(function (v: any) {
             if (v[0] != null) {
                 return v;
             }
@@ -110,15 +111,16 @@ export function updateViewOnlyList(type: string, name: string){
 		.selectAll('.selectionDiv_' + type)
 		.remove();
 
-	var nodeGs: any = d3.select('#divViewOnly_' + type)
+	const nodeGs: any = d3.select('#divViewOnly_' + type)
 		.selectAll('.selectionDiv_' + type)
 		.data(function(){
-		    if(type == "nodeColor") {
-		        return trimmedColorsNoNulls;
+			if(type == "nodeColor") {
+				return trimmedColorsNoNulls;
             }
             if(type == "nodeShape") {
                 return trimmedShapesNoNulls;
             }
+			return []
         })
 		.enter()
 		.append('div')
@@ -158,8 +160,7 @@ export function updateViewOnlyList(type: string, name: string){
 
 		nodeGs.append('path')
 			.attr("transform", function() { return "translate(7,7)"; })
-			// @ts-ignore
-			.attr('d', (n: string[]) => d3.svg.symbol().size(40).type(getNodeShape(n))())
+			.attr('d', (n: string[]) => d3.symbol().size(40).type(getNodeShape(n))())
 			.style('fill', 'black')
 	}
 
@@ -180,16 +181,16 @@ export function updateViewOnlyList(type: string, name: string){
 
 }
 
-export function createSelection(type: string) {
+export function createSelection(type: string): void {
 
-	var b: datamanager.Selection = dgraph.createSelection(type) // IS IT OK?? (dgraph)
-	var timer: number = window.setTimeout((e: any) => {
+	const b: datamanager.Selection = dgraph.createSelection(type) // IS IT OK?? (dgraph)
+	const timer: number = window.setTimeout((e: any) => {
 		messenger.setCurrentSelection(b);
 		updateLists();
 	}, 500);
 }
 
-export function updateLists() {
+export function updateLists(): void {
 
 	updateList('node', 'Node Selections')
 	updateList('link', 'Link Selections')
@@ -205,10 +206,10 @@ export function updateLists() {
 		.text(function (d: any) { return d.name + ' (' + d.elementIds.length + ')' })
 }
 
-export function updateList(type: string, name: string) {
-	var selections: datamanager.Selection[] = dgraph.getSelections(type)
+export function updateList(type: string, name: string): void {
+	const selections: datamanager.Selection[] = dgraph.getSelections(type)
 
-	var title: any = d3.select('#title_' + type)
+	const title: any = d3.select('#title_' + type)
 	title.html(name + ' (' + selections.length + ')');
 
 
@@ -216,7 +217,7 @@ export function updateList(type: string, name: string) {
 		.selectAll('.selectionDiv_' + type)
 		.remove();
 
-	var nodeGs: any = d3.select('#div_' + type)
+	const nodeGs: any = d3.select('#div_' + type)
 		.selectAll('.selectionDiv_' + type)
 		.data(selections.sort(utils.sortByPriority))
 		.enter()
@@ -262,7 +263,7 @@ export function updateList(type: string, name: string) {
 		})
 
 	// add pictures
-	var i: number = 0;
+	let i = 0;
 	nodeGs.append('svg:image')
 		.attr('class', 'icon_showColor icon')
 		.attr('x', 130 + (RECT_SIZE + GAP_ICONS) * i++)
@@ -315,22 +316,22 @@ export function updateList(type: string, name: string) {
 
 }
 
-var searchMessage: messenger.SearchResultMessage;
-export function searchResultHandler(m: messenger.SearchResultMessage) {
+let searchMessage: messenger.SearchResultMessage;
+export function searchResultHandler(m: messenger.SearchResultMessage): void {
 	searchMessage = m;
 	$('#searchResults').empty();
-	var row = $('#searchResults').append('<li></li>')
+	const row = $('#searchResults').append('<li></li>')
 	if (m.idCompound.nodeIds)
 		row.append('<p class="searchResult">Nodes: <b>' + m.idCompound.nodeIds.length + '</b> <u onclick="saveSearchResultAsSelection(\'node\')">(Save as selection)</u></p>')
 	if (m.idCompound.linkIds)
 		row.append('<p class="searchResult">Links: <b>' + m.idCompound.linkIds.length + '</b> <u onclick="saveSearchResultAsSelection(\'link\')">(Save as selection)</u></p>')
 }
 
-export function saveSearchResultAsSelection(type: string) {
-	var s: datamanager.Selection = messenger.createSelection(type, searchMessage.searchTerm);
-	var selectionIdCompound: dynamicgraph.IDCompound = new dynamicgraph.IDCompound();
+export function saveSearchResultAsSelection(type: string): void {
+	const s: datamanager.Selection = messenger.createSelection(type, searchMessage.searchTerm);
+	const selectionIdCompound: dynamicgraph.IDCompound = new dynamicgraph.IDCompound();
 	(selectionIdCompound as any)[type + 'Ids'] = (searchMessage.idCompound as any)[type + 'Ids']
-	var temp: utils.ElementCompound = utils.makeElementCompound(selectionIdCompound, dgraph);
+	const temp: utils.ElementCompound = utils.makeElementCompound(selectionIdCompound, dgraph);
 	window.setTimeout(() => {
 		messenger.highlight('reset');
 		window.setTimeout(() => {
@@ -341,15 +342,26 @@ export function saveSearchResultAsSelection(type: string) {
 }
 
 // clear search field and highlighted nodes
-export function clearSearchSelection() {
+export function clearSearchSelection(): void {
 	messenger.highlight('reset');
 	$('#searchResults').empty();
 }
 
-export function getNodeShape(n: string[]) {
-	var tmp = (n[1] as any).split(',');
-	if(tmp) {
-		return tmp[tmp.length - 1];
+export function getNodeShape(n: string[]): d3.SymbolType {
+    const shapes : Record<string, d3.SymbolType> = {
+        circle: d3.symbolCircle,
+        cross: d3.symbolCross,
+        diamond: d3.symbolDiamond,
+        square: d3.symbolSquare,
+        star: d3.symbolStar,
+        triangle: d3.symbolTriangle,
+        wye: d3.symbolWye
+        }
+
+	const tmp = (n[1] as any).split(',');
+	if (tmp) {
+		const shape = tmp[tmp.length - 1];
+		return shapes[shape] ? shapes[shape] : d3.symbolCircle;
 	}
-	return 'wye'
+	return d3.symbolWye;
 }

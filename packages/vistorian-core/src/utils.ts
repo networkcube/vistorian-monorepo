@@ -88,13 +88,13 @@ export function getPriorityColor(element: BasicElement): string | undefined { //
 }
 
 
-export function sortByPriority(s1: any, s2: any) {
+export function sortByPriority(s1: any, s2: any): number {
     return s1.priority - s2.priority;
 }
 
 
-export function getUrlVars(): Object {
-    const vars: Object = {};
+export function getUrlVars(): Record<string, any> {
+    const vars: Record<string, any> = {};
     const params = window.location.search.replace("?", "").split('&');
     let tmp: any;
     let value: any;
@@ -126,7 +126,7 @@ function hexToG(h: any) { return parseInt((cutHex(h)).substring(2, 4), 16); }
 function hexToB(h: any) { return parseInt((cutHex(h)).substring(4, 6), 16); }
 function cutHex(h: any) { return (h.charAt(0) == "#") ? h.substring(1, 7) : h; }
 
-export function hex2web(v: string) {
+export function hex2web(v: string): string {
     v = v + '';
     return v.replace('0x', '#');
 }
@@ -269,7 +269,7 @@ export function makeIdCompound(elements: ElementCompound | undefined): IDCompoun
     return result;
 }
 
-export function formatAtGranularity(time: any, granualarity: number) {
+export function formatAtGranularity(time: any, granualarity: number): string | undefined {
     switch (granualarity) {
         case 0: return time.millisecond();
         case 1: return time.second();
@@ -282,7 +282,7 @@ export function formatAtGranularity(time: any, granualarity: number) {
     }
 }
 
-export function arraysEqual(a: any, b: any) {
+export function arraysEqual(a: any, b: any): boolean {
     if (a === b) return true;
     if (a == null || b == null) return false;
     if (a.length != b.length) return false;
@@ -296,12 +296,12 @@ export function arraysEqual(a: any, b: any) {
     return true;
 }
 
-export function encapsulate(array: any[], attrName?: string): Object[] {
+export function encapsulate(array: any[], attrName?: string): Record<string, any>[] {
     if (attrName == undefined) {
         attrName = 'element';
     }
     const a = []
-    let o: Object;
+    let o: Record<string, any>;
     for (let i = 0; i < array.length; i++) {
         o = {
             index: i,
@@ -312,7 +312,7 @@ export function encapsulate(array: any[], attrName?: string): Object[] {
     return a;
 }
 
-export function isPointInPolyArray(poly: number[][], pt: number[]) {
+export function isPointInPolyArray(poly: number[][], pt: number[]): boolean {
     const l = poly.length;
 
     let c = false;
@@ -323,7 +323,7 @@ export function isPointInPolyArray(poly: number[][], pt: number[]) {
 }
 
 
-export function formatTimeAtGranularity(time: Time, granualarity: number) {
+export function formatTimeAtGranularity(time: Time, granualarity: number): number {
     const momentTime = moment.utc(time.unixTime())
     switch (granualarity) {
         case 0: return momentTime.millisecond();
@@ -349,7 +349,7 @@ export function formatTimeAtGranularity(time: Time, granualarity: number) {
 
 // Downloads the content of the openGL canvas to the 
 // desktop.
-export function downloadPNGFromCanvas(name: string) {
+export function downloadPNGFromCanvas(name: string): void {
     const blob = getBlobFromCanvas(document.getElementsByTagName('canvas')[0]);
     const fileNameToSaveAs = name + '_' + new Date().toUTCString() + '.png';
     const downloadLink = document.createElement("a")
@@ -372,19 +372,19 @@ function getBlobFromCanvas(canvas: any): Blob {
 ///////////
 
 // downloads a screenshot on the desktop from the passed svg
-export function downloadPNGfromSVG(name: string, svgId: string) {
+export function downloadPNGfromSVG(name: string, svgId: string): void {
     const blob = getBlobFromSVG(name, svgId);
 }
 
 // creates an image blob from the passed svg and calls the 
 // callback function with the blob as parameter
-export function getBlobFromSVG(name: string, svgId: string, callback?: Function) {
+export function getBlobFromSVG(name: string, svgId: string, callback?: (blob: any, name: string) => void): void {
     const width = $('#' + svgId).width();
     const height = $('#' + svgId).height();
     if (callback != undefined) // UNDEFINED ?? 
         getBlobFromSVGString(name, getSVGString(d3.select('#' + svgId).node()), width, height, callback) // what happend if callback undefinied (example above)
 }
-export function getBlobFromSVGNode(name: string, svgNode: any, callback: Function, backgroundColor?: string) {
+export function getBlobFromSVGNode(name: string, svgNode: any, callback: (blob: any, name: string) => void, backgroundColor?: string): void {
     const string = getSVGString(svgNode);
     let width = svgNode.getAttribute('width')
     let height = svgNode.getAttribute('height')
@@ -396,7 +396,7 @@ export function getBlobFromSVGNode(name: string, svgNode: any, callback: Functio
     }
     getBlobFromSVGString(name, string, width, height, callback, backgroundColor)
 }
-export function getBlobFromSVGString(name: string, svgString: string, width: number, height: number, callback: Function, backgroundColor?: string) {
+export function getBlobFromSVGString(name: string, svgString: string, width: number, height: number, callback: (blob: any, name: string) => void, backgroundColor?: string): void {
     // get SVG string
     // CREATE PNG
     //var format: any = format ? format : 'png';
@@ -429,7 +429,7 @@ export function getBlobFromSVGString(name: string, svgString: string, width: num
 
 }
 
-export function getSVGString(svgNode: any) {
+export function getSVGString(svgNode: any): string {
     svgNode.setAttribute('xlink', 'http://www.w3.org/1999/xlink');
     const cssStyleText = getCSSStyles(svgNode);
     appendCSS(cssStyleText, svgNode);
@@ -502,7 +502,7 @@ export function getSVGString(svgNode: any) {
 }
 
 
-export function exportPNG(canvas: any, name: string) {
+export function exportPNG(canvas: any, name: string): void {
     const dataURL: any = canvas.toDataURL('image/jpg', 1);
     const blob: any = dataURItoBlob(dataURL);
     // window.open(dataURL);
@@ -539,7 +539,7 @@ function dataURItoBlob(dataURI: string): Blob {
 
 
 let msgBox;
-export function showMessage(message: string, timeout: any) {
+export function showMessage(message: string, timeout: any): void {
     if ($('.messageBox'))
         $('.messageBox').remove();
 

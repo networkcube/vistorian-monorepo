@@ -25,7 +25,7 @@ export class SmartSlider {
     width: number;
     g: any; // BEFORE d3.Selection<d3.BaseType, {}, HTMLElement, any>;
 
-    dragEndCallBackFn: any; // BEFORE Function;
+    dragEndCallBackFn: (min: number, max: number, valueRange: any) => void = () => null; // BEFORE Function;
 
     constructor(
         x: number,
@@ -48,7 +48,7 @@ export class SmartSlider {
             this.hasTickmarks = false;
     }
 
-    setDragEndCallBack(fn: Function) {
+    setDragEndCallBack(fn: (min: number, max: number, valueRange: any) => void): void {
         this.dragEndCallBackFn = fn;
     }
 
@@ -65,7 +65,7 @@ export class SmartSlider {
     rect: any;
     singleTimeStepX = 0;
 
-    appendTo(svg: d3.Selection<any,any,any,any>) {
+    appendTo(svg: d3.Selection<any,any,any,any>): void {
 
         this.svg = svg;
 
@@ -195,7 +195,7 @@ export class SmartSlider {
     dragObj: any;
     currentBarLength = 0; // BEFORE number;
 
-    dragStart(ev: MouseEvent) {
+    dragStart(ev: MouseEvent): void {
         this.dragStartXMouse = Math.max(this.LEFT, Math.min(this.width - this.RIGHT, this.getRelX(ev)));
         //var sourceEvent = (ev).sourceEvent; // d3.BaseEvent
         this.dragObj = ev ? ev.target : undefined;
@@ -221,7 +221,7 @@ export class SmartSlider {
         }
     }
 
-    dragMove(ev: MouseEvent) {
+    dragMove(ev: MouseEvent): void {
         // if we are dragging the entire bar
         if (!this.isInverted && this.dragObj.id == this.bar0.attr('id')) {
             const xOffset = Math.max(this.LEFT, Math.min(this.width - this.RIGHT, this.getRelX(ev))) - this.dragStartXMouse;
@@ -257,7 +257,7 @@ export class SmartSlider {
     }
 
 
-    dragEnd() {
+    dragEnd(): void {
         this.min = this.valueRange(this.circleMin.attr("cx"));
         this.max = this.valueRange(this.circleMax.attr("cx"));
         this.dragEndCallBackFn(this.min, this.max, this.valueRange(this.singleTimeStepX));
@@ -272,7 +272,7 @@ export class SmartSlider {
 
 
 
-    set(min: number, max: number) {
+    set(min: number, max: number): void {
         // seems like this would make sense, 
         // this.min = min;
         // this.max = max;
