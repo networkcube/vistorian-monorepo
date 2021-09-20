@@ -346,10 +346,21 @@ export function clearSearchSelection() {
 	$('#searchResults').empty();
 }
 
-export function getNodeShape(n: string[]) {
-	var tmp = (n[1] as any).split(',');
-	if(tmp) {
-		return tmp[tmp.length - 1];
+export function getNodeShape(n: string[]): d3.SymbolType {
+    const shapes : Record<string, d3.SymbolType> = {
+        circle: d3.symbolCircle,
+        cross: d3.symbolCross,
+        diamond: d3.symbolDiamond,
+        square: d3.symbolSquare,
+        star: d3.symbolStar,
+        triangle: d3.symbolTriangle,
+        wye: d3.symbolWye
+        }
+
+	const tmp = (n[1] as any).split(',');
+	if (tmp) {
+		const shape = tmp[tmp.length - 1];
+		return shapes[shape] ? shapes[shape] : d3.symbolCircle;
 	}
-	return 'wye'
+	return d3.symbolWye;
 }
