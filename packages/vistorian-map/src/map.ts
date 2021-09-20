@@ -409,7 +409,7 @@ function init() {
         {
             n = nodes[i];
             positions = n.locationSerie().getSerie();
-            serie = new dynamicgraph.ScalarTimeSeries<Object>();
+            serie = new dynamicgraph.ScalarTimeSeries<any>();
             nodePositionObjectsLookupTable.push(serie);
             for (const tId in positions) {
                 googleLatLng = new google.maps.LatLng(
