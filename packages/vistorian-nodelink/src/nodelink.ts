@@ -205,8 +205,7 @@ parentSvg
             mouseEnd = [ev.clientX, ev.clientY];
 
             // mouse positions are  clientX/clientY in local (DOM content) cooordinates - NOT relative to the parent SVG
-            // @ts-ignore
-            const {x: leftOffset, y: topOffset} = document.getElementById("visSvg").getBoundingClientRect();
+            const {x: leftOffset, y: topOffset} = parentSvg.node().getBoundingClientRect();
 
             const r_h = Math.abs(mouseStart[1] - mouseEnd[1]);
             const r_x = Math.min(mouseStart[0], mouseEnd[0]) - leftOffset - panOffsetGlobal[0];
@@ -226,8 +225,7 @@ parentSvg
             mouseEnd = [ev.clientX, ev.clientY];
 
             // mouse positions are  clientX/clientY in local (DOM content) cooordinates - NOT relative to the parent SVG
-            // @ts-ignore
-            const {x: leftOffset, y: topOffset} = document.getElementById("visSvg").getBoundingClientRect();
+            const {x: leftOffset, y: topOffset} = parentSvg.node().getBoundingClientRect();
 
             const r_h = Math.abs(mouseStart[1] - mouseEnd[1]);
             const r_x = Math.min(mouseStart[0], mouseEnd[0]) - leftOffset - panOffsetGlobal[0];
@@ -240,15 +238,10 @@ parentSvg
                 .attr("y", r_y)
                 .attr("height", r_h);
 
-            // @ts-ignore
 
-            const selectedNodes = visualNodes.filter(function (d,i,n) {
-                // @ts-ignore
-                const node = d3.select(this);
+            const selectedNodes = visualNodes.filter(function (d: any, i: number, nodes: any[]) {
+                const node = nodes[i];
                 const [node_x, node_y] = node.attr("transform").replace("translate(", "").replace(")", "").split(",");
-
-                const y = +node.attr("y");
-
                 return +node_x >= r_x && +node_x <= (r_x + r_w) && +node_y >= r_y && +node_y <= (r_y + r_h);
             });
 
@@ -287,9 +280,8 @@ parentSvg
         const globalZoom = 1 - deltaPixels / 1000;
 
         const mouse = [ev.clientX - panOffsetGlobal[0], ev.clientY - panOffsetGlobal[1]];
-        var d: any, n: any;
         for (let i = 0; i < nodes.length; i++) {
-            n = nodes[i]
+            const n = nodes[i]
             n.x = mouse[0] + (n.x - mouse[0]) * globalZoom;
             n.y = mouse[1] + (n.y - mouse[1]) * globalZoom;
         }
@@ -375,7 +367,7 @@ d3.forceSimulation(nodes)
         updateLinks();
         updateLayout();
         // package layout coordinates
-        let coords: any = []
+        const coords: any = []
         for (let i = 0; i < nodes.length; i++) {
             coords.push({ x: (nodes[i] as any).x, y: (nodes[i] as any).y })
         }
@@ -393,7 +385,6 @@ function init() {
         .data(nodes)
         .enter()
         .append('path')
-        // @ts-ignore
         .attr('d', (n: dynamicgraph.Node) => d3.symbol().type(getNodeShape(n))())
         .attr('class', 'nodes')
         .style('fill', (n: dynamicgraph.Node) => getNodeColor(n)) 
@@ -747,7 +738,6 @@ function updateEvent(m: messenger.Message) {
 function updateNodeSize() {
     visualNodes
         // .attr('r', (n: any) => getNodeRadius(n))
-        //@ts-ignore
         .attr('d', (n: any) => d3.symbol().size(getNodeRadius(n)).type(getNodeShape(n))())
 }
 
