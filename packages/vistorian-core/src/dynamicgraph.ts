@@ -1055,7 +1055,7 @@ export class DynamicGraph {
         }
 
         //Build a shape mapping
-        const shapeSet = new Set(['cross', 'diamond', 'square', 'triangle-down', 'triangle-up']);
+        const shapeSet = new Set(['cross', 'diamond', 'square', 'triangle']);
         const shapeMappings: { [shape: string]: string; } = {};
         this.nodeArrays.shape.forEach(function (shape: any) {
             if (!shapeMappings[shape]) {
