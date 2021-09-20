@@ -5,7 +5,7 @@ import netClustering from 'netclustering'
 
 export function findTemplate(nodes: Node[],
     template: MotifTemplate,
-    config?: Object) {
+    config?: Record<string, any>): void {
 
     const nodeCount = template.nodes.length;
     const linkCount = template.links.length;
@@ -20,6 +20,7 @@ export function findTemplate(nodes: Node[],
                 if (template.links[k][0] == template.nodes[j])
 
                     for (let l = 0; l < linkCount; l++) {
+                        // TOOD: this is unfinished
                     }
             }
         }
@@ -29,7 +30,7 @@ export function findTemplate(nodes: Node[],
 }
 
 
-export function findClusters(nodes: Node[], config?: Object) {
+export function findClusters(nodes: Node[], config?: Record<string, any>): Record<string, any> {
     if (nodes.length == 0)
         return []
 
@@ -108,7 +109,7 @@ export function findCliques(nodes: Node[], config?: any) {
 };
 */
 
-function bronKerbosch(nodes: Node[], r: any[], p: any[], x: any[], cliques: any[], config: Object) {
+function bronKerbosch(nodes: Node[], r: any[], p: any[], x: any[], cliques: any[], config: Record<string, any>) {
 
     if (p.length === 0 && x.length === 0) {
         cliques.push(r);
@@ -205,7 +206,7 @@ function bronKerboschIterative(nodes: Node[], config: Object): any[] {
 }
 */
 
-export function findFullEgoNetwork(nodes: Node[], config?: Object): Motif[] {
+export function findFullEgoNetwork(nodes: Node[], config?: Record<string, any>): Motif[] {
     const motifs: Motif[] = [];
     let ns;
     let ls;

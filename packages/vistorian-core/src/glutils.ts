@@ -1,10 +1,11 @@
 import * as THREE from 'three';
 import $ from 'jquery';
 import { BSpline } from './BSpline';
+import {sortNumber} from "./dynamicgraph";
 
 //module glutils {
 
-export function makeAlphaBuffer(array: number[], stretch: number) {
+export function makeAlphaBuffer(array: number[], stretch: number): Float32Array {
     const buffer: Float32Array = new Float32Array(array.length * stretch); // three components per vertex
     for (let i = 0; i < array.length; i++) {
         for (let j = 0; j < stretch; j++) {
@@ -14,7 +15,7 @@ export function makeAlphaBuffer(array: number[], stretch: number) {
     return buffer
 }
 
-export function addBufferedHatchedRect(vertexArray: number[][], x: number, y: number, z: number, width: number, height: number, colorArray: number[][], c: number[]) {
+export function addBufferedHatchedRect(vertexArray: number[][], x: number, y: number, z: number, width: number, height: number, colorArray: number[][], c: number[]): void {
     const HATCH_NUM = 3;
     const LINE_WIDTH = 1;
     const hatchWidth = width / HATCH_NUM;
@@ -43,7 +44,7 @@ export function addBufferedHatchedRect(vertexArray: number[][], x: number, y: nu
     }
 }
 
-export function addBufferedRect(vertexArray: number[][], x: number, y: number, z: number, width: number, height: number, colorArray: number[][], c: number[]) {
+export function addBufferedRect(vertexArray: number[][], x: number, y: number, z: number, width: number, height: number, colorArray: number[][], c: number[]): void {
     width = width / 2;
     height = height / 2;
     vertexArray.push(
@@ -64,7 +65,7 @@ export function addBufferedRect(vertexArray: number[][], x: number, y: number, z
     );
 }
 
-export function addBufferedCirlce(vertexArray: number[][], x: number, y: number, z: number, radius: number, colorArray: number[][], c: number[]) {
+export function addBufferedCirlce(vertexArray: number[][], x: number, y: number, z: number, radius: number, colorArray: number[][], c: number[]): void {
     const segments = 11;
     const angle: number = Math.PI / (segments / 2)
     for (let i = 0; i < segments; i++) {
@@ -81,7 +82,7 @@ export function addBufferedCirlce(vertexArray: number[][], x: number, y: number,
     }
 }
 
-export function addBufferedDiamond(vertexArray: number[][], x: number, y: number, z: number, width: number, height: number, colorArray: number[][], c: number[]) {
+export function addBufferedDiamond(vertexArray: number[][], x: number, y: number, z: number, width: number, height: number, colorArray: number[][], c: number[]): void {
     width = width / 2;
     height = height / 2;
     vertexArray.push(
@@ -167,7 +168,7 @@ export function makeBuffer4f(array: number[][]): Float32Array {
 }
 
 
-export function updateBuffer(buffer: number[], array: number[][], size: number) {
+export function updateBuffer(buffer: number[], array: number[][], size: number): void {
     for (let i = 0; i < array.length; i++) {
         for (let j = 0; j < size; j++) {
             buffer[i * size + j] = array[i][j];
@@ -197,7 +198,7 @@ export function createText(string: string, x: number, y: number, z: number, size
     return label;
 }
 
-export function getMousePos(canvas: any, x: any, y: any) {
+export function getMousePos(canvas: any, x: any, y: any): Record<'x'|'y', number> {
     const rect = canvas.getBoundingClientRect();
     return {
         x: x - rect.left,
@@ -229,12 +230,12 @@ export class WebGL {
 
     elementQueries: WebGLElementQuery[] = []
 
-    constructor(params?: Object) {
+    constructor(params?: Record<string, any>) {
         txtCanvas = document.createElement("canvas");
         txtCanvas.setAttribute('id', 'textCanvas');
     }
 
-    render() {
+    render(): void {
         // var d = new Date();
         // var begin = d.getTime()
 
@@ -249,7 +250,7 @@ export class WebGL {
     }
 
 
-    selectAll() {
+    selectAll(): WebGLElementQuery {
         return selectAll()
     }
 
@@ -260,7 +261,7 @@ export class WebGL {
     // RENDER PARAMETERS //
     ///////////////////////
 
-    enableZoom(b?: boolean) {
+    enableZoom(b?: boolean): void {
         function mouseWheel(event: any) {
             event.preventDefault();
 
@@ -275,10 +276,10 @@ export class WebGL {
             window.addEventListener("mousewheel", mouseWheel, false);
         }
     }
-    enablePanning(b: boolean) {
+    enablePanning(b: boolean): void {
         this.interactor.isPanEnabled = b;
     }
-    enableHorizontalPanning(b: boolean) {
+    enableHorizontalPanning(b: boolean): void {
         this.interactor.isHorizontalPanEnabled = b;
     }
 
@@ -291,7 +292,7 @@ export class WebGL {
 
 let webgl: WebGL;
 
-export function initWebGL(parentId: string, width: number, height: number, params?: Object): WebGL {
+export function initWebGL(parentId: string, width: number, height: number, params?: Record<string, any>): WebGL {
 
     webgl = new WebGL(params);
 
@@ -331,7 +332,7 @@ export function initWebGL(parentId: string, width: number, height: number, param
 }
 
 // camera BEFORE THREE.Camera, renderer BEFORE THREE.Renderer
-export function setWebGL(scene: THREE.Scene, camera: THREE.OrthographicCamera, renderer: THREE.WebGLRenderer, canvas: any) {
+export function setWebGL(scene: THREE.Scene, camera: THREE.OrthographicCamera, renderer: THREE.WebGLRenderer, canvas: any): void {
     webgl = new WebGL();
     webgl.camera = camera;
     webgl.scene = scene;
@@ -350,10 +351,10 @@ export function selectAll(): WebGLElementQuery {
 
 
 export class WebGLElementQuery {
-    dataElements: Object[] = [];
+    dataElements: any[] = [];
     visualElements: any[] = [];
     mesh: THREE.Mesh = new THREE.Mesh();
-    children: Object[] = []
+    children: any[] = []
     scene: THREE.Scene = new THREE.Scene();
     mouseOverHandler: any; // BEFORE Function;
     mouseMoveHandler: any; // BEFORE Function;
@@ -385,7 +386,7 @@ export class WebGLElementQuery {
         this.scene = webgl.scene;
     }
 
-    data(arr: Object[]): WebGLElementQuery {
+    data(arr: any[]): WebGLElementQuery {
         this.dataElements = arr.slice(0);
         return this;
     }
@@ -430,11 +431,11 @@ export class WebGLElementQuery {
         return this.visualElements[this.dataElements.indexOf(i)];
     }
 
-    get length() {
+    get length(): number {
         return this.dataElements.length;
     }
 
-    filter(f: Function): WebGLElementQuery {
+    filter(f: (obj: Record<string, any>, n: number) => boolean): WebGLElementQuery {
         const arr: any[] = [];
         const visArr: any[] = []
         for (let i = 0; i < this.dataElements.length; i++) {
@@ -458,7 +459,7 @@ export class WebGLElementQuery {
         } else {
             for (let i = 0; i < l; i++) {
                 this.setAttr(this.visualElements[i], name, v instanceof Function ? v(this.dataElements[i], i) : v, i);
-                if (this.visualElements[i].hasOwnProperty('wireframe')) {
+                if (Object.prototype.hasOwnProperty.call(this.visualElements[i], 'wireframe')) {
                     this.setAttr(this.visualElements[i].wireframe, name, v instanceof Function ? v(this.dataElements[i], i) : v, i);
                 }
             }
@@ -525,7 +526,7 @@ export class WebGLElementQuery {
     }
 
     // interaction
-    on(event: string, f: Function): WebGLElementQuery {
+    on(event: string, f: (this: any, event: any, d: any) => void): WebGLElementQuery {
         switch (event) {
             case 'mouseover': this.mouseOverHandler = f; break;
             case 'mousemove': this.mouseMoveHandler = f; break;
@@ -551,7 +552,7 @@ export class WebGLElementQuery {
         return this;
     }
 
-    setAttr(element: THREE.Mesh, attr: string, v: any, index: number) {
+    setAttr(element: THREE.Mesh, attr: string, v: any, index: number): void {
         switch (attr) {
             case 'x': element.position.x = v; this.x[index] = v; break;
             case 'y': element.position.y = v; this.y[index] = v; break;
@@ -576,7 +577,7 @@ export class WebGLElementQuery {
         (element.geometry as THREE.Geometry).lineDistancesNeedUpdate = true;
     }
 
-    removeAll() {
+    removeAll(): void {
         for (let i = 0; i < this.visualElements.length; i++) {
             if (this.visualElements[i].wireframe)
                 this.scene.remove(this.visualElements[i].wireframe)
@@ -594,7 +595,7 @@ export class WebGLElementQuery {
 
 
 
-export function setStyle(element: any, attr: string, v: any, query: WebGLElementQuery) {
+export function setStyle(element: any, attr: string, v: any, query: WebGLElementQuery): void {
     switch (attr) {
         case 'fill':
             if (query.shape == 'text')
@@ -603,7 +604,7 @@ export function setStyle(element: any, attr: string, v: any, query: WebGLElement
                 element.material.color = new THREE.Color(v);
             break;
         case 'stroke':
-            if (element.hasOwnProperty('wireframe')) {
+            if (Object.prototype.hasOwnProperty.call(element, 'wireframe')) {
                 element.wireframe.material.color = new THREE.Color(v);
             } else {
                 element.material.color = new THREE.Color(v);
@@ -611,10 +612,10 @@ export function setStyle(element: any, attr: string, v: any, query: WebGLElement
             break;
         case 'opacity':
             element.material.opacity = v;
-            if (element.hasOwnProperty('wireframe')) element.wireframe.material.opacity = v;
+            if (Object.prototype.hasOwnProperty.call(element, 'wireframe')) element.wireframe.material.opacity = v;
             break;
         case 'stroke-width':
-            if (element.hasOwnProperty('wireframe'))
+            if (Object.prototype.hasOwnProperty.call(element, 'wireframe'))
                 element.wireframe.material.linewidth = v;
             else
                 element.material.linewidth = v;
@@ -627,12 +628,12 @@ export function setStyle(element: any, attr: string, v: any, query: WebGLElement
         default: console.error('Style', attr, 'does not exist.')
     }
     element.material.needsUpdate = true;
-    if (element.hasOwnProperty('wireframe'))
+    if (Object.prototype.hasOwnProperty.call(element, 'wireframe'))
         element.wireframe.material.needsUpdate = true;
 }
 
 // var textCtx
-export function setText(mesh: any, text: string, parConfig?: any) {
+export function setText(mesh: any, text: string, parConfig?: any): void {
     let config = parConfig;
     if (config == undefined) {
         config = {};
@@ -741,16 +742,16 @@ export function setText(mesh: any, text: string, parConfig?: any) {
 // }
 
 
-export function setX1(mesh: THREE.Mesh, v: any) {
+export function setX1(mesh: THREE.Mesh, v: any): void {
     (mesh.geometry as THREE.Geometry).vertices[0].x = v
 }
-export function setY1(mesh: THREE.Mesh, v: any) {
+export function setY1(mesh: THREE.Mesh, v: any): void {
     (mesh.geometry as THREE.Geometry).vertices[0].y = v
 }
-export function setX2(mesh: THREE.Mesh, v: any) {
+export function setX2(mesh: THREE.Mesh, v: any): void {
     (mesh.geometry as THREE.Geometry).vertices[1].x = v
 }
-export function setY2(mesh: THREE.Mesh, v: any) {
+export function setY2(mesh: THREE.Mesh, v: any): void {
     (mesh.geometry as THREE.Geometry).vertices[1].y = v
 }
 
@@ -769,7 +770,7 @@ export function setY2(mesh: THREE.Mesh, v: any) {
 
 // }
 
-export function createG(dataElements: any[], scene: THREE.Scene) {
+export function createG(dataElements: any[], scene: THREE.Scene): GroupElement[] {
     const visualElements = []
     // create group element for every data element
     for (let i = 0; i < dataElements.length; i++) {
@@ -780,10 +781,10 @@ export function createG(dataElements: any[], scene: THREE.Scene) {
 
 export class GroupElement {
     position = { x: 0, y: 0, z: 0 };
-    children: Object = [];
+    children: any = [];
 }
 
-export function createCirclesNoShader(dataElements: any[], scene: THREE.Scene) {
+export function createCirclesNoShader(dataElements: any[], scene: THREE.Scene): any[] {
     let material: any;
     let geometry: any;
     const visualElements: any[] = []
@@ -817,8 +818,8 @@ const fragmentShaderProgram = "\
             gl_FragColor = vec4(vColor[0], vColor[1], vColor[2], vColor[3]);\
         }";
 
-export function createCirclesWithBuffers(query: WebGLElementQuery, scene: THREE.Scene) {
-    const dataElements: Object[] = query.dataElements;
+export function createCirclesWithBuffers(query: WebGLElementQuery, scene: THREE.Scene): WebGLElementQuery {
+    const dataElements: Record<string, any>[] = query.dataElements;
     query.IS_SHADER = true;
     const attributes: any = {
         customColor: { type: 'c', value: [] }
@@ -867,7 +868,7 @@ export function createCirclesWithBuffers(query: WebGLElementQuery, scene: THREE.
     return query;
 }
 
-export function createRectangles(dataElements: any[], scene: THREE.Scene) {
+export function createRectangles(dataElements: any[], scene: THREE.Scene): any[] {
     let material: any;
     let geometry: any;
     const visualElements: any[] = []
@@ -902,7 +903,7 @@ export function createRectangles(dataElements: any[], scene: THREE.Scene) {
     return visualElements;
 }
 
-export function createPaths(dataElements: any[], scene: THREE.Scene) {
+export function createPaths(dataElements: any[], scene: THREE.Scene): any[] {
     let material: any;
     let geometry: any;
     const visualElements: any[] = []
@@ -917,7 +918,7 @@ export function createPaths(dataElements: any[], scene: THREE.Scene) {
     return visualElements;
 }
 
-export function createPolygons(dataElements: any[], scene: THREE.Scene) {
+export function createPolygons(dataElements: any[], scene: THREE.Scene): any[] {
     let material: any;
     let geometry: any;
     const visualElements: any[] = []
@@ -939,7 +940,7 @@ export function createPolygons(dataElements: any[], scene: THREE.Scene) {
     return visualElements;
 }
 
-export function createLines(dataElements: any[], scene: THREE.Scene) {
+export function createLines(dataElements: any[], scene: THREE.Scene): any[] {
     let material: any;
     let geometry: any;
     const visualElements: any[] = []
@@ -957,7 +958,7 @@ export function createLines(dataElements: any[], scene: THREE.Scene) {
     return visualElements;
 }
 
-export function createWebGLText(dataElements: any[], scene: THREE.Scene) {
+export function createWebGLText(dataElements: any[], scene: THREE.Scene): any[] {
     const visualElements = []
     let mesh: any;
     for (let i = 0; i < dataElements.length; i++) {
@@ -969,7 +970,7 @@ export function createWebGLText(dataElements: any[], scene: THREE.Scene) {
     return visualElements;
 }
 
-export function createPath(mesh: THREE.Mesh, points: any[]) {
+export function createPath(mesh: THREE.Mesh, points: any[]): void {
     (mesh.geometry as THREE.Geometry).vertices = []
     for (let i = 0; i < points.length; i++) {
         (mesh.geometry as THREE.Geometry).vertices.push(new THREE.Vector3(points[i].x, points[i].y, 0));
@@ -977,7 +978,7 @@ export function createPath(mesh: THREE.Mesh, points: any[]) {
     (mesh.geometry as THREE.Geometry).verticesNeedUpdate = true;
 }
 
-export function createPolygon(mesh: THREE.Mesh, points: THREE.Vector2[]) {
+export function createPolygon(mesh: THREE.Mesh, points: THREE.Vector2[]): void {
     const vectors = []
     const shape = new THREE.Shape(points);
     mesh.geometry = new THREE.ShapeGeometry(shape);
@@ -1047,7 +1048,7 @@ export class WebGLInteractor {
         // })
     }
 
-    register(selection: WebGLElementQuery, method: string) {
+    register(selection: WebGLElementQuery, method: string): void {
         switch (method) {
             case 'mouseover': this.mouseOverSelections.push(selection); break;
             case 'mousemove': this.mouseMoveSelections.push(selection); break;
@@ -1058,7 +1059,7 @@ export class WebGLInteractor {
         }
     }
 
-    addEventListener(eventName: string, f: Function) {
+    addEventListener(eventName: string, f: (points: any[]) => void): void  {
         if (eventName == 'lassoStart')
             this.lassoStartHandler = f;
         if (eventName == 'lassoEnd')
@@ -1069,7 +1070,7 @@ export class WebGLInteractor {
 
 
     // Event handlers
-    mouseMoveHandler(e: any) {
+    mouseMoveHandler(e: any): void  {
         this.mouse = mouseToWorldCoordinates(e.clientX, e.clientY)
 
         if (this.isLassoEnabled && e.which == 2) {
@@ -1131,7 +1132,7 @@ export class WebGLInteractor {
 
 
     }
-    clickHandler(e: any) {
+    clickHandler(e: any): void  {
         this.mouse = mouseToWorldCoordinates(e.clientX, e.clientY)
 
         let intersectedVisualElements: any[] = []
@@ -1146,7 +1147,7 @@ export class WebGLInteractor {
         this.mouseDown = false;
     }
 
-    mouseDownHandler(e: any) {
+    mouseDownHandler(e: any): void  {
         this.mouse = mouseToWorldCoordinates(e.clientX, e.clientY)
         this.mouseStart = [e.clientX, e.clientY]
         this.cameraStart = [webgl.camera.position.x, webgl.camera.position.y];
@@ -1164,7 +1165,7 @@ export class WebGLInteractor {
             this.lassoStartHandler(this.lassoPoints);
         }
     }
-    mouseUpHandler(e: any) {
+    mouseUpHandler(e: any): void  {
         this.mouse = mouseToWorldCoordinates(e.clientX, e.clientY)
         let intersectedVisualElements: any[] = []
         for (let i = 0; i < this.mouseUpSelections.length; i++) {
@@ -1265,7 +1266,7 @@ export class WebGLInteractor {
             return dist2(p, { x: v.x + t * (w.x - v.x), y: v.y + t * (w.y - v.y) });
         }
 
-        function distToSegment(p: any, v: any, w: any) {
+        function distToSegment(p: any, v: any, w: any): number {
             return Math.sqrt(distToSegmentSquared(p, v, w));
         }
     }
@@ -1274,7 +1275,7 @@ export class WebGLInteractor {
 }
 
 // Calculate intersection
-export function mouseToWorldCoordinates(mouseX: any, mouseY: any) {
+export function mouseToWorldCoordinates(mouseX: any, mouseY: any): number[] {
     const rect = webgl.canvas.getBoundingClientRect();
     const x = webgl.camera.position.x + webgl.camera.left / webgl.camera.zoom + (mouseX - rect.left) / webgl.camera.zoom;
     const y = webgl.camera.position.y + webgl.camera.top / webgl.camera.zoom - (mouseY - rect.top) / webgl.camera.zoom;            // this.mouse[1] *= -1
@@ -1306,7 +1307,7 @@ export function curve(points: any[]): any[] {
 
 export class CheckBox {
     selected = false;
-    changeCallBack: any; // BEFORE Function;
+    changeCallBack: () => void = () => null; // BEFORE Function;
     circle: any;
     frame: any;
 
@@ -1332,7 +1333,7 @@ export class CheckBox {
         //     .style('opacity', 0);
     }
 
-    attr(attrName: string, value: any) {
+    attr(attrName: string, value: any): CheckBox | undefined {
         switch (attrName) {
             case 'x':
                 this.frame.attr('x', value);
@@ -1346,7 +1347,7 @@ export class CheckBox {
 
     }
 
-    on(eventType: string, fn: Function) {
+    on(eventType: string, fn: () => void): void  {
         switch (eventType) {
             case 'change': this.changeCallBack = fn;
         }
@@ -1390,7 +1391,7 @@ export class THREEx {
      * @return {THREEx.DynamicTexture}      the object itself, for chained texture
      */
 
-    clear(fillStyle?: any) {
+    clear(fillStyle?: any): THREEx {
         // depends on fillStyle
         if (fillStyle !== undefined) {
             this.context.fillStyle = fillStyle
@@ -1416,7 +1417,7 @@ export class THREEx {
      * @return {THREEx.DynamicTexture}	the object itself, for chained texture
      */
 
-    drawText(text: string, x: number | undefined, y: number, fillStyle?: string, contextFont?: string) {
+    drawText(text: string, x: number | undefined, y: number, fillStyle?: string, contextFont?: string): THREEx {
         // set font if needed
         if (contextFont !== undefined) this.context.font = contextFont;
         // if x isnt provided 
@@ -1433,7 +1434,7 @@ export class THREEx {
         return this;
     }
 
-    drawTextCooked(text: string, options: any) {
+    drawTextCooked(text: string, options: any): THREEx {
         const context = this.context
         const canvas = this.canvas
         options = options || {}
@@ -1501,9 +1502,9 @@ export class THREEx {
      * execute the drawImage on the internal context
      * the arguments are the same the official context2d.drawImage
      */
-    drawImage(/* same params as context2d.drawImage */) {
+    drawImage(...args: any/* same params as context2d.drawImage */): THREEx {
         // call the drawImage
-        this.context.drawImage.apply(this.context, arguments)
+        this.context.drawImage.apply(...args)
         // make the texture as .needsUpdate
         this.texture.needsUpdate = true;
         // for chained API 
@@ -1671,16 +1672,16 @@ THREEx.DynamicTexture.prototype.drawImage = function () {
 
 //module geometry {
 
-export function length(v1: any[]) {
+export function length(v1: any[]): number {
     return Math.sqrt(v1[0] * v1[0] + v1[1] * v1[1]);
 }
 
-export function normalize(v: number[]) {
+export function normalize(v: number[]): number[]{
     const l = length(v)
     return [v[0] / l, v[1] / l]
 }
 
-export function setLength(v: number[], l: number) {
+export function setLength(v: number[], l: number): number[] {
     const len = length(v)
     return [l * v[0] / len, l * v[1] / len]
 }

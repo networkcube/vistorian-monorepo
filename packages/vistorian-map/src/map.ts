@@ -409,7 +409,7 @@ function init() {
         {
             n = nodes[i];
             positions = n.locationSerie().getSerie();
-            serie = new dynamicgraph.ScalarTimeSeries<Object>();
+            serie = new dynamicgraph.ScalarTimeSeries<any>();
             nodePositionObjectsLookupTable.push(serie);
             for (const tId in positions) {
                 googleLatLng = new google.maps.LatLng(
@@ -1380,7 +1380,7 @@ function getNodePositionObjectsForLocation(n: dynamicgraph.Node, long: number, l
 }
 
 
-function getNodePositionObjectAtTime(n: dynamicgraph.Node, tId: number): Object {
+function getNodePositionObjectAtTime(n: dynamicgraph.Node, tId: number): Record<string, unknown> {
     const s: any = nodePositionObjectsLookupTable[n.id()]
     let npo: any;
 
