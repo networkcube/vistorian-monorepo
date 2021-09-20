@@ -132,7 +132,8 @@ export function loadCSV(files: File[], callBack: () => void, sessionid: string) 
     const tables: VTable[] = [];
     const fileContents: any[] = []
     const readers: FileReader[] = [];
-    for (let i = 0, f: File; f = files[i]; i++) {
+    for (let i = 0, f: File; i < files.length; i++) {
+        f = files[i];
         const reader: FileReader = new FileReader();
         (reader as any).filename = f.name.replace(/\s/g, '_').split('_')[0];
         readers[i] = reader;
@@ -331,7 +332,6 @@ export function createAndNormaliseLocationTable(currentNetwork: Network) {
     }
 
     if(currentNetwork.userLinkTable) {
-        // @ts-ignore
         const userLinkData: any = currentNetwork.userLinkTable.data;
         let userLinkSchema: VLinkSchema;
         if (currentNetwork.userLinkSchema) {
@@ -1077,6 +1077,9 @@ export function importIntoNetworkcube(currentNetwork: Network, sessionid: string
     // link table has been created above. 
     // If he has provided a link table, it is traversed below and 
     // the references to node names are put into place.
+
+    let time: any;
+
     if (currentNetwork.userLinkTable && currentNetwork.userLinkSchema) {
         // create normalized link table and replace source/target label by source/target id
         // normalizedLinkTable = [];
@@ -1105,8 +1108,6 @@ export function importIntoNetworkcube(currentNetwork: Network, sessionid: string
         }
 
         // check if location and time information exists for nodes
-        var time: any;
-
 
         if (datamanager.isValidIndex(currentNetwork.userLinkSchema.location_source)
             || datamanager.isValidIndex(currentNetwork.userLinkSchema.location_target)) {
@@ -1129,13 +1130,13 @@ export function importIntoNetworkcube(currentNetwork: Network, sessionid: string
 
             // insert locations and ev. times into node table, as found in linktable
             for (let i = 1; i < currentNetwork.userLinkTable.data.length; i++) {
-                var nodeRow: any, rowToDuplicate: any;
+                let nodeRow: any, rowToDuplicate: any;
                 // do for source location
                 let nodeName = currentNetwork.userLinkTable.data[i][currentNetwork.userLinkSchema.source]
                 if (datamanager.isValidIndex(currentNetwork.userLinkSchema.location_source)
                     && currentNetwork.userLinkTable.data[i][currentNetwork.userLinkSchema.location_source]
                     && currentNetwork.userLinkTable.data[i][currentNetwork.userLinkSchema.location_source] != '') {
-                    var len = normalizedNodeTable.length
+                    const len = normalizedNodeTable.length
                     for (let j = 0; j < len; j++) {
                         nodeRow = normalizedNodeTable[j];
                         if (nodeRow[normalizedNodeSchema.label] == nodeName) {
@@ -1168,7 +1169,7 @@ export function importIntoNetworkcube(currentNetwork: Network, sessionid: string
                             rowToDuplicate[normalizedNodeSchema.location] = currentNetwork.userLinkTable.data[i][currentNetwork.userLinkSchema.location_source]
                             rowToDuplicate[normalizedNodeSchema.time] = currentNetwork.userLinkTable.data[i][currentNetwork.userLinkSchema.time]
                         } else {
-                            var newRowNode = []
+                            const newRowNode = []
                             for (let c = 0; c < rowToDuplicate.length; c++) {
                                 newRowNode.push(rowToDuplicate[c])
                             }
@@ -1184,7 +1185,7 @@ export function importIntoNetworkcube(currentNetwork: Network, sessionid: string
                 if (datamanager.isValidIndex(currentNetwork.userLinkSchema.location_target)
                     && currentNetwork.userLinkTable.data[i][currentNetwork.userLinkSchema.location_target]
                     && currentNetwork.userLinkTable.data[i][currentNetwork.userLinkSchema.location_target] != '') {
-                    var len = normalizedNodeTable.length
+                    const len = normalizedNodeTable.length
                     for (let j = 0; j < len; j++) {
                         nodeRow = normalizedNodeTable[j];
                         if (nodeRow[normalizedNodeSchema.label] == nodeName) {
@@ -1218,7 +1219,7 @@ export function importIntoNetworkcube(currentNetwork: Network, sessionid: string
                             rowToDuplicate[normalizedNodeSchema.time] = currentNetwork.userLinkTable.data[i][currentNetwork.userLinkSchema.time]
                         } else {
                             // duplicate
-                            var newRowNode = []
+                            const newRowNode = []
                             for (let c = 0; c < rowToDuplicate.length; c++) {
                                 newRowNode.push(rowToDuplicate[c])
                             }
@@ -1255,7 +1256,9 @@ export function importIntoNetworkcube(currentNetwork: Network, sessionid: string
         }
     }
 
-    let {normalizedLocationSchema, normalizedLocationTable, locationName, locationLabels} = createAndNormaliseLocationTable(currentNetwork);
+    const t = createAndNormaliseLocationTable(currentNetwork);
+    let {locationName} = t;
+    const {normalizedLocationSchema, normalizedLocationTable, locationLabels} = t;
 
     if (normalizedNodeSchema.location > -1) {
         for (let i = 0; i < normalizedNodeTable.length; i++) {

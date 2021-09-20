@@ -1,4 +1,3 @@
-/// <reference path="../../node_modules/@types/jstorage/index.d.ts"/>
 import * as vistorian from './vistorian';
 import * as main from 'vistorian-core/src/main';
 

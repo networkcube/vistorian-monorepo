@@ -28,7 +28,7 @@ storage.saveSessionId(SESSION_NAME); // save id for later retrieve
 let tables = storage.getUserTables(SESSION_NAME);
 
 // user's currently selected network. All visualizations will visualize this network
-export var currentNetwork: vistorian.Network;
+export let currentNetwork: vistorian.Network;
 
 // visualizations among which the user can chose
 // format: [shown name, codename]
@@ -460,7 +460,7 @@ export function showTable(table: vistorian.VTable, elementName: string, isLocati
     tHead.append(tr);
 
     for (let c = 0; c < data[0].length; c++) {
-        var td = $('<th></th>').addClass('th').attr('contenteditable', 'false').attr('onclick','trace.event(\'dat_16\',\'data view\',\'column\',\'Sorted\')');
+        const td = $('<th></th>').addClass('th').attr('contenteditable', 'false').attr('onclick','trace.event(\'dat_16\',\'data view\',\'column\',\'Sorted\')');
         tr.append(td);
         td.html(data[0][c]);
     }
@@ -490,6 +490,7 @@ export function showTable(table: vistorian.VTable, elementName: string, isLocati
         tBody.append(tr);
         for (let c = 0; c < data[r].length; c++)
         {
+            let td;
             if(isLocationTable && data[0][c] == "User Name")
             {
                 td = $('<td></td>').attr('contenteditable', 'false');
@@ -653,8 +654,9 @@ export function schemaSelectionChanged(field: string, columnNumber: number, sche
             {
                 (currentNetwork as any)[schemaName][field2].splice((currentNetwork as any)[schemaName][field2].indexOf(columnNumber), 1);
             } else {
-                var arr: any = (currentNetwork as any)[schemaName][field]
-                    (currentNetwork as any)[schemaName][field2].slice(arr.indexOf(columnNumber), 0);
+                // JSB: This seems to be a no-op?
+                const arr: any = (currentNetwork as any)[schemaName][field];
+                (currentNetwork as any)[schemaName][field2].slice(arr.indexOf(columnNumber), 0);
             }
         } else {
             if ((currentNetwork as any)[schemaName][field2] == columnNumber) {
@@ -710,10 +712,6 @@ export function checkTimeFormatting(network: vistorian.Network) {
     return false;
 }
 
-export function removeRow(row: number) {
-
-}
-
 
 /// FILES
 
@@ -726,7 +724,8 @@ export function getFileInfos(e: any) {
     const files: File[] = e.target.files; // FileList object
 
     // files is a FileList of File objects. List some properties.
-    for (let i = 0, f; f = files[i]; i++) {
+    for (let i = 0, f; i < files.length; i++) {
+        f = files[i];
         if (f.name.split('.')[1] != 'csv') {
             showMessage("Uploaded file is not a .csv file. Please chose another file.", 4000)
             return;
@@ -956,7 +955,7 @@ export function extractLocations() {
     // var linkTable: any;
     // check link table
     if (currentNetwork.userLinkSchema && currentNetwork.userLinkTable){
-        for (var row = 1; row < currentNetwork.userLinkTable.data.length; row++) 
+        for (let row = 1; row < currentNetwork.userLinkTable.data.length; row++)
         {
             if(currentNetwork.userLinkSchema.location_target 
             && currentNetwork.userLinkSchema.location_target > -1){
@@ -971,7 +970,7 @@ export function extractLocations() {
 
     let nodeTable: any;
     if (currentNetwork.userNodeSchema && currentNetwork.userNodeTable){
-        for (var row = 1; row < currentNetwork.userNodeTable.data.length; row++) 
+        for (let row = 1; row < currentNetwork.userNodeTable.data.length; row++)
         {
             if(currentNetwork.userNodeSchema.location 
             && currentNetwork.userNodeSchema.location > -1){
@@ -1139,9 +1138,9 @@ export function setNetworkConfig(string: string) {
 
 // CHANGE FROM VISTORIAN.TS TO DATAVIEW.TS
 
-export var requestTimer: any;
-export var requestsRunning = 0;
-export var fullGeoNames: any = [];
+export let requestTimer: any;
+export let requestsRunning = 0;
+export let fullGeoNames: any = [];
 
 export function checkRequests(callBack: any, locationsFound: any) {
     if (requestsRunning == 0) {
