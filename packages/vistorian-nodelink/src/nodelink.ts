@@ -526,7 +526,8 @@ function getNodeColor(n: dynamicgraph.Node)
     if(!c){
         c = '#000';
     }
-    return c;
+    
+    return c[0] === '#' ? c : '#' + c;
 }
 
 function getNodeShape(n: dynamicgraph.Node) {
