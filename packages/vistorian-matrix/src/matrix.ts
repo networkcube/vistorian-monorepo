@@ -296,9 +296,8 @@ class MatrixLabels {
 
     //When a node row is hovered over in dataview.ts, a message is received here to highlight the corresponding link.
     const bcNode = new BroadcastChannel('row_hovered_over_node');
-    const self = this;
-    bcNode.onmessage = function (ev) {
-      self.updateHighlightedNodes([ev.data.id]);
+    bcNode.onmessage = (ev) => {
+      this.updateHighlightedNodes([ev.data.id]);
     };
   }
 
@@ -466,9 +465,8 @@ class MatrixVisualization {
 
     //When a node row is hovered over in dataview.ts, a message is received here to highlight the corresponding link.
     const bcNode = new BroadcastChannel('row_hovered_over_link');
-    const self = this;
-    bcNode.onmessage = function (ev) {
-      self.updateHighlightedLinks([ev.data.id]);
+    bcNode.onmessage = (ev) => {
+      this.updateHighlightedLinks([ev.data.id]);
     };
     this.init();
   }
