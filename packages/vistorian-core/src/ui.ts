@@ -22,6 +22,7 @@ export function makeSlider(
             .attr('x', 10)
             .attr('y', height - 15)
             .text(label)
+            .style('user-select', 'none')
             .attr('class', 'sliderLabel');
 
         slider.appendTo(svg);
@@ -105,7 +106,7 @@ export function makeCheckBox(d3parent: any, label: string, callback: (this: any,
     d3parent.append('input')
         .attr('type', 'checkbox')
         .on('change', callback);
-    d3parent.append('b').attr('class', 'sliderLabel').html(label);
+    d3parent.append('b').attr('class', 'sliderLabel').style('user-select', 'none').html(label);
 }
 
 export function makeButton(d3parent: any, label: string, callback: (this: any, event: any, d: any) => void): void {
