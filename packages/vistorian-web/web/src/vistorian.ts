@@ -926,7 +926,7 @@ export function importIntoNetworkcube(currentNetwork: Network, sessionid: string
     let nodeColCount = 2
     if (currentNetwork.userNodeSchema) {
         for (const p in currentNetwork.userNodeSchema) {
-            if (Object.prototype.hasOwnProperty.call(currentNetwork, p)
+            if (Object.prototype.hasOwnProperty.call(currentNetwork.userNodeSchema, p)
             && (currentNetwork.userNodeSchema as any)[p] > -1
             && p != 'id'
             && p != 'label'
@@ -948,7 +948,7 @@ export function importIntoNetworkcube(currentNetwork: Network, sessionid: string
     let linkColCount = 3
     if (currentNetwork.userLinkSchema) {
         for (const p in currentNetwork.userLinkSchema) {
-            if (Object.prototype.hasOwnProperty.call(currentNetwork, p)
+            if (Object.prototype.hasOwnProperty.call(currentNetwork.userLinkSchema, p)
                 && (currentNetwork.userLinkSchema as any)[p] > -1
                 && p != 'id'
                 && p != 'source'
@@ -1092,7 +1092,7 @@ export function importIntoNetworkcube(currentNetwork: Network, sessionid: string
                 newRow.push('');
             }
             for (const p in currentNetwork.userLinkSchema) {
-                if (Object.prototype.hasOwnProperty.call(currentNetwork, p)
+                if (Object.prototype.hasOwnProperty.call(currentNetwork.userLinkSchema, p)
                     && (currentNetwork.userLinkSchema as any)[p] > -1) {
                     newRow[(normalizedLinkSchema as any)[p]] = currentNetwork.userLinkTable.data[i][(currentNetwork.userLinkSchema as any)[p]];
                 }

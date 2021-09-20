@@ -7,6 +7,10 @@ import * as main from 'vistorian-core/src/main';
 
 const DATA_TABLE_MAX_LENGTH = 200;
 
+let currentTable: vistorian.VTable;
+let currentTableId: string;
+let currentCell: any;
+
 const files = document.getElementById('files');
 
 if (files)
@@ -404,8 +408,6 @@ export function nodeRowMouseOver(tableRow: any){
     bc.postMessage({"id": rowID});
 }
 
-let currentTable: vistorian.VTable;
-
 export function showSingleTable(tableName: string) {
     currentTable = storage.getUserTable(tableName, SESSION_NAME);
     showTable(currentTable, '#individualTable', false);
@@ -416,8 +418,6 @@ export function showSingleTable(tableName: string) {
 // displays a table into the DOM
 // - if schema is passed, shows the schema on the dropdown
 // - if user selects a time field, displays field to specify time format
-let currentTableId: string;
-let currentCell: any;
 export function showTable(table: vistorian.VTable, elementName: string, isLocationTable: boolean, schema?: vistorian.VTableSchema) {
     console.log('SHOW TABLE',elementName, schema )
 
