@@ -3,13 +3,13 @@ import * as vistorian from './vistorian';
 import * as main from 'vistorian-core/src/main';
 
 
-var SESSION_TABLENAMES: string = "vistorian.tablenames";
-var SESSION_TABLE: string = "vistorian.table";
-var SESSION_NETWORK: string = "vistorian.network";
-var SESSION_NETWORKIDS: string = "vistorian.networkIds";
-var SESSION_SESSIONID: string = "vistorian.lastSessionId";
+const SESSION_TABLENAMES = "vistorian.tablenames";
+const SESSION_TABLE = "vistorian.table";
+const SESSION_NETWORK = "vistorian.network";
+const SESSION_NETWORKIDS = "vistorian.networkIds";
+const SESSION_SESSIONID = "vistorian.lastSessionId";
 
-var SEP: string = "#";
+const SEP = "#";
 
 
 // SESSION
@@ -20,7 +20,7 @@ export function saveSessionId(sessionid: string) {
 }
 
 export function getLastSessionId(): string {
-    var session: string = $.jStorage.get<string>("vistorian.lastSessionId");
+    const session: string = $.jStorage.get<string>("vistorian.lastSessionId");
     return session;
 }
 
@@ -34,8 +34,8 @@ export function getLastSessionId(): string {
 export function saveUserTable(table: any, sessionid: string) {
 
     // add name to table names if not yet there.
-    var tableNames: string[] = getTableNames(sessionid);
-    var found: boolean = false;
+    let tableNames: string[] = getTableNames(sessionid);
+    let found = false;
     if (!tableNames) {
         tableNames = [];
     } else {
@@ -56,9 +56,9 @@ export function saveUserTable(table: any, sessionid: string) {
 // returns all users' tables
 export function getUserTables(sessionid: string): vistorian.VTable[] {
 
-    var tablenames: string[] = getTableNames(sessionid);
-    var tables: vistorian.VTable[] = [];
-    for (var i = 0; i < tablenames.length; i++) {
+    const tablenames: string[] = getTableNames(sessionid);
+    const tables: vistorian.VTable[] = [];
+    for (let i = 0; i < tablenames.length; i++) {
         tables.push($.jStorage.get<vistorian.VTable>(sessionid + "#" + "vistorian.table" + "#" + tablenames[i]));
     }
 
@@ -70,7 +70,7 @@ export function getUserTable(tablename: string, sessionid: string): vistorian.VT
 }
 
 export function getTableNames(sessionid: string): string[] {
-    var names: string[] = $.jStorage.get<string[]>(sessionid + "#" + "vistorian.tablenames");
+    let names: string[] = $.jStorage.get<string[]>(sessionid + "#" + "vistorian.tablenames");
     if (names == undefined)
         names = []
     return names;
@@ -81,8 +81,8 @@ export function saveTableNames(tableNames: any, sessionid: string) {
 export function deleteTable(table: vistorian.VTable, sessionid: string) {
     $.jStorage.deleteKey(sessionid + "#" + "vistorian.table" + "#" + table.name);
 
-    var tableNames: string[] = getTableNames(sessionid);
-    var found: boolean = false;
+    let tableNames: string[] = getTableNames(sessionid);
+    let found = false;
     if (!tableNames) {
         tableNames = [];
     } else {
@@ -104,7 +104,7 @@ export function deleteTable(table: vistorian.VTable, sessionid: string) {
 ////////////////
 
 export function getNetworkIds(sessionid: string): number[] {
-    var ids: number[] = $.jStorage.get(sessionid + "#" + "vistorian.networkIds");
+    let ids: number[] = $.jStorage.get(sessionid + "#" + "vistorian.networkIds");
 
     if (ids == undefined)
         ids = []
@@ -114,8 +114,8 @@ export function getNetworkIds(sessionid: string): number[] {
 export function saveNetwork(network: vistorian.Network, sessionid: string) {
 
     // add name to table names if not yet there.
-    var networkIds: number[] = getNetworkIds(sessionid);
-    var found: boolean = false;
+    let networkIds: number[] = getNetworkIds(sessionid);
+    let found = false;
     if (!networkIds) {
         networkIds = [];
     } else {
@@ -152,8 +152,8 @@ export function deleteNetworkById(id: number, sessionid: string) {
     $.jStorage.set(sessionid + "#" + "vistorian.network" + "#" + id, {});
     $.jStorage.deleteKey(sessionid + "#" + "vistorian.network" + "#" + id);
 
-    var networkIds: number[] = getNetworkIds(sessionid);
-    var found: boolean = false;
+    let networkIds: number[] = getNetworkIds(sessionid);
+    let found = false;
     if (!networkIds) {
         networkIds = [];
     } else {

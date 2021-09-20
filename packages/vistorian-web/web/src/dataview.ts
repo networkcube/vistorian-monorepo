@@ -5,34 +5,34 @@ import * as utils from './utils';
 import * as datamanager from 'vistorian-core/src/datamanager';
 import * as main from 'vistorian-core/src/main';
 
-var DATA_TABLE_MAX_LENGTH = 200;
+const DATA_TABLE_MAX_LENGTH = 200;
 
-var files = document.getElementById('files');
+const files = document.getElementById('files');
 
 if (files)
     files.addEventListener('change', getFileInfos, false);
 
-var nodeTableUpload = document.getElementById('nodeTableUpload');
+const nodeTableUpload = document.getElementById('nodeTableUpload');
 
 if (nodeTableUpload)
     nodeTableUpload.addEventListener('change', uploadNodeTable, false);
 
-var linkTableUpload = document.getElementById('linkTableUpload');
+const linkTableUpload = document.getElementById('linkTableUpload');
 
 if (linkTableUpload)
     linkTableUpload.addEventListener('change', uploadLinkTable, false);
 
-var SESSION_NAME = utils.getUrlVars()['session'];
+const SESSION_NAME = utils.getUrlVars()['session'];
 storage.saveSessionId(SESSION_NAME); // save id for later retrieve
 
-var tables = storage.getUserTables(SESSION_NAME);
+let tables = storage.getUserTables(SESSION_NAME);
 
 // user's currently selected network. All visualizations will visualize this network
 export var currentNetwork: vistorian.Network;
 
 // visualizations among which the user can chose
 // format: [shown name, codename]
-var visualizations = [
+const visualizations = [
     ['Node Link', 'nodelink'],
     ['Matrix', 'matrix'],
     ['Time Arcs', 'dynamicego'],
@@ -40,7 +40,7 @@ var visualizations = [
 ]
 
 
-var messages: string[] = [];
+const messages: string[] = [];
 
 init()
 
@@ -52,7 +52,7 @@ export function init() {
 
     loadTableList()
 
-    var networkids = storage.getNetworkIds(SESSION_NAME);
+    const networkids = storage.getNetworkIds(SESSION_NAME);
     if (networkids.length > 0)
         showNetworkTables(networkids[0])
 
@@ -88,9 +88,9 @@ export function loadVisualizationList()
 // loads the list of tables in this session and displays them on the left
 export function loadTableList() {
     $('#tableList').empty()
-    var tableNames = storage.getTableNames(SESSION_NAME)
+    const tableNames = storage.getTableNames(SESSION_NAME)
     tableNames.forEach(t => {
-        var shownName = t;
+        let shownName = t;
         if (t.length > 30)
             shownName = t.substring(0, 30) + '..';
         $('#tableList').append('<li>\
@@ -104,11 +104,11 @@ export function loadTableList() {
 export function loadNetworkList() {
 
     $('#networkList').empty()
-    var networkNames = storage.getNetworkIds(SESSION_NAME)
-    var network: vistorian.Network;
+    const networkNames = storage.getNetworkIds(SESSION_NAME)
+    let network: vistorian.Network;
     networkNames.forEach((t: any) => {
         network = storage.getNetwork(t, SESSION_NAME);
-        var networkDisplayName = network.name;
+        let networkDisplayName = network.name;
         if (networkDisplayName.length > 15){
             networkDisplayName = networkDisplayName.slice(0,15) + '...';
         }
@@ -135,8 +135,8 @@ export function loadVisualization(visType: any)
 
 export function createNetwork() {
 
-    var networkIds = storage.getNetworkIds(SESSION_NAME);
-    var id = new Date().getTime();
+    const networkIds = storage.getNetworkIds(SESSION_NAME);
+    const id = new Date().getTime();
 
     currentNetwork = new vistorian.Network(id);
     currentNetwork.name = 'Network-' + currentNetwork.id;
@@ -149,9 +149,9 @@ export function createNetwork() {
 
 
 export function setNodeTable(list: any) {
-    var tableName = list.value;
+    const tableName = list.value;
     if (tableName != '---') {
-        var table: vistorian.VTable = storage.getUserTable(tableName, SESSION_NAME);
+        const table: vistorian.VTable = storage.getUserTable(tableName, SESSION_NAME);
         currentNetwork.userNodeTable = table;
         showTable(table, '#nodeTableDiv', false, currentNetwork.userNodeSchema)
     } else {
@@ -162,9 +162,9 @@ export function setNodeTable(list: any) {
 }
 
 export function setLinkTable(list: any) {
-    var tableName = list.value;
+    const tableName = list.value;
     if (tableName != '---') {
-        var table: vistorian.VTable = storage.getUserTable(tableName, SESSION_NAME);
+        const table: vistorian.VTable = storage.getUserTable(tableName, SESSION_NAME);
         currentNetwork.userLinkTable = table;
         showTable(table, '#linkTableDiv', false, currentNetwork.userLinkSchema);
     } else {
@@ -176,9 +176,9 @@ export function setLinkTable(list: any) {
 }
 
 export function setLocationTable(list: any) {
-    var tableName = list.value;
+    const tableName = list.value;
     if (tableName != '---') {
-        var table: vistorian.VTable = storage.getUserTable(tableName, SESSION_NAME);
+        const table: vistorian.VTable = storage.getUserTable(tableName, SESSION_NAME);
         currentNetwork.userLocationTable = table;
         currentNetwork.userLocationSchema = new datamanager.LocationSchema(0, 1, 2, 3, 4);
         showTable(table, '#locationTableDiv', true, currentNetwork.userLocationSchema);
@@ -226,7 +226,7 @@ export function saveCurrentNetwork(failSilently: boolean, saveButton?:boolean)
         return;
     }
     
-    var dataset: datamanager.DataSet | undefined = vistorian.importIntoNetworkcube(currentNetwork, SESSION_NAME, failSilently)
+    const dataset: datamanager.DataSet | undefined = vistorian.importIntoNetworkcube(currentNetwork, SESSION_NAME, failSilently)
     
     updateNetworkStatusIndication();
     
@@ -292,7 +292,7 @@ export function showNetworkTables(networkId: number) {
 
     // get all tables for this user so that he can select those 
     // he wants to create his network from.
-    var tables = storage.getUserTables(SESSION_NAME)
+    const tables = storage.getUserTables(SESSION_NAME)
 
     $('#nodetableSelect').append('<option class="tableSelection">---</option>')
     $('#linktableSelect').append('<option class="tableSelection">---</option>')
@@ -393,18 +393,18 @@ export function unshowTable(elementName: string) {
 }
 
 export function linkRowMouseOver(tableRow: any){
-    var rowID = tableRow.id - 1; //indexed from 1 in showTable function
-    var bc = new BroadcastChannel('row_hovered_over_link');
+    const rowID = tableRow.id - 1; //indexed from 1 in showTable function
+    const bc = new BroadcastChannel('row_hovered_over_link');
     bc.postMessage({"id": rowID});
 }
 
 export function nodeRowMouseOver(tableRow: any){
-    var rowID = tableRow.id - 1; //indexed from 1 in showTable function
-    var bc = new BroadcastChannel('row_hovered_over_node');
+    const rowID = tableRow.id - 1; //indexed from 1 in showTable function
+    const bc = new BroadcastChannel('row_hovered_over_node');
     bc.postMessage({"id": rowID});
 }
 
-var currentTable: vistorian.VTable;
+let currentTable: vistorian.VTable;
 
 export function showSingleTable(tableName: string) {
     currentTable = storage.getUserTable(tableName, SESSION_NAME);
@@ -416,11 +416,9 @@ export function showSingleTable(tableName: string) {
 // displays a table into the DOM
 // - if schema is passed, shows the schema on the dropdown
 // - if user selects a time field, displays field to specify time format
-var currentTableId: string;
-var currentCell: any;
+let currentTableId: string;
+let currentCell: any;
 export function showTable(table: vistorian.VTable, elementName: string, isLocationTable: boolean, schema?: vistorian.VTableSchema) {
-    var tHead, tBody;
-
     console.log('SHOW TABLE',elementName, schema )
 
     currentTable = table;
@@ -428,50 +426,50 @@ export function showTable(table: vistorian.VTable, elementName: string, isLocati
     $(elementName).empty();
 
     // table name
-    var tableId = 'datatable_' + table.name;
+    const tableId = 'datatable_' + table.name;
     currentTableId = tableId
     $('#' + tableId).remove();
 
-    var tableDiv = $('<div id="div_' + tableId + '"></div>');
+    const tableDiv = $('<div id="div_' + tableId + '"></div>');
     $(elementName).append(tableDiv);
 
-    var tableMenu = $(elementName).prev()
+    const tableMenu = $(elementName).prev()
     tableMenu.find('.exportButton').remove();
 
-    var data = table.data
+    const data = table.data
     if (data.length > DATA_TABLE_MAX_LENGTH) {
-        var info = $('<p>Table shows first 200 rows out of ' + data.length + ' rows in total.</p>');
+        const info = $('<p>Table shows first 200 rows out of ' + data.length + ' rows in total.</p>');
         tableDiv.append(info);
     }
 
     // CREATE TABLE MENU    
     // export button
-    var csvExportButton = $('<button class="menuButton exportButton" onclick="window.exports.networkcube.dataview.exportCurrentTableCSV(\'' + table.name + '\');trace.event(\'dat_8\', \'data view\', \'export as CSV file\',\'' + elementName +'\' )">Export Table as CSV</button>')
+    const csvExportButton = $('<button class="menuButton exportButton" onclick="window.exports.networkcube.dataview.exportCurrentTableCSV(\'' + table.name + '\');trace.event(\'dat_8\', \'data view\', \'export as CSV file\',\'' + elementName +'\' )">Export Table as CSV</button>')
     tableMenu.append(csvExportButton);
 
     // create table
 
-    var tab = $('<table id="' + tableId + '">');
+    const tab = $('<table id="' + tableId + '">');
     tableDiv.append(tab);
     tab.addClass('datatable stripe hover cell-border and order-column compact');
 
     // create head
-    tHead = $('<thead>');
+    const tHead = $('<thead>');
     tab.append(tHead);
-    var tr = $('<tr></tr>').addClass('tableheader');
+    let tr = $('<tr></tr>').addClass('tableheader');
     tHead.append(tr);
 
-    for (var c = 0; c < data[0].length; c++) {
+    for (let c = 0; c < data[0].length; c++) {
         var td = $('<th></th>').addClass('th').attr('contenteditable', 'false').attr('onclick','trace.event(\'dat_16\',\'data view\',\'column\',\'Sorted\')');
         tr.append(td);
         td.html(data[0][c]);
     }
 
-    tBody = $('<tbody></tbody>');
+    const tBody = $('<tbody></tbody>');
     tab.append(tBody);
 
     // Load data into html table
-    for (var r = 1; r < Math.min(data.length, DATA_TABLE_MAX_LENGTH); r++) {
+    for (let r = 1; r < Math.min(data.length, DATA_TABLE_MAX_LENGTH); r++) {
 
         if(elementName == "#nodeTableDiv"){
             tr = $('<tr></tr>').addClass('tablerow').attr({
@@ -490,7 +488,7 @@ export function showTable(table: vistorian.VTable, elementName: string, isLocati
         }
 
         tBody.append(tr);
-        for (var c = 0; c < data[r].length; c++) 
+        for (let c = 0; c < data[r].length; c++)
         {
             if(isLocationTable && data[0][c] == "User Name")
             {
@@ -525,7 +523,7 @@ export function showTable(table: vistorian.VTable, elementName: string, isLocati
     }
 
     // turn table into an interactive jQuery table
-    var dtable: any = ($('#' + tableId) as any).DataTable({
+    const dtable: any = ($('#' + tableId) as any).DataTable({
         "autoWidth": true
     });
     dtable.columns.adjust().draw();
@@ -534,12 +532,12 @@ export function showTable(table: vistorian.VTable, elementName: string, isLocati
     if (schema) {
 
         // add schema header
-        var schemaRow = $('<tr class="schemaRow"></tr>');
+        const schemaRow = $('<tr class="schemaRow"></tr>');
         $('#' + tableId + ' > thead').append(schemaRow);
 
-        var select, cell, option, timeFormatInput;
+        let select, cell, option, timeFormatInput;
 
-        for (var i = 0; i < table.data[0].length; i++) 
+        for (let i = 0; i < table.data[0].length; i++) 
         {
 
             cell = $('<th class="schemaCell" id="schemaCell_' + schema.name + '_' + i + '"></th>')
@@ -548,13 +546,13 @@ export function showTable(table: vistorian.VTable, elementName: string, isLocati
             cell.append(select);
             select.append('<option>(Not visualized)</option>')    
                             
-            for (var field in schema) {
+            for (const field in schema) {
                 if (field == 'name'
                 || field == 'constructor'
                 || field == 'timeFormat')
                 continue;
                 
-                var fieldName = '';
+                let fieldName = '';
                 // Translate schema names in human readable text
                 switch (field) {
                     case 'source': fieldName = 'Source Node'; break;
@@ -597,8 +595,8 @@ export function showTable(table: vistorian.VTable, elementName: string, isLocati
                     cell.addClass('schemaCellSet');
                 
                     if (field == 'time') {
-                        var val = '';
-                        if (currentNetwork.hasOwnProperty('timeFormat') 
+                        let val = '';
+                        if (Object.prototype.hasOwnProperty.call(currentNetwork, 'timeFormat')
                             && currentNetwork.timeFormat != undefined
                             && currentNetwork.timeFormat != 'undefined') 
                             {
@@ -614,7 +612,7 @@ export function showTable(table: vistorian.VTable, elementName: string, isLocati
 
                 // check relations
                 if (field == 'relation') {
-                    for (var k = 0; k < (schema as any).relation.length; k++) {
+                    for (let k = 0; k < (schema as any).relation.length; k++) {
                         if ((schema as any).relation[k] == i) {
                             $(option).attr('selected', 'selected');
                             cell.addClass('schemaCellSet')
@@ -647,7 +645,7 @@ export function schemaSelectionChanged(field: string, columnNumber: number, sche
     // }
 
     // reset schema:
-    for (var field2 in (currentNetwork as any)[schemaName]) 
+    for (const field2 in (currentNetwork as any)[schemaName]) 
     {
         if (field2 == 'relation' && (currentNetwork as any)[schemaName][field2].indexOf(columnNumber) > -1) 
         {
@@ -689,7 +687,7 @@ export function schemaSelectionChanged(field: string, columnNumber: number, sche
 // results currently not used, but useful in future
 export function checkTimeFormatting(network: vistorian.Network) {
 
-    var corruptedNodeTimes: number[] = [];
+    let corruptedNodeTimes: number[] = [];
     if (network.userNodeTable 
         && network.userNodeSchema 
         && (network.userNodeSchema as any)['timeFormat']) {
@@ -699,7 +697,7 @@ export function checkTimeFormatting(network: vistorian.Network) {
             (network.userNodeSchema as any)['timeFormat']);
     }
 
-    var corruptedLinkTimes: number[] = [];
+    let corruptedLinkTimes: number[] = [];
     if (network.userLinkTable 
         && network.userLinkSchema 
         && (network.userLinkSchema as any)['timeFormat']) {
@@ -720,16 +718,15 @@ export function removeRow(row: number) {
 /// FILES
 
 
-var filesToUpload: any[] = [];
+let filesToUpload: any[] = [];
 
 export function getFileInfos(e: any) {
     filesToUpload = [];
 
-    var files: File[] = e.target.files; // FileList object
+    const files: File[] = e.target.files; // FileList object
 
     // files is a FileList of File objects. List some properties.
-    var output = [];
-    for (var i = 0, f; f = files[i]; i++) {
+    for (let i = 0, f; f = files[i]; i++) {
         if (f.name.split('.')[1] != 'csv') {
             showMessage("Uploaded file is not a .csv file. Please chose another file.", 4000)
             return;
@@ -746,7 +743,7 @@ function checkFileType(filesToUpload: any){
     if(!filesToUpload.length){
         return false;
     }
-    var filename = filesToUpload[0].name;
+    const filename = filesToUpload[0].name;
     if(filename.substr(filename.length -4) != ".csv"){
         $('#networkStatus')
             .text('Incorrect format, file must be CSV.')
@@ -762,8 +759,8 @@ export function uploadNodeTable(e: any)
     filesToUpload = [e.target.files[0]];
     if(checkFileType(filesToUpload)) {
         uploadFiles(() => {
-            var tables = storage.getUserTables(SESSION_NAME)
-            var lastTable = tables[tables.length - 1];
+            const tables = storage.getUserTables(SESSION_NAME)
+            const lastTable = tables[tables.length - 1];
 
             $('#nodetableSelect').append('<option value="' + lastTable.name + '">' + lastTable.name + '</option>')
             $('#nodetableSelect').val(lastTable.name);
@@ -786,8 +783,8 @@ export function uploadLinkTable(e: any) {
     filesToUpload = [e.target.files[0]];
     if(checkFileType(filesToUpload)) {
         uploadFiles(() => {
-            var tables = storage.getUserTables(SESSION_NAME)
-            var lastTable = tables[tables.length - 1];
+            const tables = storage.getUserTables(SESSION_NAME)
+            const lastTable = tables[tables.length - 1];
 
             $('#linktableSelect').append('<option value="' + lastTable.name + '">' + lastTable.name + '</option>')
             $('#linktableSelect').val(lastTable.name);
@@ -799,7 +796,7 @@ export function uploadLinkTable(e: any) {
 
             saveCurrentNetwork(false);
 
-            var element = document.getElementById('leaveCode');
+            const element = document.getElementById('leaveCode');
 
             loadTableList();
         });
@@ -814,7 +811,7 @@ export function uploadFiles(handler: () => void) {
 
 export function exportCurrentTableCSV(tableName: string) {
     saveCurrentTableCellEdits();
-    var table: vistorian.VTable | undefined = undefined;
+    let table: vistorian.VTable | undefined = undefined;
 
     if (tableName) {
         if (currentNetwork.userLinkTable && currentNetwork.userLinkTable.name == tableName)
@@ -832,13 +829,13 @@ export function exportCurrentTableCSV(tableName: string) {
 }
 
 export function replaceCellContents(tableId: any) {
-    var replace_pattern = $('#div_' + tableId + ' #replace_pattern').val();
-    var replace_value = $('#div_' + tableId + ' #replace_value').val();
-    var arr: any;
+    const replace_pattern = $('#div_' + tableId + ' #replace_pattern').val();
+    const replace_value = $('#div_' + tableId + ' #replace_value').val();
+    let arr: any;
 
     if (tableId.startsWith('datatable_'))
         tableId = tableId.slice(10, tableId.length)
-    var table: vistorian.VTable | undefined = storage.getUserTable(tableId, SESSION_NAME);
+    let table: vistorian.VTable | undefined = storage.getUserTable(tableId, SESSION_NAME);
     if (table == undefined) {
         table = currentNetwork.userLocationTable;
     }
@@ -848,9 +845,9 @@ export function replaceCellContents(tableId: any) {
         arr = table;
     }
 
-    var replaceCount = 0
-    for (var i = 0; i < arr.length; i++) {
-        for (var j = 0; j < arr[i].length; j++) {
+    let replaceCount = 0
+    for (let i = 0; i < arr.length; i++) {
+        for (let j = 0; j < arr[i].length; j++) {
             if (isNaN(arr[i][j])) {
                 // for text
                 if (arr[i][j].indexOf(replace_pattern) > -1) {
@@ -875,7 +872,7 @@ export function replaceCellContents(tableId: any) {
     showMessage('Replaced ' + replaceCount + ' occurrences of ' + replace_pattern + ' with ' + replace_value + '.', 2000);
 }
 
-var directedCheckboxToggle = true;
+let directedCheckboxToggle = true;
 export function directedCheckboxClick()
 {
     directedCheckboxToggle = !directedCheckboxToggle;
@@ -884,44 +881,44 @@ export function directedCheckboxClick()
 
     currentNetwork.directed = directedCheckboxToggle;
 
-    var directionFields = document.getElementsByClassName('directionField') as HTMLCollectionOf<HTMLElement>;
-    var sourceFields = document.getElementsByClassName('sourceField');
-    var targetFields = document.getElementsByClassName('targetField');
-    var locSourceFields = document.getElementsByClassName('location_source');
-    var locTargetFields = document.getElementsByClassName('location_target');
+    const directionFields = document.getElementsByClassName('directionField') as HTMLCollectionOf<HTMLElement>;
+    const sourceFields = document.getElementsByClassName('sourceField');
+    const targetFields = document.getElementsByClassName('targetField');
+    const locSourceFields = document.getElementsByClassName('location_source');
+    const locTargetFields = document.getElementsByClassName('location_target');
 
     if(directedCheckboxToggle)
     {
-        for (var i = 0; i < directionFields.length; i ++) {
+        for (let i = 0; i < directionFields.length; i ++) {
             directionFields[i].style.display = 'none';
         }
-        for (var i = 0; i < sourceFields.length; i ++) {
+        for (let i = 0; i < sourceFields.length; i ++) {
             sourceFields[i].innerHTML = 'Source Node';
         }
-        for (var i = 0; i < targetFields.length; i ++) {
+        for (let i = 0; i < targetFields.length; i ++) {
             targetFields[i].innerHTML = 'Target Node';
         }
-        for (var i = 0; i < locSourceFields.length; i ++) {
+        for (let i = 0; i < locSourceFields.length; i ++) {
             locSourceFields[i].innerHTML = 'Location Source Node';
         }
-        for (var i = 0; i < locTargetFields.length; i ++) {
+        for (let i = 0; i < locTargetFields.length; i ++) {
             locTargetFields[i].innerHTML = 'Location Source Node';
         }
     }else
     {
-        for (var i = 0; i < directionFields.length; i ++) {
+        for (let i = 0; i < directionFields.length; i ++) {
             directionFields[i].style.display = 'block';
         }
-        for (var i = 0; i < sourceFields.length; i ++) {
+        for (let i = 0; i < sourceFields.length; i ++) {
             sourceFields[i].innerHTML = 'Node 1';
         }
-        for (var i = 0; i < targetFields.length; i ++) {
+        for (let i = 0; i < targetFields.length; i ++) {
             targetFields[i].innerHTML = 'Node 2';
         }
-        for (var i = 0; i < locSourceFields.length; i ++) {
+        for (let i = 0; i < locSourceFields.length; i ++) {
             locSourceFields[i].innerHTML = 'Location Node 1';
         }
-        for (var i = 0; i < locTargetFields.length; i ++) {
+        for (let i = 0; i < locTargetFields.length; i ++) {
             locTargetFields[i].innerHTML = 'Location Node 2';
         }
     }
@@ -938,7 +935,7 @@ export function extractLocations() {
     // if no location table exist, create one
     if (currentNetwork.userLocationTable == undefined) 
     {
-        var tableName = currentNetwork.name.replace(/ /g, "_");
+        const tableName = currentNetwork.name.replace(/ /g, "_");
         currentNetwork.userLocationTable = new vistorian.VTable(tableName + '-locations', []);
         currentNetwork.userLocationSchema = new datamanager.LocationSchema(0, 1, 2, 3, 4);
         currentNetwork.userLocationTable.data.push(['Id', 'User Label', 'Geo Name', 'Longitude', 'Latitude']);
@@ -950,11 +947,11 @@ export function extractLocations() {
 
     // if location table is empty, add header as first column
     if (currentNetwork.userLocationTable.data.length == 0) {
-        var schemaStrings: string[] = [];
+        const schemaStrings: string[] = [];
         currentNetwork.userLocationTable.data.push(['Id', 'User Label', 'Geoname', 'Longitude', 'Latitude']);
     }
 
-    var locationsFound: number = 0;
+    const locationsFound = 0;
 
     // var linkTable: any;
     // check link table
@@ -972,7 +969,7 @@ export function extractLocations() {
         }
     }
 
-    var nodeTable: any;
+    let nodeTable: any;
     if (currentNetwork.userNodeSchema && currentNetwork.userNodeTable){
         for (var row = 1; row < currentNetwork.userNodeTable.data.length; row++) 
         {
@@ -1005,7 +1002,7 @@ export function createLocationEntry(name: string, locationTableData: any[]) {
         return;
 
     // check if location entry exists already.     
-    for (var i = 0; i < locationTableData.length; i++) 
+    for (let i = 0; i < locationTableData.length; i++) 
     {
         if (locationTableData[i][1] == name)
             return;
@@ -1034,7 +1031,7 @@ export function updateLocationCoordinatesWrapper()
     }
 }
 
-var msgBox;
+let msgBox;
 export function showMessage(message: string, timeout: any) {
 
     // $( "#dialogBox" ).dialog();
@@ -1065,13 +1062,12 @@ export function saveCurrentTableCellEdits()
     if (currentCell == undefined)
         return;
 
-    var selectedCell_row = currentCell.data('row'),
+    const selectedCell_row = currentCell.data('row'),
         selectedCell_col = currentCell.data('column'),
-        data = currentCell.data('table').data,
-        value;
+        data = currentCell.data('table').data;
 
     if (selectedCell_row != undefined && selectedCell_col != undefined) {
-        value = currentCell.text().trim();
+        const value = currentCell.text().trim();
         data[selectedCell_row][selectedCell_col] = value;
     }
     currentCell = undefined;
@@ -1090,7 +1086,7 @@ export function removeNetwork(networkId: string) {
 
 export function removeTable(tableId: string) 
 {
-    var table = storage.getUserTable(tableId, SESSION_NAME);
+    const table = storage.getUserTable(tableId, SESSION_NAME);
     unshowTable('#individualTables')
 
     if (currentNetwork.userNodeTable != undefined
@@ -1144,7 +1140,7 @@ export function setNetworkConfig(string: string) {
 // CHANGE FROM VISTORIAN.TS TO DATAVIEW.TS
 
 export var requestTimer: any;
-export var requestsRunning: number = 0;
+export var requestsRunning = 0;
 export var fullGeoNames: any = [];
 
 export function checkRequests(callBack: any, locationsFound: any) {
@@ -1164,7 +1160,7 @@ export function updateLocationCoordinates(
     // var data: any = userLocationTable.data;
     requestsRunning = 0;
     fullGeoNames = [];
-    for (var i = 1; i < userLocationTable.data.length; i++) 
+    for (let i = 1; i < userLocationTable.data.length; i++) 
     {
         getOpenStreetMapCoordinatesForLocation(i, userLocationTable.data[i][locationSchema.geoname], userLocationTable, locationSchema);
     }
@@ -1182,16 +1178,16 @@ export function getOpenStreetMapCoordinatesForLocation(index: number, geoname: s
     if(geoname) {
         geoname = geoname.trim();
         fullGeoNames.push(geoname);
-        var xhr: any = $.ajax({
+        const xhr: any = $.ajax({
             url: 'https://api.maptiler.com/geocoding/'+geoname.split(',')[0].trim()+'.json?key=4JfMdMSpqOnXq9pxP8x4',
             // headers: {  'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Credentials':'true' , 'Access-Control-Allow-Methods': 'POST, GET, OPTIONS','Access-Control-Allow-Headers' :'Authorization,DNT,X-Mx-ReqToken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type'},
             data: {output: "json", limit: "1", },
             dataType: 'json'
         })
             .done(function (data, text, XMLHttpRequest) {
-                var entry;
-                var rowIndex = XMLHttpRequest.uniqueId + 1;
-                var userLocationLabel = locationTable.data[rowIndex][locationSchema.label];
+                let entry;
+                const rowIndex = XMLHttpRequest.uniqueId + 1;
+                const userLocationLabel = locationTable.data[rowIndex][locationSchema.label];
                 if (data.features.length > 0) {
                     entry = data.features[0]
                     console.log('ENTRY RECEIVED', entry, entry.center[0], entry.center[1])

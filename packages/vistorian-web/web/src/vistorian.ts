@@ -15,7 +15,7 @@ import * as moment from 'moment';
 import * as storage from './storage';
 
 
-var head: any = $('head');
+const head: any = $('head');
 head.append("<link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300italic,700,300&subset=latin,latin-ext' rel='stylesheet' type='text/css'></head>")
 head.append("<link href='https://fonts.googleapis.com/css?family=Great+Vibes' rel='stylesheet' type='text/css'>")
 head.append("<link href='https://fonts.googleapis.com/css?family=Playfair+Display' rel='stylesheet' type='text/css'>")
@@ -28,13 +28,13 @@ head.append("<link href='https://fonts.googleapis.com/css?family=IM+Fell+English
 
 
 function append(url: string) {
-    var script: any = document.createElement('script');
+    const script: any = document.createElement('script');
     script.type = 'text/javascript';
     script.src = url;
     $("head").append(script);
 }
 
-var tables: any[] = [];
+const tables: any[] = [];
 
 
 // DATA TYPES
@@ -58,41 +58,41 @@ export class VTableSchema {
 
 export class VNodeSchema extends VTableSchema {
     relation: number[] = []; // relationships defined in a node table (e.g. father, mother..)
-    location: number = -1; // location of node
-    id: number = 0;
-    label: number = -1;
-    time: number = -1;
+    location = -1; // location of node
+    id = 0;
+    label = -1;
+    time = -1;
     // nodeType: number = -1;
     // color: number = -1;
-    shape: number = -1;
+    shape = -1;
     constructor() {
         super('userNodeSchema')
-    };
+    }
 }
 
 export class VLinkSchema extends VTableSchema {
-    location_source: number = -1; // location of source node
-    location_target: number = -1; // location of target node
-    id: number = 0;
-    source: number = -1;
-    target: number = -1;
-    weight: number = -1;
-    time: number = -1;
-    linkType: number = -1;
-    directed: number = -1;
+    location_source = -1; // location of source node
+    location_target = -1; // location of target node
+    id = 0;
+    source = -1;
+    target = -1;
+    weight = -1;
+    time = -1;
+    linkType = -1;
+    directed = -1;
     constructor() {
         super('userLinkSchema')
-    };
+    }
 }
 export class VLocationSchema extends VTableSchema {
-    id: number = 0;
-    label: number = 1;
-    geoname: number = 2
-    longitude: number = 3;
-    latitude: number = 4;
+    id = 0;
+    label = 1;
+    geoname = 2
+    longitude = 3;
+    latitude = 4;
     constructor() {
         super('userLocationSchema')
-    };
+    }
 }
 
 // this represents a network the user created, including
@@ -101,7 +101,7 @@ export class VLocationSchema extends VTableSchema {
 // - the networkcube data set with the normalized tables
 export class Network {
     id: number;
-    name: string = '';
+    name = '';
     userNodeTable: VTable | undefined = undefined; // ??
     userLinkTable: VTable | undefined = undefined; // ??;
     userNodeSchema: VNodeSchema | undefined;
@@ -109,8 +109,8 @@ export class Network {
     userLocationTable: VTable | undefined = undefined; // ??;
     userLocationSchema: datamanager.LocationSchema = new datamanager.LocationSchema(0, 0); // ??
     // networkCubeDataSet: networkcube.DataSet;
-    networkConfig: string = 'both';
-    timeFormat: string = '';
+    networkConfig = 'both';
+    timeFormat = '';
     ready: boolean; // placeholder indicating if network is complete and ready to be visualized.
     directed: boolean;
 
@@ -127,24 +127,24 @@ export class Network {
 
 export function loadCSV(files: File[], callBack: () => void, sessionid: string) {
 
-    var loadCount: number = 0;
-    var table: any;
-    var tables: VTable[] = [];
-    var fileContents: any[] = []
-    var readers: FileReader[] = [];
-    for (var i = 0, f: File; f = files[i]; i++) {
-        var reader: FileReader = new FileReader();
+    let loadCount = 0;
+    let table: any;
+    const tables: VTable[] = [];
+    const fileContents: any[] = []
+    const readers: FileReader[] = [];
+    for (let i = 0, f: File; f = files[i]; i++) {
+        const reader: FileReader = new FileReader();
         (reader as any).filename = f.name.replace(/\s/g, '_').split('_')[0];
         readers[i] = reader;
 
         reader.onload = function (f) {
-            var obj = {
+            const obj = {
                 content: (<FileReader>f.target).result,
                 name: (f.target as any).filename
             }
-            var i: number = readers.indexOf((<FileReader>f.target));
+            const i: number = readers.indexOf((<FileReader>f.target));
             fileContents[i] = obj;
-            var content: any = fileContents[i].content.replace(', "', ',"').replace('" ,', '",')
+            const content: any = fileContents[i].content.replace(', "', ',"').replace('" ,', '",')
             table = new VTable(
                 // eliminate spaces in the name because they will 
                 // interfere with creating html element ids
@@ -173,20 +173,20 @@ export function loadCSV(files: File[], callBack: () => void, sessionid: string) 
 }
 
 export function exportTableCSV(table: VTable) {
-    var csv: any = Papa.unparse(table.data, { quotes: true });
-    var textFileAsBlob: Blob = new Blob([csv], { type: 'text/csv' });
-    var fileNameToSaveAs: string = table.name + '.csv';
-    var downloadLink: any = document.createElement('a');
+    const csv: any = Papa.unparse(table.data, { quotes: true });
+    const textFileAsBlob: Blob = new Blob([csv], { type: 'text/csv' });
+    const fileNameToSaveAs: string = table.name + '.csv';
+    const downloadLink: any = document.createElement('a');
     downloadLink.download = fileNameToSaveAs;
     downloadLink.href = (window as any).webkitURL.createObjectURL(textFileAsBlob);
     downloadLink.click();
 }
 
 export function exportLocationTableCSV(networkname: any, table: any) {
-    var csv: any = Papa.unparse(table, { quotes: true });
-    var textFileAsBlob: Blob = new Blob([csv], { type: 'text/csv' });
-    var fileNameToSaveAs: string = networkname + '-locations.csv';
-    var downloadLink: any = document.createElement('a');
+    const csv: any = Papa.unparse(table, { quotes: true });
+    const textFileAsBlob: Blob = new Blob([csv], { type: 'text/csv' });
+    const fileNameToSaveAs: string = networkname + '-locations.csv';
+    const downloadLink: any = document.createElement('a');
     downloadLink.download = fileNameToSaveAs;
     downloadLink.href = (window as any).webkitURL.createObjectURL(textFileAsBlob);
     downloadLink.click();
@@ -199,8 +199,8 @@ export function exportLocationTableCSV(networkname: any, table: any) {
 // - add line numbers
 export function formatTable(table: VTable) {
 
-    var data: any[] = [];
-    var indexify: boolean =
+    const data: any[] = [];
+    const indexify =
         !(table.data[0][0] == 'ID'
             || table.data[0][0] == 'id'
             || table.data[0][0] == 'Id'
@@ -208,10 +208,10 @@ export function formatTable(table: VTable) {
             || table.data[0][0].includes('index')
             || table.data[0][0].includes('Index'));
 
-    var numCols: number = table.data[0].length;
-    var emptyCols: number = 0;
-    var row: any[];
-    for (var i = 0; i < table.data.length; i++) {
+    const numCols: number = table.data[0].length;
+    let emptyCols = 0;
+    let row: any[];
+    for (let i = 0; i < table.data.length; i++) {
         row = [];
         emptyCols = 0;
         if (indexify) {
@@ -220,7 +220,7 @@ export function formatTable(table: VTable) {
             else
                 row.push((i - 1) + '');
         }
-        for (var j = 0; j < numCols; j++) {
+        for (let j = 0; j < numCols; j++) {
             if (table.data[i][j] == undefined) {
                 table.data[i][j] = '';
             }
@@ -248,9 +248,9 @@ export function formatTable(table: VTable) {
  * @return {[type]}            [description]
  */
 export function checkTime(table: VTable, timeCol: number, timeFormat: string): number[] {
-    var timeString: string;
-    var error: number[] = [];
-    for (var i = 0; i < table.data.length; i++) {
+    let timeString: string;
+    const error: number[] = [];
+    for (let i = 0; i < table.data.length; i++) {
         timeString = table.data[i][timeCol];
 
         if (timeString.length == 0) {
@@ -268,9 +268,9 @@ export function checkTime(table: VTable, timeCol: number, timeFormat: string): n
 
 export function cleanTable(table: any[][]) {
     // trim entries
-    var emptyColBool: any[] = []
-    for (var i = 0; i < table.length; i++) {
-        for (var j = 0; j < table[i].length; j++) {
+    const emptyColBool: any[] = []
+    for (let i = 0; i < table.length; i++) {
+        for (let j = 0; j < table[i].length; j++) {
             if (table[i][j] != undefined)
                 table[i][j] = table[i][j].trim();
         }
@@ -279,10 +279,10 @@ export function cleanTable(table: any[][]) {
 }
 
 
-export function setHeader(elementId: String, datasetname: String) {
-    var header: any = $('<a href="../index.html"><img width="100%" src="../static/logos/logo-networkcube.png"/></a>')
+export function setHeader(elementId: string, datasetname: string) {
+    const header: any = $('<a href="../index.html"><img width="100%" src="../static/logos/logo-networkcube.png"/></a>')
     $('#' + elementId).append(header);
-    var dataname: any = $('\
+    const dataname: any = $('\
         <p style="margin:5px;background-color:#eeeeee;border-radius:2px;padding-left:10px;padding:5px;"><b>Data:</b> '+ datasetname + '</h2>')
     $('#' + elementId).append(dataname);
  
@@ -290,7 +290,7 @@ export function setHeader(elementId: String, datasetname: String) {
     //$('#' + elementId).append('')
     //$('#' + elementId).append('')
 
-    var vars: any = utils.getUrlVars();
+    const vars: any = utils.getUrlVars();
 
     // VS: Clicks on Return to DataView
     $('#' + elementId).append('<a href="../web/dataview.html?session=' + vars['session'] + '&datasetName' + vars['datasetName'] + '" style="margin:5px;padding-left:5px;" onclick="trace.event(\'log_4\', document.location.pathname, \'Return to Data View Button\', \'Clicked\');" target="_blank">Return to Dataview</a>');
@@ -300,9 +300,9 @@ export function setHeader(elementId: String, datasetname: String) {
 
 
 export function exportNetwork(network: Network) {
-    var blurb: Network = network;
+    const blurb: Network = network;
 
-    var element: any = document.createElement('a');
+    const element: any = document.createElement('a');
     element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(blurb)));
     element.setAttribute('download', network.name + '.vistorian');
     element.style.display = 'none';
@@ -322,24 +322,25 @@ export function createAndNormaliseLocationTable(currentNetwork: Network) {
 
     //  EXTRACT LOCATIONS FROM USER LOCATION TABLE, IF PRESENT
 
-    var locationLabels: string[] = [];
+    const locationLabels: string[] = [];
     if (currentNetwork.userLocationTable) {
         // store all locations for easy index lookup
-        for (var i = 1; i < currentNetwork.userLocationTable.data.length; i++) {
+        for (let i = 1; i < currentNetwork.userLocationTable.data.length; i++) {
             locationLabels.push(currentNetwork.userLocationTable.data[i][currentNetwork.userLocationSchema.label]);
         }
     }
 
     if(currentNetwork.userLinkTable) {
         // @ts-ignore
-        var userLinkData: any = currentNetwork.userLinkTable.data;
+        const userLinkData: any = currentNetwork.userLinkTable.data;
+        let userLinkSchema: VLinkSchema;
         if (currentNetwork.userLinkSchema) {
-            var userLinkSchema: VLinkSchema = currentNetwork.userLinkSchema;
+            userLinkSchema = currentNetwork.userLinkSchema;
         } else {
-            var userLinkSchema: VLinkSchema = new VLinkSchema();
+            userLinkSchema = new VLinkSchema();
         }
 
-        for (var i = 1; i < userLinkData.length; i++) {
+        for (let i = 1; i < userLinkData.length; i++) {
             if (locationLabels.indexOf(userLinkData[i][userLinkSchema.location_source]) == -1) {
                 locationLabels.push(userLinkData[i][userLinkSchema.location_source])
             }
@@ -350,21 +351,21 @@ export function createAndNormaliseLocationTable(currentNetwork: Network) {
     }
 
 
-    var normalizedLocationSchema: datamanager.LocationSchema = datamanager.getDefaultLocationSchema();
+    let normalizedLocationSchema: datamanager.LocationSchema = datamanager.getDefaultLocationSchema();
     if (currentNetwork.userLocationTable) {
         normalizedLocationSchema = currentNetwork.userLocationSchema
     }
 
-    var normalizedLocationTable: any[] = [];
-    var locationName: string = "";
-    var row: any;
+    const normalizedLocationTable: any[] = [];
+    let locationName = "";
+    let row: any;
 
     // If the user has specified a location table, normalize
     // that table:
     if (currentNetwork.userLocationTable) {
-        var userLocationTable: any = currentNetwork.userLocationTable.data;
-        var userLocationSchema: any = currentNetwork.userLocationSchema;
-        for (var i = 1; i < userLocationTable.length; i++) {
+        const userLocationTable: any = currentNetwork.userLocationTable.data;
+        const userLocationSchema: any = currentNetwork.userLocationSchema;
+        for (let i = 1; i < userLocationTable.length; i++) {
             row = [normalizedLocationTable.length, 0, 0, 0, 0]
             locationName = userLocationTable[i][userLocationSchema.label]
             row[normalizedLocationSchema.id] = locationLabels.indexOf(locationName)
@@ -378,9 +379,9 @@ export function createAndNormaliseLocationTable(currentNetwork: Network) {
     // if there exist any locations, check if they are
     // listed in the location table
     if (locationLabels.length > 0) {
-        for (var i = 0; i < locationLabels.length; i++) {
-            var found: boolean = false;
-            for (var j = 0; j < normalizedLocationTable.length; j++) {
+        for (let i = 0; i < locationLabels.length; i++) {
+            let found = false;
+            for (let j = 0; j < normalizedLocationTable.length; j++) {
                 if (normalizedLocationTable[j][1] == locationLabels[i]) {
                     found = true;
                 }
@@ -909,12 +910,12 @@ export function importIntoNetworkcube(currentNetwork: Network, sessionid: string
 
 
     // Start with empty normalized tables
-    var normalizedNodeTable: any[] = [];
-    var normalizedLinkTable: any[] = [];
+    const normalizedNodeTable: any[] = [];
+    const normalizedLinkTable: any[] = [];
 
     // get standard schemas
     // INIT NODE SCHEMA
-    var normalizedNodeSchema: datamanager.NodeSchema = new datamanager.NodeSchema(0);
+    const normalizedNodeSchema: datamanager.NodeSchema = new datamanager.NodeSchema(0);
      
     // INITIALZE NORMALIZED SCHEMAS WITH USER'S ATTRIBUTES
     
@@ -922,10 +923,10 @@ export function importIntoNetworkcube(currentNetwork: Network, sessionid: string
     normalizedNodeSchema.id = 0;
     normalizedNodeSchema.label = 1;
     
-    var nodeColCount: number = 2
+    let nodeColCount = 2
     if (currentNetwork.userNodeSchema) {
-        for (var p in currentNetwork.userNodeSchema) {
-            if (currentNetwork.userNodeSchema.hasOwnProperty(p)
+        for (const p in currentNetwork.userNodeSchema) {
+            if (Object.prototype.hasOwnProperty.call(currentNetwork, p)
             && (currentNetwork.userNodeSchema as any)[p] > -1
             && p != 'id'
             && p != 'label'
@@ -938,16 +939,16 @@ export function importIntoNetworkcube(currentNetwork: Network, sessionid: string
     }
     
     // INIT LINK SCHEMA WITH USER ATTRIBUTES    
-    var normalizedLinkSchema: datamanager.LinkSchema = new datamanager.LinkSchema(0, 1, 2);
+    const normalizedLinkSchema: datamanager.LinkSchema = new datamanager.LinkSchema(0, 1, 2);
     // required attributes
     normalizedLinkSchema.id = 0;
     normalizedLinkSchema.source = 1;
     normalizedLinkSchema.target = 2;
 
-    var linkColCount: number = 3
+    let linkColCount = 3
     if (currentNetwork.userLinkSchema) {
-        for (var p in currentNetwork.userLinkSchema) {
-            if (currentNetwork.userLinkSchema.hasOwnProperty(p)
+        for (const p in currentNetwork.userLinkSchema) {
+            if (Object.prototype.hasOwnProperty.call(currentNetwork, p)
                 && (currentNetwork.userLinkSchema as any)[p] > -1
                 && p != 'id'
                 && p != 'source'
@@ -962,8 +963,8 @@ export function importIntoNetworkcube(currentNetwork: Network, sessionid: string
     }
 
     // var nodeLabels: any = []
-    var nodeIds = [];
-    var nodeNames:String[] = [];
+    const nodeIds = [];
+    const nodeNames:string[] = [];
 
     if(currentNetwork.userNodeSchema 
         && currentNetwork.userNodeTable 
@@ -971,8 +972,8 @@ export function importIntoNetworkcube(currentNetwork: Network, sessionid: string
     {
         let id;
         // create node table
-        for (var i = 1; i < currentNetwork.userNodeTable.data.length; i++) {
-            let newRow = [0, 0, 0, 0, 0];
+        for (let i = 1; i < currentNetwork.userNodeTable.data.length; i++) {
+            const newRow = [0, 0, 0, 0, 0];
             id = parseInt(currentNetwork.userNodeTable.data[i][currentNetwork.userNodeSchema.id]);
             nodeIds.push(id)
             newRow[normalizedNodeSchema.id] = id
@@ -993,7 +994,7 @@ export function importIntoNetworkcube(currentNetwork: Network, sessionid: string
 
     if(currentNetwork.userNodeSchema && currentNetwork.userNodeSchema.relation.length > 0 && currentNetwork.userNodeTable)
     {
-        var colCount: number = 3
+        let colCount = 3
         normalizedLinkSchema.linkType = colCount++;
         if (datamanager.isValidIndex(currentNetwork.userNodeSchema.time)) {
             normalizedLinkSchema.time = colCount++;
@@ -1005,7 +1006,7 @@ export function importIntoNetworkcube(currentNetwork: Network, sessionid: string
             let relCol, rowNum
             let sourceId: number;
             let targetId: number;
-            for (var j = 0; j < currentNetwork.userNodeSchema.relation.length; j++) {
+            for (let j = 0; j < currentNetwork.userNodeSchema.relation.length; j++) {
                 row = currentNetwork.userNodeTable.data[i];
                 relCol = currentNetwork.userNodeSchema.relation[j];
                 sourceId = nodeIds[i - 1]
@@ -1018,7 +1019,7 @@ export function importIntoNetworkcube(currentNetwork: Network, sessionid: string
 
                 if (rowNum < 0) {
                     // create new node in node table
-                    let newNodeRow = [0, 0];
+                    const newNodeRow = [0, 0];
                     newNodeRow[normalizedNodeSchema.id] = normalizedNodeTable.length;
                     nodeIds.push(normalizedNodeTable.length - 1)
                     nodeNames.push(row[relCol])
@@ -1031,8 +1032,8 @@ export function importIntoNetworkcube(currentNetwork: Network, sessionid: string
                 }
 
                 // create entry in link table
-                let newLinkRow = []
-                for (var k = 0; k < colCount; k++) {
+                const newLinkRow = []
+                for (let k = 0; k < colCount; k++) {
                     newLinkRow.push('');
                 }
                 newLinkRow[normalizedLinkSchema.id] = normalizedLinkTable.length;
@@ -1051,8 +1052,8 @@ export function importIntoNetworkcube(currentNetwork: Network, sessionid: string
     {
 
         // Extract node labels and create (simple) normalized node table
-        var row: any;
-        for (var i = 1; i < currentNetwork.userLinkTable.data.length; i++) {
+        let row: any;
+        for (let i = 1; i < currentNetwork.userLinkTable.data.length; i++) {
             // source
             let nodeName = currentNetwork.userLinkTable.data[i][currentNetwork.userLinkSchema.source];
             if (nodeNames.indexOf(nodeName) < 0) {
@@ -1082,22 +1083,22 @@ export function importIntoNetworkcube(currentNetwork: Network, sessionid: string
         let newRow: any[];
         // let linkTime: string;
         // let found: boolean = true;
-        for (var i = 1; i < currentNetwork.userLinkTable.data.length; i++) {
+        for (let i = 1; i < currentNetwork.userLinkTable.data.length; i++) {
             newRow = []
-            for (var k = 0; k < linkColCount; k++) {
+            for (let k = 0; k < linkColCount; k++) {
                 newRow.push('');
             }
-            for (var p in currentNetwork.userLinkSchema) {
-                if (currentNetwork.userLinkSchema.hasOwnProperty(p)
+            for (const p in currentNetwork.userLinkSchema) {
+                if (Object.prototype.hasOwnProperty.call(currentNetwork, p)
                     && (currentNetwork.userLinkSchema as any)[p] > -1) {
                     newRow[(normalizedLinkSchema as any)[p]] = currentNetwork.userLinkTable.data[i][(currentNetwork.userLinkSchema as any)[p]];
                 }
             }
 
-            let sourceId = nodeNames.indexOf(currentNetwork.userLinkTable.data[i][currentNetwork.userLinkSchema.source]);
+            const sourceId = nodeNames.indexOf(currentNetwork.userLinkTable.data[i][currentNetwork.userLinkSchema.source]);
             newRow[normalizedLinkSchema.source] = sourceId;
 
-            let targetId = nodeNames.indexOf(currentNetwork.userLinkTable.data[i][currentNetwork.userLinkSchema.target]);
+            const targetId = nodeNames.indexOf(currentNetwork.userLinkTable.data[i][currentNetwork.userLinkSchema.target]);
             newRow[normalizedLinkSchema.target] = targetId;
 
             normalizedLinkTable.push(newRow)
@@ -1105,8 +1106,6 @@ export function importIntoNetworkcube(currentNetwork: Network, sessionid: string
 
         // check if location and time information exists for nodes
         var time: any;
-        var locationsFound: boolean = false;
-        var timeFound: boolean = false;
 
 
         if (datamanager.isValidIndex(currentNetwork.userLinkSchema.location_source)
@@ -1114,7 +1113,7 @@ export function importIntoNetworkcube(currentNetwork: Network, sessionid: string
             // set location schema index to next new column
             normalizedNodeSchema.location = nodeColCount++;
             // append new field to each row in node table
-            for (var i = 0; i < normalizedNodeTable.length; i++) {
+            for (let i = 0; i < normalizedNodeTable.length; i++) {
                 normalizedNodeTable[i].push('')
             }
             // FYI: node table has now at least 3 rows (id, name, location)
@@ -1122,14 +1121,14 @@ export function importIntoNetworkcube(currentNetwork: Network, sessionid: string
                 // set time schema index to next new column
                 normalizedNodeSchema.time = nodeColCount++;
                 // append new field to each row in node table
-                for (var i = 0; i < normalizedNodeTable.length; i++) {
+                for (let i = 0; i < normalizedNodeTable.length; i++) {
                     normalizedNodeTable[i].push('')
                 }
                 // FYI: node table has now at least 4 rows (id, name, location, time)
             }
 
             // insert locations and ev. times into node table, as found in linktable
-            for (var i = 1; i < currentNetwork.userLinkTable.data.length; i++) {
+            for (let i = 1; i < currentNetwork.userLinkTable.data.length; i++) {
                 var nodeRow: any, rowToDuplicate: any;
                 // do for source location
                 let nodeName = currentNetwork.userLinkTable.data[i][currentNetwork.userLinkSchema.source]
@@ -1137,7 +1136,7 @@ export function importIntoNetworkcube(currentNetwork: Network, sessionid: string
                     && currentNetwork.userLinkTable.data[i][currentNetwork.userLinkSchema.location_source]
                     && currentNetwork.userLinkTable.data[i][currentNetwork.userLinkSchema.location_source] != '') {
                     var len = normalizedNodeTable.length
-                    for (var j = 0; j < len; j++) {
+                    for (let j = 0; j < len; j++) {
                         nodeRow = normalizedNodeTable[j];
                         if (nodeRow[normalizedNodeSchema.label] == nodeName) {
                             rowToDuplicate = undefined;
@@ -1170,7 +1169,7 @@ export function importIntoNetworkcube(currentNetwork: Network, sessionid: string
                             rowToDuplicate[normalizedNodeSchema.time] = currentNetwork.userLinkTable.data[i][currentNetwork.userLinkSchema.time]
                         } else {
                             var newRowNode = []
-                            for (var c = 0; c < rowToDuplicate.length; c++) {
+                            for (let c = 0; c < rowToDuplicate.length; c++) {
                                 newRowNode.push(rowToDuplicate[c])
                             }
                             newRowNode[normalizedNodeSchema.location] = currentNetwork.userLinkTable.data[i][currentNetwork.userLinkSchema.location_source]
@@ -1186,7 +1185,7 @@ export function importIntoNetworkcube(currentNetwork: Network, sessionid: string
                     && currentNetwork.userLinkTable.data[i][currentNetwork.userLinkSchema.location_target]
                     && currentNetwork.userLinkTable.data[i][currentNetwork.userLinkSchema.location_target] != '') {
                     var len = normalizedNodeTable.length
-                    for (var j = 0; j < len; j++) {
+                    for (let j = 0; j < len; j++) {
                         nodeRow = normalizedNodeTable[j];
                         if (nodeRow[normalizedNodeSchema.label] == nodeName) {
                             rowToDuplicate = undefined;
@@ -1220,7 +1219,7 @@ export function importIntoNetworkcube(currentNetwork: Network, sessionid: string
                         } else {
                             // duplicate
                             var newRowNode = []
-                            for (var c = 0; c < rowToDuplicate.length; c++) {
+                            for (let c = 0; c < rowToDuplicate.length; c++) {
                                 newRowNode.push(rowToDuplicate[c])
                             }
                             newRowNode[normalizedNodeSchema.location] = currentNetwork.userLinkTable.data[i][currentNetwork.userLinkSchema.location_target]
@@ -1235,10 +1234,10 @@ export function importIntoNetworkcube(currentNetwork: Network, sessionid: string
 
     // FORMAT TIMES INTO ISO STANDARD
 
-    if (currentNetwork.hasOwnProperty('timeFormat') && currentNetwork.timeFormat != undefined && currentNetwork.timeFormat.length > 0) {
-        var format: string = currentNetwork.timeFormat;
+    if (Object.prototype.hasOwnProperty.call(currentNetwork, 'timeFormat') && currentNetwork.timeFormat != undefined && currentNetwork.timeFormat.length > 0) {
+        const format: string = currentNetwork.timeFormat;
         if (normalizedLinkSchema.time != undefined && normalizedLinkSchema.time > -1) {
-            for (var i = 0; i < normalizedLinkTable.length; i++) {
+            for (let i = 0; i < normalizedLinkTable.length; i++) {
                 time = moment.utc(normalizedLinkTable[i][normalizedLinkSchema.time], format).format(main.timeFormat())
                 if (time.indexOf('Invalid') > -1)
                     time = undefined;
@@ -1247,7 +1246,7 @@ export function importIntoNetworkcube(currentNetwork: Network, sessionid: string
         }
 
         if (normalizedNodeSchema.time != undefined && normalizedNodeSchema.time > -1) {
-            for (var i = 0; i < normalizedNodeTable.length; i++) {
+            for (let i = 0; i < normalizedNodeTable.length; i++) {
                 time = moment.utc(normalizedNodeTable[i][normalizedNodeSchema.time], format).format(main.timeFormat());
                 if (time.indexOf('Invalid') > -1)
                     time = undefined;
@@ -1256,19 +1255,19 @@ export function importIntoNetworkcube(currentNetwork: Network, sessionid: string
         }
     }
 
-    var {normalizedLocationSchema, normalizedLocationTable, locationName, locationLabels} = createAndNormaliseLocationTable(currentNetwork);
+    let {normalizedLocationSchema, normalizedLocationTable, locationName, locationLabels} = createAndNormaliseLocationTable(currentNetwork);
 
     if (normalizedNodeSchema.location > -1) {
-        for (var i = 0; i < normalizedNodeTable.length; i++) {
+        for (let i = 0; i < normalizedNodeTable.length; i++) {
             locationName = normalizedNodeTable[i][normalizedNodeSchema.location].trim();
-            let id = locationLabels.indexOf(locationName);
+            const id = locationLabels.indexOf(locationName);
             normalizedNodeTable[i][normalizedNodeSchema.location] = id;
         }
     }
 
 
     // set tables to networkcube data set:
-    var params: any = {}
+    const params: any = {}
     params.name = currentNetwork.name;
     params.nodeTable = normalizedNodeTable;
     params.linkTable = normalizedLinkTable;
@@ -1278,22 +1277,22 @@ export function importIntoNetworkcube(currentNetwork: Network, sessionid: string
     params.locationSchema = normalizedLocationSchema;
     params.timeFormat = currentNetwork.timeFormat;
     params.directed = currentNetwork.directed;
-    var dataset: datamanager.DataSet = new datamanager.DataSet(params);
+    const dataset: datamanager.DataSet = new datamanager.DataSet(params);
 
     if (currentNetwork.userLocationTable) {
         currentNetwork.userLocationTable.data = []
         currentNetwork.userLocationTable.data.push(['Id', 'User Name', 'Geoname', 'Longitude', 'Latitude'])
-        for (var i = 0; i < normalizedLocationTable.length; i++) {
+        for (let i = 0; i < normalizedLocationTable.length; i++) {
             currentNetwork.userLocationTable.data.push(normalizedLocationTable[i]);
         }
     }
 
 
     // make ids integer
-    for (var i = 0; i < normalizedNodeTable.length; i++) {
+    for (let i = 0; i < normalizedNodeTable.length; i++) {
         normalizedNodeTable[i][0] = parseInt(normalizedNodeTable[i][0])
     }
-    for (var i = 0; i < normalizedLinkTable.length; i++) {
+    for (let i = 0; i < normalizedLinkTable.length; i++) {
         normalizedLinkTable[i][0] = parseInt(normalizedLinkTable[i][0])
     }
 

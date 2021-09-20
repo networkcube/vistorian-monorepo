@@ -1,7 +1,7 @@
 export function getUrlVars() {
-    var vars: any = {};
-    var params: any = window.location.search.replace("?", "").split('&');
-    var tmp: any, value: any;
+    const vars: any = {};
+    const params: any = window.location.search.replace("?", "").split('&');
+    let tmp: any, value: any;
     params.forEach(function (item: any) {
         tmp = item.split("=");
         value = decodeURIComponent(tmp[1]);
