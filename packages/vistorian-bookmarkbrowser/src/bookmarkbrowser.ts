@@ -169,7 +169,7 @@ export function updateViewOnlyList(type: string, name: string): void {
 		.text(function (d: any) {
 			return d[0];
 		})
-		.style('font-size', RECT_SIZE)
+		.style('font-size', RECT_SIZE + "px")
 		.style('font-family', 'Helvetica')
 		.attr('x', RECT_SIZE + 10)
 		.attr('y', RECT_SIZE * .8)
@@ -253,7 +253,7 @@ export function updateList(type: string, name: string): void {
 		.text(function (d: any) {
 			return d.name;
 		})
-		.style('font-size', RECT_SIZE)
+		.style('font-size', RECT_SIZE + "px")
 		.style('font-family', 'Helvetica')
 		.attr('x', RECT_SIZE + 10)
 		.attr('y', RECT_SIZE * .8)
