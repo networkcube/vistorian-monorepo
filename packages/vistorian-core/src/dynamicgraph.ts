@@ -1049,9 +1049,11 @@ export class DynamicGraph {
         });
 
         //Add color values to nodeArray colors
+        /*
         for(let i=0; i<this.nodeArrays.color.length; i++) {
             this.nodeArrays.color[i] = this.nodeArrays.color[i], colorMappings[this.nodeArrays.color[i]];
         }
+        */
 
         //Build a shape mapping
         const shapeSet = new Set(['cross', 'diamond', 'square', 'triangle']);
@@ -1066,11 +1068,11 @@ export class DynamicGraph {
         });
 
         //Add shapes to nodeArray shapes
+        /*
         for(let i=0; i<this.nodeArrays.shape.length; i++) {
             this.nodeArrays.shape[i] = this.nodeArrays.shape[i], shapeMappings[this.nodeArrays.shape[i]];
         }
-        console.log(" TEST ")
-        console.log(this)
+        */
 
 
         // create color map for link types
