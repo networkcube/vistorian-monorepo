@@ -184,7 +184,7 @@ export function updateViewOnlyList(type: string, name: string): void {
 export function createSelection(type: string): void {
 
 	const b: datamanager.Selection = dgraph.createSelection(type) // IS IT OK?? (dgraph)
-	const timer: number = window.setTimeout((e: any) => {
+	window.setTimeout(() => {
 		messenger.setCurrentSelection(b);
 		updateLists();
 	}, 500);
@@ -267,7 +267,7 @@ export function updateList(type: string, name: string): void {
 	nodeGs.append('svg:image')
 		.attr('class', 'icon_showColor icon')
 		.attr('x', 130 + (RECT_SIZE + GAP_ICONS) * i++)
-		.on('click', function (ev: MouseEvent, d: datamanager.Selection, i: number) {
+		.on('click', function (ev: MouseEvent, d: datamanager.Selection) {
 			messenger.showSelectionColor(d, !d.showColor);
 		})
 
@@ -277,7 +277,7 @@ export function updateList(type: string, name: string): void {
 		.attr('xlink:href', 'eye-seeing.png')//eye-visible.png
 		.attr('x', 130 + (RECT_SIZE + GAP_ICONS) * i++)
 		.attr('onclick','trace.event(\'vis_14\',document.location.pathname,\'' +name + '\' , this.getAttribute(\'href\'))')
-		.on('click', function (ev: MouseEvent, d: datamanager.Selection, i: any) {
+		.on('click', function (ev: MouseEvent, d: datamanager.Selection) {
 			messenger.filterSelection(d, !d.filter);
 		})
 
@@ -306,7 +306,7 @@ export function updateList(type: string, name: string): void {
 		.attr('class', 'icon')
 		.attr('xlink:href', 'delete.png')
 		.attr('x', 130 + (RECT_SIZE + GAP_ICONS) * i++)
-		.on('click', function (ev: MouseEvent, d: datamanager.Selection, i: number) {
+		.on('click', function (ev: MouseEvent, d: datamanager.Selection) {
 			messenger.deleteSelection(d);
 		})
 
