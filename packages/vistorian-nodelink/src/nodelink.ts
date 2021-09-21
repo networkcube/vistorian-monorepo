@@ -16,8 +16,7 @@ let NODE_OPACITY = 1;
 let LINK_WIDTH_SCALE = 1;
 const OFFSET_LABEL = { x: 5, y: 4 }
 let LINK_GAP = 2;
-// var LAYOUT_TIMEOUT: number = 3000;
-// var LABELBACKGROUND_OPACITY: number = 1;
+
 const LABELDISTANCE = 10;
 const SLIDER_WIDTH = 100
 const SLIDER_HEIGHT = 35;
@@ -26,11 +25,6 @@ let NODE_SIZE = 10;
 const width = window.innerWidth
 const height = window.innerHeight - 100;
 
-interface Bounds {
-    left: number;
-    top: number;
-}
-// var margin: Bounds = { left: 20, top: 20 };
 const TIMELINE_HEIGHT = 50;
 
 // get dynamic graph
@@ -43,11 +37,9 @@ const directed = dgraph.directed;
 const nodes: any = dgraph.nodes().toArray();
 const nodesOrderedByDegree: dynamicgraph.Node[] = dgraph.nodes().toArray().sort((n1: any, n2: any) => n2.neighbors().length - n1.neighbors().length);
 
-// var nodePairs: dynamicgraph.NodePairQuery = dgraph.nodePairs();
 let links: any = dgraph.links().toArray();
 const linkArrays = dgraph.linkArrays;
 links = addDirectionToLinks(links, linkArrays);
-// var nodeLength: number = nodes.length;
 
 //When a link row is hovered over in dataview.ts, a message is received here to highlight the corresponding link.
 const bcLink = new BroadcastChannel('row_hovered_over_link');
@@ -62,7 +54,6 @@ bcNode.onmessage = function (ev) {
 };
 
 // states
-// var mouseDownNode = undefined;
 let hiddenLabels: any = [];
 let LABELING_STRATEGY = 0;
 
@@ -134,13 +125,7 @@ function addDirectionToLinks(links: any, linkArrays: any) {
     for(let i=0 ; i <links.length ; i++){
         const directionValue = linkArrays.directed[i];
 
-        if (["yes","true"].indexOf(directionValue) > -1 || directed){
-            links[i].directed = true;
-        }
-        //else if(["no","false"].indexOf(directionValue) > -1) {links[i].directed = false;}
-        else{
-            links[i].directed = false;
-        }
+        links[i].directed = !!(["yes", "true"].includes(directionValue) || directed);
     }
     return links;
 }
@@ -193,8 +178,7 @@ const selectionRect = svg
 parentSvg
     .on('mousedown', (ev: MouseEvent) => {
         isMouseDown = true;
-        // <MouseEvent>
-        mouseStart = [ev.clientX, ev.clientY]; // todo: is a .sourceEvent needed?
+        mouseStart = [ev.clientX, ev.clientY];
     })
     .on('mousemove', (ev: MouseEvent) => {
         if (isMouseDown && !shiftDown) {
@@ -267,7 +251,7 @@ parentSvg
         // It seems that Chrome provides values in pixels, whereas Firefox provides values in lines.
         const deltaMode = ev.deltaMode; //TODO: does this need a sourceEvent?
         const deltaY = ev.deltaY;
-        let deltaPixels = 0;
+        let deltaPixels;
         if (deltaMode === 1) {
             deltaPixels = deltaY * 16;
         } else if (deltaMode === 0) {
@@ -477,11 +461,11 @@ function updateLayout() {
 
 
     nodeLabels
-        .attr('x', (d: any, i: any) => d.x + OFFSET_LABEL.x)
-        .attr('y', (d: any, i: any) => d.y + OFFSET_LABEL.y)
+        .attr('x', (d: any) => d.x + OFFSET_LABEL.x)
+        .attr('y', (d: any) => d.y + OFFSET_LABEL.y)
     nodeLabelOutlines
-        .attr('x', (d: any, i: any) => d.x + OFFSET_LABEL.x)
-        .attr('y', (d: any, i: any) => d.y + OFFSET_LABEL.y)
+        .attr('x', (d: any) => d.x + OFFSET_LABEL.x)
+        .attr('y', (d: any) => d.y + OFFSET_LABEL.y)
 
 
     // update link positions
@@ -533,8 +517,6 @@ function getNodeShape(n: dynamicgraph.Node) {
 
     return shapes[shape] ? shapes[shape] : d3.symbolCircle;
 
-    // console.log('node shape', shape)
-    // temporaryly this function is not working until the proper setting of node shape has been fixed.
 }
 
 function updateLabelVisibility() {
@@ -645,7 +627,6 @@ function setStateHandler(m: messenger.SetStateMessage){
 
     // set linkwidh
     LINK_WIDTH_SCALE = state.linkWidth;
-    // linkWeightScale.range([1, LINK_WIDTH_SCALE]);
     updateLinks();
 
     
@@ -654,7 +635,6 @@ function setStateHandler(m: messenger.SetStateMessage){
 
     // set time (start/end)
      messenger.timeRange(state.timeSliderStart, state.timeSliderEnd, times[0], true);
-  //timeSlider.set(state.timeSliderStart, state.timeSliderEnd);
     updateLinks();
     updateNodes();
 
@@ -666,7 +646,6 @@ function setStateHandler(m: messenger.SetStateMessage){
     globalZoom = state.globalZoom;
 
     updateLayout();
-    // svg.attr("transform", "translate(" + (panOffsetGlobal[0] + panOffsetLocal[0]) + ',' + (panOffsetGlobal[1] + panOffsetLocal[1]) + ")");
     }
 
 }
@@ -677,29 +656,6 @@ function getStateHandler( m: messenger.GetStateMessage){
     if (m.viewType=="nodelink" ){
         const nlNetwor: messenger.NetworkControls = new messenger.NodeLinkControls("nodelink",time_start.unixTime(),time_end.unixTime(),globalZoom,panOffsetLocal,panOffsetGlobal,LINK_OPACITY,NODE_OPACITY,NODE_SIZE,LINK_GAP,LINK_WIDTH_SCALE,LABELING_STRATEGY);
         messenger.stateCreated(nlNetwor,m.bookmarkIndex,m.viewType,m.isNewBookmark,m.typeOfMultiView);
-
-        //  var states=JSON.parse(localStorage.getItem("currentCapturedStates") || "[]" ) ;
-        //    states.push(nlNetwor);
-  /*       var bookmarksArray=JSON.parse(localStorage.getItem("vistorianBookmarks") || "[]");
-
-        if (m.bookmarkIndex!=bookmarksArray.length-1){
-            bookmarksArray[m.bookmarkIndex].controlsValues[0]=nlNetwor;
-//            localStorage.setItem("vistorianBookmarks", JSON.stringify(bookmarksArray))
-        }
-        else{
-            bookmarksArray[m.bookmarkIndex].controlsValues.push(nlNetwor);
-           //states.push(nlNetwor); 
-           //localStorage.setItem("currentCapturedStates", JSON.stringify(states));
-    
-        // localStorage.setItem("currentCapturedStates", JSON.stringify(nlNetwor));
-        }
-        //messenger.stateCreated(nlNetwor,m.bookmarkIndex);
-        localStorage.setItem("vistorianBookmarks", JSON.stringify(bookmarksArray))
-     */
- //   var isNew=(m.bookmarkIndex<0?true:false);
- //   localStorage.setItem("currentCapturedStates", JSON.stringify(nlNetwor));
-   // messenger.stateCreated(nlNetwor,m.bookmarkIndex,m.viewType,isNew);
-
     }
 
 }
@@ -731,7 +687,7 @@ function timeChangedHandler(m: messenger.TimeRangeMessage) {
 }
 
 
-function updateEvent(m: messenger.Message) {
+function updateEvent() {
     updateLinks();
     updateNodes();
 }
@@ -845,7 +801,7 @@ function updateLinks(highlightId?: number){
 
 function calculateCurvedLinks()
 {
-    let path: any, dir: any, offset: any, offset2: any, nodePair: dynamicgraph.NodePair | undefined;
+    let dir: any, offset: any, offset2: any, nodePair: dynamicgraph.NodePair | undefined;
     let links: dynamicgraph.Link[];
     for (let i = 0; i < dgraph.nodePairs().length; i++) 
     {
@@ -946,6 +902,3 @@ function unshowMessage() {
     if ($('#messageBox'))
         $('#messageBox').remove();
 }
-
-
-
