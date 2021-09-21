@@ -64,7 +64,7 @@ class MatrixMenu {
     $('#cellSizeBox').change(this.updateCellSize);
     this.elem.append('<br/>');
     this.elem.append('<label>Label ordering:</label>');
-    const orderingMenu = $("#networkcube-matrix-menu")
+    $("#networkcube-matrix-menu")
       .append('<select id="labelOrdering" onchange="trace.event(\'vis_35\',\'Matrix\',\'labelingType\',this.value)"></select>')
 
     // VS: Clicks on Manual
@@ -236,7 +236,7 @@ class MatrixOverview {
     this.updateTransform(ev.transform.k, [ev.transform.x, ev.transform.y]);
   }
 
-  setCanvasRatio(canvasRatio: number) {
+  setCanvasRatio() {
     this.canvasRatio = 1;
     const w = this.canvasRatio > 1 ? this.width * this.canvasRatio : this.width;
     const h = this.canvasRatio < 1 ? this.height * this.canvasRatio : this.height;
@@ -280,8 +280,6 @@ class MatrixOverview {
 }
 
 class MatrixLabels {
-  private width = 0;
-  private height = 0;
   private margin: NMargin;
   private matrix: Matrix;
   private cellSize: number;
@@ -304,7 +302,7 @@ class MatrixLabels {
   updateData(leftNodes: dynamicgraph.Node[], topNodes: dynamicgraph.Node[],
     cellSize: number, nodeOrder: number[],
     leftLabelOffset: number, topLabelOffset: number,
-    bbox: Box, highlightId?: number) {
+    bbox: Box) {
 
     this.cellSize = cellSize;
 
@@ -314,12 +312,12 @@ class MatrixLabels {
     const leftLabelPosition = (nodeId: any) => this.margin.top + leftLabelOffset + cellSize * (nodeOrder[nodeId] - bbox.y0) + cellSize / 2;
 
     labelsLeft.enter().append('text')
-      .attr('id', (d: any, i: any) => { return 'nodeLabel_left_' + d.id(); })
+      .attr('id', (d: any) => { return 'nodeLabel_left_' + d.id(); })
       .attr('class', 'labelsLeft nodeLabel')
       .attr('text-anchor', 'end')
       .attr('alignment-baseline', 'middle')
       .attr('x', this.margin.left - 10)
-      .attr('y', (d: any, i: any) => { return leftLabelPosition(d.id()) })
+      .attr('y', (d: any) => { return leftLabelPosition(d.id()) })
       .on('mouseover', (ev: MouseEvent, d: any) => {
         messenger.highlight('set', <utils.ElementCompound>{ nodes: [d] });
       })
@@ -333,10 +331,10 @@ class MatrixLabels {
     labelsLeft.exit().remove();
 
     labelsLeft
-      .attr('id', (d: any, i: any) => { return 'nodeLabel_left_' + d.id(); })
-      .text((d: any, i: any) => { return d.label(); })
+      .attr('id', (d: any) => { return 'nodeLabel_left_' + d.id(); })
+      .text((d: any) => { return d.label(); })
       .attr('x', this.margin.left - 10)
-      .attr('y', (d: any, i: any) => {
+      .attr('y', (d: any) => {
         return leftLabelPosition(d.id());
       });
 
@@ -346,32 +344,32 @@ class MatrixLabels {
     const topLabelPosition = (nodeId: any) => this.margin.left + topLabelOffset + cellSize * (nodeOrder[nodeId] - bbox.x0) + cellSize / 2;
 
     labelsTop.enter().append('text')
-      .attr('id', (d: any, i: any) => { return 'nodeLabel_top_' + d.id(); })
+      .attr('id', (d: any) => { return 'nodeLabel_top_' + d.id(); })
       .attr('class', 'labelsTop nodeLabel')
-      .text((d: any, i: any) => { return d.label(); })
-      .attr('x', (d: any, i: any) => { return topLabelPosition(d.id()) })
+      .text((d: any) => { return d.label(); })
+      .attr('x', (d: any) => { return topLabelPosition(d.id()) })
       .attr('y', this.margin.left - 10)
       .attr('transform', (d: any, i: any) => { return 'rotate(-90, ' + (this.margin.top + cellSize * i + cellSize / 2) + ', ' + (this.margin.left - 10) + ')' })
-      .on('mouseover', (ev: MouseEvent, d: any, i: any) => {
+      .on('mouseover', (ev: MouseEvent, d: any) => {
         this.matrix.highlightNodes([d.id()]);
       })
       .on('mouseout', () => {
         this.matrix.highlightNodes([]);
       })
-      .on('click', (ev: MouseEvent, d: any, i: any) => {
+      .on('click', (ev: MouseEvent, d: any) => {
         this.matrix.nodeClicked(d);
       });
 
     labelsTop.exit().remove();
     labelsTop
-      .attr('id', (d: any, i: any) => { return 'nodeLabel_top_' + d.id(); })
-      .text((d: any, i: any) => { return d.label(); })
+      .attr('id', (d: any) => { return 'nodeLabel_top_' + d.id(); })
+      .text((d: any) => { return d.label(); })
       .attr('alignment-baseline', 'middle')
-      .attr('x', (d: any, i: any) => {
+      .attr('x', (d: any) => {
         return topLabelPosition(d.id());
       })
       .attr('y', this.margin.top - 10)
-      .attr('transform', (d: any, i: any) => { return 'rotate(-90, ' + (this.margin.top + topLabelOffset + cellSize * (nodeOrder[d.id()] - bbox.x0) + cellSize / 2) + ', ' + (this.margin.left - 10) + ')' });
+      .attr('transform', (d: any) => { return 'rotate(-90, ' + (this.margin.top + topLabelOffset + cellSize * (nodeOrder[d.id()] - bbox.x0) + cellSize / 2) + ', ' + (this.margin.left - 10) + ')' });
 
     this.updateHighlightedNodes();
   }
@@ -413,7 +411,6 @@ class MatrixVisualization {
   private matrix: Matrix;
   private cellSize = 0;
   private scale: number;
-  private tr: number[];
   private offset: number[];
   private nrows: number;
   private ncols: number;
@@ -436,7 +433,6 @@ class MatrixVisualization {
   private vertexColors: number[][] = [];
   private shaderMaterial: THREE.ShaderMaterial = new THREE.ShaderMaterial();
   private cellHighlightFrames: { [id: number]: THREE.Mesh[] };
-  private cellSelectionFrames: THREE.Mesh[];
   private linkWeightScale: any; // BEFORE d3.ScaleLinear;
   private bufferTexture: any; // BEFORE THREE.WebGLRenderTarget;
 
@@ -452,14 +448,12 @@ class MatrixVisualization {
     this.nrows = 0;
     this.ncols = 0;
     this.scale = 1;
-    this.tr = [0, 0];
     this.offset = [0, 0];
     this.guideLines = [];
     this.hoveredLinks = [];
     this.previousHoveredLinks = [];
     this.mouseDownCell = { row: 0, col: 0 };
     this.cellHighlightFrames = dynamicgraph.array(undefined, matrix.numberOfLinks());
-    this.cellSelectionFrames = dynamicgraph.array(undefined, matrix.numberOfLinks());
     this.linkWeightScale = d3.scaleLinear().range([0.1, 1])
       .domain([0, matrix.maxWeight()]);
 
@@ -520,10 +514,6 @@ class MatrixVisualization {
         gl_FragColor = vec4(vColor[0], vColor[1], vColor[2], vColor[3]);
       }`;
 
-    const attributes = {
-      customColor: { type: 'c', value: [] }
-    }
-
     // SHADERS
     this.shaderMaterial = new THREE.ShaderMaterial({
       //attributes: attributes, // Not Exist
@@ -538,10 +528,7 @@ class MatrixVisualization {
     this.geometry = new THREE.BufferGeometry();
   }
   render() {
-    let d = new Date();
-    const begin = d.getTime();
     this.renderer.render(this.scene, this.camera);
-    d = new Date();
   }
 
   updateData(data: { [id: number]: { [id: number]: dynamicgraph.NodePair } },
@@ -633,7 +620,6 @@ class MatrixVisualization {
     const links: dynamicgraph.Link[] = pair.links().toArray();
     let e: dynamicgraph.Link;
     let x, y: number;
-    const z = 1;
     const linkNum: number = links.length;
     const seg: number = (linkNum !== 0 )? this.cellSize / linkNum : 0;
     let meanWeight: number;
@@ -693,8 +679,6 @@ class MatrixVisualization {
     frame.position.y = -y;
     frame.position.z = 9;
     selectionFrames.add(frame);
-    this.cellSelectionFrames[id] = selectionFrames;
-
   }
   updateGuideLines() {
     this.guideLines = [];
@@ -716,7 +700,6 @@ class MatrixVisualization {
     )
     let m, pos;
     const mat = new THREE.LineBasicMaterial({ color: 0xeeeeee, linewidth: 1 });
-    let x, y;
     let j = 0;
     for (let i = 0; i <= h; i += this.cellSize) {
       pos = j * this.cellSize + this.offset[1];
@@ -741,13 +724,11 @@ class MatrixVisualization {
   highlightLink(cell: Cell) {
     const row = cell.row;
     const col = cell.col;
-    let id: number;
     if (this.linksPos[row]) {
       if (this.linksPos[row][col]) {
         for (const id of this.linksPos[row][col]) {
           this.toHoverLinks.push(id);
         }
-        //this.render();
       }
     }
   }
@@ -814,7 +795,7 @@ class MatrixVisualization {
       this.mouseDownCell = this.posToCell(this.mouseDownPos);
     }
   }
-  private mouseUpHandler = (e: Event) => {
+  private mouseUpHandler = () => {
     this.mouseDown = false;
     if (this.hoveredLinks)
       for (const id of this.hoveredLinks) {
@@ -825,7 +806,7 @@ class MatrixVisualization {
     this.hoveredLinks = [];
   }
   
-  clickHandler(e: Event) {
+  clickHandler() {
     console.log("click");
   }
 
@@ -856,7 +837,6 @@ class Matrix {
   private _scale: number;
   private _cellSize: any;
   private initialCellSize: any;
-  private hoveredLinks: dynamicgraph.Link[];
   private labelLength = 0;
   public margin: NMargin;
 
@@ -873,7 +853,6 @@ class Matrix {
     this.createOverviewImage = false;
     this.initialCellSize = 12;
     this._cellSize = this.initialCellSize;
-    this.hoveredLinks = [];
     this.longestLabelLength();
     this.margin = new NMargin(0);
     this.calculatePlotMargin();
@@ -896,8 +875,7 @@ class Matrix {
       cs = totalNodes !== 0 ? Math.min(this.visualization.height, this.visualization.width) / totalNodes : 0;
     else
       cs = 0
-    const scale = this.initialCellSize !== 0 ? cs / this.initialCellSize : 0;
-    return scale;
+    return this.initialCellSize !== 0 ? cs / this.initialCellSize : 0;
   }
   setVis(matrixVis: MatrixVisualization) {
     this.visualization = matrixVis;
@@ -1138,7 +1116,6 @@ class Matrix {
     if (link) {
       let val = link.weights(this.startTime, this.endTime).get(0);
       val = Math.round(val * 1000) / 1000;
-      const z = this._scale;
       const fw = this.initialCellSize;
       if (this.cellLabel)
         this.cellLabel.updateCellLabel(mx, my, val, fw);
@@ -1266,12 +1243,6 @@ function setStateHandler(m: messenger.SetStateMessage){
   if (m.viewType=="matrix" ){
  
     const state: messenger.MatrixControls = m.state as messenger.MatrixControls;    
-    // unpack / query that state object
-    // e.g., var params = state.params.
-    // set the parameters below:...  
-    
-   
-    
 
     // set labelling type
     matrix.reorderWorker(state.labellingType);
@@ -1282,43 +1253,16 @@ function setStateHandler(m: messenger.SetStateMessage){
     // set time (start/end)
     messenger.timeRange(state.timeSliderStart, state.timeSliderEnd, matrix.startTime, true);
   //timeSlider.set(state.timeSliderStart, state.timeSliderEnd);
-
-    // camera
-  /*  webgl=state.webglState;
-      webgl.camera.position.x=state.camer_position_x ;
-      webgl.camera.position.y=state.camer_position_y  ;
-      webgl.camera.position.z=state.camer_position_z  ;
-  */
   }
-
 }
 
 
 function getStateHandler( m: messenger.GetStateMessage){
   if (m.viewType=="matrix" ){
-
-    /*         var webglState=webgl;
-        var camer_position_x=webgl.camera.position.x;
-        var camer_position_y=webgl.camera.position.y;
-        var camer_position_z=webgl.camera.position.z; */
         const zoomValue: any = $('#cellSizeBox').val();
         const orderType: any = $('#labelOrdering').val();
 
-        //matrix.cellSize
       const matrixNetwork: messenger.NetworkControls=new messenger.MatrixControls("matrix",matrix.startTime.unixTime(),matrix.endTime.unixTime(),zoomValue,orderType);
-      
-/*       var bookmarksArray=JSON.parse(localStorage.getItem("vistorianBookmarks") || "[]");
-
-      if (m.bookmarkIndex!=bookmarksArray.length-1){
-          bookmarksArray[m.bookmarkIndex].controlsValues[1]=matrixNetwork;
-      }
-      else{
-          bookmarksArray[m.bookmarkIndex].controlsValues.push(matrixNetwork);
-        
-      }
-      localStorage.setItem("vistorianBookmarks", JSON.stringify(bookmarksArray)) */
-  
-       messenger.stateCreated(matrixNetwork,m.bookmarkIndex,m.viewType,m.isNewBookmark,m.typeOfMultiView);
-
+      messenger.stateCreated(matrixNetwork,m.bookmarkIndex,m.viewType,m.isNewBookmark,m.typeOfMultiView);
   }
 }
