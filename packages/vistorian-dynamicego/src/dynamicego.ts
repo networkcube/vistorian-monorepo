@@ -22,7 +22,6 @@ messenger.addEventListener(messenger.MESSAGE_GET_STATE, getStateHandler);
 const nodes: dynamicgraph.Node[] = dgraph.nodes().toArray();
 const links: dynamicgraph.Link[] = dgraph.links().toArray();
 const times: dynamicgraph.Time[] = dgraph.times().toArray();
-const linkTypes: any[] = dgraph.links().linkTypes();
 
 // VIS PARAMETERS
 const WIDTH: number = window.innerWidth;
@@ -30,7 +29,6 @@ const TABLE_MARGIN_LEFT = 200
 const TABLE_PADDING_LEFT = 5
 const TABLE_RIGHT = 100
 const ROW_HEIGHT = 13;
-const COL_WIDTH = 10;
 const NODE_OPACITY = .6
 const ANCHOR_END_DIAMETER = 2;
 const ANCHOR_START_DIAMETER = 4;
@@ -39,10 +37,7 @@ const LINK_OPACITY_HIGHLIGHTED = 1;
 const NODE_LABEL_COLOR = '#000'
 const NODE_LABEL_WEIGHT = 300
 let LABEL_ORDER: string;
-const CIRCLE_SEGMENTS = 7;
 const SCROLL_CHUNK = 2;
-const TIME_TICK_GAP_MAX = 12;
-const TIMELABEL_OPACITY = .3;
 const MARGIN_TOP = 70;
 const TABLE_TOP = 50;
 
@@ -50,8 +45,6 @@ const TABLE_TOP = 50;
 let svg: any;
 const nodeYPosFunction: any = d3.scaleLinear();
 const timeXFunction: any = d3.scaleLinear();
-let bar: any;
-let nodeLabel: any;
 
 /* INIT */
 let startAnchors: glutils.WebGLElementQuery;
@@ -59,32 +52,18 @@ let endAnchors: glutils.WebGLElementQuery;
 let arcs: glutils.WebGLElementQuery;
 let rowBars: any = [];
 
-const tickTimes: any[] = []
-let timeLabelHoverFields: any;
 let egoNode: any;
-
-// STATES
-const isShownNoneEgoLinks = true;
-const yearOffset = 0;
 
 /* IF TIMES UNDEFINED ? */
 let startUnix: number = times[0] ? times[0].unixTime() : 0;
 let endUnix: number = times[times.length - 1] ? times[times.length - 1].unixTime() : 0;
 let nodesScrollStart = 0;
-const granualarity: number = dgraph.getMinGranularity();
 let globalNodeOrder: any[] = nodes ? nodes.slice(0) : [];
 
 let currentNodeOrder: any[] = []
 for (let i = 0; i < globalNodeOrder.length; i++) {
     currentNodeOrder.push(i);
 }
-
-// VIS FUNCTIONS
-const lineFunction: any = d3.line()
-    .x((d: any) => { return d.x; })
-    .y((d: any) => { return d.y; })
-    .curve(d3.curveBasis);
-
 
 // UI SETUP
 const HEIGHT: any = window.innerHeight;
@@ -133,11 +112,11 @@ const filter = document.getElementById('labelOrdering');
 if (filter)
     filter.addEventListener('change', updateGlobalOrderHandler);
 
-export function updateGlobalOrderHandler() {
+export function updateGlobalOrderHandler(): void {
     updateGlobalOrder();
 }
 
-export function visualize() {
+export function visualize(): void {
 
     // SET UP GLOBAL PARAMETERS
     nodeYPosFunction.domain([0, nodes.length - 1])
@@ -166,10 +145,10 @@ export function visualize() {
     webgl.render();
 }
 
-export function createNodes() {
+export function createNodes(): void {
 
     // DRAW NODES
-    nodeLabel = svg.selectAll('.nodeLabel')
+    svg.selectAll('.nodeLabel')
         .data(nodes)
         .enter()
         .append('text')
@@ -180,13 +159,13 @@ export function createNodes() {
         .attr('class', 'nodeLabel')
         .style('font-weight', NODE_LABEL_WEIGHT)
         .style('fill', NODE_LABEL_COLOR)
-        .on('mouseover', (ev: MouseEvent, d: any, i: any) => {
+        .on('mouseover', (ev: MouseEvent, d: any) => {
             messenger.highlight('set', <utils.ElementCompound>{ nodes: [d] });
         })
-        .on('mouseout', (ev: MouseEvent, d: any, i: any) => {
+        .on('mouseout', () => {
             messenger.highlight('reset');
         })
-        .on('click', (ev: MouseEvent, d: any, i: any) => {
+        .on('click', (ev: MouseEvent, d: any) => {
             showEgoNetwork(d)
         });
 
@@ -205,43 +184,34 @@ export function createNodes() {
 
 }
 
-export function createTimes() {
+export function createTimes(): void {
 
-    timeLabelHoverFields = glutils.selectAll()
+     glutils.selectAll()
         .data(times)
         .append('rect')
-        .attr('x', (d: any, i: any) => {
+        .attr('x', (d: any) => {
             timeXFunction(d.unixTime()) - 6;
         })
         .attr('y', (d: any) => -TABLE_TOP + getTimeFormatted(d).length * 8)
-        .attr('z', 2)
-        // .style('fill', '#ff0000')
+        .attr('z', 2).style('fill', '#ff0000')
         .style('opacity', 0)
         .attr('width', 12)
         .attr('height', (d: any) => getTimeFormatted(d).length * 8)
-        .on('mouseover', (d: any, i: any) => {
+        .on('mouseover', (d: any) => {
             messenger.highlight('set', <utils.ElementCompound>{ times: [d] });
         })
-        .on('mouseout', (d: any, i: any) => {
+        .on('mouseout', () => {
             messenger.highlight('reset');
         })
-
 }
 
-export function getTimeFormatted(d: any) {
+export function getTimeFormatted(d: any): string {
     return utils.formatAtGranularity(d.time(), 7) + '-' + utils.formatAtGranularity(d.time(), 6)
 }
 
-export function createLinks() {
+export function createLinks(): void {
 
-    let l: dynamicgraph.Link;
-    let geometry: any;
-    let material: any;
-    let c: any, curve: any;
-    let points: any;
-    let x: any, y1: any, y2: any;
-    let p: any;
-    let splineObject: any;
+    let y1: any, y2: any;
     let yOffset: any;
 
     // CREATE ANCHORS
@@ -250,9 +220,9 @@ export function createLinks() {
 
     startAnchors
         .append('circle')
-        .attr('x', (l: any, i: any) =>
+        .attr('x', (l: any) =>
             timeXFunction(l.times().toArray()[0].unixTime()))
-        .attr('y', (l: any, i: any) => {
+        .attr('y', (l: any) => {
             y1 = nodeYPosFunction(currentNodeOrder[l.source.id()]);
             yOffset = ROW_HEIGHT / 2;
             return -(y1 + yOffset);
@@ -264,8 +234,8 @@ export function createLinks() {
     // CREATE ANCHORS
     endAnchors = glutils.selectAll().data(links);
     endAnchors.append('circle')
-        .attr('x', (l: any, i: any) => timeXFunction(l.times().toArray()[0].unixTime()))
-        .attr('y', (l: any, i: any) => {
+        .attr('x', (l: any) => timeXFunction(l.times().toArray()[0].unixTime()))
+        .attr('y', (l: any) => {
             y2 = nodeYPosFunction(currentNodeOrder[l.target.id()]);
             yOffset = ROW_HEIGHT / 2;
             return -(y2 + yOffset);
@@ -279,18 +249,18 @@ export function createLinks() {
         .data(links)
         .append('path')
         .attr('d', (l: any) => makeArcPath(l))
-        .attr('x', (l: any, i: any) => timeXFunction(l.times().toArray()[0].unixTime()))
-        .attr('y', (l: any, i: any) => -ROW_HEIGHT / 2)
+        .attr('x', (l: any) => timeXFunction(l.times().toArray()[0].unixTime()))
+        .attr('y', () => -ROW_HEIGHT / 2)
         .attr('z', 10)
         .style('stroke', (l: any) => l.getSelections()[0].color)
         .style('stroke-width', 1)
         .style('opacity', .3)
-        .on('mouseover', (d: any, i: any) => {
+        .on('mouseover', (d: any) => {
             // N.B glutils uses callback functions with same signatures as *old* d3 format
             messenger.highlight('set', <utils.ElementCompound>{ links: [d] });
             timeline.highlight(d.times().get(0).unixTime())
         })
-        .on('mouseout', (d: any, i: any) => {
+        .on('mouseout', () => {
             // N.B glutils uses callback functions with same signatures as *old* d3 format
             messenger.highlight('reset');
         })
@@ -299,7 +269,7 @@ export function createLinks() {
 
 // UPDATES
 
-export function timeRangeHandler(m: messenger.TimeRangeMessage) {
+export function timeRangeHandler(m: messenger.TimeRangeMessage): void {
 
     startUnix = m.startUnix;
     endUnix = m.endUnix;
@@ -311,16 +281,16 @@ export function timeRangeHandler(m: messenger.TimeRangeMessage) {
 
     // update link positions
     arcs
-        .attr('x', (l: any, i: any) => timeXFunction(l.times().toArray()[0].unixTime()))
-        .style('opacity', (l: any, i: any) => timeXFunction(l.times().toArray()[0].unixTime()) < 5 ? 0 : 1)
+        .attr('x', (l: any) => timeXFunction(l.times().toArray()[0].unixTime()))
+        .style('opacity', (l: any) => timeXFunction(l.times().toArray()[0].unixTime()) < 5 ? 0 : 1)
 
     startAnchors
-        .attr('x', (l: any, i: any) => timeXFunction(l.times().toArray()[0].unixTime()))
-        .style('opacity', (l: any, i: any) => timeXFunction(l.times().toArray()[0].unixTime()) < 5 ? 0 : 1)
+        .attr('x', (l: any) => timeXFunction(l.times().toArray()[0].unixTime()))
+        .style('opacity', (l: any) => timeXFunction(l.times().toArray()[0].unixTime()) < 5 ? 0 : 1)
 
     endAnchors
-        .attr('x', (l: any, i: any) => timeXFunction(l.times().toArray()[0].unixTime()))
-        .style('opacity', (l: any, i: any) => timeXFunction(l.times().toArray()[0].unixTime()) < 5 ? 0 : 1)
+        .attr('x', (l: any) => timeXFunction(l.times().toArray()[0].unixTime()))
+        .style('opacity', (l: any) => timeXFunction(l.times().toArray()[0].unixTime()) < 5 ? 0 : 1)
 
     updateLinks();
 
@@ -329,7 +299,7 @@ export function timeRangeHandler(m: messenger.TimeRangeMessage) {
     webgl.render();
 }
 
-export function updateEventHandler(m: messenger.Message) {
+export function updateEventHandler(m: messenger.Message): void {
     if (m.type == messenger.MESSAGE_SELECTION_FILTER) {
         updateCurrentOrder();
         return;
@@ -341,13 +311,12 @@ export function updateEventHandler(m: messenger.Message) {
 
 }
 
-export function updateCurrentOrder() {
+export function updateCurrentOrder(): void {
     currentNodeOrder = []
     for (let i = 0; i < nodes.length; i++) {
         currentNodeOrder.push(-1);
     }
     let rank = 0
-    let n: any;
     for (let i = 0; i < globalNodeOrder.length; i++) {
         if (globalNodeOrder[i].isVisible()) {
             currentNodeOrder[globalNodeOrder[i].id()] = rank
@@ -365,7 +334,7 @@ export function updateCurrentOrder() {
     webgl.render();
 }
 
-export function updateLinks() {
+export function updateLinks(): void {
     arcs
         .style('stroke-width', (d: any) =>
             d.isHighlighted()
@@ -419,7 +388,7 @@ export function updateLinks() {
         .style('fill', (d: dynamicgraph.Link) => d.getSelections()[0].showColor ? d.getSelections()[0].color : '#999')
 }
 
-export function updateNodes() {
+export function updateNodes(): void {
     d3.selectAll('.nodeLabel')
         .style('font-weight', (d: any) => d.isHighlighted() || d.links().highlighted().size() > 0 || d.neighbors().highlighted().size() > 0 ? 900 : NODE_LABEL_WEIGHT)
         .style('text-decoration', (d: any) => d.isHighlighted() ? 'underline' : 'none')
@@ -436,23 +405,23 @@ export function updateNodes() {
         .text((n: any) => egoNode == n ? 'EGO-->' + n.label() + ' (' + n.neighbors().size() + ')' : n.label() + ' (' + n.neighbors().size() + ')')
 }
 
-export function updateNodePositions(duration: number) {
+export function updateNodePositions(duration: number): void {
     d3.selectAll('.nodeLabel')
         .transition().duration(duration)
         .attr('y', (d: any) => MARGIN_TOP + nodeYPosFunction(currentNodeOrder[d.id()]) + ROW_HEIGHT - 5)
         .style('opacity', (n: any) => currentNodeOrder[n.id()] >= nodesScrollStart ? n == egoNode ? 1 : NODE_OPACITY : 0)
-
 }
-export function updateLinkPositions() {
-    let y1: any, y2: any, yOffset: any, points: any;
+
+export function updateLinkPositions(): void {
+    let y1: any, y2: any, yOffset: any;
     startAnchors
-        .attr('y', (l: any, i: any) => {
+        .attr('y', (l: any) => {
             y1 = nodeYPosFunction(currentNodeOrder[l.source.id()]);
             yOffset = ROW_HEIGHT / 2;
             return -(y1 + yOffset) + ANCHOR_START_DIAMETER / 2;
         })
     endAnchors
-        .attr('y', (l: any, i: any) => {
+        .attr('y', (l: any) => {
             y2 = nodeYPosFunction(currentNodeOrder[l.target.id()]);
             yOffset = ROW_HEIGHT / 2;
             return -(y2 + yOffset) + ANCHOR_END_DIAMETER / 2;
@@ -461,7 +430,7 @@ export function updateLinkPositions() {
         .attr('d', (l: any) => makeArcPath(l))
 }
 
-export function mouseWheelHandler(event: any) {
+export function mouseWheelHandler(event: any): void {
     event.preventDefault();
 
     if (
@@ -494,7 +463,7 @@ export function mouseWheelHandler(event: any) {
 /// HELPER
 
 
-export function updateGlobalOrder(validNodes?: dynamicgraph.Node[]) {
+export function updateGlobalOrder(validNodes?: dynamicgraph.Node[]): void {
     if (validNodes == undefined)
         globalNodeOrder = dgraph.nodes().toArray();
     else
@@ -524,7 +493,7 @@ export function updateGlobalOrder(validNodes?: dynamicgraph.Node[]) {
     updateCurrentOrder();
 }
 
-export function compareFunc(a: any, b: any) {
+export function compareFunc(a: any, b: any): number {
     return a.label() < b.label() ? -1 : 1;
 }
 
@@ -535,8 +504,8 @@ export function makeArcPath(link: dynamicgraph.Link): Record<'x'|'y', number>[] 
     const y2: number = Math.max(y2p, y1p)
     const points: any[] = [];
     points.push({ x: 0, y: -y1 })
-    points.push({ x: 0 + Math.abs(y1 - y2) / 5, y: -(y1 + (y2 - y1) / 6) })
-    points.push({ x: 0 + Math.abs(y1 - y2) / 5, y: -(y2 - (y2 - y1) / 6) })
+    points.push({ x: Math.abs(y1 - y2) / 5, y: -(y1 + (y2 - y1) / 6) })
+    points.push({ x: Math.abs(y1 - y2) / 5, y: -(y2 - (y2 - y1) / 6) })
     points.push({ x: 0, y: -y2 })
 
     const vectors: any = []
@@ -547,7 +516,7 @@ export function makeArcPath(link: dynamicgraph.Link): Record<'x'|'y', number>[] 
 }
 
 
-export function showEgoNetwork(n: dynamicgraph.Node) {
+export function showEgoNetwork(n: dynamicgraph.Node): void {
     if (egoNode == n) {
         egoNode = undefined;
         updateGlobalOrder()
@@ -567,7 +536,7 @@ export function showEgoNetwork(n: dynamicgraph.Node) {
 
 }
 
-function setStateHandler(m: messenger.SetStateMessage){
+function setStateHandler(m: messenger.SetStateMessage): void{
     if (m.viewType=="dynamicego"){
 
     const state: messenger.TimeArchsControls = m.state as messenger.TimeArchsControls;    
@@ -581,35 +550,13 @@ function setStateHandler(m: messenger.SetStateMessage){
 
     // set time (start/end)
     messenger.timeRange(state.timeSliderStart, state.timeSliderEnd, times[0], true);
-
-   // camera
-   /*  webgl=state.webglState;
-    webgl.camera.position.x=state.camera_position_x ;
-    webgl.camera.position.y=state.camera_position_y  ;
-    webgl.camera.position.z=state.camera_position_z  ; */
     }
 }
 
-function getStateHandler( m: messenger.GetStateMessage){
+function getStateHandler( m: messenger.GetStateMessage): void{
     if (m.viewType=="dynamicego"){
-        /* var webglState=webgl;
-        var camera_position_x=webgl.camera.position.x;
-        var camera_position_y=webgl.camera.position.y;
-        var camera_position_z=webgl.camera.position.z; */
         const dyEgoNetwork: messenger.NetworkControls=new messenger.TimeArchsControls("dynamicego",startUnix,endUnix,LABEL_ORDER);
-        //,webglState,camera_position_x,camera_position_y,camera_position_z);
-/*         var bookmarksArray=JSON.parse(localStorage.getItem("vistorianBookmarks") || "[]");
-
-        if (m.bookmarkIndex!=bookmarksArray.length-1){
-            bookmarksArray[m.bookmarkIndex].controlsValues[2]=dyEgoNetwork;
-        }
-        else{
-            bookmarksArray[m.bookmarkIndex].controlsValues.push(dyEgoNetwork);
-          
-        }
-        localStorage.setItem("vistorianBookmarks", JSON.stringify(bookmarksArray)) */
        messenger.stateCreated(dyEgoNetwork,m.bookmarkIndex,m.viewType,m.isNewBookmark,m.typeOfMultiView);
-
     }
 
 }
