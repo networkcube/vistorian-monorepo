@@ -1,5 +1,3 @@
-import * as bookmarkbrowser from './bookmarkbrowser';
+import * as bookmarkbrowser from "./bookmarkbrowser";
 
-export {
-    bookmarkbrowser
-};
+export { bookmarkbrowser };

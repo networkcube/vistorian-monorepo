@@ -1,5 +1,3 @@
-import * as nodelink from './nodelink';
+import * as nodelink from "./nodelink";
 
-export {
-    nodelink
-};
+export { nodelink };

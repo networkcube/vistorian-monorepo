@@ -1,42 +1,38 @@
-import {
-    Node,
-    Link,
-    Time,
-} from './dynamicgraph'
+import { Node, Link, Time } from "./dynamicgraph";
 
 ////////////////
 //// MOTIFS ////
 ////////////////
 
 export class Motif {
-    nodes: Node[] = []
-    links: Link[] = []
-    times: Time[] = []
+  nodes: Node[] = [];
+  links: Link[] = [];
+  times: Time[] = [];
 
-    constructor(nodes: Node[], links: Link[]) {
-        this.nodes = nodes.slice(0)
-        this.links = links.slice(0);
-    }
+  constructor(nodes: Node[], links: Link[]) {
+    this.nodes = nodes.slice(0);
+    this.links = links.slice(0);
+  }
 
-    print(): void {
-        console.log('nodes:', this.nodes.length, 'links:', this.links.length)
-    }
+  print(): void {
+    console.log("nodes:", this.nodes.length, "links:", this.links.length);
+  }
 }
 
 export class MotifTemplate {
-    nodes: number[] = []
-    links: number[][] = []
+  nodes: number[] = [];
+  links: number[][] = [];
 
-    constructor(nodes: number[], links: number[][]) {
-        this.nodes = nodes.slice(0)
-        this.links = links.slice(0);
-    }
+  constructor(nodes: number[], links: number[][]) {
+    this.nodes = nodes.slice(0);
+    this.links = links.slice(0);
+  }
 }
 
 export class MotifSequence {
-    motifs: Motif[] = [];
-    push(m: Motif): void {
-        this.motifs.push(m);
-    }
+  motifs: Motif[] = [];
+  push(m: Motif): void {
+    this.motifs.push(m);
+  }
 }
 //}

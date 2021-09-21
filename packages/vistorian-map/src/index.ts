@@ -1,5 +1,3 @@
-import * as map from './map';
+import * as map from "./map";
 
-export {
-    map
-};
+export { map };

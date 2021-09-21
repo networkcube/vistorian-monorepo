@@ -1,5 +1,3 @@
-import * as dynamicego from './dynamicego';
+import * as dynamicego from "./dynamicego";
 
-export {
-    dynamicego
-};
+export { dynamicego };
