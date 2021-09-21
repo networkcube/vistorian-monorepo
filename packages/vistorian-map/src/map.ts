@@ -1,13 +1,6 @@
 /* eslint-disable @typescript-eslint/triple-slash-reference */
 /// <reference path="./lib/google.maps.d.ts" />
 
-/* Tried adding to tsconfig.json:
-  "typeRoots": [
-    "node_modules/@types"
-  ]
-
- */
-
 import * as d3 from "d3";
 
 import * as dynamicgraph from 'vistorian-core/src/dynamicgraph';
@@ -31,17 +24,10 @@ let OVERLAP_FRACTION = 0.3;
 const NODE_SIZE = 4;
 const OUT_OF_TIME_NODES_OPACITY = 0;
 const LABEL_OFFSET_X = 20;
-const SHOW_NON_PLACE = true;
 let LINK_GAP = 2;
 
 const width: number = window.innerWidth
-const height: number = window.innerHeight - 100;
 
-interface Bounds {
-    left: number;
-    top: number;
-}
-const margin: Bounds = { left: 20, top: 20 };
 const TIMELINE_HEIGHT = 50;
 const MENU_HEIGHT = 50;
 
@@ -71,19 +57,7 @@ const nodePositionObjectsLookupTable: any[] = [];
 
 let geoMultiLinks:GeoMultiLink[] = [];
 
-// class GeoLink extends dynamicgraph.Link{
-
-//     GeoLink(){
-//         super();
-//     }
-//     sourceNPO: NodePositionObject;
-//     targetNPO: NodePositionObject;
-// }
-
 class GeoMultiLink{
-
-    // private sourceNPOs: NodePositionObject[] = [];
-    // private targetNPOs: NodePositionObject[] = [];
     private links:dynamicgraph.Link[] = []
 
     public numLinks()
@@ -138,8 +112,8 @@ linkWeightScale.domain([
 messenger.setDefaultEventListener(updateEvent);
 
 dgraph.nodes().toArray().forEach((n: any) => {
-    n['width'] = n.attr('label').length * 5 + 10,
-        n['height'] = 10;
+    n['width'] = n.attr('label').length * 5 + 10;
+    n['height'] = 10;
 })
 
 
@@ -165,8 +139,6 @@ let prevIntersectedLink: any;
 let prevIntersectedNode: any;
 let intersectedLink: any;
 let intersectedNode: any;
-let prevDist: any;
-let f: any;
 const F = 1000;
 
 
@@ -272,21 +244,10 @@ function init() {
         updateLinks(ev.data.id);
     };
 
-    let lastPanUpdate: number = window.performance.now();
-    map.addListener('center_changed', function (e: any) {
-
-        const current: any = window.performance.now();
-        const delta: any = current - lastPanUpdate;
-        if (delta < 1000) {
-            const pps = (1000 / delta).toFixed(0);
-        }
-        lastPanUpdate = current;
+    map.addListener('center_changed', function () {
         $('#weirdDiv').css('width', window.innerWidth * Math.random());
         $('#weirdDiv').parent().parent().css('width', window.innerWidth * Math.random());
-
-        const northWest: any = { x: map.getBounds().getSouthWest().lng(), y: map.getBounds().getNorthEast().lat() }
         messenger.zoomInteraction("map","span");
-
     });
 
     // create overlay over googlemaps
@@ -309,7 +270,7 @@ function init() {
             $(locationsPanelDiv).addClass('hidden').removeClass('shown');
         }
 
-        map.addListener('mouseout', function (ev: any) {
+        map.addListener('mouseout', function () {
             hideLocationsWindow();
         });
 
@@ -430,7 +391,6 @@ function init() {
         }
 
         // assign NPOs to links
-        let loc: any; // BEFORE queries.Location;
         visualLinks
             .each((link: any) => {
                 // get source and target NPO
@@ -634,7 +594,7 @@ function displayLocationsWindow(currentProjection: google.maps.MapCanvasProjecti
     // hit-test against every location we know about
     //      
     const foundLocations: Array<dynamicgraph.Location> = [];
-    locations.forEach(function (v, i, arr): void {
+    locations.forEach(function (v): void {
         const latlng = new google.maps.LatLng(v.latitude(), v.longitude());
         if (hittestRect.contains(latlng))
             foundLocations.push(v);
@@ -649,10 +609,10 @@ function displayLocationsWindow(currentProjection: google.maps.MapCanvasProjecti
     }
 
     const locationGroups: Array<{ loc: dynamicgraph.Location, nodes: Array<dynamicgraph.Node> }> = [];
-    foundLocations.forEach(function (v, i, arr) {
+    foundLocations.forEach(function (v) {
         locationGroups.push({
             loc: v,
-            nodes: foundNodes.filter(function (v2, i2, arr2): boolean {
+            nodes: foundNodes.filter(function (v2): boolean {
                 const nodeLoc = getNodeLocation(v2);
                 return nodeLoc !== null && nodeLoc.label() == v.label();
             })
@@ -660,7 +620,6 @@ function displayLocationsWindow(currentProjection: google.maps.MapCanvasProjecti
     });
     // so now we have the locations and the nodes, so we fill out the locationPanel
     //
-    let panelContents: any;
 
     $(locationsPanelDiv).html('');
     const locListItemSelection = d3.select(locationsPanelDiv)
@@ -678,7 +637,7 @@ function displayLocationsWindow(currentProjection: google.maps.MapCanvasProjecti
 
     locListItemSelection
         .selectAll('.nodeListItem')
-        .data(function (d: any, i: any) { return d.nodes; })
+        .data(function (d: any) { return d.nodes; })
         .enter()
         .append('p')
         .attr('class', 'nodeListItem')
@@ -700,7 +659,6 @@ function displayLocationsWindow(currentProjection: google.maps.MapCanvasProjecti
 
 
 function hittestNodeGeoPositions(bounds: google.maps.LatLngBounds): Array<dynamicgraph.Node> {
-    const pos: google.maps.Point = new google.maps.Point(0, 0);
     const result: Array<dynamicgraph.Node> = [];
     let n, locations;
     let llpos;
@@ -716,23 +674,6 @@ function hittestNodeGeoPositions(bounds: google.maps.LatLngBounds): Array<dynami
         }
     }
     return result;
-}
-
-function getNodeRelevantLocation(node: dynamicgraph.Node): dynamicgraph.Location | null {
-    if (node.locations().length == 0)
-        return null;
-    else
-        return node.locations().last();
-}
-
-function getNodeLatLng(node: dynamicgraph.Node): google.maps.LatLng {
-    if (node.locations().length == 0) {
-        return new google.maps.LatLng(0, 0);
-    } else {
-        return new google.maps.LatLng(
-            node.locations().last().latitude(),
-            node.locations().last().longitude());
-    }
 }
 
 function getNodeLocation(node: dynamicgraph.Node): dynamicgraph.Location | null {
@@ -977,7 +918,7 @@ function updateLocationMarkers() {
 // Calculates curve paths for links
 function updateLinkPaths() {
 
-    let path: any, dir: any, offset: any;
+    let dir: any, offset: any;
     let center: any;
     let link, link2: dynamicgraph.Link | any;
     let sourceNPO: any, targetNPO: any;
@@ -1135,30 +1076,6 @@ function linkOverlapTest(l1: any, l2: any): boolean
 //     return v * .2;
 // }
 
-function showLabel(i: any, b: any) {
-    if (b) {
-        d3.select('#nodeLabelBackground_' + i)
-            .attr('visibility', 'visible')
-        d3.select('#nodeLabel_' + i)
-            .attr('visibility', 'visible')
-    } else {
-        d3.select('#nodeLabelBackground_' + i)
-            .attr('visibility', 'hidden')
-        d3.select('#nodeLabel_' + i)
-            .attr('visibility', 'hidden')
-    }
-}
-
-function setRelationTypeVisibility(relType: any, b: any) {
-    d3.selectAll('.link')
-        .filter(function (d: any) {
-            return d.type == relType
-        })
-        .style('opacity', function (d: any) {
-            return b ? 1 : 0
-        })
-}
-
 
 /// TIMELINE/SLIDER
 
@@ -1254,11 +1171,6 @@ function updateEvent(m: messenger.TimeRangeMessage) { // BEFORE messenger.Messag
 }
 
 
-function reorderLabels() {
-    console.log('updateEvents')
-}
-
-
 function updateNodePositions() {
 
     let npo: any;
@@ -1273,36 +1185,6 @@ function updateNodePositions() {
     {
         if (!nodePositionObjects[i].fixedPosition) 
         {
-            // npo = nodePositionObjects[i]
-
-            // // calculate barycenter of related npos
-            // var x_bar: number = 0
-            // var y_bar: number = 0
-            // for (var j = 0; j < npo.inNeighbors.length; j++) 
-            // {
-            //     x_bar += npo.inNeighbors[j].x
-            //     y_bar += npo.inNeighbors[j].y
-            // }
-            // for (var j = 0; j < npo.outNeighbors.length; j++) 
-            // {
-            //     x_bar += npo.outNeighbors[j].x
-            //     y_bar += npo.outNeighbors[j].y
-            // }
-            // x_bar /= (npo.inNeighbors.length + npo.outNeighbors.length)
-            // y_bar /= (npo.inNeighbors.length + npo.outNeighbors.length)
-
-            // var x_vec: number = npo.x - x_bar;
-            // var y_vec: number = npo.y - y_bar;
-            // var d: number = Math.sqrt(x_vec * x_vec + y_vec * y_vec);
-            // if (d == 0) 
-            // {
-            //     d = 1;
-            // }
-            // x_vec /= d;
-            // y_vec /= d;
-
-            // npo.x = x_bar + 200 * x_vec;
-            // npo.y = y_bar + 200 * y_vec;
             npo.x = 0;
             npo.y = 0;
         }
@@ -1368,13 +1250,13 @@ function getNodePositionObjectsForLocation(n: dynamicgraph.Node, long: number, l
     }
     // init node positions
     const npo : any = new NodePositionObject();
-    npo.node = n,
-        npo.x = 0,
-        npo.y = 0,
-        npo.xOrig = 0,
-        npo.yOrig = 0,
-        npo.displaced = false
-    npo.displacementVector = [0, 0]
+    npo.node = n;
+    npo.x = 0;
+    npo.y = 0;
+    npo.xOrig = 0;
+    npo.yOrig = 0;
+    npo.displaced = false;
+    npo.displacementVector = [0, 0];
     nodePositionObjects.push(npo);
 
     return npo
@@ -1436,10 +1318,6 @@ function distToSegmentSquared(p: any, v: any, w: any) {
     return dist2(p, { x: v.x + t * (w.x - v.x), y: v.y + t * (w.y - v.y) });
 }
 
-function distToSegment(p: any, v: any, w: any) {
-    return Math.sqrt(distToSegmentSquared(p, v, w));
-}
-
 
 function getTextWidth(s: string) {
     return s.length * 8.8;
@@ -1475,21 +1353,9 @@ function setStateHandler(m: messenger.SetStateMessage){
 }
 
 function getStateHandler( m: messenger.GetStateMessage){
-    if (m.viewType=="map"){
-
-        const mapNetwork: messenger.NetworkControls=new messenger.MapControls("map",time_start.unixTime(),time_end.unixTime(),OVERLAP_FRACTION,LINK_OPACITY,NODE_UNPOSITIONED_OPACITY);
-      /*   var bookmarksArray=JSON.parse(localStorage.getItem("vistorianBookmarks") || "[]");
-
-      if (m.bookmarkIndex!=bookmarksArray.length-1){
-          bookmarksArray[m.bookmarkIndex].controlsValues[3]=mapNetwork;
-      }
-      else{
-          bookmarksArray[m.bookmarkIndex].controlsValues.push(mapNetwork);
-        
-      }
-      localStorage.setItem("vistorianBookmarks", JSON.stringify(bookmarksArray)) */
-  
-    messenger.stateCreated(mapNetwork,m.bookmarkIndex,m.viewType,m.isNewBookmark,m.typeOfMultiView);
-}
+    if (m.viewType == "map") {
+        const mapNetwork: messenger.NetworkControls = new messenger.MapControls("map", time_start.unixTime(), time_end.unixTime(), OVERLAP_FRACTION, LINK_OPACITY, NODE_UNPOSITIONED_OPACITY);
+        messenger.stateCreated(mapNetwork, m.bookmarkIndex, m.viewType, m.isNewBookmark, m.typeOfMultiView);
+    }
 
 }
