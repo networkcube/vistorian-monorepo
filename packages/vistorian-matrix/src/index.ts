@@ -1,5 +1,3 @@
-import * as matrix from './matrix';
+import * as matrix from "./matrix";
 
-export {
-    matrix
-};
+export { matrix };

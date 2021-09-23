@@ -1,72 +1,70 @@
 // import swiftSet from 'swiftset';
-import { Motif, MotifTemplate } from './queries'
-import { DynamicGraph, Link, Node } from './dynamicgraph'
-import netClustering from 'netclustering'
+import { Motif, MotifTemplate } from "./queries";
+import { DynamicGraph, Link, Node } from "./dynamicgraph";
+import netClustering from "netclustering";
 
-export function findTemplate(nodes: Node[],
-    template: MotifTemplate,
-    config?: Record<string, any>): void {
-
-    const nodeCount = template.nodes.length;
-    const linkCount = template.links.length;
-    // test every node if it matches one of the nodes in the motif
-    let n;
-    let links
-    const candidateNodes = []
-    for (let i = 0; i < nodes.length; i++) {
-        links = nodes[i].links().toArray();
-        for (let j = 0; j < nodeCount; j++) {
-            for (let k = 0; k < linkCount; k++) {
-                if (template.links[k][0] == template.nodes[j])
-
-                    for (let l = 0; l < linkCount; l++) {
-                        // TOOD: this is unfinished
-                    }
-            }
-        }
+export function findTemplate(
+  nodes: Node[],
+  template: MotifTemplate,
+  config?: Record<string, any>
+): void {
+  const nodeCount = template.nodes.length;
+  const linkCount = template.links.length;
+  // test every node if it matches one of the nodes in the motif
+  let n;
+  let links;
+  const candidateNodes = [];
+  for (let i = 0; i < nodes.length; i++) {
+    links = nodes[i].links().toArray();
+    for (let j = 0; j < nodeCount; j++) {
+      for (let k = 0; k < linkCount; k++) {
+        if (template.links[k][0] == template.nodes[j])
+          for (let l = 0; l < linkCount; l++) {
+            // TOOD: this is unfinished
+          }
+      }
     }
-
-
+  }
 }
 
+export function findClusters(
+  nodes: Node[],
+  config?: Record<string, any>
+): Record<string, any> {
+  if (nodes.length == 0) return [];
 
-export function findClusters(nodes: Node[], config?: Record<string, any>): Record<string, any> {
-    if (nodes.length == 0)
-        return []
+  const g: DynamicGraph = nodes[0].g;
+  const links: any[] = nodes[0].g.links().toArray();
+  for (let i = 0; i < links.length; i++) {
+    links[i].value = links[i].weights().sum(); // VALUE ???
+  }
+  const clusters = netClustering.cluster(nodes, links);
 
-    const g: DynamicGraph = nodes[0].g
-    const links: any[] = nodes[0].g.links().toArray()
-    for (let i = 0; i < links.length; i++) {
-        links[i].value = links[i].weights().sum() // VALUE ???
+  const motifs = [];
+  const clusterArray = [];
+  // replace ids with nodes
+
+  let clusterLinks: any[] = [];
+  let cl;
+  let s, t;
+  for (let c = 0; c < clusters.length; c++) {
+    clusterLinks = [];
+    cl = clusters[c];
+    // exclude clusters with less than 4 nodes
+    if (cl.length < 4) continue;
+
+    for (let j = 0; j < cl.length; j++) {
+      cl[j] = g.node(parseInt(cl[j]));
     }
-    const clusters = netClustering.cluster(nodes, links);
-
-    const motifs = []
-    const clusterArray = []
-    // replace ids with nodes
-
-    let clusterLinks: any[] = []
-    let cl;
-    let s, t
-    for (let c = 0; c < clusters.length; c++) {
-        clusterLinks = []
-        cl = clusters[c]
-        // exclude clusters with less than 4 nodes
-        if (cl.length < 4)
-            continue;
-
-        for (let j = 0; j < cl.length; j++) {
-            cl[j] = g.node(parseInt(cl[j]))
-        }
-        for (let i = 0; i < cl.length; i++) {
-            for (let j = i + 1; j < cl.length; j++) {
-                clusterLinks = clusterLinks.concat(cl[i].linksBetween(cl[j]).toArray())
-            }
-        }
-        motifs.push({ nodes: cl, links: clusterLinks })
+    for (let i = 0; i < cl.length; i++) {
+      for (let j = i + 1; j < cl.length; j++) {
+        clusterLinks = clusterLinks.concat(cl[i].linksBetween(cl[j]).toArray());
+      }
     }
+    motifs.push({ nodes: cl, links: clusterLinks });
+  }
 
-    return motifs;
+  return motifs;
 }
 
 /*
@@ -109,26 +107,38 @@ export function findCliques(nodes: Node[], config?: any) {
 };
 */
 
-function bronKerbosch(nodes: Node[], r: any[], p: any[], x: any[], cliques: any[], config: Record<string, any>) {
+function bronKerbosch(
+  nodes: Node[],
+  r: any[],
+  p: any[],
+  x: any[],
+  cliques: any[],
+  config: Record<string, any>
+) {
+  if (p.length === 0 && x.length === 0) {
+    cliques.push(r);
+    return;
+  }
 
-    if (p.length === 0 && x.length === 0) {
-        cliques.push(r);
-        return;
-    }
+  p.forEach(function (v) {
+    const tempR = r.splice(0);
+    tempR.push(v);
+    bronKerbosch(
+      nodes,
+      tempR,
+      p.filter(function (temp) {
+        return v.neighbors().contains(temp);
+      }),
+      x.filter(function (temp) {
+        return v.neighbors().contains(temp);
+      }),
+      cliques,
+      config
+    );
 
-    p.forEach(function (v) {
-        const tempR = r.splice(0);
-        tempR.push(v);
-        bronKerbosch(nodes, tempR, p.filter(function (temp) {
-            return v.neighbors().contains(temp);
-        }), x.filter(function (temp) {
-            return v.neighbors().contains(temp);
-        }), cliques, config);
-
-        p.splice(p.indexOf(v), 1);
-        if (x.indexOf(v) == -1)
-            x.push(v);
-    });
+    p.splice(p.indexOf(v), 1);
+    if (x.indexOf(v) == -1) x.push(v);
+  });
 }
 
 /*
@@ -206,28 +216,30 @@ function bronKerboschIterative(nodes: Node[], config: Object): any[] {
 }
 */
 
-export function findFullEgoNetwork(nodes: Node[], config?: Record<string, any>): Motif[] {
-    const motifs: Motif[] = [];
-    let ns;
-    let ls;
-    let finalLinks;
-    let n;
-    for (let i = 0; i < nodes.length; i++) {
-        n = nodes[i];
-        finalLinks = [];
-        ns = n.neighbors().removeDuplicates()
-        ls = ns.links().removeDuplicates().toArray();
-        ns = ns.toArray().concat(n);
-        for (let j = 0; j < ls.length; j++) {
-            if (ls[j] == undefined)
-                continue;
-            if (ns.indexOf(ls[j].source) > -1 && ns.indexOf(ls[j].target) > -1) {
-                finalLinks.push(ls[j])
-            }
-        }
-        motifs.push(new Motif(ns, finalLinks))
+export function findFullEgoNetwork(
+  nodes: Node[],
+  config?: Record<string, any>
+): Motif[] {
+  const motifs: Motif[] = [];
+  let ns;
+  let ls;
+  let finalLinks;
+  let n;
+  for (let i = 0; i < nodes.length; i++) {
+    n = nodes[i];
+    finalLinks = [];
+    ns = n.neighbors().removeDuplicates();
+    ls = ns.links().removeDuplicates().toArray();
+    ns = ns.toArray().concat(n);
+    for (let j = 0; j < ls.length; j++) {
+      if (ls[j] == undefined) continue;
+      if (ns.indexOf(ls[j].source) > -1 && ns.indexOf(ls[j].target) > -1) {
+        finalLinks.push(ls[j]);
+      }
     }
-    return motifs;
+    motifs.push(new Motif(ns, finalLinks));
+  }
+  return motifs;
 }
 
 /*
@@ -339,8 +351,5 @@ export function findTriangles(nodes: Node[], config?: any): Motif[] {
     return motifs;
 }
 */
-
-
-
 
 //}

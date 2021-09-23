@@ -8,6 +8,7 @@
         "build": "tsc --pretty false && webpack --config webpack.config.js",
         "lint": "eslint src/",
         "clean": "rimraf lib",
+        "reformat": "prettier --write src/",
         "start": "webpack-dev-server --config webpack.config.js --open",
         "prepare": "npm run build"
     },
@@ -19,6 +20,7 @@
         "@typescript-eslint/eslint-plugin": "^4.31.0",
         "@typescript-eslint/parser": "^4.31.0",
         "eslint": "^7.32.0",
+        "prettier": "^2.4.1",
         "rimraf": "^2.6.3",
         "ts-loader": "^5.3.3",
         "typescript": "^3.2.4",
