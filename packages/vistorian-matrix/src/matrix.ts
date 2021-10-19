@@ -461,7 +461,7 @@ class MatrixVisualization {
   private pixi_app: PIXI.Application;
   private tooltipTextStyle: PIXI.TextStyle;
   private tooltip: PIXI.Text; // formerly cellLabel
-  private showTooltip: Boolean;
+  private showTooltip: boolean;
 
   private data: { [id: number]: { [id: number]: dynamicgraph.NodePair } } = {};
   constructor(
@@ -630,7 +630,7 @@ class MatrixVisualization {
       this.pixi_app.stage.addChild(sprite);
 
       // highlight frame
-      let frame = new PIXI.Graphics();
+      const frame = new PIXI.Graphics();
       frame.lineStyle(1, COLOR_HIGHLIGHT , 1); // width, color, alpha
       frame.beginFill(0, 0); // color, alpha: alpha of 0 is transparent
       frame.drawRect(x, y, seg - 1, this.cellSize - 1) // TODO: should this be -y?
@@ -746,7 +746,7 @@ class MatrixVisualization {
     }
     const link = this.matrix._dgraph.link(linkId);
     if (link) {
-      let val = link.weights(this.matrix.startTime, this.matrix.endTime).get(0);
+      const val = link.weights(this.matrix.startTime, this.matrix.endTime).get(0);
       const label = (Math.round(val * 1000) / 1000).toString();
       const fw = this.matrix.initialCellSize;
 
