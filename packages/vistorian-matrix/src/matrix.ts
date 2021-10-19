@@ -1,6 +1,17 @@
 import * as d3 from "d3";
 
-import * as THREE from "three";
+import * as PIXI from 'pixi.js'
+
+// TOOD:
+// [x] mousover resets zoom/pan [fixedover by changing where this.updateVisibleBox is called
+// [x] filtering by time broken [fixed by setting node opacity]
+// [x] use this.canvas in mroe places isntead of  elem.select("canvas").node()
+// - reimplement CellLabel tooltips
+
+// Fixed vs online:
+// - on full zoom, top row always visible, rather than flashing in and out of view
+// - mouse-over pan-jump bug
+
 
 import * as dynamicgraph from "vistorian-core/src/dynamicgraph";
 import * as utils from "vistorian-core/src/utils";
@@ -9,7 +20,6 @@ import * as messenger from "vistorian-core/src/messenger";
 import * as ordering from "vistorian-core/src/ordering";
 
 import * as TimeSlider from "vistorian-core/src/timeslider";
-import * as glutils from "vistorian-core/src/glutils";
 
 const COLOR_HIGHLIGHT = 0x000000;
 const COLOR_SELECTION = 0xff0000;
@@ -132,49 +142,6 @@ class MatrixTimeSlider {
   }
 }
 
-class CellLabel {
-  private cellLabelBackground: any;
-  private cellLabel: any;
-  constructor() {
-    this.cellLabelBackground = glutils
-      .selectAll()
-      .data([{ id: 0 }])
-      .append("text")
-      .style("opacity", 0)
-      .attr("z", -1)
-      .style("font-size", "12px")
-      .style("stroke", "#fff")
-      .style("stroke-width", 2.5);
-
-    this.cellLabel = glutils
-      .selectAll()
-      .data([{ id: 0 }])
-      .append("text")
-      .style("opacity", 0)
-      .attr("z", -1)
-      .style("font-size", "12px");
-  }
-  hideCellLabel() {
-    this.cellLabelBackground.style("opacity", 0);
-    this.cellLabel.attr("z", -1).style("opacity", 0);
-  }
-  updateCellLabel(mx: number, my: number, val: number | null, fw: number) {
-    this.cellLabel
-      .attr("x", mx + 40)
-      .attr("y", -my)
-      .style("opacity", 1)
-      .text(val ? val : 0)
-      .attr("z", 2)
-      .style("font-size", fw + "px");
-    this.cellLabelBackground
-      .attr("x", mx + 40)
-      .attr("y", -my)
-      .style("opacity", 1)
-      .text(val ? val : 0)
-      .attr("z", 2)
-      .style("font-size", fw + "px");
-  }
-}
 class MatrixOverview {
   private width: number;
   private height: number;
@@ -479,6 +446,7 @@ class MatrixLabels {
   }
 }
 
+
 class MatrixVisualization {
   private elem: any;
   public width: number;
@@ -497,19 +465,14 @@ class MatrixVisualization {
   private hoveredLinks: number[] | undefined;
   private previousHoveredLinks: number[] | undefined;
   private canvas: any; // HTMLCanvasElement = new HTMLCanvasElement();
-  private view: any; // BEFORE D3.Selection;
-  private scene: any; // BEFORE THREE.Scene = new THREE.Scene();
-  private camera: any; // BEFORE THREE.OrthographicCamera;
-  private renderer: any; // BEFORE THREE.WebGLRenderer = new THREE.WebGLRenderer();
-  private geometry: THREE.BufferGeometry = new THREE.BufferGeometry();
-  private mesh: THREE.Mesh = new THREE.Mesh();
-  private guideLines: THREE.Object3D[];
-  private vertexPositions: number[][] = [];
-  private vertexColors: number[][] = [];
-  private shaderMaterial: THREE.ShaderMaterial = new THREE.ShaderMaterial();
-  private cellHighlightFrames: { [id: number]: THREE.Mesh[] };
+
+  private cellHighlightFrames: { [id: number]: PIXI.Graphics[] };
   private linkWeightScale: any; // BEFORE d3.ScaleLinear;
-  private bufferTexture: any; // BEFORE THREE.WebGLRenderTarget;
+
+  private pixi_app: PIXI.Application;
+  private tooltipTextStyle: PIXI.TextStyle;
+  private tooltip: PIXI.Text; // formerly cellLabel
+  private showTooltip: Boolean;
 
   private data: { [id: number]: { [id: number]: dynamicgraph.NodePair } } = {};
   constructor(
@@ -526,7 +489,6 @@ class MatrixVisualization {
     this.ncols = 0;
     this.scale = 1;
     this.offset = [0, 0];
-    this.guideLines = [];
     this.hoveredLinks = [];
     this.previousHoveredLinks = [];
     this.mouseDownCell = { row: 0, col: 0 };
@@ -544,74 +506,44 @@ class MatrixVisualization {
     bcNode.onmessage = (ev) => {
       this.updateHighlightedLinks([ev.data.id]);
     };
+
+    this.pixi_app = new PIXI.Application({
+      width: this.width, height: this.height, backgroundColor: 0xffffff, resolution: window.devicePixelRatio || 1,
+    });
+
+    this.tooltipTextStyle = new PIXI.TextStyle({
+      //fontFamily: 'Arial',
+      fontSize: "12px",
+      fill: '#000000',
+      stroke: '#000000',
+    });
+    this.tooltip = new PIXI.Text("", this.tooltipTextStyle);
+    this.showTooltip = false;
+
     this.init();
   }
   init() {
-    this.initWebGL();
-    this.elem.node().appendChild(this.canvas);
-    this.view = d3.select(this.canvas);
-    this.initGeometry();
+    this.elem.node().appendChild(this.pixi_app.view);
+    this.canvas = this.elem.select("canvas").node();
+
     this.cellSize = this.matrix.cellSize;
-  }
-  webgl: any; //glutils.WebGL = new glutils.WebGL();
-  initWebGL() {
-    this.webgl = glutils.initWebGL("visCanvasFO", this.width, this.height);
-    this.webgl.enablePanning(false);
-    this.webgl.camera.position.x = this.width / 2;
-    this.webgl.camera.position.y = -this.height / 2;
-    this.webgl.camera.position.z = 1000;
 
-    this.canvas = this.webgl.canvas;
-
-    this.scene = this.webgl.scene;
-    this.camera = this.webgl.camera;
-    this.renderer = this.webgl.renderer;
-
-    this.initTextureFramebuffer();
-
-    this.webgl.canvas.addEventListener("mousemove", this.mouseMoveHandler);
-    this.webgl.canvas.addEventListener("mousedown", this.mouseDownHandler);
-    this.webgl.canvas.addEventListener("mouseup", this.mouseUpHandler);
-    this.webgl.canvas.addEventListener("click", this.clickHandler);
+    // register event handlers
+    const canvas_node = this.canvas;
+    canvas_node.addEventListener("mousemove", this.mouseMoveHandler);
+    canvas_node.addEventListener("mousedown", this.mouseDownHandler);
+    canvas_node.addEventListener("mouseup", this.mouseUpHandler);
   }
 
-  initTextureFramebuffer() {
-    this.bufferTexture = new THREE.WebGLRenderTarget(256, 256, {
-      minFilter: THREE.NearestMipMapNearestFilter,
-      magFilter: THREE.LinearFilter,
-    });
-  }
-
-  initGeometry() {
-    const vertexShaderProgram = `
-      attribute vec4 customColor;
-      varying vec4 vColor;
-      void main() {
-        vColor = customColor;
-        gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1 );
-      }`;
-    const fragmentShaderProgram = `
-      varying vec4 vColor;
-      void main() {
-        gl_FragColor = vec4(vColor[0], vColor[1], vColor[2], vColor[3]);
-      }`;
-
-    // SHADERS
-    this.shaderMaterial = new THREE.ShaderMaterial({
-      //attributes: attributes, // Not Exist
-      vertexShader: vertexShaderProgram,
-      fragmentShader: fragmentShaderProgram,
-    });
-    this.shaderMaterial.blending = THREE.NormalBlending;
-    this.shaderMaterial.depthTest = true;
-    this.shaderMaterial.transparent = true;
-    this.shaderMaterial.side = THREE.DoubleSide;
-
-    this.geometry = new THREE.BufferGeometry();
-  }
   render() {
-    this.renderer.render(this.scene, this.camera);
+    // TODO: is this ever called? does it need to do anything?
+   // this.renderer.render(this.scene, this.camera);
   }
+
+
+  // what currently happens
+  // - update data iterates through this.cellHighlightFrames and removes form scene; special handling of getImageData
+
 
   updateData(
     data: { [id: number]: { [id: number]: dynamicgraph.NodePair } },
@@ -629,21 +561,9 @@ class MatrixVisualization {
     this.offset = offset;
     this.cellSize = cellSize;
 
-    if (this.geometry) {
-      this.scene.remove(this.mesh);
-    }
-    if (this.hoveredLinks)
-      for (const id of this.hoveredLinks) {
-        if (this.cellHighlightFrames[id])
-          for (const frame of this.cellHighlightFrames[id])
-            this.scene.remove(frame);
-      }
-    for (let i = 0; i < this.guideLines.length; i++) {
-      this.scene.remove(this.guideLines[i]);
-    }
+    // delete all child objects from scene
+    this.pixi_app.stage.removeChildren();
 
-    this.vertexPositions = [];
-    this.vertexColors = [];
     this.cellHighlightFrames = [];
     this.linksPos = {};
 
@@ -655,51 +575,36 @@ class MatrixVisualization {
       }
     }
 
-    // CREATE + ADD MESH
-    this.geometry.addAttribute(
-      "position",
-      new THREE.BufferAttribute(glutils.makeBuffer3f(this.vertexPositions), 3)
-    );
-    this.geometry.addAttribute(
-      "customColor",
-      new THREE.BufferAttribute(glutils.makeBuffer4f(this.vertexColors), 4)
-    );
-
-    this.mesh = new THREE.Mesh(this.geometry, this.shaderMaterial);
-
-    (
-      this.geometry.attributes["customColor"] as THREE.BufferAttribute
-    ).needsUpdate = true;
-
-    this.scene.add(this.mesh);
-    this.render();
+    // This is set if we need to update the image in the pan/zoom control
     if (getImageData) {
+      // TODO: why smallDim not largeDim?
       const smallDim = Math.min(this.height, this.width);
+      const largeDim = Math.max(this.height, this.width);
 
-      this.resizeCanvas(smallDim, smallDim);
+     // this.resizeCanvas(smallDim, smallDim);
+      this.elem.select("canvas").attr("width", smallDim).attr("height", smallDim);
 
-      this.matrix.hideCellLabel();
-      this.render();
+      this.pixi_app.stage.removeChild(this.tooltip);
+
+      //this.render();
+      this.pixi_app.render();
 
       const imgData = this.canvas.toDataURL();
       this.matrix.updateOverviewImage(imgData);
 
-      this.resizeCanvas(this.width, this.height);
+      // this.resizeCanvas(this.width, this.height);
+      this.elem.select("canvas").attr("width", this.width).attr("height", this.height);
+
     }
+
     this.updateGuideLines();
-    this.render();
+
+    if (this.showTooltip) {
+      this.pixi_app.stage.addChild(this.tooltip);
+    }
+   // this.render();
   }
 
-  resizeCanvas(width: number, height: number) {
-    this.camera.position.x = width / 2;
-    this.camera.position.y = -height / 2;
-    this.camera.left = width / -2;
-    this.camera.right = width / 2;
-    this.camera.top = height / 2;
-    this.camera.bottom = height / -2;
-    this.camera.updateProjectionMatrix();
-    this.renderer.setSize(width, height);
-  }
 
   addCell(row: number, col: number, pair: dynamicgraph.NodePair) {
     const links: dynamicgraph.Link[] = pair.links().toArray();
@@ -709,7 +614,6 @@ class MatrixVisualization {
     const seg: number = linkNum !== 0 ? this.cellSize / linkNum : 0;
     let meanWeight: number;
     let alpha: number;
-    let color: THREE.Color;
 
     for (let j = 0; j < links.length; j++) {
       e = links[j];
@@ -719,117 +623,63 @@ class MatrixVisualization {
       meanWeight = e.weights()
         ? e.weights(this.matrix.startTime, this.matrix.endTime).mean()
         : 1;
-      color = new THREE.Color(webColor);
       alpha = this.linkWeightScale(Math.abs(meanWeight));
       if (!e.isVisible()) alpha = 0;
 
-      x = col * this.cellSize + seg * j + seg / 2 + this.offset[0];
-      y = row * this.cellSize + this.cellSize / 2 + this.offset[1];
-      this.paintCell(
-        e.id(),
-        x,
-        y,
-        seg,
-        [color.r, color.g, color.b, alpha],
-        meanWeight > 0
-      );
+      x = col * this.cellSize + seg * j + this.offset[0];
+      y = row * this.cellSize + this.offset[1];
 
+      // TODO: paintCell draws a diamond for negative edge weights?
+
+      const sprite = new PIXI.Sprite(PIXI.Texture.WHITE);
+      sprite.tint = PIXI.utils.string2hex(webColor);
+      sprite.alpha = alpha;
+      sprite.x = x;
+      sprite.y = y;
+      sprite.width = seg - 1;
+      sprite.height = this.cellSize - 1;
+      this.pixi_app.stage.addChild(sprite);
+
+      // highlight frame
+      let frame = new PIXI.Graphics();
+      frame.lineStyle(1, COLOR_HIGHLIGHT , 1); // width, color, alpha
+      frame.beginFill(0, 0); // color, alpha: alpha of 0 is transparent
+      frame.drawRect(x, y, seg - 1, this.cellSize - 1) // TODO: should this be -y?
+
+      if (!this.cellHighlightFrames[e.id()]) this.cellHighlightFrames[e.id()] = [];
+      this.cellHighlightFrames[e.id()].push(frame);
+
+      // N.B. selection framews were previously created but not then used
       if (!this.linksPos[row]) this.linksPos[row] = {};
       if (!this.linksPos[row][col]) this.linksPos[row][col] = [];
       this.linksPos[row][col].push(e.id());
     }
   }
 
-  paintCell(
-    id: number,
-    x: number,
-    y: number,
-    w: number,
-    color: number[],
-    positive: boolean
-  ) {
-    const h: number = this.cellSize;
-    const highlightFrames: THREE.Mesh = new THREE.Mesh();
-    const selectionFrames: THREE.Mesh = new THREE.Mesh();
-    let frame: any; // BEFORE THREE.Line;
 
-    if (positive) {
-      glutils.addBufferedRect(
-        this.vertexPositions,
-        x,
-        -y,
-        0,
-        w - 1,
-        h - 1,
-        this.vertexColors,
-        color
-      );
-    } else {
-      glutils.addBufferedDiamond(
-        this.vertexPositions,
-        x,
-        -y,
-        0,
-        w - 1,
-        h - 1,
-        this.vertexColors,
-        color
-      );
-    }
-    // highlight frame
-    frame = glutils.createRectFrame(w - 1, h - 1, COLOR_HIGHLIGHT, 1);
-    frame.position.x = x;
-    frame.position.y = -y;
-    frame.position.z = 10;
-    highlightFrames.add(frame);
-    if (!this.cellHighlightFrames[id]) this.cellHighlightFrames[id] = [];
-    this.cellHighlightFrames[id].push(highlightFrames);
-
-    // selection frame
-    frame = glutils.createRectFrame(w - 1, h - 1, COLOR_SELECTION, 2);
-    frame.position.x = x;
-    frame.position.y = -y;
-    frame.position.z = 9;
-    selectionFrames.add(frame);
-  }
   updateGuideLines() {
-    this.guideLines = [];
-
     if (!this.data) return;
 
     const w = this.ncols * this.cellSize;
     const h = this.nrows * this.cellSize;
-
-    const geometry1 = new THREE.Geometry();
-    geometry1.vertices.push(
-      new THREE.Vector3(this.offset[0], 0, 0),
-      new THREE.Vector3(w + this.offset[0], 0, 0)
-    );
-    const geometry2 = new THREE.Geometry();
-    geometry2.vertices.push(
-      new THREE.Vector3(0, -this.offset[1], 0),
-      new THREE.Vector3(0, -h - this.offset[1], 0)
-    );
     let m, pos;
-    const mat = new THREE.LineBasicMaterial({ color: 0xeeeeee, linewidth: 1 });
-    let j = 0;
+
+    const graphics = new PIXI.Graphics();
+    graphics.lineStyle(1, 0xf6f6f6, 1); // width, color, alpha
+
     for (let i = 0; i <= h; i += this.cellSize) {
-      pos = j * this.cellSize + this.offset[1];
-      m = new THREE.Line(geometry1, mat);
-      m.position.set(0, -pos, 0);
-      this.scene.add(m);
-      this.guideLines.push(m);
-      j++;
+      pos = i + this.offset[1];
+      graphics.moveTo(this.offset[0], pos);
+      graphics.lineTo(this.offset[0] + w, pos);
     }
-    j = 0;
+
     for (let i = 0; i <= w; i += this.cellSize) {
-      pos = j * this.cellSize + this.offset[0];
-      m = new THREE.Line(geometry2, mat);
-      m.position.set(pos, 0, 0);
-      this.scene.add(m);
-      this.guideLines.push(m);
-      j++;
+      pos = i + this.offset[0];
+      graphics.moveTo(pos, this.offset[1]);
+      graphics.lineTo(pos, this.offset[1] + h); // TODO: check sign
     }
+
+    this.pixi_app.stage.addChild(graphics);
   }
 
   highlightLink(cell: Cell) {
@@ -861,7 +711,13 @@ class MatrixVisualization {
   }
 
   private mouseMoveHandler = (e: MouseEvent) => {
-    const mpos: Pos = glutils.getMousePos(this.canvas, e.clientX, e.clientY);
+    // TODO: update
+
+    const rect = this.canvas.getBoundingClientRect();
+    const mpos: Pos = {
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    };
 
     this.toHoverLinks = [];
 
@@ -885,12 +741,35 @@ class MatrixVisualization {
     }
     if (this.toHoverLinks.length > 0) {
       this.matrix.highlightLinks(this.toHoverLinks);
-      this.matrix.updateCellLabel(this.toHoverLinks[0], mpos.x, mpos.y);
+      this.updateTooltip(this.toHoverLinks[0], mpos.x, mpos.y);
     } else {
       this.matrix.highlightLinks([]);
-      this.matrix.updateCellLabel(-1, -1000, -1000);
+      this.updateTooltip(-1, -1000, -1000);
     }
   };
+
+  updateTooltip(linkId: number, mx: number, my: number) {
+    if (linkId < 0) {
+
+      this.showTooltip = false;
+      this.pixi_app.stage.removeChild(this.tooltip);
+      return;
+    }
+    const link = this.matrix._dgraph.link(linkId);
+    if (link) {
+      let val = link.weights(this.matrix.startTime, this.matrix.endTime).get(0);
+      const label = (Math.round(val * 1000) / 1000).toString();
+      const fw = this.matrix.initialCellSize;
+
+      this.showTooltip = true;
+      this.pixi_app.stage.removeChild(this.tooltip);
+      this.tooltipTextStyle.fontSize = fw + "px";
+      this.tooltip = new PIXI.Text(label, this.tooltipTextStyle);
+      this.tooltip.x = mx + 40;
+      this.tooltip.y = my; // ?
+      this.pixi_app.stage.addChild(this.tooltip);
+    }
+  }
 
   updateHighlightedLinks(hoveredLinks: number[] | undefined = undefined) {
     this.previousHoveredLinks = this.hoveredLinks;
@@ -899,42 +778,44 @@ class MatrixVisualization {
       for (const id of this.previousHoveredLinks) {
         if (this.cellHighlightFrames[id])
           for (const frame of this.cellHighlightFrames[id])
-            this.scene.remove(frame);
+            this.pixi_app.stage.removeChild(frame);
       }
     if (this.hoveredLinks)
       for (const id of this.hoveredLinks) {
         if (this.cellHighlightFrames[id])
           for (const frame of this.cellHighlightFrames[id])
-            this.scene.add(frame);
+            this.pixi_app.stage.addChild(frame);
       }
+
     this.render();
   }
   private mouseDownHandler = (e: MouseEvent) => {
     if (e.shiftKey) {
       this.mouseDown = true;
-      this.mouseDownPos = glutils.getMousePos(
-        this.canvas,
-        e.clientX,
-        e.clientY
-      );
+
+      const rect = this.canvas.getBoundingClientRect();
+      this.mouseDownPos = {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top,
+      };
+
       this.mouseDownCell = this.posToCell(this.mouseDownPos);
     }
   };
+
   private mouseUpHandler = () => {
     this.mouseDown = false;
     if (this.hoveredLinks)
       for (const id of this.hoveredLinks) {
         if (this.cellHighlightFrames[id])
-          for (const frame of this.cellHighlightFrames[id])
-            this.scene.remove(frame);
+          for (const frame of this.cellHighlightFrames[id]){
+              //  this.scene.remove(frame);
+          }
       }
     this.hoveredLinks = [];
   };
 
-  clickHandler() {
-    console.log("click");
-  }
-
+  // TOOD: is this needed? can it be deleted?
   updateTransform(z: any, tr: any) {
     tr[0] = Math.min(0, tr[0]);
     tr[1] = Math.min(0, tr[1]);
@@ -945,11 +826,10 @@ class MatrixVisualization {
 class Matrix {
   private visualization: MatrixVisualization | undefined = undefined;
   private labels: MatrixLabels | undefined = undefined;
-  private cellLabel: CellLabel | undefined = undefined;
   private menu: MatrixMenu | undefined = undefined;
   private timeSlider: MatrixTimeSlider | undefined = undefined;
   private overview: MatrixOverview | undefined = undefined;
-  private _dgraph: dynamicgraph.DynamicGraph;
+  public _dgraph: dynamicgraph.DynamicGraph;
   private times: dynamicgraph.Time[];
   public startTime: dynamicgraph.Time;
   public endTime: dynamicgraph.Time;
@@ -960,7 +840,7 @@ class Matrix {
   private _tr: number[];
   private _scale: number;
   private _cellSize: any;
-  private initialCellSize: any;
+  public initialCellSize: any;
   private labelLength = 0;
   public margin: NMargin;
 
@@ -1011,9 +891,6 @@ class Matrix {
   setLabels(matrixLabels: MatrixLabels) {
     this.labels = matrixLabels;
   }
-  setCellLabel(cellLabel: CellLabel) {
-    this.cellLabel = cellLabel;
-  }
   setOverview(overview: MatrixOverview) {
     this.overview = overview;
   }
@@ -1025,10 +902,6 @@ class Matrix {
   }
   updateOverviewImage(dataImg: any) {
     if (this.overview) this.overview.updateOverviewImage(dataImg);
-  }
-
-  hideCellLabel() {
-    if (this.cellLabel) this.cellLabel.hideCellLabel();
   }
 
   updateCellSize(value: number) {
@@ -1054,6 +927,8 @@ class Matrix {
     this._tr[1] = Math.min(this._tr[1], 0);
     this._cellSize = this._scale * this.initialCellSize;
     if (this.menu) this.menu.setScale(this._cellSize);
+
+    this.updateVisibleBox();
     this.updateVisibleData();
   }
 
@@ -1157,7 +1032,6 @@ class Matrix {
   }
 
   updateVisibleData() {
-    this.updateVisibleBox();
     let leftNodes = this.dgraph.nodes().visible().toArray();
     leftNodes = leftNodes.filter(
       (d: any) =>
@@ -1283,19 +1157,6 @@ class Matrix {
       });
     } else messenger.highlight("reset");
   }
-  updateCellLabel(linkId: number, mx: number, my: number) {
-    if (linkId < 0) {
-      if (this.cellLabel) this.cellLabel.updateCellLabel(-1000, -1000, null, 0);
-      return;
-    }
-    const link = this._dgraph.link(linkId);
-    if (link) {
-      let val = link.weights(this.startTime, this.endTime).get(0);
-      val = Math.round(val * 1000) / 1000;
-      const fw = this.initialCellSize;
-      if (this.cellLabel) this.cellLabel.updateCellLabel(mx, my, val, fw);
-    }
-  }
   updateEvent = () => {
     const highlightedNodesIds = [];
     const highlightedLinksIds = [];
@@ -1402,13 +1263,15 @@ const matrixOverview = new MatrixOverview(
   matrix.margin.top - 2,
   matrix
 );
-const cellLabel = new CellLabel();
 
 matrix.setLabels(matrixLabels);
 matrix.setMenu(matrixMenu);
-matrix.setCellLabel(cellLabel);
 matrix.setOverview(matrixOverview);
 matrix.setVis(matrixVis);
+
+// extra kick to cause apeparance of left node labels (i.e., row labels)
+matrix.updateVisibleData();
+
 messenger.addEventListener(messenger.MESSAGE_SET_STATE, setStateHandler);
 messenger.addEventListener(messenger.MESSAGE_GET_STATE, getStateHandler);
 
