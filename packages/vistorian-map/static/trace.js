@@ -129,7 +129,10 @@
     }
 
     function traceEvent(cat, action, label, value) {
-		
+		if (localStorage.getItem('disableLogging') == 'true'){
+			return;
+		}
+
 	//	if (Boolean(localStorage.getItem(LoggingPhase))){
 			if (starting) {
 			//if (StartedLogging()) {
