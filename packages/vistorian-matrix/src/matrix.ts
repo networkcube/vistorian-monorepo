@@ -2,17 +2,6 @@ import * as d3 from "d3";
 
 import * as PIXI from 'pixi.js'
 
-// TOOD:
-// [x] mousover resets zoom/pan [fixedover by changing where this.updateVisibleBox is called
-// [x] filtering by time broken [fixed by setting node opacity]
-// [x] use this.canvas in mroe places isntead of  elem.select("canvas").node()
-// - reimplement CellLabel tooltips
-
-// Fixed vs online:
-// - on full zoom, top row always visible, rather than flashing in and out of view
-// - mouse-over pan-jump bug
-
-
 import * as dynamicgraph from "vistorian-core/src/dynamicgraph";
 import * as utils from "vistorian-core/src/utils";
 import * as main from "vistorian-core/src/main";
