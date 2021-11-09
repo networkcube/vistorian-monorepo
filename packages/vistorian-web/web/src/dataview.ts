@@ -2,7 +2,7 @@ import * as storage from "./storage";
 import * as vistorian from "./vistorian";
 import * as utils from "./utils";
 
-import * as datamanager from "vistorian-core/src/datamanager";
+import * as dynamicgraphutils from "vistorian-core/build/src/dynamicgraphutils";
 import * as main from "vistorian-core/src/main";
 
 const DATA_TABLE_MAX_LENGTH = 200;
@@ -216,7 +216,7 @@ export function setLocationTable(list: any) {
       SESSION_NAME
     );
     currentNetwork.userLocationTable = table;
-    currentNetwork.userLocationSchema = new datamanager.LocationSchema(
+    currentNetwork.userLocationSchema = new dynamicgraphutils.LocationSchema(
       0,
       1,
       2,
@@ -274,7 +274,7 @@ export function saveCurrentNetwork(
     return;
   }
 
-  const dataset: datamanager.DataSet | undefined =
+  const dataset: dynamicgraphutils.DataSet | undefined =
     vistorian.importIntoNetworkcube(currentNetwork, SESSION_NAME, failSilently);
 
   updateNetworkStatusIndication();
@@ -1139,7 +1139,7 @@ export function extractLocations() {
       tableName + "-locations",
       []
     );
-    currentNetwork.userLocationSchema = new datamanager.LocationSchema(
+    currentNetwork.userLocationSchema = new dynamicgraphutils.LocationSchema(
       0,
       1,
       2,
@@ -1399,7 +1399,7 @@ export function checkRequests(callBack: any, locationsFound: any) {
 
 export function updateLocationCoordinates(
   userLocationTable: vistorian.VTable,
-  locationSchema: datamanager.LocationSchema,
+  locationSchema: dynamicgraphutils.LocationSchema,
   callBack: (locationsFound: any) => void
 ) {
   console.log("UPDATE-LOCATION-TABLE-COORDINATES");
@@ -1427,7 +1427,7 @@ export function getOpenStreetMapCoordinatesForLocation(
   index: number,
   geoname: string,
   locationTable: vistorian.VTable,
-  locationSchema: datamanager.LocationSchema
+  locationSchema: dynamicgraphutils.LocationSchema
 ) {
   if (geoname) {
     geoname = geoname.trim();

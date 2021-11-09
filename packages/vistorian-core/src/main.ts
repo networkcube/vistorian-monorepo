@@ -1,6 +1,7 @@
 import { getUrlVars } from "./utils";
 import { DataSet } from "./dynamicgraphutils";
-import { DynamicGraph, DataManager, DataManagerOptions } from "./dynamicgraph";
+import { DynamicGraph} from "./dynamicgraph";
+import {DataManager, DataManagerOptions} from "./datamanager";
 
 /** A collection of Networkcube's  global function availeble
  * through networkcube.myFunc()

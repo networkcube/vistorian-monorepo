@@ -4,7 +4,8 @@ and the user data.
 This API should be used in every visualization.
 */
 
-import * as datamanager from "vistorian-core/src/datamanager";
+
+import * as dynamicgraphutils from "vistorian-core/src/dynamicgraphutils";
 import * as utils from "vistorian-core/src/utils";
 import * as main from "vistorian-core/src/main";
 
@@ -118,8 +119,8 @@ export class Network {
   userNodeSchema: VNodeSchema | undefined;
   userLinkSchema: VLinkSchema | undefined;
   userLocationTable: VTable | undefined = undefined; // ??;
-  userLocationSchema: datamanager.LocationSchema =
-    new datamanager.LocationSchema(0, 0); // ??
+  userLocationSchema: dynamicgraphutils.LocationSchema =
+    new dynamicgraphutils.LocationSchema(0, 0); // ??
   // networkCubeDataSet: networkcube.DataSet;
   networkConfig = "both";
   timeFormat = "";
@@ -389,8 +390,8 @@ export function createAndNormaliseLocationTable(currentNetwork: Network) {
     }
   }
 
-  let normalizedLocationSchema: datamanager.LocationSchema =
-    datamanager.getDefaultLocationSchema();
+  let normalizedLocationSchema: dynamicgraphutils.LocationSchema =
+    dynamicgraphutils.getDefaultLocationSchema();
   if (currentNetwork.userLocationTable) {
     normalizedLocationSchema = currentNetwork.userLocationSchema;
   }
@@ -957,8 +958,8 @@ export function importIntoNetworkcube(
 
   // get standard schemas
   // INIT NODE SCHEMA
-  const normalizedNodeSchema: datamanager.NodeSchema =
-    new datamanager.NodeSchema(0);
+  const normalizedNodeSchema: dynamicgraphutils.NodeSchema =
+    new dynamicgraphutils.NodeSchema(0);
 
   // INITIALZE NORMALIZED SCHEMAS WITH USER'S ATTRIBUTES
 
@@ -986,8 +987,8 @@ export function importIntoNetworkcube(
   }
 
   // INIT LINK SCHEMA WITH USER ATTRIBUTES
-  const normalizedLinkSchema: datamanager.LinkSchema =
-    new datamanager.LinkSchema(0, 1, 2);
+  const normalizedLinkSchema: dynamicgraphutils.LinkSchema =
+    new dynamicgraphutils.LinkSchema(0, 1, 2);
   // required attributes
   normalizedLinkSchema.id = 0;
   normalizedLinkSchema.source = 1;
@@ -1062,7 +1063,7 @@ export function importIntoNetworkcube(
   ) {
     let colCount = 3;
     normalizedLinkSchema.linkType = colCount++;
-    if (datamanager.isValidIndex(currentNetwork.userNodeSchema.time)) {
+    if (dynamicgraphutils.isValidIndex(currentNetwork.userNodeSchema.time)) {
       normalizedLinkSchema.time = colCount++;
     }
     for (let i = 1; i < currentNetwork.userNodeTable.data.length; i++) {
@@ -1104,7 +1105,7 @@ export function importIntoNetworkcube(
         newLinkRow[normalizedLinkSchema.target] = targetId;
         newLinkRow[normalizedLinkSchema.linkType] =
           currentNetwork.userNodeTable.data[0][relCol]; // set column header as relation type
-        if (datamanager.isValidIndex(currentNetwork.userNodeSchema.time))
+        if (dynamicgraphutils.isValidIndex(currentNetwork.userNodeSchema.time))
           newLinkRow[normalizedLinkSchema.time] =
             row[currentNetwork.userNodeSchema.time];
         normalizedLinkTable.push(newLinkRow);
@@ -1196,8 +1197,8 @@ export function importIntoNetworkcube(
     // check if location and time information exists for nodes
 
     if (
-      datamanager.isValidIndex(currentNetwork.userLinkSchema.location_source) ||
-      datamanager.isValidIndex(currentNetwork.userLinkSchema.location_target)
+      dynamicgraphutils.isValidIndex(currentNetwork.userLinkSchema.location_source) ||
+      dynamicgraphutils.isValidIndex(currentNetwork.userLinkSchema.location_target)
     ) {
       // set location schema index to next new column
       normalizedNodeSchema.location = nodeColCount++;
@@ -1206,7 +1207,7 @@ export function importIntoNetworkcube(
         normalizedNodeTable[i].push("");
       }
       // FYI: node table has now at least 3 rows (id, name, location)
-      if (datamanager.isValidIndex(currentNetwork.userLinkSchema.time)) {
+      if (dynamicgraphutils.isValidIndex(currentNetwork.userLinkSchema.time)) {
         // set time schema index to next new column
         normalizedNodeSchema.time = nodeColCount++;
         // append new field to each row in node table
@@ -1225,7 +1226,7 @@ export function importIntoNetworkcube(
             currentNetwork.userLinkSchema.source
           ];
         if (
-          datamanager.isValidIndex(
+          dynamicgraphutils.isValidIndex(
             currentNetwork.userLinkSchema.location_source
           ) &&
           currentNetwork.userLinkTable.data[i][
@@ -1240,7 +1241,7 @@ export function importIntoNetworkcube(
             nodeRow = normalizedNodeTable[j];
             if (nodeRow[normalizedNodeSchema.label] == nodeName) {
               rowToDuplicate = undefined;
-              if (datamanager.isValidIndex(normalizedNodeSchema.time)) {
+              if (dynamicgraphutils.isValidIndex(normalizedNodeSchema.time)) {
                 // if there is already a time but no location,
                 if (
                   nodeRow[normalizedNodeSchema.time] ==
@@ -1308,7 +1309,7 @@ export function importIntoNetworkcube(
             currentNetwork.userLinkSchema.target
           ];
         if (
-          datamanager.isValidIndex(
+          dynamicgraphutils.isValidIndex(
             currentNetwork.userLinkSchema.location_target
           ) &&
           currentNetwork.userLinkTable.data[i][
@@ -1323,7 +1324,7 @@ export function importIntoNetworkcube(
             nodeRow = normalizedNodeTable[j];
             if (nodeRow[normalizedNodeSchema.label] == nodeName) {
               rowToDuplicate = undefined;
-              if (datamanager.isValidIndex(normalizedNodeSchema.time)) {
+              if (dynamicgraphutils.isValidIndex(normalizedNodeSchema.time)) {
                 // if location is not empty,
                 if (
                   nodeRow[normalizedNodeSchema.time] ==
@@ -1449,7 +1450,7 @@ export function importIntoNetworkcube(
   params.locationSchema = normalizedLocationSchema;
   params.timeFormat = currentNetwork.timeFormat;
   params.directed = currentNetwork.directed;
-  const dataset: datamanager.DataSet = new datamanager.DataSet(params);
+  const dataset: dynamicgraphutils.DataSet = new dynamicgraphutils.DataSet(params);
 
   if (currentNetwork.userLocationTable) {
     currentNetwork.userLocationTable.data = [];
