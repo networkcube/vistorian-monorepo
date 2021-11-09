@@ -80,7 +80,6 @@ export function loadLinkTable(
 
       // var nodeIds: number[] = [];
       const names: string[] = [];
-      const nodeTimes: number[][] = [];
 
       const nodeSchema: NodeSchema = new NodeSchema(0);
       nodeSchema.label = 1;
@@ -187,9 +186,6 @@ export function loadXML(
   url: string,
   callBack: (dataset: DataSet) => void
 ): void {
-  let d: DataSet;
-  let dataset;
-
   d3.xml(url).then((data: any) => {
     // "application/xml",
     const nodes = data.documentElement.getElementsByTagName("node");
@@ -205,8 +201,6 @@ export function loadXML(
       nodeIds.push(nodes[i].id);
     }
     const linkTable = [];
-    const line = [];
-    let link;
     const linkSchema = new LinkSchema(0, 1, 2);
     const links = data.documentElement.getElementsByTagName("edge");
     let s, t;
@@ -241,9 +235,6 @@ export function loadJson(
   callBack: (dataset: DataSet) => void,
   dataName?: string
 ): void {
-  let d: DataSet;
-  let dataset;
-
   d3.json(url).then((data: any) => {
     if (!data) return;
 
@@ -309,7 +300,6 @@ export function loadJson(
     const nodeTable = [];
     const locationTable: any[] = []; // location table in case there are locations
     const locationSchema = { id: 0, longitude: 1, latitude: 2 }; // location table in case there are locations
-    const locationEntry = [];
     const nodeSchema = { id: 0, label: 1 };
     const nodeUserProperties = [];
     for (let i = 0; i < nodes.length; i++) {
@@ -379,16 +369,12 @@ export function loadJsonList(
   url: string,
   callBack: (dataset: DataSet) => void
 ): void {
-  let d: DataSet;
-  let dataset;
-
   d3.json(url).then((data: any) => {
     if (!data) return;
 
     // fill node and link table
     const linkTable = [];
     let line = [];
-    let link;
     const linkSchema = new LinkSchema(0, 1, 2);
     const nodes = data;
     let node;
@@ -436,9 +422,6 @@ export function loadNCube(
   url: string,
   callBack: (dataset: DataSet) => void
 ): void {
-  let d: DataSet;
-  let dataset;
-
   d3.json(url).then((data: any) => {
     const nodeTable: any[][] = [];
     const linkTable: any[][] = [];
@@ -499,9 +482,6 @@ export function loadPajek(
   url: string,
   callBack: (dataset: DataSet) => void
 ): void {
-  let d: DataSet;
-  let dataset;
-
   $.get(url, (data) => {
     const lines = data.split("\n");
     const nodeTable = [];
@@ -573,9 +553,6 @@ export function loadMat(
   url: string,
   callBack: (dataset: DataSet) => void
 ): void {
-  let d: DataSet;
-  let dataset;
-
   $.get(url, (data) => {
     const lines = data.split("\n");
     const nodeTable = [];
@@ -639,21 +616,15 @@ export function loadGEDCOM(
   url: string,
   callBack: (dataset: DataSet) => void
 ): void {
-  let d: DataSet;
-  let dataset;
-
   const nodeTable: any[] = [];
   const nodeSchema = { id: 0, label: 1, nodeType: 2 };
   const linkTable: any[] = [];
   const linkSchema = { id: 0, source: 1, target: 2 };
-  let line;
-  let s, t;
 
   $.get(url, (data) => {
     data = data.split("\n");
     let singleLine: any;
     let line: any[];
-    let currPersonId;
     const personIds = [];
     const personSex = [];
     const familiyIds: any[] = [];
@@ -690,7 +661,6 @@ export function loadGEDCOM(
     }
 
     let hi, wi, ci;
-    const nodeNames = [];
     for (let fi = 0; fi < familiyIds.length; fi++) {
       hi = personIds.indexOf(familiyHusband[fi]);
       wi = personIds.indexOf(familiyWife[fi]);
@@ -721,9 +691,6 @@ export function loadLinkList(
   url: string,
   callBack: (dataset: DataSet) => void
 ): void {
-  let d: DataSet;
-  let dataset;
-
   $.get(url, (data) => {
     const lines = data.split("\n");
     const nodeTable = [];
@@ -798,19 +765,13 @@ export function loadMatrix(
   url: string,
   callBack: (dataset: DataSet) => void
 ): void {
-  let d: DataSet;
-  let dataset;
-
   $.get(url, (data) => {
     const lines = data.split("\n");
     const nodeTable = [];
     const nodeSchema = { id: 0, label: 1 };
     const linkTable = [];
     const linkSchema = { id: 0, source: 1, target: 2 };
-    const parseType = "";
 
-    const rowCount = 0;
-    const currRow = 0;
     const nodeNames = [];
     let label;
     // get nodes from rows
