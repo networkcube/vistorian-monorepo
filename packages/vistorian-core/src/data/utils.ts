@@ -110,6 +110,7 @@ export function capitalizeFirstLetter(string: string): string {
 export function isBefore(t1: Time, t2: Time): boolean {
   return t1.time < t2.time;
 }
+
 export function isAfter(t1: Time, t2: Time): boolean {
   return t1.time > t2.time;
 }
@@ -117,15 +118,19 @@ export function isAfter(t1: Time, t2: Time): boolean {
 export function hex2Rgb(hex: string): number[] {
   return [hexToR(hex), hexToG(hex), hexToB(hex)];
 }
+
 function hexToR(h: any) {
   return parseInt(cutHex(h).substring(0, 2), 16);
 }
+
 function hexToG(h: any) {
   return parseInt(cutHex(h).substring(2, 4), 16);
 }
+
 function hexToB(h: any) {
   return parseInt(cutHex(h).substring(4, 6), 16);
 }
+
 function cutHex(h: any) {
   return h.charAt(0) == "#" ? h.substring(1, 7) : h;
 }
@@ -190,9 +195,11 @@ export class Box {
   get width(): number {
     return this.x2 - this.x1;
   }
+
   get height(): number {
     return this.y2 - this.y1;
   }
+
   isPoint(): boolean {
     return this.width == 0 && this.height == 0;
   }
@@ -418,6 +425,7 @@ export function getBlobFromSVG(
       callback
     ); // what happend if callback undefinied (example above)
 }
+
 export function getBlobFromSVGNode(
   name: string,
   svgNode: any,
@@ -435,6 +443,7 @@ export function getBlobFromSVGNode(
   }
   getBlobFromSVGString(name, string, width, height, callback, backgroundColor);
 }
+
 export function getBlobFromSVGString(
   name: string,
   svgString: string,
@@ -579,29 +588,30 @@ function dataURItoBlob(dataURI: string): Blob {
 }
 
 let msgBox;
+
 export function showMessage(message: string, timeout: any): void {
   if ($(".messageBox")) $(".messageBox").remove();
 
   msgBox = $(
     '<div id="div" class="messageBox" style="\
-            width: 100%;\
-            height: 100%;\
-            background-color: #ffffff;\
-            opacity: .9;\
-            position: absolute;\
-            top: 0px;\
-            left: 0px;"></div>'
+                width: 100%;\
+                height: 100%;\
+                background-color: #ffffff;\
+                opacity: .9;\
+                position: absolute;\
+                top: 0px;\
+                left: 0px;"></div>'
   );
   msgBox.append(
     '<div id="div" style="\
-            font-size: 20pt;\
-            font-weight: bold;\
-            font-family: "Helvetica Neue", Helvetica, sans-serif;\
-            width: 500px;\
-            padding-top: 300px;\
-            text-align: center;\
-            margin:auto;">\
-            <p>' +
+                font-size: 20pt;\
+                font-weight: bold;\
+                font-family: "Helvetica Neue", Helvetica, sans-serif;\
+                width: 500px;\
+                padding-top: 300px;\
+                text-align: center;\
+                margin:auto;">\
+                <p>' +
       message +
       "</p></div>"
   );

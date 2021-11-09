@@ -3,10 +3,10 @@
 
 import * as d3 from "d3";
 
-import * as dynamicgraph from "vistorian-core/src/dynamicgraph";
-import * as utils from "vistorian-core/src/utils";
-import * as main from "vistorian-core/src/main";
-import * as messenger from "vistorian-core/src/messenger";
+import * as dynamicgraph from "vistorian-core/src/data/dynamicgraph";
+import * as utils from "vistorian-core/src/data/utils";
+import * as main from "vistorian-core/src/data/main";
+import * as messenger from "vistorian-core/src/data/messenger";
 
 import * as ui from "vistorian-core/src/ui/ui";
 import * as timeslider from "vistorian-core/src/ui/timeslider";

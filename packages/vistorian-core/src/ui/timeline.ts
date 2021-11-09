@@ -1,8 +1,8 @@
 import * as d3 from "d3";
 
-import * as dynamicgraph from "../dynamicgraph";
+import * as dynamicgraph from "../data/dynamicgraph";
 import * as moment from "moment";
-import * as utils from "../utils";
+import * as utils from "../data/utils";
 
 import { WebGL, WebGLElementQuery } from "./glutils";
 

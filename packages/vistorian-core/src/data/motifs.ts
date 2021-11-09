@@ -1,5 +1,5 @@
 // import swiftSet from 'swiftset';
-import {DynamicGraph, Link, Node, Time} from "./dynamicgraph";
+import { DynamicGraph, Link, Node, Time } from "./dynamicgraph";
 import netClustering from "netclustering";
 
 export class Motif {

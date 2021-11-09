@@ -3,7 +3,7 @@ import * as vistorian from "./vistorian";
 import * as utils from "./utils";
 
 import * as dynamicgraphutils from "vistorian-core/build/src/dynamicgraphutils";
-import * as main from "vistorian-core/src/main";
+import * as main from "vistorian-core/src/data/main";
 
 const DATA_TABLE_MAX_LENGTH = 200;
 

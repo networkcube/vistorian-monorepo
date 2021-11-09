@@ -1,10 +1,10 @@
 import * as d3 from "d3";
 
-import * as utils from "vistorian-core/src/utils";
-import * as dynamicgraph from "vistorian-core/src/dynamicgraph";
-import * as main from "vistorian-core/src/main";
-import * as messenger from "vistorian-core/src/messenger";
-import * as dynamicgraphutils from "vistorian-core/src/dynamicgraphutils";
+import * as utils from "vistorian-core/src/data/utils";
+import * as dynamicgraph from "vistorian-core/src/data/dynamicgraph";
+import * as main from "vistorian-core/src/data/main";
+import * as messenger from "vistorian-core/src/data/messenger";
+import * as dynamicgraphutils from "vistorian-core/src/data/dynamicgraphutils";
 
 import $ from "jquery";
 

@@ -1,7 +1,7 @@
 import { getUrlVars } from "./utils";
 import { DataSet } from "./dynamicgraphutils";
-import { DynamicGraph} from "./dynamicgraph";
-import {DataManager, DataManagerOptions} from "./datamanager";
+import { DynamicGraph } from "./dynamicgraph";
+import { DataManager, DataManagerOptions } from "./datamanager";
 
 /** A collection of Networkcube's  global function availeble
  * through networkcube.myFunc()
@@ -9,6 +9,7 @@ import {DataManager, DataManagerOptions} from "./datamanager";
 
 // must agree with var of same name in DynamicGraph.initDynamicGraph()
 export const TIME_FORMAT = "YYYY-MM-DD hh:mm:ss";
+
 /**
  * Returns the networkcube standart time format
  * @return {[type]} [description]
@@ -104,14 +105,14 @@ export function createTabVisualizations(
 
   const ul = $(
     '<ul class="networkcube-tabs"\
-                style="\
-                    list-style-type: none;\
-                    margin: 0;\
-                    padding:2px;\
-                    overflow: hidden;\
-                    border: none;\
-                    background-color: #f1f1f1;"\
-                ></ul>'
+                    style="\
+                        list-style-type: none;\
+                        margin: 0;\
+                        padding:2px;\
+                        overflow: hidden;\
+                        border: none;\
+                        background-color: #f1f1f1;"\
+                    ></ul>'
   );
   tabDiv.append(ul);
 
@@ -121,18 +122,18 @@ export function createTabVisualizations(
     ul.append(
       $(
         '<li style="float: left;"><a style="\
-                display: inline-block;\
-                color: black;\
-                margin-right: 8px;\
-                margin-left: 8px;\
-                padding: 5px;\
-                text-align: left;\
-                text-decoration: none;\
-                transition: 0.3s;\
-                font-weight: 800;\
-                border: #fff 1px solid;\
-                border-raduis: 5px;\
-                font-size: 13px;" href="#" class="networkcube-tablinks" onclick="networkcube.switchVisTab(event, \'' +
+                        display: inline-block;\
+                        color: black;\
+                        margin-right: 8px;\
+                        margin-left: 8px;\
+                        padding: 5px;\
+                        text-align: left;\
+                        text-decoration: none;\
+                        transition: 0.3s;\
+                        font-weight: 800;\
+                        border: #fff 1px solid;\
+                        border-raduis: 5px;\
+                        font-size: 13px;" href="#" class="networkcube-tablinks" onclick="networkcube.switchVisTab(event, \'' +
           visSpec[i].name +
           "')\">" +
           visSpec[i].name +
@@ -250,6 +251,7 @@ export function createVisualizationIFrame(
 
   return iframe;
 }
+
 //
 // // Internal convenient function to open a window
 function openView(

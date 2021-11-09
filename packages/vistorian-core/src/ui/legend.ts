@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import * as dynamicgraph from "../dynamicgraph";
+import * as dynamicgraph from "../data/dynamicgraph";
 
 import $ from "jquery";
 

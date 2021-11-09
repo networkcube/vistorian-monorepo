@@ -1,5 +1,5 @@
 import * as vistorian from "./vistorian";
-import * as main from "vistorian-core/src/main";
+import * as main from "vistorian-core/src/data/main";
 
 const SESSION_TABLENAMES = "vistorian.tablenames";
 const SESSION_TABLE = "vistorian.table";

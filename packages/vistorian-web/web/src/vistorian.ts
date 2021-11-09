@@ -4,10 +4,9 @@ and the user data.
 This API should be used in every visualization.
 */
 
-
-import * as dynamicgraphutils from "vistorian-core/src/dynamicgraphutils";
-import * as utils from "vistorian-core/src/utils";
-import * as main from "vistorian-core/src/main";
+import * as dynamicgraphutils from "vistorian-core/src/data/dynamicgraphutils";
+import * as utils from "vistorian-core/src/data/utils";
+import * as main from "vistorian-core/src/data/main";
 
 import $ from "jquery";
 import * as Papa from "papaparse";
@@ -1197,8 +1196,12 @@ export function importIntoNetworkcube(
     // check if location and time information exists for nodes
 
     if (
-      dynamicgraphutils.isValidIndex(currentNetwork.userLinkSchema.location_source) ||
-      dynamicgraphutils.isValidIndex(currentNetwork.userLinkSchema.location_target)
+      dynamicgraphutils.isValidIndex(
+        currentNetwork.userLinkSchema.location_source
+      ) ||
+      dynamicgraphutils.isValidIndex(
+        currentNetwork.userLinkSchema.location_target
+      )
     ) {
       // set location schema index to next new column
       normalizedNodeSchema.location = nodeColCount++;
@@ -1450,7 +1453,9 @@ export function importIntoNetworkcube(
   params.locationSchema = normalizedLocationSchema;
   params.timeFormat = currentNetwork.timeFormat;
   params.directed = currentNetwork.directed;
-  const dataset: dynamicgraphutils.DataSet = new dynamicgraphutils.DataSet(params);
+  const dataset: dynamicgraphutils.DataSet = new dynamicgraphutils.DataSet(
+    params
+  );
 
   if (currentNetwork.userLocationTable) {
     currentNetwork.userLocationTable.data = [];
