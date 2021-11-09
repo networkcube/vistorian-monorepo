@@ -1,6 +1,5 @@
 import pkg from "../package.json";
 import * as dynamicgraph from "./dynamicgraph";
-import * as queries from "./queries";
 import * as utils from "./utils";
 import * as ordering from "./ordering";
 import * as motifs from "./motifs";
@@ -22,7 +21,6 @@ import * as timeslider from "./timeslider";
 import * as ui from "./ui";
 export {
   dynamicgraph,
-  queries,
   utils,
   ordering,
   motifs,
