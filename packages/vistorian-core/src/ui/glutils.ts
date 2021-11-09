@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import $ from "jquery";
 import { BSpline } from "./BSpline";
-import { sortNumber } from "./dynamicgraph";
+import { sortNumber } from "../dynamicgraph";
 
 //module glutils {
 

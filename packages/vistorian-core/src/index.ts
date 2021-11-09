@@ -9,16 +9,16 @@ import * as main from "./main";
 import * as datamanager from "./dynamicgraphutils";
 import * as analytics from "./analytics";
 import * as search from "./search";
-import * as colors from "./colors";
-import * as BSpline from "./BSpline";
-import * as glutils from "./glutils";
-import * as legend from "./legend";
-import * as rangeslider from "./rangeslider";
-import * as slider from "./slider";
-import * as smartslider from "./smartslider";
-import * as timeline from "./timeline";
-import * as timeslider from "./timeslider";
-import * as ui from "./ui";
+import * as colors from "./ui/colors";
+import * as BSpline from "./ui/BSpline";
+import * as glutils from "./ui/glutils";
+import * as legend from "./ui/legend";
+import * as rangeslider from "./ui/rangeslider";
+import * as slider from "./ui/slider";
+import * as smartslider from "./ui/smartslider";
+import * as timeline from "./ui/timeline";
+import * as timeslider from "./ui/timeslider";
+import * as ui from "./ui/ui";
 export {
   dynamicgraph,
   utils,

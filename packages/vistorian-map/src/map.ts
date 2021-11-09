@@ -8,8 +8,8 @@ import * as utils from "vistorian-core/src/utils";
 import * as main from "vistorian-core/src/main";
 import * as messenger from "vistorian-core/src/messenger";
 
-import * as ui from "vistorian-core/src/ui";
-import * as timeslider from "vistorian-core/src/timeslider";
+import * as ui from "vistorian-core/src/ui/ui";
+import * as timeslider from "vistorian-core/src/ui/timeslider";
 
 import * as moment from "moment";
 
