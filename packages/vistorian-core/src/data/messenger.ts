@@ -1,12 +1,11 @@
 import { makeIdCompound, sortByPriority, ElementCompound } from "./utils";
-import { Selection } from "./datamanager";
+import { Selection } from "./dynamicgraphutils";
 import {
   Time,
   DynamicGraph,
   dgraphReplacer,
   dgraphReviver,
   IDCompound,
-  copyTimeseriesPropsShallow,
 } from "./dynamicgraph";
 import { getDynamicGraph } from "./main";
 import { searchForTerm } from "./search";
@@ -47,11 +46,10 @@ const MESSAGE_HANDLERS: string[] = [
   MESSAGE_ZOOM_INTERACTION,
 ];
 
-const messageHandlers: MessageHandler[] = [];
-
 // contains handlers for passing messages to the
 // visualization.
 class MessageHandler {}
+
 const messageHandler: MessageHandler = new MessageHandler();
 
 let previousMessageId = -1;
@@ -77,6 +75,7 @@ export class Message {
   id: number;
   type: string;
   body: any;
+
   constructor(type: string) {
     this.id = Math.random();
     this.type = type;
@@ -215,8 +214,10 @@ export function createSelection(type: string, name: string): Selection {
 
   return b;
 }
+
 export class CreateSelectionMessage extends Message {
   selection: Selection;
+
   constructor(b: Selection) {
     super(MESSAGE_SELECTION_CREATE);
     this.selection = b;
@@ -230,8 +231,10 @@ export function setCurrentSelection(b: Selection): void {
   const m = new SetCurrentSelectionIdMessage(b);
   distributeMessage(m);
 }
+
 export class SetCurrentSelectionIdMessage extends Message {
   selectionId: number;
+
   constructor(b: Selection) {
     super(MESSAGE_SELECTION_SET_CURRENT);
     this.selectionId = b.id;
@@ -247,9 +250,11 @@ export function showSelectionColor(
   const m = new ShowSelectionColorMessage(selection, showColor);
   distributeMessage(m);
 }
+
 export class ShowSelectionColorMessage extends Message {
   selectionId: number;
   showColor: boolean;
+
   constructor(selection: Selection, showColor: boolean) {
     super(MESSAGE_SELECTION_SET_COLORING_VISIBILITY);
     this.selectionId = selection.id;
@@ -263,9 +268,11 @@ export function filterSelection(selection: Selection, filter: boolean): void {
   const m = new FilterSelectionMessage(selection, filter);
   distributeMessage(m);
 }
+
 export class FilterSelectionMessage extends Message {
   selectionId: number;
   filter: boolean;
+
   constructor(selection: Selection, filter: boolean) {
     super(MESSAGE_SELECTION_FILTER);
     this.selectionId = selection.id;
@@ -285,6 +292,7 @@ export class SelectionPriorityMessage extends Message {
   selectionId2: number;
   priority1: number;
   priority2: number;
+
   constructor(s1: Selection, s2: Selection, p1: number, p2: number) {
     super(MESSAGE_SELECTION_PRIORITY);
     this.selectionId1 = s1.id;
@@ -303,6 +311,7 @@ export function deleteSelection(selection: Selection): void {
 
 export class DeleteSelectionMessage extends Message {
   selectionId: number;
+
   constructor(selection: Selection) {
     super(MESSAGE_SELECTION_DELETE);
     this.selectionId = selection.id;
@@ -318,6 +327,7 @@ export function setSelectionColor(s: Selection, color: string): void {
 class SelectionColorMessage extends Message {
   selectionId: number;
   color: string;
+
   constructor(selection: Selection, color: string) {
     super(MESSAGE_SELECTION_COLORING);
     this.selectionId = selection.id;
@@ -335,6 +345,7 @@ export function search(term: string, type?: string): void {
 export class SearchResultMessage extends Message {
   idCompound: IDCompound;
   searchTerm: string;
+
   constructor(searchTerm: string, idCompound: IDCompound) {
     super(MESSAGE_SEARCH_RESULT);
     this.idCompound = idCompound;
@@ -364,6 +375,7 @@ export class NodeLinkControls extends NetworkControls {
   edgeGap: number;
   linkWidth: number;
   labellingType: number;
+
   constructor(
     networkType: string,
     startTime: number,
@@ -390,9 +402,11 @@ export class NodeLinkControls extends NetworkControls {
     this.labellingType = labellingType;
   }
 }
+
 export class MatrixControls extends NetworkControls {
   labellingType: string;
   zoom: number;
+
   constructor(
     networkType: string,
     startTime: number,
@@ -405,12 +419,14 @@ export class MatrixControls extends NetworkControls {
     this.labellingType = labellingType;
   }
 }
+
 export class TimeArchsControls extends NetworkControls {
   labellingType: string;
+
   /* webglState:any;
-    camera_position_x:number;
-    camera_position_y:number;
-    camera_position_z:number; */
+      camera_position_x:number;
+      camera_position_y:number;
+      camera_position_z:number; */
 
   constructor(
     networkType: string,
@@ -422,16 +438,18 @@ export class TimeArchsControls extends NetworkControls {
     super(networkType, startTime, endTime);
     this.labellingType = labellingType;
     /*  this.webglState=webglState;
-        this.camera_position_x=camera_position_x;
-        this.camera_position_y=camera_position_z;
-        this.camera_position_z=camera_position_z;
- */
+            this.camera_position_x=camera_position_x;
+            this.camera_position_y=camera_position_z;
+            this.camera_position_z=camera_position_z;
+     */
   }
 }
+
 export class MapControls extends NetworkControls {
   nodeOverlap: number;
   linkOpacity: number;
   opacityOfPositionlessNodes: number;
+
   constructor(
     networkType: string,
     startTime: number,
@@ -452,6 +470,7 @@ export class MapControls extends NetworkControls {
 export class SetStateMessage extends Message {
   state: NetworkControls; // this is the state with all the parameters to set the view to.
   viewType: string;
+
   constructor(state: NetworkControls, viewType: string) {
     super(MESSAGE_SET_STATE);
     this.state = state;
@@ -472,6 +491,7 @@ export class GetStateMessage extends Message {
   viewType: string;
   isNewBookmark: boolean;
   typeOfMultiView: string;
+
   constructor(
     bookmarkIndex: number,
     viewType: string,
@@ -512,6 +532,7 @@ export class StateCreatedMessage extends Message {
   viewType: string;
   isNewBookmark: boolean;
   typeOfMultiView: string;
+
   constructor(
     state: NetworkControls,
     bookmarkIndex: number,
@@ -552,12 +573,14 @@ export function stateCreated(
 export class ZoomInteractionMessage extends Message {
   visType: string;
   ineractionType: string;
+
   constructor(visType: string, ineractionType: string) {
     super(MESSAGE_ZOOM_INTERACTION);
     this.visType = visType;
     this.ineractionType = ineractionType;
   }
 }
+
 export function zoomInteraction(visType: string, ineractionType: string): void {
   // log zoom interactions
   distributeMessage(new ZoomInteractionMessage(visType, ineractionType), true);

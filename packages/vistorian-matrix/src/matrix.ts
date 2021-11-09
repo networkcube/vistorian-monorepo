@@ -2,14 +2,14 @@ import * as d3 from "d3";
 
 import * as THREE from "three";
 
-import * as dynamicgraph from "vistorian-core/src/dynamicgraph";
-import * as utils from "vistorian-core/src/utils";
-import * as main from "vistorian-core/src/main";
-import * as messenger from "vistorian-core/src/messenger";
-import * as ordering from "vistorian-core/src/ordering";
+import * as dynamicgraph from "vistorian-core/src/data/dynamicgraph";
+import * as utils from "vistorian-core/src/data/utils";
+import * as main from "vistorian-core/src/data/main";
+import * as messenger from "vistorian-core/src/data/messenger";
+import * as ordering from "vistorian-core/src/data/ordering";
 
-import * as TimeSlider from "vistorian-core/src/timeslider";
-import * as glutils from "vistorian-core/src/glutils";
+import * as TimeSlider from "vistorian-core/src/ui/timeslider";
+import * as glutils from "vistorian-core/src/ui/glutils";
 
 const COLOR_HIGHLIGHT = 0x000000;
 const COLOR_SELECTION = 0xff0000;

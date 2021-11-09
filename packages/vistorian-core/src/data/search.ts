@@ -53,6 +53,7 @@ export interface IFilter {
 
 class StringContainsFilter {
   pattern: string;
+
   constructor(pattern: string) {
     this.pattern = pattern;
   }

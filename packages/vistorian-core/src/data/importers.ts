@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 
-import { DataSet, LinkSchema, NodeSchema } from "./datamanager";
+import { DataSet, LinkSchema, NodeSchema } from "./dynamicgraphutils";
 import { DynamicGraph } from "./dynamicgraph";
 import * as moment from "moment";
 import * as main from "./main";
@@ -374,6 +374,7 @@ export function loadJson(
     );
   });
 }
+
 export function loadJsonList(
   url: string,
   callBack: (dataset: DataSet) => void
