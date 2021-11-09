@@ -102,7 +102,7 @@ const timeline: tline.Timeline = new tline.Timeline(
 );
 
 // VERTICAL SCROLL EVENT
-window.addEventListener("mousewheel", mouseWheelHandler, false);
+window.addEventListener("mousewheel", mouseWheelHandler, {passive: false});
 
 $("#menu").append(
   '\
