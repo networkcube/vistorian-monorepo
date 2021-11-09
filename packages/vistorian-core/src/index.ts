@@ -6,7 +6,7 @@ import * as motifs from "./motifs";
 import * as importers from "./importers";
 import * as messenger from "./messenger";
 import * as main from "./main";
-import * as datamanager from "./datamanager";
+import * as datamanager from "./dynamicgraphutils";
 import * as analytics from "./analytics";
 import * as search from "./search";
 import * as colors from "./colors";

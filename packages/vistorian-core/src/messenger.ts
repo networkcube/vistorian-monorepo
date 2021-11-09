@@ -1,5 +1,5 @@
 import { makeIdCompound, sortByPriority, ElementCompound } from "./utils";
-import { Selection } from "./datamanager";
+import { Selection } from "./dynamicgraphutils";
 import {
   Time,
   DynamicGraph,

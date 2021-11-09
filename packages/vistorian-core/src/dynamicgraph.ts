@@ -1,4 +1,4 @@
-import { DataSet, Selection, isValidIndex } from "./datamanager";
+import { DataSet, Selection, isValidIndex } from "./dynamicgraphutils";
 import * as moment from "moment";
 import * as LZString from "lz-string";
 
