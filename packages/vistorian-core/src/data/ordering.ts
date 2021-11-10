@@ -3,10 +3,8 @@ import * as reorder from "reorder.js";
 
 /**
  * Calculates an ordering for the passed graph and time span
- * @param  {DynamicGraph} dgraph [description]
- * @param  {Time}         start  [description]
- * @param  {Time}         end    [description]
- * @return {[type]}              [description]
+ * @param  {DynamicGraph} graph [description]
+ * @param  {OrderingConfiguration} config  [description]
  */
 export function orderNodes(
   graph: DynamicGraph,
@@ -45,7 +43,6 @@ export function orderNodes(
   }
   // fill matrix
   let weight = 0;
-  let l: Link;
   let s: number;
   let t: number;
   for (let i = 0; i < links.length; i++) {
@@ -87,6 +84,7 @@ export class OrderingConfiguration {
   distance: string[] = [];
 
   constructor(start: Time, end: Time) {
-    (this.start = start), (this.end = end);
+    this.start = start;
+    this.end = end;
   }
 }
