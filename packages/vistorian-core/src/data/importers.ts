@@ -66,15 +66,15 @@ export function loadLinkTable(
     return;
   }
 
-  $.get(
-    url,
-    (linkData) => {
+  fetch(url)
+    .then((response) => response.text())
+    .then((text) => {
       const array = [];
-      const rows = linkData.split("\r\n");
+      const rows = text.split("\r\n");
       for (let i = 1; i < rows.length; i++) {
         array.push(rows[i].split(delimiter));
       }
-      linkData = array;
+      const linkData = array;
       // get references to tables
       const nodeTable: any[] = [];
 
@@ -177,9 +177,7 @@ export function loadLinkTable(
       }
 
       callBack(dataSet);
-    },
-    "text"
-  );
+    });
 }
 
 export function loadXML(
@@ -482,134 +480,138 @@ export function loadPajek(
   url: string,
   callBack: (dataset: DataSet) => void
 ): void {
-  $.get(url, (data) => {
-    const lines = data.split("\n");
-    const nodeTable = [];
-    const nodeSchema = { id: 0, label: 1 };
-    const linkTable = [];
-    const linkSchema = { id: 0, source: 1, target: 2, directed: 3 };
-    let parseType = "";
-    let line;
-    for (let i = 0; i < lines.length; i++) {
-      line = lines[i];
+  fetch(url)
+    .then((response) => response.text())
+    .then((data) => {
+      const lines = data.split("\n");
+      const nodeTable = [];
+      const nodeSchema = { id: 0, label: 1 };
+      const linkTable = [];
+      const linkSchema = { id: 0, source: 1, target: 2, directed: 3 };
+      let parseType = "";
+      let line;
+      for (let i = 0; i < lines.length; i++) {
+        line = lines[i];
 
-      // define data type
-      if (line.indexOf("*Vertices") > -1) {
-        parseType = "nodes";
-        continue;
-      } else if (line.indexOf("*Arcs") > -1) {
-        parseType = "undirectedLinks";
-        continue;
-      } else if (line.indexOf("*Edges") > -1) {
-        parseType = "directedLinks";
-        continue;
-      }
+        // define data type
+        if (line.indexOf("*Vertices") > -1) {
+          parseType = "nodes";
+          continue;
+        } else if (line.indexOf("*Arcs") > -1) {
+          parseType = "undirectedLinks";
+          continue;
+        } else if (line.indexOf("*Edges") > -1) {
+          parseType = "directedLinks";
+          continue;
+        }
 
-      // prepare and clean line
-      line = line.trim();
-      line = line.split(" ");
-      for (let j = 0; j < line.length; j) {
-        if (line[j].length == 0) {
-          line.splice(j, 1);
-        } else {
-          j++;
+        // prepare and clean line
+        line = line.trim();
+        line = line.split(" ");
+        for (let j = 0; j < line.length; j) {
+          if (line[j].length == 0) {
+            line.splice(j, 1);
+          } else {
+            j++;
+          }
+        }
+        if (line.length == 0) continue;
+
+        // parse data
+        if (parseType.indexOf("nodes") > -1) {
+          nodeTable.push([nodeTable.length, line[1]]);
+        } else if (parseType.indexOf("undirectedLinks") > -1) {
+          linkTable.push([
+            linkTable.length,
+            parseInt(line[0]) - 1,
+            parseInt(line[1]) - 1,
+            false,
+          ]);
+        } else if (parseType.indexOf("directedLinks") > -1) {
+          linkTable.push([
+            linkTable.length,
+            parseInt(line[0]) - 1,
+            parseInt(line[1]) - 1,
+            true,
+          ]);
         }
       }
-      if (line.length == 0) continue;
 
-      // parse data
-      if (parseType.indexOf("nodes") > -1) {
-        nodeTable.push([nodeTable.length, line[1]]);
-      } else if (parseType.indexOf("undirectedLinks") > -1) {
-        linkTable.push([
-          linkTable.length,
-          parseInt(line[0]) - 1,
-          parseInt(line[1]) - 1,
-          false,
-        ]);
-      } else if (parseType.indexOf("directedLinks") > -1) {
-        linkTable.push([
-          linkTable.length,
-          parseInt(line[0]) - 1,
-          parseInt(line[1]) - 1,
-          true,
-        ]);
-      }
-    }
-
-    callBack(
-      new DataSet({
-        name: url.split("=")[0],
-        nodeTable: nodeTable,
-        linkTable: linkTable,
-        nodeSchema: nodeSchema,
-        linkSchema: linkSchema,
-      })
-    );
-  });
+      callBack(
+        new DataSet({
+          name: url.split("=")[0],
+          nodeTable: nodeTable,
+          linkTable: linkTable,
+          nodeSchema: nodeSchema,
+          linkSchema: linkSchema,
+        })
+      );
+    });
 }
 
 export function loadMat(
   url: string,
   callBack: (dataset: DataSet) => void
 ): void {
-  $.get(url, (data) => {
-    const lines = data.split("\n");
-    const nodeTable = [];
-    const nodeSchema = { id: 0, label: 1 };
-    const linkTable = [];
-    const linkSchema = { id: 0, source: 1, target: 2 };
-    let parseType = "";
-    let line;
-    let rowCount = 0;
-    let currRow = 0;
-    for (let i = 0; i < lines.length; i++) {
-      line = lines[i];
+  fetch(url)
+    .then((response) => response.text())
+    .then((data) => {
+      const lines = data.split("\n");
+      const nodeTable = [];
+      const nodeSchema = { id: 0, label: 1 };
+      const linkTable = [];
+      const linkSchema = { id: 0, source: 1, target: 2 };
+      let parseType = "";
+      let line;
+      let rowCount = 0;
+      let currRow = 0;
+      for (let i = 0; i < lines.length; i++) {
+        line = lines[i];
 
-      // define data type
-      if (line.indexOf("ROW LABELS") > -1) {
-        parseType = "rows";
-        continue;
-      } else if (line.indexOf("COLUMN LABELS") > -1) {
-        parseType = "cols";
-        continue;
-      } else if (line.indexOf("DATA:") > -1) {
-        parseType = "links";
-        continue;
-      }
-      if (parseType.length == 0) continue;
-
-      line = line.trim();
-      line = line.split(" ");
-      if (parseType.indexOf("rows") > -1) {
-        nodeTable.push([nodeTable.length, line[0]]);
-        rowCount++;
-      } else if (parseType.indexOf("cols") > -1) {
-        if (line[0].indexOf(nodeTable[0][1] > -1)) {
-          parseType = "";
-          rowCount = 0;
+        // define data type
+        if (line.indexOf("ROW LABELS") > -1) {
+          parseType = "rows";
+          continue;
+        } else if (line.indexOf("COLUMN LABELS") > -1) {
+          parseType = "cols";
+          continue;
+        } else if (line.indexOf("DATA:") > -1) {
+          parseType = "links";
           continue;
         }
-        nodeTable.push([nodeTable.length, line[0]]);
-      } else if (parseType.indexOf("links") > -1) {
-        for (let j = 0; j < line.length; j++) {
-          if (parseInt(line[j]) == 1) {
-            linkTable.push([linkTable.length, currRow, rowCount + 1]);
+        if (parseType.length == 0) continue;
+
+        line = line.trim();
+        line = line.split(" ");
+        if (parseType.indexOf("rows") > -1) {
+          nodeTable.push([nodeTable.length, line[0]]);
+          rowCount++;
+        } else if (parseType.indexOf("cols") > -1) {
+          if (line[0].includes(nodeTable[0][1].toString())) {
+            parseType = "";
+            rowCount = 0;
+            continue;
           }
+          nodeTable.push([nodeTable.length, line[0]]);
+        } else if (parseType.indexOf("links") > -1) {
+          for (let j = 0; j < line.length; j++) {
+            if (parseInt(line[j]) == 1) {
+              linkTable.push([linkTable.length, currRow, rowCount + 1]);
+            }
+          }
+          currRow++;
         }
-        currRow++;
       }
-    }
-    callBack(
-      new DataSet({
-        name: url.split("=")[0],
-        nodeTable: nodeTable,
-        linkTable: linkTable,
-        nodeSchema: nodeSchema,
-        linkSchema: linkSchema,
-      })
-    );
-  });
+      callBack(
+        new DataSet({
+          name: url.split("=")[0],
+          nodeTable: nodeTable,
+          linkTable: linkTable,
+          nodeSchema: nodeSchema,
+          linkSchema: linkSchema,
+        })
+      );
+    });
 }
 
 export function loadGEDCOM(
@@ -621,197 +623,203 @@ export function loadGEDCOM(
   const linkTable: any[] = [];
   const linkSchema = { id: 0, source: 1, target: 2 };
 
-  $.get(url, (data) => {
-    data = data.split("\n");
-    let singleLine: any;
-    let line: any[];
-    const personIds = [];
-    const personSex = [];
-    const familiyIds: any[] = [];
-    const familiyChildren: any[][] = [];
-    const familiyHusband: any[] = [];
-    const familiyWife: any[] = [];
-    for (let i = 0; i < data.length; i++) {
-      singleLine = data[i].replace(/@/g, "");
-      line = singleLine.split(" ");
-      // parsing persons
-      if (line.length < 3) continue;
+  fetch(url)
+    .then((response) => response.text())
+    .then((text) => {
+      const data = text.split("\n");
+      let singleLine: any;
+      let line: any[];
+      const personIds = [];
+      const personSex = [];
+      const familiyIds: any[] = [];
+      const familiyChildren: any[][] = [];
+      const familiyHusband: any[] = [];
+      const familiyWife: any[] = [];
+      for (let i = 0; i < data.length; i++) {
+        singleLine = data[i].replace(/@/g, "");
+        line = singleLine.split(" ");
+        // parsing persons
+        if (line.length < 3) continue;
 
-      if (parseInt(line[0]) == 0 && line[2].indexOf("INDI") > -1) {
-        personIds.push(line[1].trim());
-        personSex.push("");
-      } else if (parseInt(line[0]) == 1 && line[1].indexOf("SEX") > -1) {
-        personSex[personSex.length - 1] = line[2].trim();
-      } else if (parseInt(line[0]) == 0 && line[2].indexOf("FAM") > -1) {
-        familiyIds.push(line[1].trim());
-        familiyChildren.push([]);
-        familiyHusband.push(undefined);
-        familiyWife.push(undefined);
-      } else if (parseInt(line[0]) == 1 && line[1].indexOf("CHIL") > -1) {
-        familiyChildren[familiyChildren.length - 1].push(line[2].trim());
-      } else if (parseInt(line[0]) == 1 && line[1].indexOf("HUSB") > -1) {
-        familiyHusband[familiyChildren.length - 1] = line[2].trim();
-      } else if (parseInt(line[0]) == 1 && line[1].indexOf("WIFE") > -1) {
-        familiyWife[familiyChildren.length - 1] = line[2].trim();
+        if (parseInt(line[0]) == 0 && line[2].indexOf("INDI") > -1) {
+          personIds.push(line[1].trim());
+          personSex.push("");
+        } else if (parseInt(line[0]) == 1 && line[1].indexOf("SEX") > -1) {
+          personSex[personSex.length - 1] = line[2].trim();
+        } else if (parseInt(line[0]) == 0 && line[2].indexOf("FAM") > -1) {
+          familiyIds.push(line[1].trim());
+          familiyChildren.push([]);
+          familiyHusband.push(undefined);
+          familiyWife.push(undefined);
+        } else if (parseInt(line[0]) == 1 && line[1].indexOf("CHIL") > -1) {
+          familiyChildren[familiyChildren.length - 1].push(line[2].trim());
+        } else if (parseInt(line[0]) == 1 && line[1].indexOf("HUSB") > -1) {
+          familiyHusband[familiyChildren.length - 1] = line[2].trim();
+        } else if (parseInt(line[0]) == 1 && line[1].indexOf("WIFE") > -1) {
+          familiyWife[familiyChildren.length - 1] = line[2].trim();
+        }
       }
-    }
 
-    for (let fi = 0; fi < personIds.length; fi++) {
-      nodeTable.push([fi, personIds[fi], personSex[fi]]);
-    }
-
-    let hi, wi, ci;
-    for (let fi = 0; fi < familiyIds.length; fi++) {
-      hi = personIds.indexOf(familiyHusband[fi]);
-      wi = personIds.indexOf(familiyWife[fi]);
-      console.log("-->", hi, wi, familiyHusband[fi], familiyWife[fi]);
-      for (let i = 0; i < familiyChildren[fi].length; i++) {
-        ci = personIds.indexOf(familiyChildren[fi][i]);
-        if (ci == undefined || ci == -1) continue;
-        if (hi != undefined && hi > -1)
-          linkTable.push([linkTable.length, hi, ci]);
-        if (wi != undefined && wi > -1)
-          linkTable.push([linkTable.length, wi, ci]);
+      for (let fi = 0; fi < personIds.length; fi++) {
+        nodeTable.push([fi, personIds[fi], personSex[fi]]);
       }
-    }
 
-    callBack(
-      new DataSet({
-        name: url.split("=")[0],
-        nodeTable: nodeTable,
-        linkTable: linkTable,
-        nodeSchema: nodeSchema,
-        linkSchema: linkSchema,
-      })
-    );
-  });
+      let hi, wi, ci;
+      for (let fi = 0; fi < familiyIds.length; fi++) {
+        hi = personIds.indexOf(familiyHusband[fi]);
+        wi = personIds.indexOf(familiyWife[fi]);
+        console.log("-->", hi, wi, familiyHusband[fi], familiyWife[fi]);
+        for (let i = 0; i < familiyChildren[fi].length; i++) {
+          ci = personIds.indexOf(familiyChildren[fi][i]);
+          if (ci == undefined || ci == -1) continue;
+          if (hi != undefined && hi > -1)
+            linkTable.push([linkTable.length, hi, ci]);
+          if (wi != undefined && wi > -1)
+            linkTable.push([linkTable.length, wi, ci]);
+        }
+      }
+
+      callBack(
+        new DataSet({
+          name: url.split("=")[0],
+          nodeTable: nodeTable,
+          linkTable: linkTable,
+          nodeSchema: nodeSchema,
+          linkSchema: linkSchema,
+        })
+      );
+    });
 }
 
 export function loadLinkList(
   url: string,
   callBack: (dataset: DataSet) => void
 ): void {
-  $.get(url, (data) => {
-    const lines = data.split("\n");
-    const nodeTable = [];
-    const nodeSchema = { id: 0, label: 1 };
-    const linkTable = [];
-    const linkSchema = { id: 0, source: 1, target: 2, weight: 3 };
-    let line;
-    let s, t;
-    let i = 0;
-    for (i; i < lines.length; i++) {
-      line = lines[i];
-      if (line.indexOf("#") == -1) {
-        break;
-      }
-    }
-    let DEL = " ";
-    if (lines[i].indexOf(",") > -1) DEL = ",";
-    else if (lines[i].indexOf("\t") > -1) DEL = "\t";
-
-    const nodeLabels = [];
-    let weight;
-    for (i; i < lines.length; i++) {
-      line = lines[i];
-      line = line.split(DEL);
-      for (let j = 0; j < line.length; j) {
-        if (line[j].length == 0) {
-          line.splice(j, 1);
-        } else {
-          j++;
+  fetch(url)
+    .then((response) => response.text())
+    .then((data) => {
+      const lines = data.split("\n");
+      const nodeTable = [];
+      const nodeSchema = { id: 0, label: 1 };
+      const linkTable = [];
+      const linkSchema = { id: 0, source: 1, target: 2, weight: 3 };
+      let line;
+      let s, t;
+      let i = 0;
+      for (i; i < lines.length; i++) {
+        line = lines[i];
+        if (line.indexOf("#") == -1) {
+          break;
         }
       }
-      if (line.length < 2) continue;
+      let DEL = " ";
+      if (lines[i].indexOf(",") > -1) DEL = ",";
+      else if (lines[i].indexOf("\t") > -1) DEL = "\t";
 
-      s = line[0].toLowerCase();
-      if (s == undefined || s == "") continue;
+      const nodeLabels = [];
+      let weight;
+      for (i; i < lines.length; i++) {
+        line = lines[i];
+        line = line.split(DEL);
+        for (let j = 0; j < line.length; j) {
+          if (line[j].length == 0) {
+            line.splice(j, 1);
+          } else {
+            j++;
+          }
+        }
+        if (line.length < 2) continue;
 
-      let si = nodeLabels.indexOf(s);
-      if (si == -1) {
-        si = nodeLabels.length;
-        nodeLabels.push(s);
+        s = line[0].toLowerCase();
+        if (s == undefined || s == "") continue;
+
+        let si = nodeLabels.indexOf(s);
+        if (si == -1) {
+          si = nodeLabels.length;
+          nodeLabels.push(s);
+        }
+
+        t = line[1].toLowerCase();
+        if (t == undefined) continue;
+        t = t.trim();
+        let ti = nodeLabels.indexOf(t);
+        if (ti == -1) {
+          ti = nodeLabels.length;
+          nodeLabels.push(t);
+        }
+
+        weight = 1;
+        linkTable.push([linkTable.length, si, ti, weight]);
+      }
+      for (i = 0; i <= nodeLabels.length; i++) {
+        nodeTable.push([i, nodeLabels[i] + ""]);
       }
 
-      t = line[1].toLowerCase();
-      if (t == undefined) continue;
-      t = t.trim();
-      let ti = nodeLabels.indexOf(t);
-      if (ti == -1) {
-        ti = nodeLabels.length;
-        nodeLabels.push(t);
-      }
-
-      weight = 1;
-      linkTable.push([linkTable.length, si, ti, weight]);
-    }
-    for (i = 0; i <= nodeLabels.length; i++) {
-      nodeTable.push([i, nodeLabels[i] + ""]);
-    }
-
-    callBack(
-      new DataSet({
-        name: url.split("=")[0],
-        nodeTable: nodeTable,
-        linkTable: linkTable,
-        nodeSchema: nodeSchema,
-        linkSchema: linkSchema,
-      })
-    );
-  });
+      callBack(
+        new DataSet({
+          name: url.split("=")[0],
+          nodeTable: nodeTable,
+          linkTable: linkTable,
+          nodeSchema: nodeSchema,
+          linkSchema: linkSchema,
+        })
+      );
+    });
 }
 
 export function loadMatrix(
   url: string,
   callBack: (dataset: DataSet) => void
 ): void {
-  $.get(url, (data) => {
-    const lines = data.split("\n");
-    const nodeTable = [];
-    const nodeSchema = { id: 0, label: 1 };
-    const linkTable = [];
-    const linkSchema = { id: 0, source: 1, target: 2 };
+  fetch(url)
+    .then((response) => response.text())
+    .then((data) => {
+      const lines = data.split("\n");
+      const nodeTable = [];
+      const nodeSchema = { id: 0, label: 1 };
+      const linkTable = [];
+      const linkSchema = { id: 0, source: 1, target: 2 };
 
-    const nodeNames = [];
-    let label;
-    // get nodes from rows
-    let line = lines[0].trim().split(",");
-    for (let i = 0; i < line.length; i++) {
-      label = line[i].trim();
-      nodeTable.push([nodeTable.length, label]);
-      nodeNames.push(label);
-    }
-    let t;
-    for (let i = 1; i < lines.length; i++) {
-      line = lines[i];
-      line = line.trim();
-      line = line.split(",");
-      t = nodeNames.indexOf(line[0].trim());
-      if (t == -1) {
-        console.error("Node", line[0], "not defined");
-        continue;
+      const nodeNames = [];
+      let label;
+      // get nodes from rows
+      const initialCol = lines[0].trim().split(",");
+      for (let i = 0; i < initialCol.length; i++) {
+        label = initialCol[i].trim();
+        nodeTable.push([nodeTable.length, label]);
+        nodeNames.push(label);
       }
-      for (let j = 1; j < line.length; j++) {
-        if (
-          line[j].length > 0 &&
-          parseInt(line[j].replace(/\s/g, "")) > 300000
-        ) {
-          linkTable.push([linkTable.length, t, j - 1]);
+      let t, line;
+      for (let i = 1; i < lines.length; i++) {
+        line = lines[i];
+        line = line.trim();
+        line = line.split(",");
+        t = nodeNames.indexOf(line[0].trim());
+        if (t == -1) {
+          console.error("Node", line[0], "not defined");
+          continue;
+        }
+        for (let j = 1; j < line.length; j++) {
+          if (
+            line[j].length > 0 &&
+            parseInt(line[j].replace(/\s/g, "")) > 300000
+          ) {
+            linkTable.push([linkTable.length, t, j - 1]);
+          }
         }
       }
-    }
-    console.log("---->nodes found:", nodeTable.length);
-    console.log("---->links found:", linkTable.length);
-    callBack(
-      new DataSet({
-        name: url.split("=")[0],
-        nodeTable: nodeTable,
-        linkTable: linkTable,
-        nodeSchema: nodeSchema,
-        linkSchema: linkSchema,
-      })
-    );
-  });
+      console.log("---->nodes found:", nodeTable.length);
+      console.log("---->links found:", linkTable.length);
+      callBack(
+        new DataSet({
+          name: url.split("=")[0],
+          nodeTable: nodeTable,
+          linkTable: linkTable,
+          nodeSchema: nodeSchema,
+          linkSchema: linkSchema,
+        })
+      );
+    });
 }
 
 /// EXPORTERS
