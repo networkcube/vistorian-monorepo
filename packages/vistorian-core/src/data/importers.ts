@@ -503,10 +503,10 @@ export function parsePajek(data: any, dataName: string): DataSet {
       parseType = "nodes";
       continue;
     } else if (line.indexOf("*Arcs") > -1) {
-      parseType = "undirectedLinks";
+      parseType = "directedLinks";
       continue;
     } else if (line.indexOf("*Edges") > -1) {
-      parseType = "directedLinks";
+      parseType = "undirectedLinks";
       continue;
     }
 
