@@ -35,7 +35,7 @@
 
     let bookmarks = [];
 
-    let whichBookMarksToShow = false;
+    let whichBookMarksToShow = "all";
     let state = "initial";
 
 
@@ -131,6 +131,9 @@
 
         initializeJSON();
     })
+
+    let bookmarksToShow;
+    $: bookmarksToShow = bookmarks.filter(b => (whichBookMarksToShow === "all" || b.viewType === viewType) )
 </script>
 
 
@@ -161,12 +164,12 @@
         </FormGroup>
 
 
-        {#if bookmarks.length === 0}
-            <p>No bookmarks yet!</p>
+        {#if bookmarksToShow.length === 0}
+            <p>No bookmarks to display.</p>
         {:else}
             <div>
                 {#each bookmarks as bookmark, index}
-                    <Bookmark bind:bookmarks={bookmarks} index={index} />
+                    <Bookmark bind:bookmarks={bookmarks} index={index} whichBookMarksToShow={whichBookMarksToShow} />
                 {/each}
             </div>
         {/if}
