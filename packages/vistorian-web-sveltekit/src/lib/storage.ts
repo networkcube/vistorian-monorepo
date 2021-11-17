@@ -64,9 +64,11 @@ export function getTableNames(sessionid: string): string[] {
 	if (names == undefined) names = [];
 	return names;
 }
+
 export function saveTableNames(tableNames: any, sessionid: string) {
 	save(`${sessionid}#vistorian.tablenames`, tableNames);
 }
+
 export function deleteTable(table: VTable, sessionid: string) {
 	localStorage.deleteKey(`${sessionid}#vistorian.table#${table.name}`);
 
@@ -130,6 +132,7 @@ export function deleteNetwork(network: Network, sessionid: string) {
 	main.deleteData(network.name);
 	deleteNetworkById(network.id, sessionid);
 }
+
 export function deleteNetworkById(id: number, sessionid: string) {
 	// remove network tables from local storage:
 

@@ -10,6 +10,7 @@ import * as utils from 'vistorian-core/build/src/data/utils';
 export class VTable {
 	name: string;
 	data: any[];
+
 	constructor(name: string, data: any[]) {
 		this.name = name;
 		this.data = data;
@@ -18,6 +19,7 @@ export class VTable {
 
 export class VTableSchema {
 	name: string;
+
 	constructor(name: string) {
 		this.name = name;
 	}
@@ -32,6 +34,7 @@ export class VNodeSchema extends VTableSchema {
 	// nodeType: number = -1;
 	// color: number = -1;
 	shape = -1;
+
 	constructor() {
 		super('userNodeSchema');
 	}
@@ -47,16 +50,19 @@ export class VLinkSchema extends VTableSchema {
 	time = -1;
 	linkType = -1;
 	directed = -1;
+
 	constructor() {
 		super('userLinkSchema');
 	}
 }
+
 export class VLocationSchema extends VTableSchema {
 	id = 0;
 	label = 1;
 	geoname = 2;
 	longitude = 3;
 	latitude = 4;
+
 	constructor() {
 		super('userLocationSchema');
 	}
@@ -223,7 +229,7 @@ export function setHeader(elementId: string, datasetname: string) {
   );
   $("#" + elementId).append("<br/><br/>");
 
-	 */
+   */
 }
 
 ///////////////////////////////////////////
