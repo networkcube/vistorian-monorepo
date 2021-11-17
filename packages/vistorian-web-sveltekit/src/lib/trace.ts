@@ -1,11 +1,11 @@
-var _traceq = _traceq || [];
-var traceUrl = '/trace';
+let _traceq = [];
+let traceUrl = '/trace';
 // "http://localhost:5000/trace";
-var _sending = null;
-var sessionId;
-var starting = true;
-var debug = false;
-var loggingEnabled = false;
+let _sending = null;
+let sessionId;
+let starting = true;
+const debug = false;
+let loggingEnabled = false;
 
 // storageType = sessionStorage;
 const LoggingPhase = 'acceptLogging';
@@ -24,28 +24,26 @@ if (typeof window !== 'undefined') {
 	UpdateLoggingStatus();
 }
 
-let trace;
-trace = { version: '0.3' };
-
-trace.url = function (url) {
-	if (!arguments.length) return url;
-	traceUrl = url;
-	return trace;
+const trace = {
+	version: '0.3',
+	url: function (url) {
+		if (!arguments.length) return url;
+		traceUrl = url;
+		return trace;
+	},
+	sessionID: function () {
+		return sessionId;
+	},
+	debug: function (d) {
+		if (!arguments.length) return debug;
+		// debug = d;
+		return trace;
+	}
 };
 
-trace.sessionId = function () {
-	return sessionId;
-};
-
-trace.debug = function (d) {
-	if (!arguments.length) return debug;
-	// debug = d;
-	return trace;
-};
-
-var uuid = function () {
+const uuid = function () {
 	if (!localStorage.getItem(SessionLogId)) {
-		var uuid = '',
+		let uuid = '',
 			i,
 			random;
 		for (i = 0; i < 32; i++) {
@@ -64,8 +62,8 @@ var uuid = function () {
 	return uuid;
 };
 
-var sendLogs_ = function (list) {
-	var httpRequest;
+const sendLogs_ = function (list) {
+	let httpRequest;
 	if (window.XDomainRequest) {
 		httpRequest = new XDomainRequest();
 		httpRequest.onload = function () {
@@ -84,7 +82,7 @@ var sendLogs_ = function (list) {
 			sendMoreOrAgain(httpRequest.status < 300);
 		}
 	};
-	var json = JSON.stringify(list);
+	const json = JSON.stringify(list);
 	httpRequest.open('POST', traceUrl, true);
 	if (window.XDomainRequest) {
 		// no request header?
@@ -96,7 +94,7 @@ var sendLogs_ = function (list) {
 	// httpRequest.send(json);
 };
 
-var sendLogs = function () {
+const sendLogs = function () {
 	if (_traceq.length == 0) return;
 	_sending = _traceq;
 	if (debug) {
@@ -106,7 +104,7 @@ var sendLogs = function () {
 	sendLogs_(_sending);
 };
 
-var sendMoreOrAgain = function (ok) {
+const sendMoreOrAgain = function (ok) {
 	if (ok) {
 		_sending = null;
 		sendLogs();
@@ -145,7 +143,7 @@ function traceEvent(cat, action, label, value) {
 		if (debug) {
 			window.console && console.log('Track[' + cat + ',' + action + ',' + label + ']');
 		}
-		var ts = Date.now();
+		const ts = Date.now();
 		_traceq.push({
 			session: sessionId,
 			ts: ts,
