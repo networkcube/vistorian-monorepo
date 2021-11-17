@@ -32,7 +32,7 @@
   if (networkName.indexOf('&') > -1) {
       networkName = window.parent.location.search.split('&')[1].split('=')[1];
   }
-*/
+  */
 
 	//    window.vc.messenger.addEventListener("STATE_CREATED", stateCreatedHandler);//   window.vc.messenger.addEventListener("ZOOM_INTERACTION", zoomLoggingHandler);
 
@@ -130,9 +130,8 @@
 		if (confirm('Are you sure you want to delete all bookmarks?')) {
 			localStorage.removeItem('vistorianBookmarks');
 			initializeJSON();
-			window.parent.document.getElementById('myFrame').src = window.parent.document.getElementById(
-				'myFrame'
-			).src;
+			window.parent.document.getElementById('myFrame').src =
+				window.parent.document.getElementById('myFrame').src;
 		}
 	};
 
