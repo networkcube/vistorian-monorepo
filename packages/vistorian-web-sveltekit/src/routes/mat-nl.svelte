@@ -53,18 +53,23 @@
 			height
 		);
 
+		createVisualizationIFrame(
+			'nodelinkVisFrame',
+			SERVER + '../node_modules/vistorian-nodelink/web/index.html',
+			params['session'],
+			params['datasetName'],
+			width_col2,
+			height
+		);
 
 		createVisualizationIFrame(
-			"nodelinkVisFrame",
-			SERVER + "../node_modules/vistorian-nodelink/web/index.html",
-			params["session"], params["datasetName"],
-			width_col2, height);
-
-		createVisualizationIFrame(
-			"matrixVisFrame",
-			SERVER + "../node_modules/vistorian-matrix/web/index.html",
-			params["session"], params["datasetName"],
-			width_col2, height);
+			'matrixVisFrame',
+			SERVER + '../node_modules/vistorian-matrix/web/index.html',
+			params['session'],
+			params['datasetName'],
+			width_col2,
+			height
+		);
 
 		trace.event('log_2', 'load', 'webpage', document.location.pathname);
 
@@ -89,8 +94,8 @@
 				<br />
 				<div width="220" id="bookmarkFrame" />
 			</td>
-			<td id="nodelinkVisFrame"></td>
-			<td id="matrixVisFrame"></td>
+			<td id="nodelinkVisFrame" />
+			<td id="matrixVisFrame" />
 		</tr>
 	</table>
 

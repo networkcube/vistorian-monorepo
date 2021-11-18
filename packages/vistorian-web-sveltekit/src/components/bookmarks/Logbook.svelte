@@ -39,7 +39,7 @@
 	let bookmarks = [];
 
 	let whichBookMarksToShow = 'all';
-	
+
 	let newBookmarkModalOpen = false;
 
 	let showSessionID = false;

@@ -29,7 +29,7 @@
 	// because this file uses the window bbject, which breaks SSR
 	let setState;
 	onMount(async () => {
-		const module = await import("vistorian-core/src/data/messenger");
+		const module = await import('vistorian-core/src/data/messenger');
 		setState = module.setState;
 	});
 
