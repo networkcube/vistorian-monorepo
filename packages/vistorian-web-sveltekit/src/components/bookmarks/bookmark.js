@@ -128,12 +128,16 @@ class mapControls extends networkControls {
 		startTime,
 		endTime,
 		nodeOverlap,
+		edgeGap,
 		linkOpacity,
+		linkWidth,
 		opacityOfPositionlessNodes
 	) {
 		super(networkType, startTime, endTime);
 		this.nodeOverlap = nodeOverlap;
+		this.edgeGap = edgeGap;
 		this.linkOpacity = linkOpacity;
+		this.linkWidth = linkWidth;
 		this.opacityOfPositionlessNodes = opacityOfPositionlessNodes;
 	}
 }
@@ -220,16 +224,22 @@ function captureControlsValues(viewType) {
 			.getElementById('sliderKnobMax')
 			.getAttribute('cx');
 		let mapCntrls = visIframe.contentWindow.document.getElementsByTagName('circle');
+
 		let mapNodeOverlap = mapCntrls[0].getAttribute('cx');
-		let mapLinkOpacity = mapCntrls[1].getAttribute('cx');
-		let mapOpacityOfPositionlessNodes = mapCntrls[2].getAttribute('cx');
+		let mapEdgeGap = mapCntrls[1].getAttribute('cx');
+		let mapLinkOpacity = mapCntrls[2].getAttribute('cx');
+		let mapLinkWidth = mapCntrls[3].getAttribute('cx');
+		let mapOpacityOfPositionlessNodes = mapCntrls[4].getAttribute('cx');
+
 		visControls.push(
 			new mapControls(
 				viewType,
 				mapStartTime,
 				mapEndTime,
 				mapNodeOverlap,
+				mapEdgeGap,
 				mapLinkOpacity,
+				mapLinkWidth,
 				mapOpacityOfPositionlessNodes
 			)
 		);
@@ -271,12 +281,11 @@ function mapRestore(bkFile, bkIndex, iframeIndex, controlsObjectIndex) {
 	var visIframe = window.parent.document.getElementsByTagName('iframe')[iframeIndex];
 	let mapObj = bkFile[bkIndex].visNetworkControl[controlsObjectIndex];
 	let mapCntrls = visIframe.contentWindow.document.getElementsByTagName('circle');
-	let mapNodeOverlap = mapCntrls[0].setAttribute('cx', mapObj.nodeOverlap);
-	let mapLinkOpacity = mapCntrls[1].setAttribute('cx', mapObj.linkOpacity);
-	let mapOpacityOfPositionlessNodes = mapCntrls[2].setAttribute(
-		'cx',
-		mapObj.opacityOfPositionlessNodes
-	);
+	mapCntrls[0].setAttribute('cx', mapObj.nodeOverlap);
+	mapCntrls[1].setAttribute('cx', mapObj.edgeGap);
+	mapCntrls[2].setAttribute('cx', mapObj.linkOpacity);
+	mapCntrls[3].setAttribute('cx', mapObj.linkWidth);
+	mapCntrls[4].setAttribute('cx', mapObj.opacityOfPositionlessNodes);
 }
 
 export {
