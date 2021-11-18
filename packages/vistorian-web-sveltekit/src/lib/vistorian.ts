@@ -1,7 +1,8 @@
 import * as dynamicgraphutils from 'vistorian-core/src/data/dynamicgraphutils';
 import * as main from 'vistorian-core/src/data/main';
 
-import * as moment from 'moment';
+import { timeFormat, timeParse } from 'd3-time-format';
+
 import * as storage from './storage';
 import * as utils from 'vistorian-core/build/src/data/utils';
 
@@ -657,11 +658,15 @@ export function importIntoNetworkcube(currentNetwork: Network, sessionid: string
 		currentNetwork.timeFormat.length > 0
 	) {
 		const format: string = currentNetwork.timeFormat;
+		// TODO: timeFormat should be changed from "DD/MM/YYYY" -> "%d/%m/%Y"
+		// %Y-%m-%d %H:%M:%S
+
+		const formatTime = timeFormat(main.timeFormat());
+		const parseTime = timeParse(format);
+
 		if (normalizedLinkSchema.time != undefined && normalizedLinkSchema.time > -1) {
 			for (let i = 0; i < normalizedLinkTable.length; i++) {
-				time = moment
-					.utc(normalizedLinkTable[i][normalizedLinkSchema.time], format)
-					.format(main.timeFormat());
+				time = formatTime(parseTime(normalizedLinkTable[i][normalizedLinkSchema.time]));
 				if (time.indexOf('Invalid') > -1) time = undefined;
 				normalizedLinkTable[i][normalizedLinkSchema.time] = time;
 			}
@@ -669,9 +674,7 @@ export function importIntoNetworkcube(currentNetwork: Network, sessionid: string
 
 		if (normalizedNodeSchema.time != undefined && normalizedNodeSchema.time > -1) {
 			for (let i = 0; i < normalizedNodeTable.length; i++) {
-				time = moment
-					.utc(normalizedNodeTable[i][normalizedNodeSchema.time], format)
-					.format(main.timeFormat());
+				time = formatTime(parseTime(normalizedNodeTable[i][normalizedNodeSchema.time]));
 				if (time.indexOf('Invalid') > -1) time = undefined;
 				normalizedNodeTable[i][normalizedNodeSchema.time] = time;
 			}

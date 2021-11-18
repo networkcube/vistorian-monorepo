@@ -13,7 +13,12 @@ export const GRANULARITY: string[] = [
   "week",
   "month",
   "year",
+
+  "decade",
+  "century",
+  "millenium",
 ]; //, 'decade', 'century', 'millenium'];
+// TODO: these levels aren't handled by the relevant functions
 
 export const DGRAPH_SUB = "[*dgraph*]";
 export const DGRAPH_SER_VERBOSE_LOGGING = false;
