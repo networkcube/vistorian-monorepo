@@ -110,7 +110,7 @@ export class Timeline {
 
     let granularitySet: boolean;
     let y1: any, y2: any;
-    let to1: any, to2: any;
+    let to1: Date, to2: Date;
     for (let i = 0; i < this.timeObjects.length; i++) {
       granularitySet = false;
       if (i == 0) to1 = prevprev;
@@ -122,8 +122,8 @@ export class Timeline {
         gran--
       ) {
         if (gran > 7) {
-          y1 = to1.get(this.granules[7]) + "";
-          y2 = to2.get(this.granules[7]) + "";
+          y1 = utils.formatAtGranularity(to1, 7);
+          y2 = utils.formatAtGranularity(to2, 7);
 
           // test for millenia
           if (y1[y1.length - 4] != y2[y2.length - 4]) {
@@ -141,7 +141,8 @@ export class Timeline {
             granularitySet = true;
           }
         } else if (
-          to1.get(this.granules[gran]) != to2.get(this.granules[gran])
+          utils.formatAtGranularity(to1, gran) !=
+          utils.formatAtGranularity(to2, gran)
         ) {
           this.timeGranularities.push(gran);
           granularitySet = true;
