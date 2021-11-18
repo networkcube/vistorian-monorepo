@@ -762,7 +762,7 @@ function updateLinks(highlightId?: number) {
           Math.min(1, LINK_OPACITY)
         : LINK_OPACITY;
     })
-    .style("stroke-width", function (d: any) {
+    .attr("stroke-width", function (d: any) {
       let weight =
         linkWeightScale(d.weights(time_start, time_end).mean()) *
         LINK_WIDTH_SCALE;
@@ -775,7 +775,9 @@ function updateLinks(highlightId?: number) {
       }
       if (highlightId && highlightId == d._id) {
         weight *= 3;
-      } else if (d.isHighlighted()) weight *= 2;
+      } else if (d.isHighlighted()) {
+        weight *= 2;
+      }
       return weight;
     });
 }
