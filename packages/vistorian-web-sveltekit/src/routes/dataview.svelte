@@ -29,7 +29,7 @@
 	<table id="main">
 		<tr id="firstRow">
 			<td id="menu">
-				<a href="../index.html"><img width="100%" src="../logos/logo-networkcube.png" /></a>
+				<a href="/"><img width="100%" src="../logos/logo-networkcube.png" /></a>
 				<p id="intro">
 					This is your data view. Below you find a list of visualizations and the networks currently
 					in your browser.

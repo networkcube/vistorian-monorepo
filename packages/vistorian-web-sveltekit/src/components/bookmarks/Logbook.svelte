@@ -39,7 +39,8 @@
 	let bookmarks = [];
 
 	let whichBookMarksToShow = 'all';
-	let state = 'initial';
+	
+	let newBookmarkModalOpen = false;
 
 	let showSessionID = false;
 	const toggleMySessionID = () => {
@@ -136,8 +137,7 @@
 	};
 
 	const addBookmark = () => {
-		// TODO: implement
-		state = 'addingBookmark';
+		newBookmarkModalOpen = true;
 		trace.event('bkm_1', ' new bookmark button', 'clicked', window.parent.location.pathname);
 	};
 
@@ -160,9 +160,7 @@
 
 <main>
 	<div id="logbook_container">
-		{#if state === 'addingBookmark'}
-			<AddNewBookmark bind:bookmarks />
-		{/if}
+		<AddNewBookmark bind:bookmarks bind:open={newBookmarkModalOpen} />
 
 		<FormGroup>
 			<Input

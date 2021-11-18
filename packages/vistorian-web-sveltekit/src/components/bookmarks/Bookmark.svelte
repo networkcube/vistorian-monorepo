@@ -1,5 +1,5 @@
 <script>
-	import { getContext } from 'svelte';
+	import { getContext, onMount } from 'svelte';
 	import {
 		Button,
 		Card,
@@ -11,7 +11,6 @@
 		Icon
 	} from 'sveltestrap';
 
-	import { setState } from 'vistorian-core/src/data/messenger';
 	import { nodeLinkRestore, matrixRestore, dynamicegoRestore, mapRestore } from './bookmark';
 
 	export let bookmarks;
@@ -24,6 +23,15 @@
 
 	let expanded = false;
 	const toggle = () => (expanded = !expanded);
+
+	// We can't just do:
+	//	import { setState } from "vistorian-core/src/data/messenger";
+	// because this file uses the window bbject, which breaks SSR
+	let setState;
+	onMount(async () => {
+		const module = await import("vistorian-core/src/data/messenger");
+		setState = module.setState;
+	});
 
 	const deleteBookmarks = () => {
 		bookmarks = bookmarks.filter((b) => b.id !== bookmark.id);

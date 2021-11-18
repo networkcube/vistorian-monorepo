@@ -33,7 +33,7 @@
 				location.protocol + '//' + window.location.hostname + '' + window.location.pathname + '/';
 		}
 
-		SERVER = SERVER.split('web/')[0];
+		SERVER = SERVER.split('/')[0];
 
 		const width = window.innerWidth - 30;
 		const width_col1 = 220;

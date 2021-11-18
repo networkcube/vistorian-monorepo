@@ -24,28 +24,28 @@ if (typeof window !== 'undefined') {
 	UpdateLoggingStatus();
 }
 
-const trace = {
-	version: '0.3',
-	url: function (url) {
-		if (!arguments.length) return url;
-		traceUrl = url;
-		return trace;
-	},
-	sessionID: function () {
-		return sessionId;
-	},
-	debug: function (d) {
-		if (!arguments.length) return debug;
-		// debug = d;
-		return trace;
-	}
+const trace: any = { version: '0.3' };
+
+trace.url = function (url) {
+	if (!arguments.length) return url;
+	traceUrl = url;
+	return trace;
+};
+
+trace.sessionID = function () {
+	return sessionId;
+};
+
+trace.debug = function (d) {
+	if (!arguments.length) return debug;
+	// debug = d;
+	return trace;
 };
 
 const uuid = function () {
+	let uuid = '';
 	if (!localStorage.getItem(SessionLogId)) {
-		let uuid = '',
-			i,
-			random;
+		let i, random;
 		for (i = 0; i < 32; i++) {
 			random = (Math.random() * 16) | 0;
 

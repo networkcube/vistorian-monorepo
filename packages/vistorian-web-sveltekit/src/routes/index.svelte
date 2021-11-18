@@ -240,7 +240,7 @@
 						> for importing, storing, and querying dynamic networks in your browser cache,
 					</li>
 					<li>
-						a <a href="./web/demo.html?session=0&datasetName=demo_scientists"
+						a <a href="./demo?session=0&datasetName=demo_scientists"
 							>set of online visualizations</a
 						>
 						build on top of that library, and
@@ -344,10 +344,10 @@
 				Networkcube. However, both are identical.<br />
 				<a href="http://github.com/networkcube/networkcube/wiki/Visualization-Manual">Manual</a><br
 				/>
-				<a href="./web/demo.html?session=0&datasetName=demo_scientists"
+				<a href="./demo?session=0&datasetName=demo_scientists"
 					>Interactive visualizations</a
 				><br />
-				<a href="./web/dataview.html?session=0">Demo session</a><br />
+				<a href="./dataview?session=0">Demo session</a><br />
 
 				<h2>Cite</h2>
 
