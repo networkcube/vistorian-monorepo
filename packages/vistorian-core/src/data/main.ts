@@ -3,12 +3,11 @@ import { DataSet } from "./dynamicgraphutils";
 import { DynamicGraph } from "./dynamicgraph";
 import { DataManager, DataManagerOptions } from "./datamanager";
 
+import { TIME_FORMAT } from "./dates";
+
 /** A collection of Networkcube's  global function availeble
  * through networkcube.myFunc()
  * */
-
-// must agree with var of same name in DynamicGraph.initDynamicGraph()
-export const TIME_FORMAT = "YYYY-MM-DD hh:mm:ss";
 
 /**
  * Returns the networkcube standart time format

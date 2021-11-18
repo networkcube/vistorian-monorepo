@@ -11,7 +11,9 @@ import {
   LinkType,
   copyPropsShallow,
 } from "./dynamicgraph";
-import * as moment from "moment";
+
+// TODO: refactor imports to import from dates directly...
+export { formatAtGranularity, formatTimeAtGranularity } from "./dates";
 
 /* moved from utils to queries */
 
@@ -272,30 +274,6 @@ export function makeIdCompound(
   return result;
 }
 
-export function formatAtGranularity(
-  time: any,
-  granualarity: number
-): string | undefined {
-  switch (granualarity) {
-    case 0:
-      return time.millisecond();
-    case 1:
-      return time.second();
-    case 2:
-      return time.minute();
-    case 3:
-      return time.hour();
-    case 4:
-      return time.day();
-    case 5:
-      return time.week();
-    case 6:
-      return time.month() + 1;
-    case 7:
-      return time.year();
-  }
-}
-
 export function arraysEqual(a: any, b: any): boolean {
   if (a === b) return true;
   if (a == null || b == null) return false;
@@ -345,31 +323,6 @@ export function isPointInPolyArray(poly: number[][], pt: number[]): boolean {
           poly[i][0] &&
       (c = !c);
   return c;
-}
-
-export function formatTimeAtGranularity(
-  time: Time,
-  granualarity: number
-): number {
-  const momentTime = moment.utc(time.unixTime());
-  switch (granualarity) {
-    case 0:
-      return momentTime.millisecond();
-    case 1:
-      return momentTime.second();
-    case 2:
-      return momentTime.minute();
-    case 3:
-      return momentTime.hour();
-    case 4:
-      return momentTime.day();
-    case 5:
-      return momentTime.week();
-    case 6:
-      return momentTime.month() + 1;
-    default:
-      return momentTime.year();
-  }
 }
 
 ////////////////////////////

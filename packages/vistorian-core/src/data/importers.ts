@@ -2,8 +2,8 @@ import * as d3 from "d3";
 
 import { DataSet, LinkSchema, NodeSchema } from "./dynamicgraphutils";
 import { DynamicGraph } from "./dynamicgraph";
-import * as moment from "moment";
 import * as main from "./main";
+import { addDate, formatStandardTime } from "./dates";
 
 export function loadDyson(
   url: string,
@@ -50,7 +50,7 @@ export function loadLinkTable(
   delimiter: string,
   timeFormat?: string
 ): void {
-  if (timeFormat == undefined) timeFormat = "x";
+  if (timeFormat == undefined) timeFormat = "%Q";
 
   // Check if linkSchema is well defined:
   if (linkSchema.source == undefined) {
@@ -101,6 +101,9 @@ export function loadLinkTable(
       linkData.shift();
 
       let linkRow;
+      const parseTime = d3.timeParse(timeFormat || "%Q");
+      const formatTime = d3.timeFormat(main.timeFormat());
+
       for (let i = 0; i < linkData.length; i++) {
         if (linkData[i].length == 0 || linkData[i][0].length == 0) {
           continue;
@@ -141,9 +144,11 @@ export function loadLinkTable(
         }
         // format time
         if (linkSchema.time != undefined) {
-          linkRow[newLinkSchema.time] = moment
-            .utc(linkData[i][linkSchema.time], timeFormat)
-            .format(main.timeFormat());
+          const timeString = linkData[i][linkSchema.time];
+          const parsedTime = parseTime(timeString);
+          linkRow[newLinkSchema.time] = parsedTime
+            ? formatTime(parsedTime)
+            : undefined;
         }
         // copy remaining attributes (linkType, weight, etc..)
         for (const prop in linkSchema) {
@@ -452,14 +457,13 @@ export function loadNCube(
     // create link table
     // data.edges = data.edges.slice(0,20000);
     for (let i = 0; i < data.edges.length; i++) {
+      const d = addDate(new Date(), data.edges[i].timeIndex, "second");
+
       linkTable.push([
         data.edges[i].edgeId,
         data.edges[i].sourceNodeId,
         data.edges[i].targetNodeId,
-        moment
-          .utc()
-          .add(data.edges[i].timeIndex, "seconds")
-          .format("YYYY-MM-DD hh:mm:ss"),
+        formatStandardTime(d),
         data.edges[i].weight,
       ]);
     }

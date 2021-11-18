@@ -11,8 +11,6 @@ import * as messenger from "vistorian-core/src/data/messenger";
 import * as ui from "vistorian-core/src/ui/ui";
 import * as timeslider from "vistorian-core/src/ui/timeslider";
 
-import * as moment from "moment";
-
 const COLOR_DEFAULT_LINK = "#999999";
 const COLOR_DEFAULT_NODE = "#999999";
 const COLOR_HIGHLIGHT = "#ff8800";
@@ -561,6 +559,7 @@ function init() {
   overlay.setMap(map);
 }
 
+const toMMDDYYYY = d3.timeFormat("%m/%d/%Y");
 function createNodeLabel(npo: any) {
   let locationLabel = "";
   if (npo.location != undefined && npo.location.label() != undefined) {
@@ -569,8 +568,7 @@ function createNodeLabel(npo: any) {
 
   const time: any = dgraph.time(npo.timeIds[0]);
   let timeLabel = "";
-  if (time)
-    timeLabel = " (" + moment.utc(time.unixTime()).format("MM/DD/YYYY") + ")";
+  if (time) timeLabel = " (" + toMMDDYYYY(new Date(time.unixTime())) + ")";
 
   return npo.node.label() + locationLabel + timeLabel;
 }

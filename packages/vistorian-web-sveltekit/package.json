@@ -11,6 +11,7 @@
 		"format": "prettier --ignore-path .gitignore --write --plugin-search-dir=. ."
 	},
 	"dependencies": {
+		"d3-time-format": "^4.0.0",
 		"vistorian-bookmarkbrowser": "0.0.1-alpha",
 		"vistorian-core": "0.0.12",
 		"vistorian-dynamicego": "0.0.1-alpha",
@@ -21,6 +22,7 @@
 		"sveltestrap": "^5.6.3"
 	},
 	"devDependencies": {
+		"@sveltejs/adapter-static": "next",
 		"@sveltejs/kit": "next",
 		"@typescript-eslint/eslint-plugin": "^4.31.1",
 		"@typescript-eslint/parser": "^4.31.1",

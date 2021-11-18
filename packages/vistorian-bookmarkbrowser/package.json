@@ -39,7 +39,6 @@
     "homepage": "https://github.com/networkcube/vistorian-monorepo#readme",
     "bundledDependencies": [
         "jquery",
-        "moment",
         "vistorian-core"
     ],
     "dependencies": {
@@ -47,7 +46,6 @@
         "circular-dependency-plugin": "^5.0.2",
         "d3": "^7.0.1",
         "jquery": "^3.3.1",
-        "moment": "^2.23.0",
         "vistorian-core": "0.0.12"
     }
 }

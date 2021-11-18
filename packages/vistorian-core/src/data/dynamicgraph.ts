@@ -1,8 +1,10 @@
 import { DataSet, isValidIndex, Selection } from "./dynamicgraphutils";
-import * as moment from "moment";
 import { DataManager } from "./datamanager";
 
-export const GRANULARITY: moment.unitOfTime.Base[] = [
+import { timeFormat } from "d3-time-format";
+import { TIME_FORMAT, parseStandardTime, formatStandardTime } from "./dates";
+
+export const GRANULARITY: string[] = [
   "millisecond",
   "second",
   "minute",
@@ -244,7 +246,7 @@ export class DynamicGraph {
         return copyPropsShallow(v, new TimeArray());
       case "time":
         return (v as string[]).map(function (s, i) {
-          return moment.utc(s);
+          return new Date(s);
         });
       default:
         return v;
@@ -358,14 +360,14 @@ export class DynamicGraph {
     ) {
       const ta = this.timeArrays["momentTime"];
       for (let i = 0; i < ta.length; i++) {
-        ta[i] = moment.utc(this.timeArrays["unixTime"][i]);
+        ta[i] = new Date(this.timeArrays["unixTime"][i]);
       }
     } else if ("unixTime" in this.timeArrays) {
       /* I DON'T KNOW WHY timeArrays IS never */
       console.log("No time in timeArrays");
       (this.timeArrays as any)["momentTime"] = (this.timeArrays as any)[
         "unixTime"
-      ].map(moment.utc());
+      ].map(new Date());
     } else {
       console.log("No time or unixTime in timeArrays");
       (this.timeArrays as any)["momentTime"] = [];
@@ -714,9 +716,6 @@ export class DynamicGraph {
   // creates this graph and fills node, link and time arrays from
   // data tables.
   initDynamicGraph(data: DataSet): void {
-    // must agree with version in main.ts
-    const TIME_FORMAT = "YYYY-MM-DD hh:mm:ss";
-
     this.clearSelections();
     console.log("[dynamicgraph.ts] Create dynamic graph for ", data.name, data);
 
@@ -732,7 +731,7 @@ export class DynamicGraph {
 
     let timeLabel: string;
     const unixTimes: number[] = [];
-    let unixTime: number;
+    let unixTime: number | undefined;
 
     if (isValidIndex(data.linkSchema.time)) {
       // get unix times for all times
@@ -741,7 +740,8 @@ export class DynamicGraph {
       for (let i = 0; i < data.linkTable.length; i++) {
         timeLabel = data.linkTable[i][data.linkSchema.time];
         console.log(data.linkTable[i]);
-        unixTime = parseInt(moment.utc(timeLabel, TIME_FORMAT).format("x"));
+
+        unixTime = parseStandardTime(timeLabel)?.getTime();
         if (unixTime == undefined) continue;
 
         if (unixTimes.indexOf(unixTime) == -1) {
@@ -800,9 +800,9 @@ export class DynamicGraph {
       // this._times = [];
       for (let i = 0; i < unixTimes.length; i++) {
         this.timeArrays.id.push(i);
-        this.timeArrays.momentTime.push(moment.utc(unixTimes[i]));
+        this.timeArrays.momentTime.push(new Date(unixTimes[i]));
         this.timeArrays.label.push(
-          this.timeArrays.momentTime[i].format(TIME_FORMAT)
+          formatStandardTime(this.timeArrays.momentTime[i])
         );
         this.timeArrays.unixTime.push(unixTimes[i]);
         this.timeArrays.selections.push([]);
@@ -830,7 +830,7 @@ export class DynamicGraph {
     if (this.timeArrays.length == 0) {
       // null time object that represents one time step for the entire graph, i.e. a static graph
       this.timeArrays.id.push(0);
-      this.timeArrays.momentTime.push(moment.utc(0));
+      this.timeArrays.momentTime.push(new Date(0));
       this.timeArrays.unixTime.push(0);
       this.timeArrays.selections.push([]);
       this.timeArrays.filter.push(false);
@@ -948,10 +948,10 @@ export class DynamicGraph {
         console.log("params");
         console.log(timeLabel);
         console.log(TIME_FORMAT);
-        console.log(moment.utc(timeLabel, TIME_FORMAT));
-        console.log(moment.utc(timeLabel, TIME_FORMAT).format("x"));
+        console.log(parseStandardTime(timeLabel)?.toUTCString());
+        console.log(parseStandardTime(timeLabel)?.getTime());
         const timeIdForUnixTime = this.getTimeIdForUnixTime(
-          parseInt(moment.utc(timeLabel, TIME_FORMAT).format("x"))
+          parseStandardTime(timeLabel)?.getTime()
         );
         if (timeLabel == undefined || timeIdForUnixTime == undefined) {
           //} || timeStamp.indexOf('null')) {
@@ -1117,8 +1117,10 @@ export class DynamicGraph {
       // set time information
       if (isValidIndex(data.linkSchema.time)) {
         timeLabel = data.linkTable[i][data.linkSchema.time];
-        unixTime = parseInt(moment.utc(timeLabel, TIME_FORMAT).format("x"));
-        const timeIdForUnixTime = this.getTimeIdForUnixTime(unixTime);
+        unixTime = parseStandardTime(timeLabel)?.getTime();
+        const timeIdForUnixTime = unixTime
+          ? this.getTimeIdForUnixTime(unixTime)
+          : undefined;
         if (timeIdForUnixTime != undefined) {
           timeId = timeIdForUnixTime;
         } else {
@@ -1990,7 +1992,7 @@ export class DynamicGraph {
   }
 
   // internal utils
-  getTimeIdForUnixTime(unixTime: number): number | undefined {
+  getTimeIdForUnixTime(unixTime: number | undefined): number | undefined {
     // before only number
     let timeId: number;
     console.log("unixTime: ");
@@ -2194,7 +2196,7 @@ export class NodePairArray extends AttributeArray {
 
 export class TimeArray extends AttributeArray {
   id: number[] = [];
-  momentTime: moment.Moment[] = []; // moment object
+  momentTime: Date[] = []; // moment object
   label: string[] = [];
   unixTime: number[] = []; // unix time object
   selections: Selection[][] = [];
@@ -2840,12 +2842,12 @@ export class Time extends BasicElement {
 
   // SPECIFIC ATTRIBUTE QUERIES
 
-  /** @returns the moment object associated to this time object. */
-  time(): moment.Moment {
+  /** @returns the Date object associated to this time object. */
+  time(): Date {
     return this.attr("momentTime");
   }
 
-  moment(): moment.Moment {
+  moment(): Date {
     return this.attr("momentTime");
   }
 
@@ -2872,39 +2874,42 @@ export class Time extends BasicElement {
 
   // wrapper to moment.js
   year(): number {
-    return this.time().year();
+    return this.time().getUTCFullYear();
   }
 
   month(): number {
-    return this.time().month();
+    return this.time().getUTCMonth();
   }
 
+  getWeek = timeFormat("%V");
+
   week(): number {
-    return this.time().week();
+    return parseInt(this.getWeek(this.time()));
   }
 
   day(): number {
-    return this.time().day();
+    return this.time().getUTCDay();
   }
 
   hour(): number {
-    return this.time().hour();
+    return this.time().getUTCHours();
   }
 
   minute(): number {
-    return this.time().minute();
+    return this.time().getUTCMinutes();
   }
 
   second(): number {
-    return this.time().second();
+    return this.time().getUTCSeconds();
   }
 
   millisecond(): number {
-    return this.time().millisecond();
+    return this.time().getMilliseconds();
   }
 
   format(format: string): string {
-    return this.time().format(format);
+    const formatDate = timeFormat(format);
+    return formatDate(this.time());
   }
 }
 

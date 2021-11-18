@@ -7,7 +7,12 @@ import { SmartSlider } from "./smartslider";
 
 import { RadioButton } from "./ui";
 
-import * as m from "moment";
+import {
+  addDate,
+  formatTimeAtGranularity,
+  getGranularityFormattingString,
+  getGranularityName,
+} from "../data/dates";
 
 export class TimeSlider {
   /** VISUALIZATION  PARAMETERS */
@@ -49,47 +54,18 @@ export class TimeSlider {
     const timesDummy = new dynamicgraph.Time(0, this.dgraph);
     this.sliderWidth =
       width - this.MARGIN_SLIDER_RIGHT + 5 - this.MARGIN_SLIDER_LEFT - 5;
-    let lastDummyYear: m.Moment =
+    let lastDummyYear: Date =
       this.times.length != 0
         ? this.times[this.times.length - 1].moment()
         : timesDummy.moment(); // WHAT HAPPEND??
     const minGran: number = dgraph.gran_min;
-    let minGranName: m.unitOfTime.DurationConstructor = "milliseconds";
-    switch (minGran) {
-      case 0:
-        minGranName = "milliseconds";
-        break;
-      case 1:
-        minGranName = "seconds";
-        break;
-      case 2:
-        minGranName = "minutes";
-        break;
-      case 3:
-        minGranName = "hours";
-        break;
-      case 4:
-        minGranName = "days";
-        break;
-      case 5:
-        minGranName = "weeks";
-        break;
-      case 6:
-        minGranName = "months";
-        break;
-      case 7:
-        minGranName = "years";
-        break;
-      // case 8: minGranName = 'decades'; break;
-      // case 9: minGranName = 'centuries'; break;
-      // case 10: minGranName = 'millenia'; break;
-    }
+    let minGranName: string = getGranularityName(minGran);
 
     if (!lastDummyYear) {
-      lastDummyYear = m.unix(0);
+      lastDummyYear = new Date(0);
     }
 
-    lastDummyYear.add(1, minGranName);
+    lastDummyYear = addDate(lastDummyYear, 1, minGranName);
 
     const unixTimeSlider =
       this.times.length != 0 ? this.times[0].unixTime() : 0; // IS IT OK??
@@ -201,7 +177,7 @@ export class TimeSlider {
           .append("text")
           .attr("x", this.tickScale(tickTimes[i].unixTime()))
           .attr("y", this.SLIDER_TOP - this.tickHeightFunction(granularity))
-          .text(this.formatAtGranularity(tickTimes[i].time(), granularity))
+          .text(formatTimeAtGranularity(tickTimes[i].time(), granularity))
           .attr("id", "timelabel_" + granularity + "_" + i)
           .attr("class", "timelabel")
           .style("opacity", 0.5)
@@ -220,64 +196,20 @@ export class TimeSlider {
     }
   }
 
-  formatAtGranularity(time: m.Moment, granualarity: number): number {
-    switch (granualarity) {
-      case 0:
-        return time.millisecond();
-      case 1:
-        return time.second();
-      case 2:
-        return time.minute();
-      case 3:
-        return time.hour();
-      case 4:
-        return time.day();
-      case 5:
-        return time.week();
-      case 6:
-        return time.month() + 1;
-      default:
-        return time.year();
-    }
-  }
-
   formatForGranularities(
     time: dynamicgraph.Time,
     gran_min: number,
     gran_max: number
   ): string {
     let formatString = "";
-    let format: string;
     while (gran_max >= gran_min) {
-      formatString += this.getGranularityFormattingString(
+      formatString += getGranularityFormattingString(
         gran_max,
         gran_max > gran_min
       );
       gran_max--;
     }
     return time.format(formatString.trim());
-  }
-
-  getGranularityFormattingString(
-    granualarity: any,
-    separator: boolean
-  ): string {
-    switch (granualarity) {
-      case 0:
-        return "SSS";
-      case 1:
-        return "ss" + (separator ? "." : "");
-      case 2:
-        return "mm" + (separator ? ":" : "");
-      case 3:
-        return "hh" + (separator ? "" : "");
-      case 4:
-        return "DD" + (separator ? " " : "");
-      case 6:
-        return "MM" + (separator ? "-" : "");
-      default:
-        return "YYYY" + (separator ? "-" : "");
-    }
   }
 
   updateTime(minUnix: number, maxUnix: number, single: number): void {
