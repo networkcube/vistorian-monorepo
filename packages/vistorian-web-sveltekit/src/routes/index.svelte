@@ -108,6 +108,24 @@
 				</a>
 			</div>
 
+			<ul>
+				<li>
+					<a href="/demo?session=0&datasetName=demo_scientists">Description of the available visualizations</a>
+				</li>
+
+				<li>
+					Upload a dataset to explore
+				</li>
+
+				<li>
+						GitHub
+				</li>
+
+				<li>
+					Contact us
+				</li>
+			</ul>
+
 			<ul id="menu">
 				<li>
 					<a

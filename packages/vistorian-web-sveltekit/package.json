@@ -11,15 +11,21 @@
 		"format": "prettier --ignore-path .gitignore --write --plugin-search-dir=. ."
 	},
 	"dependencies": {
+		"@fortawesome/free-solid-svg-icons": "^5.15.4",
 		"d3-time-format": "^4.0.0",
+		"moment": "^2.29.1",
+		"papaparse": "^5.3.1",
+		"sirv-cli": "^1.0.0",
+		"svelte-fa": "^2.3.3",
+		"svelte-feather-icons": "^3.5.0",
+		"svelte-file-dropzone": "0.0.15",
+		"sveltestrap": "^5.6.3",
 		"vistorian-bookmarkbrowser": "0.0.1-alpha",
 		"vistorian-core": "0.0.12",
 		"vistorian-dynamicego": "0.0.1-alpha",
 		"vistorian-map": "0.0.5",
 		"vistorian-matrix": "0.0.2-alpha",
-		"vistorian-nodelink": "0.0.11",
-		"moment": "^2.29.1",
-		"sveltestrap": "^5.6.3"
+		"vistorian-nodelink": "0.0.11"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-static": "next",
