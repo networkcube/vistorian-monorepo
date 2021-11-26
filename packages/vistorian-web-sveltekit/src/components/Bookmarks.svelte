@@ -49,7 +49,7 @@
 		pos3 = 0,
 		pos4 = 0;
 	let top = 0,
-		left = 0;
+		left = null;
 
 	function dragMouseDown(e) {
 		e = e || window.event;
