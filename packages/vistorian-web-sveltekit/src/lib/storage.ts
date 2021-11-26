@@ -70,7 +70,7 @@ export function saveTableNames(tableNames: any, sessionid: string) {
 }
 
 export function deleteTable(table: VTable, sessionid: string) {
-	localStorage.deleteKey(`${sessionid}#vistorian.table#${table.name}`);
+	localStorage.removeItem(`${sessionid}#vistorian.table#${table.name}`);
 
 	let tableNames: string[] = getTableNames(sessionid);
 	let found = false;
@@ -137,7 +137,7 @@ export function deleteNetworkById(id: number, sessionid: string) {
 	// remove network tables from local storage:
 
 	save(`${sessionid}#Network#${id}`, {});
-	localStorage.deleteKey(`${sessionid}#Network${id}`);
+	localStorage.removeItem(`${sessionid}#Network${id}`);
 
 	let networkIds: number[] = getNetworkIds(sessionid);
 	let found = false;
