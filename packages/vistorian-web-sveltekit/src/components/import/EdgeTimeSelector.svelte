@@ -1,13 +1,19 @@
 <script>
-  import FileSelector from "./FileSelector.svelte";
   import FieldSelector from "./FieldSelector.svelte";
 
-  export let edgeTimeType = null;
-  export let selectedFile = null;
+  import DateFormatPickerModal from "./time_format/DateFomatPickerModal.svelte";
 
-  export let startTimeField = null;
-  export let endTimeField = null;
-  export let timeField = null;
+  export let config = {
+    edgeTimeType: null,
+    selectedFile: null,
+
+    startTimeField: null,
+    endTimeField: null,
+    timeField: null,
+
+    formatString: ""
+  };
+  export let selectedFile = null;
 
 </script>
 
@@ -23,28 +29,30 @@
   geocoding service.
 </details>
 
-<input type="radio" bind:group={edgeTimeType}
+<input type="radio" bind:group={config.edgeTimeType}
        value={null} /> No, the edges do not have associated times or this information is not recorded
 
 <br />
 
-<input type="radio" bind:group={edgeTimeType} value={"pointTime"} /> Yes, each edge is associated with a <i>single
+<input type="radio" bind:group={config.edgeTimeType} value={"pointTime"} /> Yes, each edge is associated with a <i>single
   time</i> (for example, if edges correspond to letters posted from one person to another at a particular time)
 
 <br />
 
-<input type="radio" bind:group={edgeTimeType} value={"timeRange"} /> Yes, each edge is associated with a <i>time
+<input type="radio" bind:group={config.edgeTimeType} value={"timeRange"} disabled /> Yes, each edge is associated with a <i>time
   range</i> (for example, if edge correspond to politcal allegiances that lasted for a period of time)
 
 <br />
 
 
 {#if selectedFile}
-  {#if edgeTimeType == "pointTime"}
-    <FieldSelector selectedFile={selectedFile} label={"Time"} bind:selectedField={timeField} required={true} />
-  {:else if edgeTimeType == "timeRange"}
-    <FieldSelector selectedFile={selectedFile} label={"Start time"} bind:selectedField={startTimeField}
+  {#if config.edgeTimeType === "pointTime"}
+    <FieldSelector selectedFile={selectedFile} label={"Time"} bind:selectedField={config.timeField} required={true} />
+  {:else if config.edgeTimeType === "timeRange"}
+    <FieldSelector selectedFile={selectedFile} label={"Start time"} bind:selectedField={config.startTimeField}
                    required={true} />
-    <FieldSelector selectedFile={selectedFile} label={"End time"} bind:selectedField={endTimeField} required={true} />
+    <FieldSelector selectedFile={selectedFile} label={"End time"} bind:selectedField={config.endTimeField} required={true} />
   {/if}
+
+  <DateFormatPickerModal bind:formatString={config.formatString} />
 {/if}

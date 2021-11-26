@@ -17,7 +17,7 @@ I have a file, or several files, in a tabular data format (e.g., a spreadsheet o
 <input type="radio" bind:group={fileFormat} value={"network"} />
 I have a file in a network format (e.g., GEXF, GraphML, GXL)
 
-{#if fileFormat == "tabular"}
+{#if fileFormat === "tabular"}
   <p>
     <Fa icon={faInfoCircle} />
     <b>

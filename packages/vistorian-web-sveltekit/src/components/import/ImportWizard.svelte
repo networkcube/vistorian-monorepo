@@ -1,20 +1,7 @@
 <script>
   // Refer to the documentation at https://vistorian.github.io/formattingdata.html
 
-  // TODO:
-  // - allow CSV upload, and identify column names
-  // - CSV files without headers
-  // - save the result of the selection
-  // - allow NodeMetadataConfig to load data from multiple tables
-  // consistent use of table vs file
-  // - metadata fields to pass through
-  // - indication of when config is complete
-
-  // some kind of table preview
-
-  // warn if same field selected for multiple things
-  // input of parsing-strings for datetimes
-
+  import { fileStore } from './stores.js';
 
   import NetworkFormat from "./NetworkFormat.svelte";
   import LinkDataType from "./LinkDataType.svelte";
@@ -23,11 +10,76 @@
   import NodeTableNetworkConfig from "./NodeTableNetworkConfig.svelte";
   import NodeLocationConfig from "./NodeLocationConfig.svelte";
 
-  let name = "New Network";
+  import importNetwork from "./import_network";
+
+  export let reloadNetworks;
+
   let nameChanged = false;
 
-  let fileFormat = "tabular";
-  let linkDataType = null;
+  let settings = {
+    name: "New Network",
+    fileFormat: "tabular",
+    linkDataType: null,
+
+    nodeTableConfig: {
+      selectedFile: null,
+      fieldNode: null,
+      fieldRelations: []
+    },
+
+    linkTableConfig: {
+      edgesAreDirected: null,
+
+      selectedFile: null,
+
+      fieldLinkId: null,
+      fieldSourceId: null,
+      fieldTargetId: null,
+
+      fieldLocationSource: null,
+      fieldLocationTarget: null,
+      fieldWeight: null,
+      fieldLinkType: null,
+      fieldLinkIsDirected: null,
+
+      timeConfig: {
+        edgeTimeType: null,
+        selectedFile: null,
+
+        startTimeField: null,
+        endTimeField: null,
+        timeField: null,
+
+        formatString: ""
+      }
+    },
+
+    nodeLocationConfig: {
+      locationFormat: "",
+      fieldPlaceName: null,
+      fieldLat: null,
+      fieldLon: null,
+      fieldX: null,
+      fieldY: null
+    },
+
+    nodeMetadataConfig: {
+      fieldLabel: null,
+      fieldLocation: null,
+      fieldColor: null
+    }
+  };
+
+  $: {
+    console.log(settings);
+  }
+
+
+  const setName = () => {
+    settings.name = settings.name.replace(/ /g, "_").replace(/[\W]+/g, "");
+    nameChanged = true;
+  }
+
 </script>
 
 <style>
@@ -45,41 +97,55 @@
 <h2>What is the name of this network?</h2>
 <label>
   Name:
-  <input bind:value={name} on:blur={() => nameChanged = true}/>
+  <input bind:value={settings.name} on:blur={setName} />
 </label>
 
 {#if nameChanged}
-  <NetworkFormat bind:fileFormat={fileFormat} />
+  <NetworkFormat bind:fileFormat={settings.fileFormat} />
 
-  {#if fileFormat === "network"}
+  {#if settings.fileFormat === "network"}
     <p>
       <b>Import of network file formats is not yet implemented.</b>
     </p>
   {/if}
 
-  {#if fileFormat === "tabular"}
-    <LinkDataType bind:linkDataType={linkDataType} />
+  {#if settings.fileFormat === "tabular"}
+    <LinkDataType bind:linkDataType={settings.linkDataType} />
 
-    {#if linkDataType === "linkTable"}
+    {#if settings.linkDataType === "linkTable"}
       <div class="link-config">
         <h1>Links</h1>
-        <LinkTableConfig />
+        <LinkTableConfig bind:config={settings.linkTableConfig} />
       </div>
       <div class="node-config">
         <h1>Nodes</h1>
-        <NodeLocationConfig />
-        <NodeMetadataConfig />
+
+        {#if settings.linkTableConfig.fieldLocationSource || settings.linkTableConfig.fieldLocationTarget}
+          <p>Node locations are being extracted from the link table. </p>
+        {:else}
+          <NodeLocationConfig bind:config={settings.nodeLocationConfig} />
+        {/if}
+
+        <NodeMetadataConfig bind:config={settings.nodeMetadataConfig} />
       </div>
-    {:else if linkDataType === "nodeTable"}
+    {:else if settings.linkDataType === "nodeTable"}
       <div class="link-config">
         <h1>Links</h1>
-        <NodeTableNetworkConfig />
+        <NodeTableNetworkConfig bind:config={settings.nodeTableConfig} />
       </div>
       <div class="node-config">
         <h1>Nodes</h1>
-        <NodeLocationConfig />
-        <NodeMetadataConfig />
+
+        {#if settings.linkTableConfig.fieldLocationSource || settings.linkTableConfig.fieldLocationTarget}
+          <p>Node locations are being extracted from the link table. </p>
+        {:else}
+          <NodeLocationConfig bind:config={settings.nodeLocationConfig} />
+        {/if}
+
+        <NodeMetadataConfig bind:config={settings.nodeMetadataConfig} />
       </div>
     {/if}
   {/if}
 {/if}
+
+<button on:click={() => importNetwork(settings, $fileStore, reloadNetworks)}>Import network</button>

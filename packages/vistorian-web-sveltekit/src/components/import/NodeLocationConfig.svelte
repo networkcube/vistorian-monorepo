@@ -2,18 +2,8 @@
   import FileSelector from "./FileSelector.svelte";
   import FieldSelector from "./FieldSelector.svelte";
 
-  export let locationFormat = null;
-
   let selectedFile;
-
-  let config = {
-    fieldPlaceName: null,
-    fieldLat: null,
-    fieldLon: null,
-    fieldX: null,
-    fieldY: null
-  };
-
+  export let config;
 </script>
 
 
@@ -28,40 +18,40 @@
   geocoding service.
 </details>
 
-<input type="radio" bind:group={locationFormat}
+<input type="radio" bind:group={config.locationFormat}
        value={null} /> No, the nodes do not have locations or this information is not recorded
 
 <br />
 
-<input type="radio" bind:group={locationFormat} value={"placeNames"} /> Yes, I have a file that records a <i>place
+<input type="radio" bind:group={config.locationFormat} value={"placeNames"} /> Yes, I have a file that records a <i>place
   name</i> for each node
 
 <br />
 
-<input type="radio" bind:group={locationFormat} value={"latLong"} /> Yes, I have a file that records a <i>latitude and
+<input type="radio" bind:group={config.locationFormat} value={"latLong"} /> Yes, I have a file that records a <i>latitude and
   longitude</i> for each node
 
 <br />
 
-<input type="radio" bind:group={locationFormat} value={"pixelPositions"} /> Yes, I have a file that records an <i>x and
+<input type="radio" bind:group={config.locationFormat} value={"pixelPositions"} disabled /> Yes, I have a file that records an <i>x and
   y coordinate</i> at which each node should be drawn
 
 <br />
 
-{#if locationFormat }
+{#if config.locationFormat }
   <FileSelector bind:selectedFile={selectedFile} />
 {/if}
 
 {#if selectedFile}
-  {#if locationFormat == "placeNames"}
+  {#if config.locationFormat === "placeNames"}
     <FieldSelector selectedFile={selectedFile} label={"Place name"} bind:selectedField={config.fieldPlaceName}
                    required={true} />
-  {:else if locationFormat == "latLong"}
+  {:else if config.locationFormat === "latLong"}
     <FieldSelector selectedFile={selectedFile} label={"Latitude"} bind:selectedField={config.fieldLat}
                    required={true} />
     <FieldSelector selectedFile={selectedFile} label={"Longitude"} bind:selectedField={config.fieldLon}
                    required={true} />
-  {:else if locationFormat == "pixelPositions"}
+  {:else if config.locationFormat === "pixelPositions"}
     <FieldSelector selectedFile={selectedFile} label={"X position"} bind:selectedField={config.fieldX}
                    required={true} />
     <FieldSelector selectedFile={selectedFile} label={"Y position"} bind:selectedField={config.fieldY}

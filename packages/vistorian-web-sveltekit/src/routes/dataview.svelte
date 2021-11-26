@@ -23,13 +23,20 @@
   let selectedNetwork = null;
   let state = null;
 
+
   // This replaces a jQuery $(document).ready()
   let SESSION_NAME, params, networks = [];
+
+  const reloadNetworks = () => {
+    networks = storage.getNetworkIds(SESSION_NAME).map(id => storage.getNetwork(id, SESSION_NAME));
+  };
+
+
   onMount(async () => {
     trace.event("log_2", "load", "webpage", document.location.pathname);
 
-    const SESSION_NAME = getUrlVars()["session"];
-    networks = storage.getNetworkIds(SESSION_NAME).map(id => storage.getNetwork(id, SESSION_NAME));
+    SESSION_NAME = getUrlVars()["session"];
+    reloadNetworks();
   });
 
   const deleteNetwork = (network) => {
@@ -38,16 +45,16 @@
       return;
     }
 
-    const currentNetwork = storage.getNetwork(network.id, SESSION_NAME);
+   // const currentNetwork = storage.getNetwork(network.id, SESSION_NAME);
 
     // removes the network from the vistorian front-ed
-    storage.deleteNetwork(currentNetwork, SESSION_NAME);
+    storage.deleteNetwork(network, SESSION_NAME);
 
     // update list of networks in UI
-    networks = storage.getNetworkIds(SESSION_NAME).map(id => storage.getNetwork(id, SESSION_NAME));
+    reloadNetworks();
 
     // deletes the network from the networkcube
-    main.deleteData(currentNetwork.name);
+    main.deleteData(network.name);
 
     // log
     trace.event("dat_4", "data view", "selected network", "deleted");
@@ -120,13 +127,13 @@
   on:beforeunload={() => trace.event('log_12', 'page', 'close', document.location.pathname)} />
 
 <main>
-  <div style="display: grid; grid-template-columns: 500px 1fr;">
+  <div style="display: grid; grid-template-columns: 300px 1fr;">
 
 
     <div id="lists" xs="2">
 
       <div id="menu">
-        <a href="/"><img width="450px" src="../logos/logo-networkcube.png" /></a>
+        <a href="/"><img width="250px" src="../logos/logo-networkcube.png" /></a>
       </div>
 
 
@@ -238,7 +245,7 @@
 
     <div id="center">
       {#if state === "NEW_NETWORK"}
-        <ImportWizard />
+        <ImportWizard reloadNetworks={reloadNetworks} />
       {/if}
    </div>
   </div>

@@ -3,24 +3,7 @@
   import FieldSelector from "./FieldSelector.svelte";
   import EdgeTimeSelector from "./EdgeTimeSelector.svelte";
 
-  let selectedFile;
-
-  let config = {
-    edgesAreDirected: null,
-
-    fieldLinkId: null,
-    fieldSourceId: null,
-    fieldTargetId: null,
-
-    fieldLocationSource: null,
-    fieldLocationTarget: null,
-    fieldWeight: null,
-    fieldTime: null,
-    fieldTimeStart: null,
-    fieldTimeEnd: null,
-    fieldLinkType: null,
-    fieldLinkIsDirected: null
-  };
+  export let config;
 
   $: console.log(config);
 </script>
@@ -42,43 +25,51 @@
   What is the structure of this link table?
 </h2>
 
-<FileSelector bind:selectedFile={selectedFile} />
+<FileSelector bind:selectedFile={config.selectedFile} />
 
-{#if selectedFile}
+{#if config.selectedFile}
 
   <h4>
     Required fields
   </h4>
 
-  <FieldSelector selectedFile={selectedFile} label={"Source node id"} bind:selectedField={config.fieldSourceId}
+  <FieldSelector selectedFile={config.selectedFile} label={"Source node label"} bind:selectedField={config.fieldSourceId}
                  required={true} />
 
-  <FieldSelector selectedFile={selectedFile} label={"Target node id"} bind:selectedField={config.fieldTargetId}
+  <br />
+  <FieldSelector selectedFile={config.selectedFile} label={"Target node label"} bind:selectedField={config.fieldTargetId}
                  required={true} />
 
   <h4>
     Optional fields
   </h4>
 
-  <FieldSelector selectedFile={selectedFile} label={"Link id"} bind:selectedField={config.fieldLinkId}
+  <FieldSelector selectedFile={config.selectedFile} label={"Link id"} bind:selectedField={config.fieldLinkId}
                  required={true} />
+  <br />
 
-  <FieldSelector selectedFile={selectedFile} label={"Location of source node"}
+  <FieldSelector selectedFile={config.selectedFile} label={"Location of source node"}
                  bind:selectedField={config.fieldLocationSource} />
+  <br />
 
-  <FieldSelector selectedFile={selectedFile} label={"Location of target id"}
+  <FieldSelector selectedFile={config.selectedFile} label={"Location of target id"}
                  bind:selectedField={config.fieldLocationTarget} />
+  <br />
 
-  <FieldSelector selectedFile={selectedFile} label={"Weight of link"}
+  <FieldSelector selectedFile={config.selectedFile} label={"Weight of link"}
                  helpText={"A numerical measure of the strength of conection between nodes (e.g., the travel time between two locations, the value of a cash transfer.)"}
                  bind:selectedField={config.fieldWeight} />
+  <br />
 
-  <FieldSelector selectedFile={selectedFile} label={"Link type"} bind:selectedField={config.fieldLinkType} />
+  <FieldSelector selectedFile={config.selectedFile} label={"Link type"} bind:selectedField={config.fieldLinkType} />
+  <br />
 
-  <FieldSelector selectedFile={selectedFile} label={"Whether link is directed"}
-                 bind:selectedField={config.fieldLinkIsDirected} />
+  {#if config.edgesAreDirected}
+    <FieldSelector selectedFile={config.selectedFile} label={"Whether link is directed"}
+                   bind:selectedField={config.fieldLinkIsDirected} />
+    <br />
+  {/if}
 
-  <EdgeTimeSelector selectedFile={selectedFile} bind:timeField={config.fieldTime}
-                    bind:startTimeField={config.fieldTimeStart} bind:endTimeField={config.fieldTimeEnd} />
+  <EdgeTimeSelector selectedFile={config.selectedFile} bind:config={config.timeConfig}  />
 
 {/if}

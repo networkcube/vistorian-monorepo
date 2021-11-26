@@ -6,11 +6,7 @@
   let hasMetadata;
 
 
-  let config = {
-    fieldLocation: null,
-    fieldLabel: null,
-    fieldShape: null
-  };
+  export let config;
 
 </script>
 
@@ -77,9 +73,10 @@
     <h4>
       Optional fields
     </h4>
-
+    <br />
     <FieldSelector selectedFile={selectedFile} label={"Label of node"} bind:selectedField={config.fieldLabel} />
-    <FieldSelector selectedFile={selectedFile} label={"Shape of node"} bind:selectedField={config.fieldShape} />
+    <br />
+    <FieldSelector selectedFile={selectedFile} label={"Color of node"} bind:selectedField={config.fieldColor} />
   {/if}
 
 {/if}
