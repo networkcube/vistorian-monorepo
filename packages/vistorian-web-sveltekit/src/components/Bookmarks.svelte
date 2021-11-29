@@ -7,7 +7,7 @@
 
 	let isExpanded = true;
 
-	let toolbarMHeight, toolbarMWidth;
+	let toolbarMHeight, toolbarMWidth, maxHeight, maxWidth;
 
 	let parentUrlTxt;
 
@@ -29,15 +29,14 @@
 		toolbarMHeight = document.getElementById('mydiv').offsetHeight;
 		toolbarMWidth = document.getElementById('mydiv').offsetWidth;
 
-		document.getElementById('mydiv').style.maxHeight =
-			document.getElementById('mydivheader').scrollHeight + 'px';
+		maxHeight = document.getElementById('mydivheader').scrollHeight + 'px';
 	};
 
 	const maximizeBookmarks = () => {
 		isExpanded = true;
 
-		document.getElementById('mydiv').style.maxHeight = toolbarMHeight + 'px';
-		document.getElementById('mydiv').style.maxWidth = toolbarMWidth + 'px';
+		maxHeight = toolbarMHeight + 'px';
+		maxWidth = toolbarMWidth + 'px';
 
 		trace.event('bkm_8', ' bookmark window ', 'maximized', parentUrlTxt);
 		localStorage.setItem('bookmarkMinimized', 'false');
@@ -86,7 +85,7 @@
 </script>
 
 <main>
-	<div id="mydiv" style={`top: ${top}; left: ${left}`}>
+	<div id="mydiv" style={`top: ${top}; left: ${left}; max-height: ${maxHeight}; max-width: ${maxWidth}`}>
 		<div id="mydivheader" on:mousedown={dragMouseDown}>
 			<strong> Bookmarks</strong> (Drag header to move)
 
