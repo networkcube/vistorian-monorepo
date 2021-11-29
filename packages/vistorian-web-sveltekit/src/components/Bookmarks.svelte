@@ -121,7 +121,7 @@
 		resize: both;
 		overflow-x: scroll;
 		overflow-y: hidden;
-		direction: rtl;
+		/* direction: rtl; */
 	}
 
 	#mydivheader {
