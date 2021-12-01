@@ -18,6 +18,11 @@
   geocoding service.
 </details>
 
+<p>
+  <b>If the location of nodes changes over time, then you will need to record locations in the link table, rather than
+    in a separate table.</b>
+</p>
+
 <input type="radio" bind:group={config.locationFormat}
        value={""} /> No, the nodes do not have locations or this information is not recorded
 

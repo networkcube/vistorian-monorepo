@@ -15,6 +15,7 @@
   import LinkTableConfig from "./LinkTableConfig.svelte";
   import NodeTableNetworkConfig from "./NodeTableNetworkConfig.svelte";
   import ExtraNodeDate from "./ExtraNodeData.svelte";
+  import LocationTableConfig from "./LocationTableConfig.svelte";
 
   export let reloadNetworks;
 
@@ -56,6 +57,15 @@
       }
     },
 
+    locationTableConfig: {
+      selectedFile: null,
+      usingLocationFile: false,
+      fieldPlaceName: null,
+      fieldLat: null,
+      fieldLon: null
+    },
+
+    // TODO?
     nodeLocationConfig: {
       locationFormat: "",
       fieldPlaceName: null,
@@ -65,6 +75,7 @@
       fieldY: null
     },
 
+    // currently disabled
     nodeMetadataConfig: {
       hasMetadata: false,
       fieldLabel: null,
@@ -82,8 +93,17 @@
     settings.name = settings.name.trim().replace(/ /g, "_").replace(/[\W]+/g, "");
   };
 
-  let stage = "name";
+  let stage = "name", previousStage=null;
 
+
+  /* "nodes" stage is currently sipped:
+    <ExtraNodeDate
+    bind:settings={settings}
+    bind:stage={stage}
+    previous_stage={() => settings.linkDataType}
+    next_stage={() => "end"}
+  />
+   */
 </script>
 
 
@@ -103,15 +123,15 @@
     </CardBody>
 
     <CardFooter>
-      <Button style="float: right" disabled={!settings.name} on:click={() => stage="network_format" }>Next</Button>
+      <Button style="float: right" disabled={!settings.name} on:click={() => {previousStage="name"; stage="network_format"} }>Next</Button>
     </CardFooter>
   </Card>
 
 {:else if stage === "network_format"}
 
   <NetworkFormat bind:stage={stage}
-                 next_stage={() => settings.fileFormat}
-                 previous_stage={() => "name"}
+                 next_stage={() => {previousStage=stage; return settings.fileFormat}}
+                 previous_stage={() => previousStage}
                  bind:fileFormat={settings.fileFormat}
   />
 
@@ -119,16 +139,17 @@
 
   <NetworkFileImport
     bind:stage={stage}
-    previous_stage={() => "network_format"}
-    next_stage={() => "name"} />
+    previous_stage={() => previousStage}
+    next_stage={() => {previousStage=stage; return "name"}}
+  />
 
 {:else if stage === "tabular"}
 
   <LinkDataType
     bind:linkDataType={settings.linkDataType}
     bind:stage={stage}
-    previous_stage={() => "network_format"}
-    next_stage={() => settings.linkDataType}
+    previous_stage={() => previousStage}
+    next_stage={() => {previousStage=stage; return settings.linkDataType}}
   />
 
 {:else if stage === "linkTable"}
@@ -136,8 +157,8 @@
   <LinkTableConfig
     bind:config={settings.linkTableConfig}
     bind:stage={stage}
-    previous_stage={() => "tabular"}
-    next_stage={() => "nodes"}
+    previous_stage={() => previousStage}
+    next_stage={() => {previousStage=stage; return (settings.linkTableConfig.fieldLocationSource || settings.linkTableConfig.fieldLocationTarget) ? "location_table" : "end"}}
   />
 
 {:else if stage === "nodeTable"}
@@ -145,26 +166,26 @@
   <NodeTableNetworkConfig
     bind:config={settings.nodeTableConfig}
     bind:stage={stage}
-    previous_stage={() => "tabular"}
-    next_stage={() => "nodes"}
+    previous_stage={() => previousStage}
+    next_stage={() => {previousStage=stage; return "end"}}
   />
 
-{:else if stage === "nodes"}
+{:else if stage === "location_table"}
 
-  <ExtraNodeDate
-    bind:settings={settings}
+  <LocationTableConfig
+    bind:config={settings.locationTableConfig}
     bind:stage={stage}
-    previous_stage={() => settings.linkDataType}
-    next_stage={() => "end"}
-  />
+    previous_stage={() => previousStage}
+    next_stage={() => {previousStage=stage; return "end"}}
+    />
 
   {:else if stage === "end" }
 
   <End
     bind:settings={settings}
-      bind:stage={stage}
-    previous_stage={() => "nodes" }
-    next_stage={() => null}
+    bind:stage={stage}
+    previous_stage={() => previousStage }
+    next_stage={() => {previousStage=stage; return null}}
     reloadNetworks={reloadNetworks}
   />
 

@@ -19,6 +19,7 @@
     && (config.fieldSourceId !== null) && (config.fieldTargetId !== null)
     && (config.timeConfig.edgeTimeType ==null || (config.timeConfig.formatString && config.timeConfig.timeField))
   ;
+  // TODO: check location set
 
   $: console.log(config);
 </script>
@@ -78,7 +79,7 @@
       <br />
 
       <FieldSelector selectedFile={config.selectedFile} label={"Weight of link"}
-                     helpText={"A numerical measure of the strength of conection between nodes (e.g., the travel time between two locations, the value of a cash transfer.)"}
+                     helpText={"A numerical measure of the strength of connection between nodes (e.g., the travel time between two locations, the value of a cash transfer.)"}
                      bind:selectedField={config.fieldWeight} />
       <br />
 

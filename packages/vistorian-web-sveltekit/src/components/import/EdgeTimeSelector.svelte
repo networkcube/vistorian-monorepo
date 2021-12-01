@@ -22,13 +22,6 @@
   Do edges have associated times?
 </h2>
 
-<details>
-  <summary>Help</summary>
-  Node locations are required for some visualization types, such as the map.
-  If your dataset contains location names, these will be converted to lattitude and longitude locations using an online
-  geocoding service.
-</details>
-
 <input type="radio" bind:group={config.edgeTimeType}
        value={null} /> No, the edges do not have associated times or this information is not recorded
 
@@ -40,7 +33,7 @@
 <br />
 
 <input type="radio" bind:group={config.edgeTimeType} value={"timeRange"} disabled /> Yes, each edge is associated with a <i>time
-  range</i> (for example, if edge correspond to politcal allegiances that lasted for a period of time)
+  range</i> (for example, if edge correspond to political allegiances that lasted for a period of time)
 
 <br />
 

@@ -22,7 +22,7 @@
 <Card class="mb-3" style="width: 50%">
   <CardBody>
 
-    {#if settings.linkTableConfig.fieldLocationSource || settings.linkTableConfig.fieldLocationTarget}
+    {#if settings.linkTableConfig.locationFormat}
       <p>Node locations are being extracted from the link table. </p>
     {:else}
       <NodeLocationConfig bind:config={settings.nodeLocationConfig} />

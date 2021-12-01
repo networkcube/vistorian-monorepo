@@ -26,6 +26,35 @@ async function geoCode(placeName): Promise<[number, number] | [undefined, undefi
 	return [undefined, undefined];
 }
 
+const getLocationsFromFile = (fileStore, settings) => {
+	if (!settings.locationTableConfig.usingLocationFile) {
+		return null;
+	}
+
+	const rawData = fileStore[settings.locationTableConfig.selectedFile].data;
+	const hasHeaderRow = fileStore[settings.locationTableConfig.selectedFile].hasHeaderRow;
+
+	const locations = [];
+
+	let firstRow = true;
+	for (const row of rawData) {
+		// skip header row if required
+		if (firstRow && hasHeaderRow) {
+			firstRow = false;
+			continue;
+		} else if (row.every((d) => d === null)) {
+			continue; // skip blank lines
+		}
+
+		const location = row[settings.locationTableConfig.fieldPlaceName];
+		const lon = row[settings.locationTableConfig.fieldLon];
+		const lat = row[settings.locationTableConfig.fieldLat];
+
+		locations[location] = [lon, lat];
+	}
+	return locations;
+};
+
 async function importNetwork(settings, fileStore, reloadNetworks): Promise<void> {
 	const SESSION_NAME = getUrlVars()['session'];
 
@@ -142,6 +171,8 @@ async function importNetwork(settings, fileStore, reloadNetworks): Promise<void>
 			}
 		}
 
+		const locationsFromFile = getLocationsFromFile(fileStore, settings);
+
 		// iterate over raw link table, populating the normalized node and location tables
 		let firstRow = true;
 		for (const row of rawData) {
@@ -161,7 +192,9 @@ async function importNetwork(settings, fileStore, reloadNetworks): Promise<void>
 					locationNames.push(sourceLocation);
 					locationIndexes[sourceLocation] = normalizedLocationTable.length;
 
-					const [long, lat] = await geoCode(sourceLocation);
+					const [long, lat] = locationsFromFile
+						? locationsFromFile[sourceLocation]
+						: await geoCode(sourceLocation);
 					normalizedLocationTable.push([
 						normalizedLocationTable.length, // id
 						sourceLocation, // label
@@ -180,7 +213,9 @@ async function importNetwork(settings, fileStore, reloadNetworks): Promise<void>
 					locationNames.push(targetLocation);
 					locationIndexes[targetLocation] = normalizedLocationTable.length;
 
-					const [long, lat] = await geoCode(targetLocation);
+					const [long, lat] = locationsFromFile
+						? locationsFromFile[targetLocation]
+						: await geoCode(targetLocation);
 					normalizedLocationTable.push([
 						normalizedLocationTable.length, // id
 						targetLocation, // label
