@@ -332,7 +332,7 @@ export class Timeline {
     }
   }
 
-  formatTime(index: number): string | undefined {
+  formatTime(index: number): number | undefined {
     const t = this.timeObjects[index];
     const g = Math.min(
       Math.max(this.tick_minGran_visible, this.timeGranularities[index]),

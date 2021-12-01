@@ -11,6 +11,7 @@ import {
   LinkType,
   copyPropsShallow,
 } from "./dynamicgraph";
+import { Selection } from "./dynamicgraphutils";
 import * as moment from "moment";
 
 /* moved from utils to queries */
@@ -45,17 +46,17 @@ export function makeElementCompound(
   const result: ElementCompound = new ElementCompound();
   if (elements != undefined) {
     if (elements.nodeIds) {
-      result.nodes = <Node[]>elements.nodeIds.map((id, i) => g.node(id)); // ?? WITH OR WITHOUT ?? .filter((element) => { return (element != undefined) });
+      result.nodes = <Node[]>elements.nodeIds.map((id) => g.node(id)); // ?? WITH OR WITHOUT ?? .filter((element) => { return (element != undefined) });
     }
     if (elements.linkIds) {
-      result.links = <Link[]>elements.linkIds.map((id, i) => g.link(id));
+      result.links = <Link[]>elements.linkIds.map((id) => g.link(id));
     }
     if (elements.timeIds) {
-      result.times = <Time[]>elements.timeIds.map((id, i) => g.time(id));
+      result.times = <Time[]>elements.timeIds.map((id) => g.time(id));
     }
     if (elements.nodePairIds) {
       result.nodePairs = <NodePair[]>(
-        elements.nodePairIds.map((id, i) => g.nodePair(id))
+        elements.nodePairIds.map((id) => g.nodePair(id))
       );
     }
   }
@@ -86,7 +87,7 @@ export function getPriorityColor(element: BasicElement): string | undefined {
   return element.getSelections()[j].color;
 }
 
-export function sortByPriority(s1: any, s2: any): number {
+export function sortByPriority(s1: Selection, s2: Selection): number {
   return s1.priority - s2.priority;
 }
 
@@ -119,19 +120,19 @@ export function hex2Rgb(hex: string): number[] {
   return [hexToR(hex), hexToG(hex), hexToB(hex)];
 }
 
-function hexToR(h: any) {
+function hexToR(h: string) {
   return parseInt(cutHex(h).substring(0, 2), 16);
 }
 
-function hexToG(h: any) {
+function hexToG(h: string) {
   return parseInt(cutHex(h).substring(2, 4), 16);
 }
 
-function hexToB(h: any) {
+function hexToB(h: string) {
   return parseInt(cutHex(h).substring(4, 6), 16);
 }
 
-function cutHex(h: any) {
+function cutHex(h: string) {
   return h.charAt(0) == "#" ? h.substring(1, 7) : h;
 }
 
@@ -205,7 +206,7 @@ export class Box {
   }
 }
 
-export function inBox(x: any, y: any, box: Box): boolean {
+export function inBox(x: number, y: number, box: Box): boolean {
   return x > box.x1 && x < box.x2 && y > box.y1 && y < box.y2;
 }
 
@@ -257,26 +258,26 @@ export function makeIdCompound(
   const result: IDCompound = new IDCompound();
   if (elements != undefined) {
     if (elements.nodes) {
-      result.nodeIds = elements.nodes.map((n: any, i: any) => n.id());
+      result.nodeIds = elements.nodes.map((n: Node) => n.id());
     }
     if (elements.links) {
-      result.linkIds = elements.links.map((n: any, i: any) => n.id());
+      result.linkIds = elements.links.map((n: Link) => n.id());
     }
     if (elements.times) {
-      result.timeIds = elements.times.map((n: any, i: any) => n.id());
+      result.timeIds = elements.times.map((n: Time) => n.id());
     }
     if (elements.nodePairs) {
-      result.nodePairIds = elements.nodePairs.map((n: any, i: any) => n.id());
+      result.nodePairIds = elements.nodePairs.map((n: NodePair) => n.id());
     }
   }
   return result;
 }
 
 export function formatAtGranularity(
-  time: any,
-  granualarity: number
-): string | undefined {
-  switch (granualarity) {
+  time: moment.Moment,
+  granularity: number
+): number | undefined {
+  switch (granularity) {
     case 0:
       return time.millisecond();
     case 1:
@@ -401,11 +402,6 @@ function getBlobFromCanvas(canvas: any): Blob {
 /// SVG ///
 ///////////
 
-// downloads a screenshot on the desktop from the passed svg
-export function downloadPNGfromSVG(name: string, svgId: string): void {
-  const blob = getBlobFromSVG(name, svgId);
-}
-
 // creates an image blob from the passed svg and calls the
 // callback function with the blob as parameter
 export function getBlobFromSVG(
@@ -449,15 +445,9 @@ export function getBlobFromSVGString(
   svgString: string,
   width: number,
   height: number,
-  callback: (blob: any, name: string) => void,
+  callback: (blob: Blob, name: string) => void,
   backgroundColor?: string
 ): void {
-  // get SVG string
-  // CREATE PNG
-  //var format: any = format ? format : 'png';
-  const format = "png";
-
-  // turn SVG in to PNG
   const imgsrc: string =
     "data:image/svg+xml;base64," +
     btoa(unescape(encodeURIComponent(svgString))); // Convert SVG string to data URL
@@ -541,7 +531,7 @@ export function getSVGString(svgNode: any): string {
     return extractedCSSText;
 
     function contains(str: string, arr: any) {
-      return arr.indexOf(str) === -1 ? false : true;
+      return arr.includes(str);
     }
   }
 
@@ -554,13 +544,14 @@ export function getSVGString(svgNode: any): string {
   }
 }
 
-export function exportPNG(canvas: any, name: string): void {
-  const dataURL: any = canvas.toDataURL("image/jpg", 1);
-  const blob: any = dataURItoBlob(dataURL);
+export function exportPNG(canvas: HTMLCanvasElement, name: string): void {
+  const dataURL: string = canvas.toDataURL("image/jpg", 1);
+  const blob: Blob = dataURItoBlob(dataURL);
   // window.open(dataURL);
 
-  const fileNameToSaveAs: any = name + "_" + new Date().toUTCString() + ".png";
-  const downloadLink: any = document.createElement("a");
+  const fileNameToSaveAs: string =
+    name + "_" + new Date().toUTCString() + ".png";
+  const downloadLink: HTMLAnchorElement = document.createElement("a");
   downloadLink.download = fileNameToSaveAs;
   downloadLink.href = (window as any).webkitURL.createObjectURL(blob);
   downloadLink.click();
@@ -589,29 +580,29 @@ function dataURItoBlob(dataURI: string): Blob {
 
 let msgBox;
 
-export function showMessage(message: string, timeout: any): void {
+export function showMessage(message: string, timeout: number): void {
   if ($(".messageBox")) $(".messageBox").remove();
 
   msgBox = $(
     '<div id="div" class="messageBox" style="\
-                width: 100%;\
-                height: 100%;\
-                background-color: #ffffff;\
-                opacity: .9;\
-                position: absolute;\
-                top: 0px;\
-                left: 0px;"></div>'
+                    width: 100%;\
+                    height: 100%;\
+                    background-color: #ffffff;\
+                    opacity: .9;\
+                    position: absolute;\
+                    top: 0;\
+                    left: 0;"></div>'
   );
   msgBox.append(
     '<div id="div" style="\
-                font-size: 20pt;\
-                font-weight: bold;\
-                font-family: "Helvetica Neue", Helvetica, sans-serif;\
-                width: 500px;\
-                padding-top: 300px;\
-                text-align: center;\
-                margin:auto;">\
-                <p>' +
+                    font-size: 20pt;\
+                    font-weight: bold;\
+                    font-family: "Helvetica Neue", Helvetica, sans-serif;\
+                    width: 500px;\
+                    padding-top: 300px;\
+                    text-align: center;\
+                    margin:auto;">\
+                    <p>' +
       message +
       "</p></div>"
   );

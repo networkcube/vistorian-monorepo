@@ -3,7 +3,7 @@ import { DataSet } from "./dynamicgraphutils";
 import { DynamicGraph } from "./dynamicgraph";
 import { DataManager, DataManagerOptions } from "./datamanager";
 
-/** A collection of Networkcube's  global function availeble
+/** A collection of Networkcube's  global function available
  * through networkcube.myFunc()
  * */
 
@@ -11,7 +11,7 @@ import { DataManager, DataManagerOptions } from "./datamanager";
 export const TIME_FORMAT = "YYYY-MM-DD hh:mm:ss";
 
 /**
- * Returns the networkcube standart time format
+ * Returns the networkcube standard time format
  * @return {[type]} [description]
  */
 export function timeFormat(): string {
@@ -37,9 +37,8 @@ export function isSessionCached(session: string, dataSetName: string): boolean {
 // DATA
 /**
  * Imports a data set into network cube.
- * @param  {string}  session [description]
+ * @param  {string}  sessionName [description]
  * @param  {DataSet} data    [description]
- * @return {[type]}          [description]
  */
 export function importData(sessionName: string, data: DataSet): void {
   console.log("[n3] Import data", data.name);
@@ -132,7 +131,7 @@ export function createTabVisualizations(
                         transition: 0.3s;\
                         font-weight: 800;\
                         border: #fff 1px solid;\
-                        border-raduis: 5px;\
+                        border-radius: 5px;\
                         font-size: 13px;" href="#" class="networkcube-tablinks" onclick="networkcube.switchVisTab(event, \'' +
           visSpec[i].name +
           "')\">" +
@@ -300,12 +299,12 @@ export enum OrderType {
 
 export function isTrackingEnabled(): boolean {
   const value = localStorage.getItem("NETWORKCUBE_IS_TRACKING_ENABLED");
-  return value == "true" ? true : false;
+  return value == "true";
 }
 
 export function isTrackingSet(): boolean {
   const value = localStorage.getItem("NETWORKCUBE_IS_TRACKING_ENABLED");
-  return value === null ? false : true;
+  return value !== null;
 }
 
 export function deleteData(dataSetName: string): void {

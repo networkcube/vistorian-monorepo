@@ -99,7 +99,7 @@ export function sendMessage(type: string, body: any): void {
 
 function isEmpty(obj: any) {
   for (const key in obj) {
-    if (Object.prototype.hasOwnProperty.call(obj, "key")) return false;
+    if (Object.prototype.hasOwnProperty.call(obj, key)) return false;
   }
   return true;
 }
@@ -150,7 +150,6 @@ export function selection(
 ): void {
   const g: DynamicGraph = getDynamicGraph();
   if (!selectionId) selectionId = g.currentSelection_id;
-  const selection = g.getSelection(selectionId);
 
   const idCompound: IDCompound = makeIdCompound(compound);
 
@@ -227,7 +226,7 @@ export class CreateSelectionMessage extends Message {
 // SET CURRENT SELECTION
 
 export function setCurrentSelection(b: Selection): void {
-  const g: DynamicGraph = getDynamicGraph();
+  getDynamicGraph(); // TODO: check if this has necessary side-effects or can  be removed
   const m = new SetCurrentSelectionIdMessage(b);
   distributeMessage(m);
 }
