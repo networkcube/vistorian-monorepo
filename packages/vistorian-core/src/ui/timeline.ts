@@ -341,14 +341,14 @@ export class Timeline {
     }
   }
 
-  formatTime(index: number): string | undefined {
+  formatTime(index: number): number | undefined {
     const t = this.timeObjects[index];
     const g = Math.min(
       Math.max(this.tick_minGran_visible, this.timeGranularities[index]),
       7
     );
 
-    return utils.formatAtGranularity(t, g);
+    return utils.formatTimeAtGranularity(t, g);
   }
 
   highlightId: any; // INIT ???

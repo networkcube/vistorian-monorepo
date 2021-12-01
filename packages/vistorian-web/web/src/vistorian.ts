@@ -143,7 +143,7 @@ export function loadCSV(
   sessionid: string
 ) {
   let loadCount = 0;
-  let table: any;
+  let table: VTable;
   const tables: VTable[] = [];
   const fileContents: any[] = [];
   const readers: FileReader[] = [];

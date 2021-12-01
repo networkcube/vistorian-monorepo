@@ -44,22 +44,3 @@ export function searchForTerm(
   }
   return result;
 }
-
-/// FILTERS
-
-export interface IFilter {
-  test(o: any): boolean;
-}
-
-class StringContainsFilter {
-  pattern: string;
-
-  constructor(pattern: string) {
-    this.pattern = pattern;
-  }
-
-  test(word: any) {
-    console.log("contains:", word, this.pattern);
-    return word.indexOf(this.pattern) > -1;
-  }
-}

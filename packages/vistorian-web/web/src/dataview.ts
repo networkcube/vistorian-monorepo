@@ -8,7 +8,6 @@ import * as main from "vistorian-core/src/data/main";
 const DATA_TABLE_MAX_LENGTH = 200;
 
 let currentTable: vistorian.VTable;
-let currentTableId: string;
 let currentCell: any;
 
 const files = document.getElementById("files");
@@ -28,8 +27,6 @@ if (linkTableUpload)
 const SESSION_NAME = utils.getUrlVars()["session"];
 storage.saveSessionId(SESSION_NAME); // save id for later retrieve
 
-let tables = storage.getUserTables(SESSION_NAME);
-
 // user's currently selected network. All visualizations will visualize this network
 export let currentNetwork: vistorian.Network;
 
@@ -41,8 +38,6 @@ const visualizations = [
   ["Time Arcs", "dynamicego"],
   ["Map", "map"],
 ];
-
-const messages: string[] = [];
 
 init();
 
@@ -163,7 +158,6 @@ export function loadVisualization(visType: any) {
 // CREATE NETWORK //
 
 export function createNetwork() {
-  const networkIds = storage.getNetworkIds(SESSION_NAME);
   const id = new Date().getTime();
 
   currentNetwork = new vistorian.Network(id);
@@ -274,8 +268,7 @@ export function saveCurrentNetwork(
     return;
   }
 
-  const dataset: dynamicgraphutils.DataSet | undefined =
-    vistorian.importIntoNetworkcube(currentNetwork, SESSION_NAME, failSilently);
+  vistorian.importIntoNetworkcube(currentNetwork, SESSION_NAME, failSilently);
 
   updateNetworkStatusIndication();
 
@@ -518,7 +511,6 @@ export function showTable(
 
   // table name
   const tableId = "datatable_" + table.name;
-  currentTableId = tableId;
   $("#" + tableId).remove();
 
   const tableDiv = $('<div id="div_' + tableId + '"></div>');
@@ -621,7 +613,7 @@ export function showTable(
         saveCurrentTableCellEdits();
         currentCell = $(this);
       });
-      td.focusout(function (e: any) {
+      td.focusout(function () {
         saveCurrentTableCellEdits();
       });
       if (typeof data[r][c] == "string" && data[r][c].trim().length == 0)
@@ -975,8 +967,6 @@ export function uploadLinkTable(e: any) {
 
       saveCurrentNetwork(false);
 
-      const element = document.getElementById("leaveCode");
-
       loadTableList();
     });
   }
@@ -1156,12 +1146,10 @@ export function extractLocations() {
 
     // save table as a user's table
     storage.saveUserTable(currentNetwork.userLocationTable, SESSION_NAME);
-    tables = storage.getUserTables(SESSION_NAME);
   }
 
   // if location table is empty, add header as first column
   if (currentNetwork.userLocationTable.data.length == 0) {
-    const schemaStrings: string[] = [];
     currentNetwork.userLocationTable.data.push([
       "Id",
       "User Label",
@@ -1170,8 +1158,6 @@ export function extractLocations() {
       "Latitude",
     ]);
   }
-
-  const locationsFound = 0;
 
   // var linkTable: any;
   // check link table
@@ -1202,7 +1188,6 @@ export function extractLocations() {
     }
   }
 
-  let nodeTable: any;
   if (currentNetwork.userNodeSchema && currentNetwork.userNodeTable) {
     for (let row = 1; row < currentNetwork.userNodeTable.data.length; row++) {
       if (
@@ -1310,8 +1295,7 @@ export function saveCurrentTableCellEdits() {
     data = currentCell.data("table").data;
 
   if (selectedCell_row != undefined && selectedCell_col != undefined) {
-    const value = currentCell.text().trim();
-    data[selectedCell_row][selectedCell_col] = value;
+    data[selectedCell_row][selectedCell_col] = currentCell.text().trim();
   }
   currentCell = undefined;
 }

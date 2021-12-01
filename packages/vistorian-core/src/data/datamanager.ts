@@ -188,6 +188,7 @@ export class DataManager {
     ] = stringToSave;
   }
 
+  // TODO: I think the state argument is unused and can be removed
   getFromStorage<TResult>(
     dataName: string,
     valueName: string,

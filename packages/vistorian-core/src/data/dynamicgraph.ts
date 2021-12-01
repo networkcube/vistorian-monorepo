@@ -761,7 +761,6 @@ export class DynamicGraph {
         diff = Math.min(diff, unixTimes[i + 1] - unixTimes[i]);
       }
 
-      const diff_min = diff;
       if (diff >= 1000) this.gran_min = 1;
       if (diff >= 1000 * 60) this.gran_min = 2;
       if (diff >= 1000 * 60 * 60) this.gran_min = 3;
@@ -846,8 +845,6 @@ export class DynamicGraph {
     // from here on, there is at least one time object present.
 
     // CREATE LOCATIONS
-    let id_loc;
-    let location: Location;
 
     // if there is a location table, then there needs to be locationSchema
     console.assert(!data.locationTable || isValidIndex(data.locationSchema.id));
@@ -887,7 +884,6 @@ export class DynamicGraph {
     let row: any[];
     let nodeId_data; // node id in data set
     let nodeId_table; // node id in table
-    let attribute: any;
     let time: Time;
     console.assert(
       data.nodeTable.length == 0 || isValidIndex(data.nodeSchema.id),
@@ -1065,7 +1061,6 @@ export class DynamicGraph {
     // CREATE LINKS
 
     let s: number, t: number;
-    let id: number;
     let timeId: number;
     let nodePairId: number;
     let linkId: number;
@@ -1309,8 +1304,6 @@ export class DynamicGraph {
         */
 
     // create color map for link types
-    const linkTypeCount: number = this.linkTypeArrays.length;
-
     console.log(
       "[Dynamic Graph] Dynamic Graph created: ",
       this.nodeArrays.length
@@ -1509,7 +1502,6 @@ export class DynamicGraph {
 
     // Populate nodes
     const nodes: Node[] = [];
-    let locations;
     if ("nodeArrays" in this && this.nodeArrays) {
       for (let i = 0; i < this.nodeArrays.id.length; i++) {
         nodes.push(new Node(i, this));
@@ -1519,7 +1511,6 @@ export class DynamicGraph {
     // Populate links
     const links: Link[] = [];
     let link: Link;
-    let source: Node, target: Node;
     if ("linkArrays" in this && this.linkArrays) {
       for (let i = 0; i < this.linkArrays.source.length; i++) {
         link = new Link(i, this);
@@ -1528,11 +1519,7 @@ export class DynamicGraph {
     }
 
     // Populate node pairs
-    let s: number, t: number;
     let pairLinks: number[];
-    let pair: NodePair;
-    let pairLinkId: number;
-    const thisGraphNodePairIds: number[] = [];
     if ("nodePairArrays" in this && this.nodePairArrays) {
       for (let i = 0; i < this.nodePairArrays.length; i++) {
         pairLinks = this.nodePairArrays.links[i];
@@ -1704,29 +1691,29 @@ export class DynamicGraph {
       this.selection("remove", c, selectionId);
       this.selection("add", idCompound, selectionId);
     } else if (action == "add") {
-      idCompound.linkIds.forEach((v, i, arr) =>
+      idCompound.linkIds.forEach((v) =>
         this.addToSelectionByTypeAndId(selection, "link", v)
       );
-      idCompound.nodeIds.forEach((v, i, arr) =>
+      idCompound.nodeIds.forEach((v) =>
         this.addToSelectionByTypeAndId(selection, "node", v)
       );
-      idCompound.timeIds.forEach((v, i, arr) =>
+      idCompound.timeIds.forEach((v) =>
         this.addToSelectionByTypeAndId(selection, "time", v)
       );
-      idCompound.nodePairIds.forEach((v, i, arr) =>
+      idCompound.nodePairIds.forEach((v) =>
         this.addToSelectionByTypeAndId(selection, "nodePair", v)
       );
     } else if (action == "remove") {
-      idCompound.linkIds.forEach((v, i, arr) =>
+      idCompound.linkIds.forEach((v) =>
         this.removeFromSelectionByTypeAndId(selection, "link", v)
       );
-      idCompound.nodeIds.forEach((v, i, arr) =>
+      idCompound.nodeIds.forEach((v) =>
         this.removeFromSelectionByTypeAndId(selection, "node", v)
       );
-      idCompound.timeIds.forEach((v, i, arr) =>
+      idCompound.timeIds.forEach((v) =>
         this.removeFromSelectionByTypeAndId(selection, "time", v)
       );
-      idCompound.nodePairIds.forEach((v, i, arr) =>
+      idCompound.nodePairIds.forEach((v) =>
         this.removeFromSelectionByTypeAndId(selection, "nodePair", v)
       );
     }
@@ -2004,7 +1991,6 @@ export class DynamicGraph {
     console.log(unixTime);
     for (timeId = 0; timeId < this.timeArrays.length; timeId++) {
       if (unixTime == this.timeArrays.unixTime[timeId]) {
-        timeId;
         return timeId;
       }
     }
