@@ -1,23 +1,25 @@
 <script>
   // Refer to the documentation at https://vistorian.github.io/formattingdata.html
 
-  import { fileStore } from './stores.js';
+  import {
+    Button,
+    Card,
+    CardBody,
+    CardFooter,
+  } from "sveltestrap";
 
+  import End from "./End.svelte";
   import NetworkFormat from "./NetworkFormat.svelte";
+  import NetworkFileImport from "./NetworkFileImport.svelte";
   import LinkDataType from "./LinkDataType.svelte";
   import LinkTableConfig from "./LinkTableConfig.svelte";
-  import NodeMetadataConfig from "./NodeMetadataConfig.svelte";
   import NodeTableNetworkConfig from "./NodeTableNetworkConfig.svelte";
-  import NodeLocationConfig from "./NodeLocationConfig.svelte";
-
-  import importNetwork from "./import_network";
+  import ExtraNodeDate from "./ExtraNodeData.svelte";
 
   export let reloadNetworks;
 
-  let nameChanged = false;
-
   let settings = {
-    name: "New Network",
+    name: "",
     fileFormat: "tabular",
     linkDataType: null,
 
@@ -64,6 +66,7 @@
     },
 
     nodeMetadataConfig: {
+      hasMetadata: false,
       fieldLabel: null,
       fieldLocation: null,
       fieldColor: null
@@ -76,76 +79,93 @@
 
 
   const setName = () => {
-    settings.name = settings.name.replace(/ /g, "_").replace(/[\W]+/g, "");
-    nameChanged = true;
-  }
+    settings.name = settings.name.trim().replace(/ /g, "_").replace(/[\W]+/g, "");
+  };
+
+  let stage = "name";
 
 </script>
 
-<style>
-    .node-config, .link-config {
-        border: 1px solid lightgrey;
-        border-radius: 5px;
-        margin-top: 1em;
-        padding-left: 1em;
-    }
-</style>
 
 <h1>Network data import wizard</h1>
 
 
-<h2>What is the name of this network?</h2>
-<label>
-  Name:
-  <input bind:value={settings.name} on:blur={setName} />
-</label>
+{#if stage === "name"}
 
-{#if nameChanged}
-  <NetworkFormat bind:fileFormat={settings.fileFormat} />
+  <Card class="mb-3" style="width: 50%">
+    <CardBody>
+      <h3>What is the name of this network?</h3>
 
-  {#if settings.fileFormat === "network"}
-    <p>
-      <b>Import of network file formats is not yet implemented.</b>
-    </p>
-  {/if}
+      <label>
+        Name:
+        <input bind:value={settings.name} on:blur={setName} />
+      </label>
+    </CardBody>
 
-  {#if settings.fileFormat === "tabular"}
-    <LinkDataType bind:linkDataType={settings.linkDataType} />
+    <CardFooter>
+      <Button style="float: right" disabled={!settings.name} on:click={() => stage="network_format" }>Next</Button>
+    </CardFooter>
+  </Card>
 
-    {#if settings.linkDataType === "linkTable"}
-      <div class="link-config">
-        <h1>Links</h1>
-        <LinkTableConfig bind:config={settings.linkTableConfig} />
-      </div>
-      <div class="node-config">
-        <h1>Nodes</h1>
+{:else if stage === "network_format"}
 
-        {#if settings.linkTableConfig.fieldLocationSource || settings.linkTableConfig.fieldLocationTarget}
-          <p>Node locations are being extracted from the link table. </p>
-        {:else}
-          <NodeLocationConfig bind:config={settings.nodeLocationConfig} />
-        {/if}
+  <NetworkFormat bind:stage={stage}
+                 next_stage={() => settings.fileFormat}
+                 previous_stage={() => "name"}
+                 bind:fileFormat={settings.fileFormat}
+  />
 
-        <NodeMetadataConfig bind:config={settings.nodeMetadataConfig} />
-      </div>
-    {:else if settings.linkDataType === "nodeTable"}
-      <div class="link-config">
-        <h1>Links</h1>
-        <NodeTableNetworkConfig bind:config={settings.nodeTableConfig} />
-      </div>
-      <div class="node-config">
-        <h1>Nodes</h1>
+{:else if stage === "network"}
 
-        {#if settings.linkTableConfig.fieldLocationSource || settings.linkTableConfig.fieldLocationTarget}
-          <p>Node locations are being extracted from the link table. </p>
-        {:else}
-          <NodeLocationConfig bind:config={settings.nodeLocationConfig} />
-        {/if}
+  <NetworkFileImport
+    bind:stage={stage}
+    previous_stage={() => "network_format"}
+    next_stage={() => "name"} />
 
-        <NodeMetadataConfig bind:config={settings.nodeMetadataConfig} />
-      </div>
-    {/if}
-  {/if}
+{:else if stage === "tabular"}
+
+  <LinkDataType
+    bind:linkDataType={settings.linkDataType}
+    bind:stage={stage}
+    previous_stage={() => "network_format"}
+    next_stage={() => settings.linkDataType}
+  />
+
+{:else if stage === "linkTable"}
+
+  <LinkTableConfig
+    bind:config={settings.linkTableConfig}
+    bind:stage={stage}
+    previous_stage={() => "tabular"}
+    next_stage={() => "nodes"}
+  />
+
+{:else if stage === "nodeTable"}
+
+  <NodeTableNetworkConfig
+    bind:config={settings.nodeTableConfig}
+    bind:stage={stage}
+    previous_stage={() => "tabular"}
+    next_stage={() => "nodes"}
+  />
+
+{:else if stage === "nodes"}
+
+  <ExtraNodeDate
+    bind:settings={settings}
+    bind:stage={stage}
+    previous_stage={() => settings.linkDataType}
+    next_stage={() => "end"}
+  />
+
+  {:else if stage === "end" }
+
+  <End
+    bind:settings={settings}
+      bind:stage={stage}
+    previous_stage={() => "nodes" }
+    next_stage={() => null}
+    reloadNetworks={reloadNetworks}
+  />
+
 {/if}
-
-<button on:click={() => importNetwork(settings, $fileStore, reloadNetworks)}>Import network</button>

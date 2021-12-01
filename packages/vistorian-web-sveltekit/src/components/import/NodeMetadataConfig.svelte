@@ -3,8 +3,6 @@
   import FieldSelector from "./FieldSelector.svelte";
 
   let selectedFile;
-  let hasMetadata;
-
 
   export let config;
 
@@ -56,15 +54,15 @@
 </details>
 <br />
 
-<input type="radio" bind:group={hasMetadata} value={true} /> Yes
+<input type="radio" bind:group={config.hasMetadata} value={true} /> Yes
 
 <br />
 
-<input type="radio" bind:group={hasMetadata} value={false} /> No
+<input type="radio" bind:group={config.hasMetadata} value={false} /> No
 
 <br />
 
-{#if hasMetadata}
+{#if config.hasMetadata}
 
   <FileSelector bind:selectedFile={selectedFile} />
 

@@ -19,7 +19,7 @@
 </details>
 
 <input type="radio" bind:group={config.locationFormat}
-       value={null} /> No, the nodes do not have locations or this information is not recorded
+       value={""} /> No, the nodes do not have locations or this information is not recorded
 
 <br />
 
