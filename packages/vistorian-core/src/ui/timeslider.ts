@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 
-import * as dynamicgraph from "./dynamicgraph";
-import * as messenger from "./messenger";
+import * as dynamicgraph from "../data/dynamicgraph";
+import * as messenger from "../data/messenger";
 
 import { SmartSlider } from "./smartslider";
 

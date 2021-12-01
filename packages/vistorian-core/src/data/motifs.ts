@@ -1,7 +1,39 @@
 // import swiftSet from 'swiftset';
-import { Motif, MotifTemplate } from "./queries";
-import { DynamicGraph, Link, Node } from "./dynamicgraph";
+import { DynamicGraph, Link, Node, Time } from "./dynamicgraph";
 import netClustering from "netclustering";
+
+export class Motif {
+  nodes: Node[] = [];
+  links: Link[] = [];
+  times: Time[] = [];
+
+  constructor(nodes: Node[], links: Link[]) {
+    this.nodes = nodes.slice(0);
+    this.links = links.slice(0);
+  }
+
+  print(): void {
+    console.log("nodes:", this.nodes.length, "links:", this.links.length);
+  }
+}
+
+export class MotifTemplate {
+  nodes: number[] = [];
+  links: number[][] = [];
+
+  constructor(nodes: number[], links: number[][]) {
+    this.nodes = nodes.slice(0);
+    this.links = links.slice(0);
+  }
+}
+
+export class MotifSequence {
+  motifs: Motif[] = [];
+
+  push(m: Motif): void {
+    this.motifs.push(m);
+  }
+}
 
 export function findTemplate(
   nodes: Node[],

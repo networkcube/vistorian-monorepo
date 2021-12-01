@@ -1,10 +1,10 @@
 import * as d3 from "d3";
 
-import * as utils from "vistorian-core/src/utils";
-import * as dynamicgraph from "vistorian-core/src/dynamicgraph";
-import * as main from "vistorian-core/src/main";
-import * as messenger from "vistorian-core/src/messenger";
-import * as datamanager from "vistorian-core/src/datamanager";
+import * as utils from "vistorian-core/src/data/utils";
+import * as dynamicgraph from "vistorian-core/src/data/dynamicgraph";
+import * as main from "vistorian-core/src/data/main";
+import * as messenger from "vistorian-core/src/data/messenger";
+import * as dynamicgraphutils from "vistorian-core/src/data/dynamicgraphutils";
 
 import $ from "jquery";
 
@@ -200,7 +200,7 @@ export function updateViewOnlyList(type: string, name: string): void {
 }
 
 export function createSelection(type: string): void {
-  const b: datamanager.Selection = dgraph.createSelection(type); // IS IT OK?? (dgraph)
+  const b: dynamicgraphutils.Selection = dgraph.createSelection(type); // IS IT OK?? (dgraph)
   window.setTimeout(() => {
     messenger.setCurrentSelection(b);
     updateLists();
@@ -228,7 +228,7 @@ export function updateLists(): void {
 }
 
 export function updateList(type: string, name: string): void {
-  const selections: datamanager.Selection[] = dgraph.getSelections(type);
+  const selections: dynamicgraphutils.Selection[] = dgraph.getSelections(type);
 
   const title: any = d3.select("#title_" + type);
   title.html(name + " (" + selections.length + ")");
@@ -297,7 +297,7 @@ export function updateList(type: string, name: string): void {
     .append("svg:image")
     .attr("class", "icon_showColor icon")
     .attr("x", 130 + (RECT_SIZE + GAP_ICONS) * i++)
-    .on("click", function (ev: MouseEvent, d: datamanager.Selection) {
+    .on("click", function (ev: MouseEvent, d: dynamicgraphutils.Selection) {
       messenger.showSelectionColor(d, !d.showColor);
     });
 
@@ -313,7 +313,7 @@ export function updateList(type: string, name: string): void {
         name +
         "' , this.getAttribute('href'))"
     )
-    .on("click", function (ev: MouseEvent, d: datamanager.Selection) {
+    .on("click", function (ev: MouseEvent, d: dynamicgraphutils.Selection) {
       messenger.filterSelection(d, !d.filter);
     });
 
@@ -327,11 +327,11 @@ export function updateList(type: string, name: string): void {
     .attr("x", 130 + (RECT_SIZE + GAP_ICONS) * i++)
     .on(
       "click",
-      function (ev: MouseEvent, d: datamanager.Selection, i: number) {
+      function (ev: MouseEvent, d: dynamicgraphutils.Selection, i: number) {
         if (i > 0)
           messenger.swapPriority(
             d,
-            <datamanager.Selection>(
+            <dynamicgraphutils.Selection>(
               d3.selectAll(".selectionDiv_" + d.acceptedType).data()[i - 1]
             )
           ); // CAST TO SELECTION??
@@ -348,11 +348,11 @@ export function updateList(type: string, name: string): void {
     .attr("x", 130 + (RECT_SIZE + GAP_ICONS) * i++)
     .on(
       "click",
-      function (ev: MouseEvent, d: datamanager.Selection, i: number) {
+      function (ev: MouseEvent, d: dynamicgraphutils.Selection, i: number) {
         if (d3.selectAll(".selectionDiv_" + d.acceptedType).data()[i + 1])
           messenger.swapPriority(
             d,
-            <datamanager.Selection>(
+            <dynamicgraphutils.Selection>(
               d3.selectAll(".selectionDiv_" + d.acceptedType).data()[i + 1]
             )
           ); // CAST TO SELECTION??
@@ -367,7 +367,7 @@ export function updateList(type: string, name: string): void {
     .attr("class", "icon")
     .attr("xlink:href", "delete.png")
     .attr("x", 130 + (RECT_SIZE + GAP_ICONS) * i++)
-    .on("click", function (ev: MouseEvent, d: datamanager.Selection) {
+    .on("click", function (ev: MouseEvent, d: dynamicgraphutils.Selection) {
       messenger.deleteSelection(d);
     });
 
@@ -394,7 +394,7 @@ export function searchResultHandler(m: messenger.SearchResultMessage): void {
 }
 
 export function saveSearchResultAsSelection(type: string): void {
-  const s: datamanager.Selection = messenger.createSelection(
+  const s: dynamicgraphutils.Selection = messenger.createSelection(
     type,
     searchMessage.searchTerm
   );

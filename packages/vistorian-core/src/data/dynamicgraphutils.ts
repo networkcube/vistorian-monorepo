@@ -73,15 +73,18 @@ export class DataSet {
 export function getDefaultNodeSchema(): NodeSchema {
   return new NodeSchema(0);
 }
+
 export function getDefaultLinkSchema(): LinkSchema {
   return new LinkSchema(0, 1, 2);
 }
+
 export function getDefaultLocationSchema(): LocationSchema {
   return new LocationSchema(0, 1, 2, 3, 4, 5, 6, 7, 8);
 }
 
 export class TableSchema {
   name: string;
+
   constructor(name: string) {
     this.name = name;
   }
@@ -97,6 +100,7 @@ export class NodeSchema extends TableSchema {
   nodeType = -1;
   shape = -1;
   color = -1;
+
   constructor(id: number) {
     super("nodeSchema");
     this.id = id;
@@ -112,6 +116,7 @@ export class LinkSchema extends TableSchema {
   linkType = -1;
   directed = -1;
   time = -1;
+
   constructor(id: number, source: number, target: number) {
     super("linkSchema");
     this.source = source;
@@ -119,6 +124,7 @@ export class LinkSchema extends TableSchema {
     this.id = id;
   }
 }
+
 export class LocationSchema extends TableSchema {
   id: number;
   label: number; // user given label
@@ -158,4 +164,5 @@ export class LocationSchema extends TableSchema {
     if (isValidIndex(radius)) this.radius = radius != undefined ? radius : -1;
   }
 }
+
 //}

@@ -1,6 +1,6 @@
-import { DataSet, Selection, isValidIndex } from "./datamanager";
+import { DataSet, isValidIndex, Selection } from "./dynamicgraphutils";
 import * as moment from "moment";
-import * as LZString from "lz-string";
+import { DataManager } from "./datamanager";
 
 export const GRANULARITY: moment.unitOfTime.Base[] = [
   "millisecond",
@@ -180,6 +180,7 @@ export class DynamicGraph {
 
     return value;
   }
+
   static timeReviver(k: string, v: any, s: DynamicGraph): any {
     if (k == "") {
       return copyPropsShallow(v, new Time(v.id, s));
@@ -258,6 +259,7 @@ export class DynamicGraph {
         return v;
     }
   }
+
   static nodeTypeArrayReviver(k: string, v: any, s: DynamicGraph): any {
     switch (k) {
       case "":
@@ -1593,12 +1595,15 @@ export class DynamicGraph {
   nodeAttr(attr: string, id: number): any {
     return this.attr(attr, id, "node");
   }
+
   linkAttr(attr: string, id: number): any {
     return this.attr(attr, id, "link");
   }
+
   pairAttr(attr: string, id: number): any {
     return this.attr(attr, id, "nodePair");
   }
+
   timeAttr(attr: string, id: number): any {
     return this.attr(attr, id, "time");
   }
@@ -1606,6 +1611,7 @@ export class DynamicGraph {
   get startTime(): Time {
     return this._times[0];
   }
+
   get endTime(): Time {
     return this._times[this._times.length - 1];
   }
@@ -1828,6 +1834,7 @@ export class DynamicGraph {
       }
     }
   }
+
   // <<<<<<< HEAD
 
   removeElementFromSelection(selection: Selection, e: BasicElement): void {
@@ -1897,6 +1904,7 @@ export class DynamicGraph {
     console.log("[DynamicGraph] setCurrentSelectionId ", id);
     this.currentSelection_id = id;
   }
+
   getCurrentSelection(): Selection | undefined {
     // before onoly Selection!
     return this.getSelection(this.currentSelection_id);
@@ -1953,6 +1961,7 @@ export class DynamicGraph {
     }
     s.color = color;
   }
+
   getSelections(type?: string): Selection[] {
     const selections: Selection[] = [];
     if (type) {
@@ -1965,6 +1974,7 @@ export class DynamicGraph {
       return this.selections;
     }
   }
+
   getSelection(id: number): Selection | undefined {
     // before only Selection return
     for (let i = 0; i < this.selections.length; i++) {
@@ -2009,6 +2019,7 @@ export class DynamicGraph {
     const o = new Ordering(name, order);
     this.nodeOrders.push(o);
   }
+
   setNodeOrdering(name: string, order: number[]): void {
     for (let i = 0; i < this.nodeOrders.length; i++) {
       if (this.nodeOrders[i].name == name) {
@@ -2018,6 +2029,7 @@ export class DynamicGraph {
     }
     console.error("Ordering", name, "does not exist");
   }
+
   removeNodeOrdering(name: string, order: number[]): void {
     for (let i = 0; i < this.nodeOrders.length; i++) {
       if (this.nodeOrders[i].name == name) {
@@ -2025,6 +2037,7 @@ export class DynamicGraph {
       }
     }
   }
+
   getNodeOrder(name: string): Ordering | undefined {
     for (let i = 0; i < this.nodeOrders.length; i++) {
       if (this.nodeOrders[i].name == name) {
@@ -2039,15 +2052,19 @@ export class DynamicGraph {
   nodes(): NodeQuery {
     return new NodeQuery(this.nodeArrays.id, this);
   }
+
   links(): LinkQuery {
     return new LinkQuery(this.linkArrays.id, this);
   }
+
   times(): TimeQuery {
     return new TimeQuery(this.timeArrays.id, this);
   }
+
   locations(): LocationQuery {
     return new LocationQuery(this.locationArrays.id, this);
   }
+
   nodePairs(): NodePairQuery {
     return new NodePairQuery(this.nodePairArrays.id, this);
   }
@@ -2094,16 +2111,19 @@ export class DynamicGraph {
       if (this._links[i].id() == id) return this._links[i];
     }
   }
+
   time(id: number): Time | undefined {
     for (let i = 0; i < this._times.length; i++) {
       if (this._times[i].id() == id) return this._times[i];
     }
   }
+
   location(id: number): Location | undefined {
     for (let i = 0; i < this._locations.length; i++) {
       if (this._locations[i].id() == id) return this._locations[i];
     }
   }
+
   nodePair(id: number): NodePair | undefined {
     for (let i = 0; i < this._nodePairs.length; i++) {
       if (this._nodePairs[i].id() == id) return this._nodePairs[i];
@@ -2113,6 +2133,7 @@ export class DynamicGraph {
   getMinGranularity(): number {
     return this.gran_min;
   }
+
   getMaxGranularity(): number {
     return this.gran_max;
   }
@@ -2122,6 +2143,7 @@ export class DynamicGraph {
 
 export class AttributeArray {
   id: number[] = [];
+
   get length(): number {
     return this.id.length;
   }
@@ -2209,6 +2231,7 @@ export class NodeType implements LegendElement {
   id: number;
   name: string;
   color: string;
+
   constructor(id: number, name: string, color: string) {
     this.id = id;
     this.name = name;
@@ -2219,6 +2242,7 @@ export class NodeType implements LegendElement {
 export class Ordering {
   name: string;
   order: number[] = [];
+
   constructor(name: string, order: number[]) {
     this.name = name;
     this.order = order;
@@ -2239,6 +2263,7 @@ export class Query {
       }
     }
   }
+
   // contains(element: number): boolean {
   //     return this._elements.indexOf(element) > -1;
   // }
@@ -2246,14 +2271,17 @@ export class Query {
   addUnique(element: number): void {
     if (this._elements.indexOf(element) == -1) this._elements.push(element);
   }
+
   add(element: number): void {
     this._elements.push(element);
   }
+
   addAll(elements: number[]): void {
     for (let i = 0; i < elements.length; i++) {
       if (elements[i] != undefined) this._elements.push(elements[i]);
     }
   }
+
   addAllUnique(elements: number[]): void {
     for (let i = 0; i < elements.length; i++) {
       this.addUnique(elements[i]);
@@ -2274,6 +2302,7 @@ export class Query {
   ids(): number[] {
     return this._elements;
   }
+
   removeDuplicates(): Query {
     const elements = this._elements.slice(0);
     this._elements = [];
@@ -2283,6 +2312,7 @@ export class Query {
     }
     return this;
   }
+
   generic_intersection(q: Query): Query {
     const intersection = [];
     for (let i = 0; i < this._elements.length; i++) {
@@ -2324,6 +2354,7 @@ export class GraphElementQuery extends Query {
     }
     return arr;
   }
+
   /** @returns a query with selected elements, i.e. elements that are in at least
    * one selection.
    */
@@ -2337,6 +2368,7 @@ export class GraphElementQuery extends Query {
     }
     return arr;
   }
+
   /** @returns a query with visible elements.
    */
   generic_visible(): any[] {
@@ -2349,6 +2381,7 @@ export class GraphElementQuery extends Query {
     }
     return arr;
   }
+
   /** @returns a query with highighted elements.
    */
   generic_highlighted(): any[] {
@@ -2361,6 +2394,7 @@ export class GraphElementQuery extends Query {
     }
     return arr;
   }
+
   /** @returns a query with only the elements present in the specified time step
    * or period.
    */
@@ -2374,6 +2408,7 @@ export class GraphElementQuery extends Query {
     }
     return arr;
   }
+
   /** @returns this query with elements sorted */
   generic_sort(attrName: string, asc?: boolean): GraphElementQuery {
     if (this._elements.length == 0) {
@@ -2395,6 +2430,7 @@ export class GraphElementQuery extends Query {
     this._elements = array;
     return this;
   }
+
   generic_removeDuplicates(): GraphElementQuery {
     const uniqueElements = [];
     for (let i = 0; i < this._elements.length; i++) {
@@ -2577,6 +2613,7 @@ export class ScalarTimeSeries<T> {
   set(t: Time, element: T): void {
     this.serie[t.id()] = element;
   }
+
   /** @returns the value for a specified time point. */
   get(t: Time): any {
     // before T!!
@@ -2639,6 +2676,7 @@ export class ArrayTimeSeries<T> {
     if (!(this.serie as any)[t._id]) (this.serie as any)[t._id] = [];
     (this.serie as any)[t._id].push(element);
   }
+
   get(t: Time): T[] {
     return (this.serie as any)[t._id];
   }
@@ -2695,18 +2733,23 @@ export class TimeQuery extends GraphElementQuery {
   highlighted(): TimeQuery {
     return new TimeQuery(super.generic_highlighted(), this.g);
   }
+
   visible(): TimeQuery {
     return new TimeQuery(super.generic_visible(), this.g);
   }
+
   selected(): TimeQuery {
     return new TimeQuery(super.generic_selected(), this.g);
   }
+
   filter(filter: (d: any) => boolean): TimeQuery {
     return new TimeQuery(super.generic_filter(filter), this.g);
   }
+
   presentIn(t1: Time, t2: Time): TimeQuery {
     return new TimeQuery(super.generic_presentIn(t1, t2), this.g);
   }
+
   sort(attributeName: string): TimeQuery {
     return <TimeQuery>super.generic_sort(attributeName);
   }
@@ -2747,6 +2790,7 @@ export class TimeQuery extends GraphElementQuery {
     }
     return a;
   }
+
   createAttribute(attrName: string, f: (t: Time) => void): TimeQuery {
     // create and init new attribute array if necessary
     if ((this.g.timeArrays as any)[attrName] == undefined) {
@@ -2762,6 +2806,7 @@ export class TimeQuery extends GraphElementQuery {
     }
     return this;
   }
+
   unixTimes(): number[] {
     const unixTimes: number[] = [];
     for (let i = 0; i < this._elements.length; i++) {
@@ -2776,6 +2821,7 @@ export class TimeQuery extends GraphElementQuery {
   intersection(q: TimeQuery): TimeQuery {
     return new TimeQuery(this.generic_intersection(q)._elements, this.g);
   }
+
   forEach(f: (t: Time | undefined, i: number) => void): TimeQuery {
     for (let i = 0; i < this._elements.length; i++) {
       f(this.g.time(this._elements[i]), i);
@@ -2798,6 +2844,7 @@ export class Time extends BasicElement {
   time(): moment.Moment {
     return this.attr("momentTime");
   }
+
   moment(): moment.Moment {
     return this.attr("momentTime");
   }
@@ -2827,24 +2874,31 @@ export class Time extends BasicElement {
   year(): number {
     return this.time().year();
   }
+
   month(): number {
     return this.time().month();
   }
+
   week(): number {
     return this.time().week();
   }
+
   day(): number {
     return this.time().day();
   }
+
   hour(): number {
     return this.time().hour();
   }
+
   minute(): number {
     return this.time().minute();
   }
+
   second(): number {
     return this.time().second();
   }
+
   millisecond(): number {
     return this.time().millisecond();
   }
@@ -2881,18 +2935,23 @@ export class LocationQuery extends GraphElementQuery {
   highlighted(): LocationQuery {
     return new LocationQuery(super.generic_highlighted(), this.g);
   }
+
   visible(): LocationQuery {
     return new LocationQuery(super.generic_visible(), this.g);
   }
+
   selected(): LocationQuery {
     return new LocationQuery(super.generic_selected(), this.g);
   }
+
   filter(filter: (d: any) => boolean): LocationQuery {
     return new LocationQuery(super.generic_filter(filter), this.g);
   }
+
   presentIn(t1: Time, t2: Time): LocationQuery {
     return new LocationQuery(super.generic_presentIn(t1, t2), this.g);
   }
+
   sort(attributeName: string): LocationQuery {
     return <LocationQuery>super.generic_sort(attributeName);
   }
@@ -2914,6 +2973,7 @@ export class LocationQuery extends GraphElementQuery {
     }
     return a;
   }
+
   createAttribute(attrName: string, f: (l: Location) => void): LocationQuery {
     // create and init new attribute array if necessary
     if ((this.g.locationArrays as any)[attrName] == undefined) {
@@ -2933,9 +2993,11 @@ export class LocationQuery extends GraphElementQuery {
   intersection(q: LocationQuery): LocationQuery {
     return new LocationQuery(this.generic_intersection(q)._elements, this.g);
   }
+
   removeDuplicates(): LocationQuery {
     return new LocationQuery(this.generic_removeDuplicates()._elements, this.g);
   }
+
   forEach(f: (l: Location | undefined, i: number) => any): LocationQuery {
     for (let i = 0; i < this._elements.length; i++) {
       f(this.g.location(this._elements[i]), i);
@@ -2962,6 +3024,7 @@ export class NumberQuery extends Query {
     }
     return min;
   }
+
   max(): number {
     let max: number = parseInt(this._elements[0] + "");
     for (let i = 1; i < this._elements.length; i++) {
@@ -2970,6 +3033,7 @@ export class NumberQuery extends Query {
     }
     return max;
   }
+
   mean(): number {
     this._elements = this.makeNumbers(this._elements);
     let v = 0;
@@ -2982,6 +3046,7 @@ export class NumberQuery extends Query {
     }
     return v / count;
   }
+
   sum(): number {
     let sum = 0;
     for (let i = 0; i < this._elements.length; i++) {
@@ -3034,21 +3099,27 @@ export class Location extends BasicElement {
   label(): string {
     return this.attr("label") + "";
   }
+
   longitude(): number {
     return this.attr("longitude");
   }
+
   latitude(): number {
     return this.attr("latitude");
   }
+
   x(): number {
     return this.attr("x");
   }
+
   y(): number {
     return this.attr("y");
   }
+
   z(): number {
     return this.attr("z");
   }
+
   radius(): number {
     return this.attr("radius");
   }
@@ -3081,18 +3152,23 @@ export class NodePairQuery extends GraphElementQuery {
   highlighted(): NodePairQuery {
     return new NodePairQuery(super.generic_highlighted(), this.g);
   }
+
   visible(): NodePairQuery {
     return new NodePairQuery(super.generic_visible(), this.g);
   }
+
   selected(): NodePairQuery {
     return new NodePairQuery(super.generic_selected(), this.g);
   }
+
   filter(filter: (d: any) => boolean): NodePairQuery {
     return new NodePairQuery(super.generic_filter(filter), this.g);
   }
+
   presentIn(t1: Time, t2: Time): NodePairQuery {
     return new NodePairQuery(super.generic_presentIn(t1, t2), this.g);
   }
+
   sort(attributeName: string): NodePairQuery {
     return <NodePairQuery>super.generic_sort(attributeName);
   }
@@ -3114,6 +3190,7 @@ export class NodePairQuery extends GraphElementQuery {
     }
     return a;
   }
+
   createAttribute(attrName: string, f: (np: NodePair) => void): NodePairQuery {
     // create and init new attribute array if necessary
     if ((this.g.nodePairArrays as any)[attrName] == undefined) {
@@ -3129,12 +3206,15 @@ export class NodePairQuery extends GraphElementQuery {
     }
     return this;
   }
+
   intersection(q: NodePairQuery): NodePairQuery {
     return new NodePairQuery(this.generic_intersection(q)._elements, this.g);
   }
+
   removeDuplicates(): NodePairQuery {
     return new NodePairQuery(this.generic_removeDuplicates()._elements, this.g);
   }
+
   forEach(f: (np: NodePair | undefined, i: number) => any): NodePairQuery {
     for (let i = 0; i < this._elements.length; i++) {
       f(this.g.nodePair(this._elements[i]), i);
@@ -3153,12 +3233,15 @@ export class NodePair extends BasicElement {
   get source(): Node {
     return this.g._nodes[this.attr("source")];
   }
+
   get target(): Node {
     return this.g._nodes[this.attr("target")];
   }
+
   links(): LinkQuery {
     return new LinkQuery(this.attr("links"), this.g);
   }
+
   nodeType(): string {
     return this.attr("nodeType");
   }
@@ -3178,6 +3261,7 @@ export class StringQuery {
     if (elements) this._elements = elements.slice(0);
     else this._elements = []; // INIT WHEN ELEMENTS DOESN'T EXIST
   }
+
   contains(element: string): boolean {
     return this._elements.indexOf(element) > -1;
   }
@@ -3185,14 +3269,17 @@ export class StringQuery {
   addUnique(element: string): void {
     if (this._elements.indexOf(element) == -1) this._elements.push(element);
   }
+
   add(element: string): void {
     this._elements.push(element);
   }
+
   addAll(elements: string[]): void {
     for (let i = 0; i < elements.length; i++) {
       if (elements[i] != undefined) this._elements.push(elements[i]);
     }
   }
+
   addAllUnique(elements: string[]): void {
     for (let i = 0; i < elements.length; i++) {
       this.addUnique(elements[i]);
@@ -3202,6 +3289,7 @@ export class StringQuery {
   get length(): number {
     return this._elements.length;
   }
+
   size(): number {
     return this._elements.length;
   }
@@ -3209,6 +3297,7 @@ export class StringQuery {
   toArray(): string[] {
     return this._elements.slice(0);
   }
+
   forEach(f: (s: string, i: number) => void): StringQuery {
     for (let i = 0; i < this._elements.length; i++) {
       f(this._elements[i], i);
@@ -3279,18 +3368,23 @@ export class NodeQuery extends GraphElementQuery {
   highlighted(): NodeQuery {
     return new NodeQuery(super.generic_highlighted(), this.g);
   }
+
   visible(): NodeQuery {
     return new NodeQuery(super.generic_visible(), this.g);
   }
+
   selected(): NodeQuery {
     return new NodeQuery(super.generic_selected(), this.g);
   }
+
   filter(filter: (d: any) => boolean): NodeQuery {
     return new NodeQuery(super.generic_filter(filter), this.g);
   }
+
   presentIn(t1: Time, t2: Time): NodeQuery {
     return new NodeQuery(super.generic_presentIn(t1, t2), this.g);
   }
+
   sort(attributeName: string, asc?: boolean): NodeQuery {
     return <NodeQuery>super.generic_sort(attributeName, asc);
   }
@@ -3304,24 +3398,28 @@ export class NodeQuery extends GraphElementQuery {
     }
     return q;
   }
+
   neighbors(t1?: Time, t2?: Time): NodeQuery {
     return new NodeQuery(
       getBulkAttributes("neighbors", this._elements, "node", this.g, t1, t2),
       this.g
     );
   }
+
   links(t1?: Time, t2?: Time): LinkQuery {
     return new LinkQuery(
       getBulkAttributes("links", this._elements, "node", this.g, t1, t2),
       this.g
     );
   }
+
   locations(t1?: Time, t2?: Time): LocationQuery {
     return new LocationQuery(
       getBulkAttributes("locations", this._elements, "node", this.g, t1, t2),
       this.g
     );
   }
+
   nodeTypes(): StringQuery {
     const q: StringQuery = new StringQuery();
     for (let i = 0; i < this._elements.length; i++) {
@@ -3347,6 +3445,7 @@ export class NodeQuery extends GraphElementQuery {
     }
     return a;
   }
+
   createAttribute(attrName: string, f: (n: Node) => any): NodeQuery {
     // create and init news attribute array if necessary
     if ((this.g.nodeArrays as any)[attrName] == undefined) {
@@ -3366,6 +3465,7 @@ export class NodeQuery extends GraphElementQuery {
   intersection(q: NodeQuery): NodeQuery {
     return new NodeQuery(this.generic_intersection(q)._elements, this.g);
   }
+
   removeDuplicates(): NodeQuery {
     return new NodeQuery(this.generic_removeDuplicates()._elements, this.g);
   }
@@ -3435,6 +3535,7 @@ export class Node extends BasicElement {
       this.g
     );
   }
+
   inNeighbors(t1?: Time, t2?: Time): NodeQuery {
     if (t2 != undefined && t1 != undefined) {
       return new NodeQuery(
@@ -3455,6 +3556,7 @@ export class Node extends BasicElement {
       this.g
     );
   }
+
   outNeighbors(t1?: Time, t2?: Time): NodeQuery {
     if (t2 != undefined && t1 != undefined) {
       return new NodeQuery(
@@ -3475,6 +3577,7 @@ export class Node extends BasicElement {
       this.g
     );
   }
+
   links(t1?: Time, t2?: Time): LinkQuery {
     if (t2 != undefined && t1 != undefined) {
       return new LinkQuery(
@@ -3495,6 +3598,7 @@ export class Node extends BasicElement {
       this.g
     );
   }
+
   inLinks(t1?: Time, t2?: Time): LinkQuery {
     if (t2 != undefined && t1 != undefined) {
       return new LinkQuery(
@@ -3515,6 +3619,7 @@ export class Node extends BasicElement {
       this.g
     );
   }
+
   outLinks(t1?: Time, t2?: Time): LinkQuery {
     if (t2 != undefined && t1 != undefined) {
       return new LinkQuery(
@@ -3535,6 +3640,7 @@ export class Node extends BasicElement {
       this.g
     );
   }
+
   locations(t1?: Time, t2?: Time): LocationQuery {
     if (t2 != undefined && t1 != undefined) {
       return new LocationQuery(
@@ -3555,6 +3661,7 @@ export class Node extends BasicElement {
       this.g
     );
   }
+
   locationSerie(t1?: Time, t2?: Time): ScalarTimeSeries<Location> {
     let serie: ScalarTimeSeries<number>;
     if (t2 != undefined && t1 != undefined)
@@ -3623,18 +3730,23 @@ export class LinkQuery extends GraphElementQuery {
   highlighted(): LinkQuery {
     return new LinkQuery(super.generic_highlighted(), this.g);
   }
+
   visible(): LinkQuery {
     return new LinkQuery(super.generic_visible(), this.g);
   }
+
   selected(): LinkQuery {
     return new LinkQuery(super.generic_selected(), this.g);
   }
+
   filter(filter: (d: any) => boolean): LinkQuery {
     return new LinkQuery(super.generic_filter(filter), this.g);
   }
+
   presentIn(t1: Time, t2?: Time): LinkQuery {
     return new LinkQuery(super.generic_presentIn(t1, t2), this.g);
   }
+
   sort(attributeName: string): LinkQuery {
     return <LinkQuery>super.generic_sort(attributeName);
   }
@@ -3682,6 +3794,7 @@ export class LinkQuery extends GraphElementQuery {
     }
     return this;
   }
+
   linkTypes(): string[] {
     const linkTypes: string[] = [];
     let s;
@@ -3729,9 +3842,11 @@ export class LinkQuery extends GraphElementQuery {
   intersection(q: LinkQuery): LinkQuery {
     return new LinkQuery(this.generic_intersection(q)._elements, this.g);
   }
+
   removeDuplicates(): LinkQuery {
     return new LinkQuery(this.generic_removeDuplicates()._elements, this.g);
   }
+
   forEach(f: (link: Link | undefined, i: number) => void): LinkQuery {
     for (let i = 0; i < this._elements.length; i++) {
       f(this.g.link(this._elements[i]), i);
@@ -3746,6 +3861,7 @@ export class LinkQuery extends GraphElementQuery {
 export class Link extends BasicElement {
   targetNPO: any = undefined;
   sourceNPO: any = undefined;
+
   constructor(id: number, graph: DynamicGraph) {
     super(id, "link", graph);
   }
@@ -3755,15 +3871,19 @@ export class Link extends BasicElement {
   linkType(): string {
     return this.attr("linkType");
   }
+
   get source(): Node {
     return this.g._nodes[this.attr("source")];
   }
+
   get target(): Node {
     return this.g._nodes[this.attr("target")];
   }
+
   nodePair(): NodePair {
     return this.g._nodePairs[this.attr("nodePair")];
   }
+
   directed(): boolean {
     return this.attr("directed");
   }
@@ -3800,6 +3920,7 @@ export class Link extends BasicElement {
     const presence: number[] = this.weights(start, end).toArray();
     return presence.length > 0;
   }
+
   /** Returns all times in which this link's weight != 0  */
   times(): TimeQuery {
     // var weights:ScalarTimeSeries<number> = <ScalarTimeSeries<number>>this.attr('weights');
@@ -3816,6 +3937,7 @@ export class LinkType implements LegendElement {
   id: number;
   name: string;
   color: string;
+
   constructor(id: number, name: string, color: string) {
     this.id = id;
     this.name = name;
@@ -3824,6 +3946,7 @@ export class LinkType implements LegendElement {
 }
 
 /* Moved from utils to dynamicgraph to eliminate circular dependency */
+
 /* used by dynamicgraph, but not used none of utils*/
 
 export function attributeSort(
@@ -3940,279 +4063,4 @@ export function doubleArray(size1: number, size2?: number, value?: any): any[] {
   while (size1--) array[size1] = a.slice(0);
 
   return array;
-}
-
-/********* MOVED FROM DATAMANAGER TO DYNAMICGRAPH **********/
-
-export interface DataManagerOptions {
-  keepOnlyOneSession: boolean;
-}
-
-export class DataManager {
-  constructor(options?: DataManagerOptions) {
-    if (options) {
-      // initialize stuff differently here
-      if (options.keepOnlyOneSession) this.setOptions(options);
-    } else {
-      this.keepOnlyOneSession = false;
-    }
-  }
-
-  setOptions(options: DataManagerOptions): void {
-    this.keepOnlyOneSession = options.keepOnlyOneSession;
-  }
-  // current dynamic graph of the visualization.
-  // The first time the getGraph() function is called
-  // that graph object is created and populated.
-  // The second time, it's just retrieved.
-  dynamicGraph?: DynamicGraph;
-
-  keepOnlyOneSession = false;
-  session = "";
-
-  sessionDataPrefix = "ncubesession";
-  // sessionDataPrefix: string = "";
-
-  clearSessionData(session: string): void {
-    const searchPrefix = this.sessionDataPrefix + this.SEP + session;
-    // var searchPrefix = session;
-    const keysToClear: string[] = [];
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (!key) continue;
-      if (key.indexOf(searchPrefix) == 0) keysToClear.push(key);
-      // these are the old keys that we used to store before we
-      // added support for multiple sessions
-      else if (key.indexOf("connectoscope1") == 0) keysToClear.push(key);
-    }
-    for (let i = 0; i < keysToClear.length; i++) {
-      const k = keysToClear[i];
-      localStorage.removeItem(k);
-    }
-  }
-
-  clearAllSessionData(): void {
-    this.clearSessionData("");
-  }
-
-  isSessionCached(session: string, dataSetName: string): boolean {
-    const prefix =
-      this.sessionDataPrefix + this.SEP + session + this.SEP + dataSetName;
-    //var firstSessionKey: string = null;
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key && key.indexOf(prefix) == 0) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  /**
-   * Import a data set into networkcube's local storage.
-   * @param  {string}  session - current session id
-   * @param  {DataSet} data    - a networkcube.DataSet
-   */
-  importData(session: string, data: DataSet): void {
-    this.session = session;
-
-    // check if all data (tables + schemas) are there
-    if (!data.nodeTable && !data.linkTable) {
-      console.log("Empty tables. No data imported.");
-      return;
-    }
-
-    if (!data.nodeTable) {
-      console.log("[n3] Node table missing!");
-    }
-    if (!data.linkTable) {
-      console.log("[n3] Link table missing!");
-    }
-    if (!data.nodeSchema) {
-      console.log("[n3] Node schema missing!");
-    }
-    if (!data.linkSchema) {
-      console.log("[n3] Link schema missing!");
-    }
-
-    // format data
-    for (let i = 0; i < data.nodeTable.length; i++) {
-      for (let j = 0; j < data.nodeTable[i].length; j++) {
-        if (typeof data.nodeTable[i][j] == "string")
-          data.nodeTable[i][j] = data.nodeTable[i][j].trim();
-      }
-    }
-    for (let i = 0; i < data.linkTable.length; i++) {
-      for (let j = 0; j < data.linkTable[i].length; j++) {
-        if (typeof data.linkTable[i][j] == "string")
-          data.linkTable[i][j] = data.linkTable[i][j].trim();
-      }
-    }
-
-    // this.saveToStorage(data.name, this.NODE_TABLE, data.nodeTable);
-    // this.saveToStorage(data.name, this.NODE_SCHEMA, data.nodeSchema);
-    // this.saveToStorage(data.name, this.LINK_SCHEMA, data.linkSchema);
-    // this.saveToStorage(data.name, this.LINK_TABLE, data.linkTable);
-    // // if(data.locationTable){
-    // this.saveToStorage(data.name, this.LOCATION_TABLE, data.locationTable);
-    // this.saveToStorage(data.name, this.LOCATION_SCHEMA, data.locationSchema);
-    // }
-
-    // In order to initialize the dynamic graph, our schema must be sufficiently well-defined
-    if (this.isSchemaWellDefined(data)) {
-      console.log("data is well-schematized, caching dynamicGraph");
-      // in order to ensure that we have enough quota, we only keep one session
-      // cached at a time.
-      if (this.keepOnlyOneSession) this.clearAllSessionData();
-
-      const graphForCaching: DynamicGraph = new DynamicGraph();
-      graphForCaching.initDynamicGraph(data);
-      // CACHEGRAPH store DynamicGraph in localstorage
-      graphForCaching.saveDynamicGraph(this);
-
-      // CACHEGRAPH : this code is strictly for diagnostics;
-      const doubleCheckSave = false;
-      if (doubleCheckSave) {
-        const testGraph: DynamicGraph = new DynamicGraph();
-        testGraph.loadDynamicGraph(this, data.name);
-        testGraph.debugCompareTo(graphForCaching);
-      }
-    } else {
-      console.log("data is not well-schematized, so not caching dynamicGraph");
-    }
-  }
-
-  // Strings used to access local storage
-  SEP = "_";
-  // NODE_TABLE: string = 'networkcube.nodetable';
-  // LINK_TABLE: string = 'networkcube.linktable';
-  // NODE_SCHEMA: string = 'networkcube.nodeschema';
-  // LINK_SCHEMA: string = 'networkcube.linkschema';
-  // LOCATION_TABLE: string = 'networkcube.locationtable';
-  // LOCATION_SCHEMA: string = 'networkcube.locationschema';
-  // GRAPH: string = 'networkcube.graph';
-
-  // storage primitives /////////////////////////////////////
-  //
-  saveToStorage<T>(
-    dataName: string,
-    valueName: string,
-    value: T,
-    replacer?: (key: string, value: any) => any
-  ): void {
-    if (value == undefined) {
-      console.log(
-        "attempting to save undefined value. aborting",
-        dataName,
-        valueName
-      );
-      return;
-    }
-    const stringifyResult = JSON.stringify(value, replacer);
-
-    let stringToSave;
-    if (stringifyResult.length > 1024 * 1024 * 4)
-      stringToSave = LZString.compress(stringifyResult);
-    else stringToSave = stringifyResult;
-
-    localStorage[
-      this.sessionDataPrefix +
-        this.SEP +
-        this.session +
-        this.SEP +
-        dataName +
-        this.SEP +
-        valueName
-    ] = stringToSave;
-  }
-
-  getFromStorage<TResult>(
-    dataName: string,
-    valueName: string,
-    reviver?: (key: any, value: any, state: any) => any,
-    state?: any
-  ): TResult | undefined {
-    // : TResult
-
-    console.assert(this.session != "");
-
-    let statefulReviver;
-    if (reviver)
-      statefulReviver = function (key: any, value: any): any {
-        return reviver(key, value, state);
-      };
-    else statefulReviver = undefined;
-
-    const storedResult =
-      localStorage[
-        this.sessionDataPrefix +
-          this.SEP +
-          this.session +
-          this.SEP +
-          dataName +
-          this.SEP +
-          valueName
-      ];
-
-    if (storedResult && storedResult != "undefined") {
-      // we try to detect whether the string was compressed or not. Given that it is
-      // JSON, we would expect it to begin with either a quote, a bracket, or a curly-brace
-      let parseText;
-      if (storedResult == "true") {
-        parseText = true;
-      } else if (storedResult == "false") {
-        parseText = false;
-      } else if ("\"'[{0123456789".indexOf(storedResult[0]) >= 0)
-        parseText = storedResult;
-      else parseText = LZString.decompress(storedResult);
-
-      return <TResult>JSON.parse(parseText, statefulReviver);
-    } else {
-      return undefined;
-    }
-  }
-
-  removeFromStorage(dataName: string, valueName: string): void {
-    localStorage.removeItem(
-      this.sessionDataPrefix +
-        this.SEP +
-        this.session +
-        this.SEP +
-        dataName +
-        this.SEP +
-        valueName
-    );
-  }
-  //
-  // end storage primitives //////////////////////////////
-
-  // GRAPH
-
-  getGraph(session: string, dataname: string): DynamicGraph {
-    this.session = session;
-    if (!this.dynamicGraph || this.dynamicGraph.name != dataname) {
-      this.dynamicGraph = new DynamicGraph();
-      this.dynamicGraph.loadDynamicGraph(this, dataname);
-    }
-    return this.dynamicGraph;
-  }
-
-  isSchemaWellDefined(data: DataSet): boolean {
-    console.log("isSchemaWellDefined");
-    if (data.locationTable && !isValidIndex(data.locationSchema.id))
-      return false;
-    if (data.nodeTable.length > 0 && !isValidIndex(data.nodeSchema.id))
-      return false;
-    if (
-      data.linkTable.length > 0 &&
-      !(
-        isValidIndex(data.linkSchema.id) &&
-        isValidIndex(data.linkSchema.source) &&
-        isValidIndex(data.linkSchema.target)
-      )
-    )
-      return false;
-
-    return true;
-  }
 }
