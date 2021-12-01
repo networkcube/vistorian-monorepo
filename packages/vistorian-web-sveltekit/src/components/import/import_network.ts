@@ -327,6 +327,8 @@ async function importNetwork(settings, fileStore, reloadNetworks): Promise<void>
 		}
 	}
 
+	// handle extra node metadata
+
 	const params = {
 		name: currentNetwork.name,
 		nodeTable: normalizedNodeTable,

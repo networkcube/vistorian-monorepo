@@ -16,7 +16,7 @@
 
 </script>
 
-<table>
+<table class="table table-bordered table-hover table-condensed">
   <thead>
   {#each cols as col}
     <th>{col}</th>

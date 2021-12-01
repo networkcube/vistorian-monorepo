@@ -12,6 +12,10 @@
 
 
   export let settings, stage, previous_stage, next_stage;
+
+   // I've removed
+   //     <NodeMetadataConfig bind:config={settings.nodeMetadataConfig} />
+   // This will be more useful in future if we can select variables of metadata to be added to node objects.
 </script>
 
 
@@ -23,9 +27,6 @@
     {:else}
       <NodeLocationConfig bind:config={settings.nodeLocationConfig} />
     {/if}
-
-    <NodeMetadataConfig bind:config={settings.nodeMetadataConfig} />
-
 
   </CardBody>
   <CardFooter>

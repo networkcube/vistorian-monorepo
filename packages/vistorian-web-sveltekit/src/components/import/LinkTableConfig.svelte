@@ -14,7 +14,11 @@
 
   export let config, stage, previous_stage, next_stage;
 
-  $: ready = (config.edgesAreDirected !== null) && config.selectedFile && (config.fieldSourceId !== null) && (config.fieldTargetId !== null);
+  $: ready = (config.edgesAreDirected !== null)
+    && config.selectedFile
+    && (config.fieldSourceId !== null) && (config.fieldTargetId !== null)
+    && (config.timeConfig.edgeTimeType ==null || (config.timeConfig.formatString && config.timeConfig.timeField))
+  ;
 
   $: console.log(config);
 </script>

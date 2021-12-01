@@ -2,8 +2,6 @@
   import FileSelector from "./FileSelector.svelte";
   import FieldSelector from "./FieldSelector.svelte";
 
-  let selectedFile;
-
   export let config;
 
 </script>
@@ -64,17 +62,17 @@
 
 {#if config.hasMetadata}
 
-  <FileSelector bind:selectedFile={selectedFile} />
+  <FileSelector bind:selectedFile={config.selectedFile} />
 
-  {#if selectedFile}
+  {#if config.selectedFile}
 
     <h4>
       Optional fields
     </h4>
     <br />
-    <FieldSelector selectedFile={selectedFile} label={"Label of node"} bind:selectedField={config.fieldLabel} />
+    <FieldSelector selectedFile={config.selectedFile} label={"Label of node"} bind:selectedField={config.fieldLabel} />
     <br />
-    <FieldSelector selectedFile={selectedFile} label={"Color of node"} bind:selectedField={config.fieldColor} />
+    <FieldSelector selectedFile={config.selectedFile} label={"Color of node"} bind:selectedField={config.fieldColor} />
   {/if}
 
 {/if}

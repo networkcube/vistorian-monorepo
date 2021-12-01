@@ -54,5 +54,7 @@
     <FieldSelector selectedFile={selectedFile} label={"End time"} bind:selectedField={config.endTimeField} required={true} />
   {/if}
 
-  <DateFormatPickerModal bind:formatString={config.formatString} />
+  {#if config.edgeTimeType === "pointTime"}
+    <DateFormatPickerModal bind:formatString={config.formatString} />
+  {/if}
 {/if}

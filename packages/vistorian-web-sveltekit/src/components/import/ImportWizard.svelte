@@ -68,8 +68,8 @@
     nodeMetadataConfig: {
       hasMetadata: false,
       fieldLabel: null,
-      fieldLocation: null,
-      fieldColor: null
+      fieldColor: null,
+      selectedFile: null
     }
   };
 
