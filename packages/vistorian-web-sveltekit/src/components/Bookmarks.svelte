@@ -85,7 +85,10 @@
 </script>
 
 <main>
-	<div id="mydiv" style={`top: ${top}; left: ${left}; max-height: ${maxHeight}; max-width: ${maxWidth}`}>
+	<div
+		id="mydiv"
+		style={`top: ${top}; left: ${left}; max-height: ${maxHeight}; max-width: ${maxWidth}`}
+	>
 		<div id="mydivheader" on:mousedown={dragMouseDown}>
 			<strong> Bookmarks</strong> (Drag header to move)
 

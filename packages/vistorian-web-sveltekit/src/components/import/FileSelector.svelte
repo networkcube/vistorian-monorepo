@@ -1,95 +1,92 @@
 <script>
-  import Papa from "papaparse";
+	import Papa from 'papaparse';
 
-  import Dropzone from "svelte-file-dropzone";
+	import Dropzone from 'svelte-file-dropzone';
 
-  import { fileStore } from "./stores.js";
-  import TablePreview from "./TablePreview.svelte";
-  /* */
+	import { fileStore } from './stores.js';
+	import TablePreview from './TablePreview.svelte';
+	/* */
 
-  let fileList;
-  $: fileList = Object.keys($fileStore);
+	let fileList;
+	$: fileList = Object.keys($fileStore);
 
-  export let selectedFile = null;
+	export let selectedFile = null;
 
-  let hasHeaderRow = false;
+	let hasHeaderRow = false;
 
-  function handleFilesSelect(e) {
-    const { acceptedFiles, fileRejections } = e.detail;
+	function handleFilesSelect(e) {
+		const { acceptedFiles, fileRejections } = e.detail;
 
-    console.log("Seleted:", e.detail);
+		console.log('Seleted:', e.detail);
 
-    for (const f of acceptedFiles) {
-      // has a .path and .name
+		for (const f of acceptedFiles) {
+			// has a .path and .name
 
-      console.log(`Uploaded file: ${f}`);
+			console.log(`Uploaded file: ${f}`);
 
-      const d = Papa.parse(f, {
-        header: false,
-        complete: function(results) {
-          // TODO: get list of columns
-          // TODO: save the uploaded data to a store
+			const d = Papa.parse(f, {
+				header: false,
+				complete: function (results) {
+					// TODO: get list of columns
+					// TODO: save the uploaded data to a store
 
-          fileStore.update(oldFileStore => ({
-            ...oldFileStore,
-            [f.name]: { data: results.data, hasHeaderRow: hasHeaderRow }
-          }));
+					fileStore.update((oldFileStore) => ({
+						...oldFileStore,
+						[f.name]: { data: results.data, hasHeaderRow: hasHeaderRow }
+					}));
 
-          selectedFile = f.name; // TODO - create UI elements for multiple selections
+					selectedFile = f.name; // TODO - create UI elements for multiple selections
 
-          console.log(results);
-        }
-      });
-    }
-  }
+					console.log(results);
+				}
+			});
+		}
+	}
 
-  $: {
-    if (selectedFile) {
-      $fileStore[selectedFile].hasHeaderRow = hasHeaderRow;
-    }
-  }
-
-
+	$: {
+		if (selectedFile) {
+			$fileStore[selectedFile].hasHeaderRow = hasHeaderRow;
+		}
+	}
 </script>
 
-<style>
-    .fileSelector {
-        font-weight: 100;
-        font-size: 12pt;
-        background-color: #eee;
-        border-style: none;
-        padding: 5px;
-        padding: 20px;
-        padding-top: 20px;
-        border-radius: 10px;
-        padding-top: 10px;
-
-        width: max-content;
-        margin-bottom: 1em;
-    }
-</style>
-
 <div class="fileSelector">
-  Select a previously uploaded table:
-  <select bind:value={selectedFile}>
-    {#each Object.keys($fileStore) as file}
-      <option value={file}>{file}</option>
-    {/each}
-  </select>
+	Select a previously uploaded table:
+	<select bind:value={selectedFile}>
+		{#each Object.keys($fileStore) as file}
+			<option value={file}>{file}</option>
+		{/each}
+	</select>
 
-  <br />
+	<br />
 
-  <b>or</b>
-  <Dropzone on:drop={handleFilesSelect} accept=".csv">
-    <p>Upload a new table</p>
-  </Dropzone>
+	<b>or</b>
+	<Dropzone on:drop={handleFilesSelect} accept=".csv">
+		<p>Upload a new table</p>
+	</Dropzone>
 </div>
 
 {#if selectedFile}
-  <TablePreview data={$fileStore[selectedFile].data} hasHeaderRow={hasHeaderRow} />
+	<TablePreview data={$fileStore[selectedFile].data} {hasHeaderRow} />
 
-  <label>
-    <input type="checkbox" bind:checked={hasHeaderRow} /> Has header row
-  </label>
+	<label>
+		<input type="checkbox" bind:checked={hasHeaderRow} /> Has header row
+	</label>
 {/if}
 
+<style>
+	.fileSelector {
+		font-weight: 100;
+		font-size: 12pt;
+		background-color: #eee;
+		border-style: none;
+		padding: 5px;
+		padding: 20px;
+		padding-top: 20px;
+		border-radius: 10px;
+		padding-top: 10px;
+
+		width: max-content;
+		margin-bottom: 1em;
+	}
+</style>

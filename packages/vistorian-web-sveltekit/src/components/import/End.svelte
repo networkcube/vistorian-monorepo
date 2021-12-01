@@ -1,64 +1,53 @@
 <script>
+	import { Button, Card, CardBody, CardFooter } from 'sveltestrap';
 
-  import {
-    Button,
-    Card,
-    CardBody,
-    CardFooter,
-  } from "sveltestrap";
+	import { fileStore } from './stores.js';
 
+	import importNetwork from './import_network';
+	import { getUrlVars } from '$lib/utils';
 
+	export let settings, reloadNetworks, stage, previous_stage, next_stage;
 
-  import { fileStore } from "./stores.js";
-
-  import importNetwork from "./import_network";
-  import { getUrlVars } from "$lib/utils";
-
-
-  export let settings, reloadNetworks, stage, previous_stage, next_stage;
-
-
-  async function loadVis (visName) {
-    const SESSION_NAME = getUrlVars()["session"];
-    await importNetwork(settings, $fileStore, reloadNetworks);
-    window.location.href = `./${visName}?session=${SESSION_NAME}&datasetName=${settings.name}`;
-  };
-
+	async function loadVis(visName) {
+		const SESSION_NAME = getUrlVars()['session'];
+		await importNetwork(settings, $fileStore, reloadNetworks);
+		window.location.href = `./${visName}?session=${SESSION_NAME}&datasetName=${settings.name}`;
+	}
 </script>
 
-
 <Card class="mb-3" style="width: 50%">
-  <CardBody>
-    <h2>Import and view network</h2>
+	<CardBody>
+		<h2>Import and view network</h2>
 
-  <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr;">
-    <div>
-      <img src="vis_icons/node-link.png" height="75px" on:click={() => loadVis("nodelink")} />
-      <p>Node link</p>
-    </div>
+		<div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr;">
+			<div>
+				<img src="vis_icons/node-link.png" height="75px" on:click={() => loadVis('nodelink')} />
+				<p>Node link</p>
+			</div>
 
-    <div>
-      <img src="vis_icons/matrix.png" height="75px" on:click={() => loadVis("matrix")} />
-      <p>Matrix</p>
-    </div>
+			<div>
+				<img src="vis_icons/matrix.png" height="75px" on:click={() => loadVis('matrix')} />
+				<p>Matrix</p>
+			</div>
 
-    <div>
-      <img src="vis_icons/dynamicego.png" height="75px" on:click={() => loadVis("dynamicego")} />
-      <p>Dynamic Ego</p>
-    </div>
+			<div>
+				<img src="vis_icons/dynamicego.png" height="75px" on:click={() => loadVis('dynamicego')} />
+				<p>Dynamic Ego</p>
+			</div>
 
-    <div>
-      <img src="vis_icons/map.png" height="75px" on:click={() => loadVis("map")} />
-      <p>Map</p>
-    </div>
-  </div>
+			<div>
+				<img src="vis_icons/map.png" height="75px" on:click={() => loadVis('map')} />
+				<p>Map</p>
+			</div>
+		</div>
 
-    <h3>or</h3>
+		<h3>or</h3>
 
-    <Button on:click={() => importNetwork(settings, $fileStore, reloadNetworks)}>Just import network</Button>
-
-  </CardBody>
-  <CardFooter>
-    <Button style="float: left" on:click={() => stage=previous_stage() }>Previous</Button>
-  </CardFooter>
+		<Button on:click={() => importNetwork(settings, $fileStore, reloadNetworks)}
+			>Just import network</Button
+		>
+	</CardBody>
+	<CardFooter>
+		<Button style="float: left" on:click={() => (stage = previous_stage())}>Previous</Button>
+	</CardFooter>
 </Card>

@@ -59,7 +59,7 @@ export class TimeSlider {
         ? this.times[this.times.length - 1].moment()
         : timesDummy.moment(); // WHAT HAPPEND??
     const minGran: number = dgraph.gran_min;
-    let minGranName: string = getGranularityName(minGran);
+    const minGranName: string = getGranularityName(minGran);
 
     if (!lastDummyYear) {
       lastDummyYear = new Date(0);
