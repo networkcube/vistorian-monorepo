@@ -102,7 +102,7 @@ const timeline: tline.Timeline = new tline.Timeline(
 );
 
 // VERTICAL SCROLL EVENT
-window.addEventListener("mousewheel", mouseWheelHandler, false);
+window.addEventListener("wheel", mouseWheelHandler);
 
 $("#menu").append(
   '\
@@ -145,10 +145,7 @@ export function visualize(): void {
 
   // create svg
   // for timeslider and labels only
-  svg = d3
-    .select("#visSvg")
-    .attr("width", WIDTH)
-    .attr("height", ROW_HEIGHT * nodes.length + 200);
+  svg = d3.select("#visSvg").attr("width", WIDTH).attr("height", "100vh");
   timeSlider.appendTo(svg, TABLE_MARGIN_LEFT);
 
   createNodes();

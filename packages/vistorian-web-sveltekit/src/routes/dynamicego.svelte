@@ -78,7 +78,7 @@
 		trace.event('err', event + ' ' + source + ' ' + lineno, error, document.location.pathname)}
 	on:beforeunload={() => trace.event('log_12', 'page', 'close', document.location.pathname)} />
 
-<main>
+<div style="height: 100vh; overflow: hidden;">
 	<table>
 		<tr>
 			<td width="220px">
@@ -96,4 +96,4 @@
 	<Bookmarks />
 
 	<Feedback />
-</main>
+</div>
