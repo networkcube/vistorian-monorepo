@@ -179,7 +179,7 @@
 						</li>
 						<li>
 							<a href="./dynamicego?session=0&datasetName={selectedNetwork.name}">
-								<img src="vis_icons/dynamicego.png" width="75px" /> Dynamic Ego
+								<img src="vis_icons/dynamicego.png" width="75px" /> Timeline
 							</a>
 						</li>
 						<li>
@@ -198,7 +198,7 @@
 							<img src="vis_icons/matrix.png" width="75px" /> Adjacency matrix
 						</li>
 						<li>
-							<img src="vis_icons/dynamicego.png" width="75px" /> Dynamic Ego
+							<img src="vis_icons/dynamicego.png" width="75px" /> Timeline
 						</li>
 						<li>
 							<img src="vis_icons/map.png" width="75px" /> Map

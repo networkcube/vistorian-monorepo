@@ -136,12 +136,10 @@
 			</div>
 
 			<div id="div_dynamicego">
-				<h2>Dynamic Ego Visualization</h2>
+				<h2>Timeline Visualization</h2>
 
 				<p>
-					An dynamic ego network shows a node in a network (<i>ego</i>) and its immediate neighbors
-					(<i>alters</i>), as well as connections between the alters. A dynamic ego network shows
-					these connections over time. The below visualization shows a timeline running from left to
+					The below visualization shows a timeline running from left to
 					right. Rows represent nodes in the network and arcs represent connections between them.
 					Adapting the time slider on the top of the visualization adapts the time range visible in
 					the visualization.
