@@ -32,7 +32,7 @@
 
 			<div>
 				<img src="vis_icons/dynamicego.png" height="75px" on:click={() => loadVis('dynamicego')} />
-				<p>Dynamic Ego</p>
+				<p>Timeline</p>
 			</div>
 
 			<div>

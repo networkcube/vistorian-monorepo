@@ -70,7 +70,7 @@
 </script>
 
 <svelte:head>
-	<title>Dynamic Ego</title>
+	<title>Timeline</title>
 </svelte:head>
 
 <svelte:body
