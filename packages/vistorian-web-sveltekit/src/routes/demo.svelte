@@ -139,10 +139,9 @@
 				<h2>Timeline Visualization</h2>
 
 				<p>
-					The below visualization shows a timeline running from left to
-					right. Rows represent nodes in the network and arcs represent connections between them.
-					Adapting the time slider on the top of the visualization adapts the time range visible in
-					the visualization.
+					The below visualization shows a timeline running from left to right. Rows represent nodes
+					in the network and arcs represent connections between them. Adapting the time slider on
+					the top of the visualization adapts the time range visible in the visualization.
 				</p>
 
 				<p>
