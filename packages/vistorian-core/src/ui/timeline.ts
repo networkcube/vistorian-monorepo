@@ -94,15 +94,15 @@ export class Timeline {
     const granularity_height = this.HEIGHT / granularity_levels;
 
     // create all timeObjects (UTC)
-    const prev = new Date(unix_start);
+    let prev = new Date(unix_start);
     const prevprev = new Date(unix_start - 86400000); // subtract one day
     // bb: check why 'subtract' is not working:
     // prevprev.substract(1, this.granules[this.minGran] + 's');
     this.timeObjects.push(prev);
     for (let i = 1; i < numTimes; i++) {
       //prev = new Date(prev); // ???
-      const adjusted = addDate(prev, 1, this.granules[this.minGran]);
-      this.timeObjects.push(adjusted);
+      prev = addDate(prev, 1, this.granules[this.minGran]);
+      this.timeObjects.push(prev);
     }
 
     this.timeGranularities = [];
