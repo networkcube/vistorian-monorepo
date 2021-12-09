@@ -624,6 +624,42 @@ class MatrixVisualization {
 
       // TODO: paintCell draws a diamond for negative edge weights?
 
+      // Left-Right gradient = from
+      const leftRightGradientFragment = `
+varying vec2 vTextureCoord;
+uniform sampler2D uSampler;
+uniform float alpha;
+
+void main(void)
+{
+   gl_FragColor = texture2D(uSampler, vTextureCoord);
+   gl_FragColor.a = alpha * (1.0 - max(0.2, vTextureCoord.x));
+}
+`;
+
+      const topBottomGradientFragment = `
+varying vec2 vTextureCoord;
+uniform sampler2D uSampler;
+uniform float alpha;
+
+void main(void)
+{
+   gl_FragColor = texture2D(uSampler, vTextureCoord);
+   gl_FragColor.a = alpha * (1.0 - max(0.2, vTextureCoord.y));
+}
+`;
+
+      const leftRightGradientFilter = new PIXI.Filter(
+        undefined,
+        leftRightGradientFragment,
+        { alpha }
+      );
+      const topBottomGradientFilter = new PIXI.Filter(
+        undefined,
+        topBottomGradientFragment,
+        { alpha }
+      );
+
       const sprite = new PIXI.Sprite(PIXI.Texture.WHITE);
       sprite.tint = PIXI.utils.string2hex(webColor);
       sprite.alpha = alpha;
@@ -631,6 +667,15 @@ class MatrixVisualization {
       sprite.y = y;
       sprite.width = seg - 1;
       sprite.height = this.cellSize - 1;
+
+      if (this.matrix._dgraph.directed) {
+        if (+row === this.matrix.nodeOrder[e.source.id()]) {
+          sprite.filters = [topBottomGradientFilter];
+        } else {
+          sprite.filters = [leftRightGradientFilter];
+        }
+      }
+
       this.pixi_app.stage.addChild(sprite);
 
       // highlight frame
@@ -826,7 +871,7 @@ class Matrix {
   private times: dynamicgraph.Time[];
   public startTime: dynamicgraph.Time;
   public endTime: dynamicgraph.Time;
-  private nodeOrder: number[];
+  nodeOrder: number[];
   private bbox: Box;
   private createOverviewImage: boolean;
   private offset: number[];
