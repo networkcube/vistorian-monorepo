@@ -366,18 +366,12 @@ class MatrixLabels {
       .text((d: any) => {
         return d.label();
       })
-      .attr("x", (d: any) => {
-        return topLabelPosition(d.id());
-      })
-      .attr("y", this.margin.left - 10)
-      .attr("transform", (d: any, i: any) => {
-        return (
-          "rotate(-90, " +
-          (this.margin.top + cellSize * i + cellSize / 2) +
-          ", " +
-          (this.margin.left - 10) +
-          ")"
-        );
+      .attr("x", 0)
+      .attr("y", 0)
+      .attr("transform", (d: any, i: number) => {
+        const y = this.margin.top - 10;
+        const x = topLabelPosition(d.id());
+        return `translate(${x}, ${y})rotate(-90)`;
       })
       .on("mouseover", (ev: MouseEvent, d: any) => {
         this.matrix.highlightNodes([d.id()]);
@@ -398,21 +392,12 @@ class MatrixLabels {
         return d.label();
       })
       .attr("alignment-baseline", "middle")
-      .attr("x", (d: any) => {
-        return topLabelPosition(d.id());
-      })
-      .attr("y", this.margin.top - 10)
-      .attr("transform", (d: any) => {
-        return (
-          "rotate(-90, " +
-          (this.margin.top +
-            topLabelOffset +
-            cellSize * (nodeOrder[d.id()] - bbox.x0) +
-            cellSize / 2) +
-          ", " +
-          (this.margin.left - 10) +
-          ")"
-        );
+      .attr("x", 0)
+      .attr("y", 0)
+      .attr("transform", (d: any, i: number) => {
+        const y = this.margin.top - 10;
+        const x = topLabelPosition(d.id());
+        return `translate(${x}, ${y})rotate(-90)`;
       });
 
     this.updateHighlightedNodes();
