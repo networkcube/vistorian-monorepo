@@ -38,6 +38,12 @@
 
 		SESSION_NAME = getUrlVars()['session'];
 		reloadNetworks();
+
+		const datasetName = getUrlVars()['datasetName'];
+		const nets = networks.filter(n => (n.name === datasetName));
+		if (nets.length > 0){
+			selectedNetwork = nets[0];
+		}
 	});
 
 	const deleteNetwork = (network) => {
