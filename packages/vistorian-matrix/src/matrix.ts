@@ -497,7 +497,11 @@ class MatrixVisualization {
     };
 
     this.pixi_app = new PIXI.Application({
-      width: this.width, height: this.height, backgroundColor: 0xffffff, resolution: window.devicePixelRatio || 1,
+      width: this.width,
+      height: this.height,
+      backgroundColor: 0xffffff,
+      // resolution must be set to 1, not window.devicePixelRatio || 1, or else rects won't line up with text labels
+      resolution: 1,
     });
 
     this.tooltipTextStyle = new PIXI.TextStyle({
