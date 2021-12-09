@@ -16,8 +16,7 @@
 				`../dataview?session=${params['session']}&datasetName=${params['datasetName']}`}
 			style="margin:5px;padding-left:5px;"
 			on:click={() =>
-				trace.event('log_4', document.location.pathname, 'Return to Data View Button', 'Clicked')}
-			target="_blank">Return to Dataview</a
+				trace.event('log_4', document.location.pathname, 'Return to Data View Button', 'Clicked')}>Return to Dataview</a
 		>
 		<br /><br />
 	</div>
