@@ -243,7 +243,11 @@ class MatrixOverview {
     tr[1] = this.ratio !== 0 ? -tr[1] / this.ratio : 0;
     this.ratio = this.height !== 0 ? r / this.height : 0;
 
-    // this.zoom.transform(this.focus, {k: z, x: tr[0], y: tr[1]});
+    // We need to update the internal state of the zoom after the zoom slider is used
+    // (if we didn't, then panning the focus rectangle will reset the zoom)
+    // But zoom.transform() immediately fires a zoom event, causing infinite recursion;
+    // instead, we set the internal state directly.
+    this.focus._groups[0][0].__zoom.k = z;
 
     const focusX = matrixX0 * this.width;
     const focusY = matrixY0 * this.height;
