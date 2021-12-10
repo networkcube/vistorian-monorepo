@@ -5,14 +5,7 @@ import sourcemaps from "rollup-plugin-sourcemaps";
 
 export default {
   input: "build/src/index.js",
-  external: [
-    "lz-string",
-    "reorder.js",
-    "netclustering",
-    "swiftset",
-    "three",
-    "jquery",
-  ],
+  external: ["lz-string", "reorder.js", "netclustering", "swiftset", "three"],
   output: {
     file: "lib/vistorian-core.js",
     format: "umd",
@@ -23,8 +16,6 @@ export default {
       "reorder.js": "reorder",
       netclustering: "netClustering",
       swiftset: "Set",
-      three: "three",
-      jquery: "$",
     },
   },
   plugins: [nodeResolve(), commonjs(), json(), sourcemaps()],

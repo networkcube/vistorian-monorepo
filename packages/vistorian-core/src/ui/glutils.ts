@@ -1,5 +1,4 @@
 import * as THREE from "three";
-import $ from "jquery";
 import { BSpline } from "./BSpline";
 
 //module glutils {
@@ -381,7 +380,7 @@ export function initWebGL(
 
   // position canvas element containing cells
   webgl.canvas = webgl.renderer.domElement;
-  $("#" + parentId).append(webgl.canvas);
+  document.getElementById(parentId)?.append(webgl.canvas);
 
   webgl.interactor = new WebGLInteractor(
     webgl.scene,

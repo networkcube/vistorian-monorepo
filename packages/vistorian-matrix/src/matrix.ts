@@ -1,4 +1,5 @@
 import * as d3 from "d3";
+import $ from "jquery";
 
 import * as PIXI from "pixi.js";
 

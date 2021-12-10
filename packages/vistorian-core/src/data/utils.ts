@@ -362,8 +362,13 @@ export function getBlobFromSVG(
   svgId: string,
   callback?: (blob: any, name: string) => void
 ): void {
-  const width = $("#" + svgId).width();
-  const height = $("#" + svgId).height();
+  //  const width = $("#" + svgId).width();
+  const svg = document.querySelector("#" + svgId);
+  if (!svg) {
+    return;
+  }
+  const width = svg.scrollWidth;
+  const height = svg.scrollHeight;
   if (callback != undefined)
     // UNDEFINED ??
     getBlobFromSVGString(
@@ -531,43 +536,61 @@ function dataURItoBlob(dataURI: string): Blob {
   return new Blob([ia], { type: mimeString });
 }
 
-let msgBox;
-
 export function showMessage(message: string, timeout: number): void {
-  if ($(".messageBox")) $(".messageBox").remove();
+  const removeMessageBox = () => {
+    const messageBox = document.querySelector(".messageBox");
+    if (messageBox) {
+      messageBox.outerHTML = "";
+    }
+  };
 
-  msgBox = $(
-    '<div id="div" class="messageBox" style="\
-                    width: 100%;\
-                    height: 100%;\
-                    background-color: #ffffff;\
-                    opacity: .9;\
-                    position: absolute;\
-                    top: 0;\
-                    left: 0;"></div>'
-  );
-  msgBox.append(
-    '<div id="div" style="\
-                    font-size: 20pt;\
-                    font-weight: bold;\
-                    font-family: "Helvetica Neue", Helvetica, sans-serif;\
-                    width: 500px;\
-                    padding-top: 300px;\
-                    text-align: center;\
-                    margin:auto;">\
-                    <p>' +
-      message +
-      "</p></div>"
-  );
-  $("body").append(msgBox);
-  msgBox.click(function () {
-    $(".messageBox").remove();
-  });
+  removeMessageBox();
+
+  const el = document.createElement("div");
+  el.innerHTML = `
+  <div id="div" class="messageBox" style="
+                    width: 100%;
+                    height: 100%;
+                    background-color: #ffffff;
+                    opacity: .9;
+                    position: absolute;
+                    top: 0;
+                    left: 0;">
+  <div id="div" style="
+        font-size: 20pt;
+        font-weight: bold;
+        font-family: 'Helvetica Neue', Helvetica, sans-serif;
+        width: 500px;
+        padding-top: 300px;
+        text-align: center;
+        margin:auto;">
+          <p>${message}</p>
+   </div>             
+</div>
+  `;
+
+  const fadeOutEffect = () => {
+    const fadeTarget = document.getElementById(".messageBox");
+    if (!fadeTarget) {
+      return;
+    }
+    const fadeEffect = setInterval(function () {
+      if (!fadeTarget.style.opacity) {
+        fadeTarget.style.opacity = "1";
+      }
+      if (+fadeTarget.style.opacity > 0) {
+        fadeTarget.style.opacity = (+fadeTarget.style.opacity - 0.1).toString();
+      } else {
+        clearInterval(fadeEffect);
+      }
+    }, 200);
+  };
+
+  document.querySelector("body")?.appendChild(el);
+  el.onclick = removeMessageBox;
 
   if (timeout) {
     // Automatically disappear
-    window.setTimeout(function () {
-      $(".messageBox").fadeOut(1000);
-    }, timeout);
+    window.setTimeout(fadeOutEffect, timeout);
   }
 }

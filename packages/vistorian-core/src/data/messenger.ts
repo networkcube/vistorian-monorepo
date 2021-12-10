@@ -123,10 +123,13 @@ export function highlight(
   const m: HighlightMessage = new HighlightMessage(action, idCompound);
   distributeMessage(m);
 
+  let cursor = "auto";
   if (elementCompound && g.currentSelection_id > 0) {
-    $("body").css("cursor", "url(/networkcube/icons/brush.png),auto");
-  } else {
-    $("body").css("cursor", "auto");
+    cursor = "url(/networkcube/icons/brush.png),auto";
+  }
+  const body = document.querySelector("body");
+  if (body) {
+    body.style.cursor = cursor;
   }
 }
 

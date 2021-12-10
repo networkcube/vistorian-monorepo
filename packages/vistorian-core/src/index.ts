@@ -12,7 +12,6 @@ import * as search from "./data/search";
 import * as colors from "./ui/colors";
 import * as BSpline from "./ui/BSpline";
 import * as glutils from "./ui/glutils";
-import * as legend from "./ui/legend";
 import * as rangeslider from "./ui/rangeslider";
 import * as slider from "./ui/slider";
 import * as smartslider from "./ui/smartslider";
@@ -33,7 +32,6 @@ export {
   colors,
   BSpline,
   glutils,
-  legend,
   rangeslider,
   slider,
   smartslider,

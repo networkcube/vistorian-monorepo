@@ -204,13 +204,17 @@ if (dgraph.times().size() > 1) {
   messenger.addEventListener("timeRange", timeChangedHandler);
 }
 
-$("#visDiv").append(
-  '<svg id="visSvg" width="' +
+const svgElement = document.createElement("svg");
+const visDiv = document.getElementById("visDiv");
+if (visDiv) {
+  visDiv.appendChild(svgElement);
+  svgElement.outerHTML =
+    '<svg id="visSvg" width="' +
     (width - 20) +
     '" height="' +
     (height - 20) +
-    '"></svg>'
-);
+    '"></svg>';
+}
 
 console.log(dgraph);
 let mouseStart: number[];
@@ -1037,11 +1041,22 @@ function stretchVector(vec: any, finalLength: any) {
   return vec;
 }
 function showMessage(message: string) {
-  if ($("#messageBox")) $("#messageBox").remove();
+  const messageBox = document.querySelector(".messageBox");
+  if (messageBox) {
+    messageBox.outerHTML = "";
+  }
 
-  $("#visDiv").append('<div id="messageBox"><p>' + message + "</p></div>");
+  const div = document.createElement("div");
+  const visDiv = document.getElementById("visDiv");
+  if (visDiv) {
+    visDiv.appendChild(div);
+    div.outerHTML = '<div id="messageBox"><p>' + message + "</p></div>";
+  }
 }
 
 function unshowMessage() {
-  if ($("#messageBox")) $("#messageBox").remove();
+  const messageBox = document.querySelector("#messageBox");
+  if (messageBox) {
+    messageBox.outerHTML = "";
+  }
 }

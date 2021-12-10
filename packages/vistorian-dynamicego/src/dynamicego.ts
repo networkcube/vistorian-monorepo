@@ -69,9 +69,15 @@ for (let i = 0; i < globalNodeOrder.length; i++) {
 
 // UI SETUP
 const HEIGHT: any = window.innerHeight;
-$("#visDiv").append(
-  '<svg id="visSvg"><foreignObject id="visCanvasFO"></foreignObject></svg>'
-);
+
+const svgElement = document.createElement("svg");
+const visDiv = document.getElementById("visDiv");
+if (visDiv) {
+  visDiv.appendChild(svgElement);
+  svgElement.outerHTML =
+    '<svg id="visSvg"><foreignObject id="visCanvasFO"></foreignObject></svg>';
+}
+
 d3.select("#visCanvasFO")
   .attr("x", TABLE_MARGIN_LEFT)
   .attr("y", MARGIN_TOP)
@@ -104,15 +110,19 @@ const timeline: tline.Timeline = new tline.Timeline(
 // VERTICAL SCROLL EVENT
 window.addEventListener("wheel", mouseWheelHandler);
 
-$("#menu").append(
-  '\
+const select = document.createElement("select");
+const menu = document.getElementById("menu");
+if (menu) {
+  menu.appendChild(select);
+  select.outerHTML =
+    '\
             <select id="labelOrdering" onchange=trace.event(\'vis_37\',\'DynamicEgo\',\'labelingType\',this.value)">\
                 <option value="data">As appear in table</option>\
                 <option value="alphanumerical">Alphanumerical</option>\
                 <option value="degree">Number of connections</option>\
             </select>\
-            '
-);
+            ';
+}
 
 const timeSlider: timeslider.TimeSlider = new timeslider.TimeSlider(
   dgraph,
