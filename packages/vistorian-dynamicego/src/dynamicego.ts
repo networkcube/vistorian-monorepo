@@ -6,8 +6,6 @@ import * as main from "vistorian-core/src/data/main";
 import * as utils from "vistorian-core/src/data/utils";
 import * as ordering from "vistorian-core/src/data/ordering";
 
-import * as THREE from "three";
-
 import * as glutils from "vistorian-core/src/ui/glutils";
 import * as tline from "vistorian-core/src/ui/timeline";
 import * as timeslider from "vistorian-core/src/ui/timeslider";
@@ -589,7 +587,7 @@ export function makeArcPath(
 
   const vectors: any = [];
   for (let i = 0; i < points.length; i++) {
-    vectors.push(new THREE.Vector2(points[i].x, points[i].y));
+    vectors.push({ x: points[i].x, y: points[i].y });
   }
   return glutils.curve(points);
 }
