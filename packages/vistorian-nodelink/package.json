@@ -25,6 +25,7 @@
         "ts-loader": "^5.3.3",
         "typedoc": "^0.14.2",
         "typescript": "^3.2.4",
+        "uglifyjs-webpack-plugin": "^2.2.0",
         "webpack": "^4.28.4",
         "webpack-bundle-analyzer": "^3.0.3",
         "webpack-cli": "^3.2.1",
