@@ -2,6 +2,10 @@
 	import { onMount } from 'svelte';
 	import { Button } from 'sveltestrap';
 
+	import Fa from 'svelte-fa';
+	import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
+
+
 	import { importData, importIntoNetworkcube } from '../lib/vistorian';
 	import { getLastSessionId } from '../lib/storage';
 
@@ -11,13 +15,14 @@
 	import Footer from '../components/Footer.svelte';
 
 	const citationBibtex = `@misc{bach:hal-01205822,
-TITLE = {{NetworkCube: Bringing Dynamic Network Visualizations to Domain Scientists}},
-AUTHOR = {Bach, Benjamin and Henry Riche, Nathalie and Fernandez , Roland and Giannisakis, Emmanoulis and Lee, Bongshin and Fekete, Jean-Daniel},
-URL = {https://hal.inria.fr/hal-01205822},
-NOTE = {Poster},
-HOWPUBLISHED = {{Posters of the Conference on Information Visualization (InfoVis)}},
-YEAR = {2015},
-MONTH = Oct}`;
+    TITLE = {{NetworkCube: Bringing Dynamic Network Visualizations to Domain Scientists}},
+    AUTHOR = {Bach, Benjamin and Henry Riche, Nathalie and Fernandez, Roland and Giannisakis, Emmanoulis and Lee, Bongshin and Fekete, Jean-Daniel},
+    URL = {https://hal.inria.fr/hal-01205822},
+    NOTE = {Poster},
+    HOWPUBLISHED = {{Posters of the Conference on Information Visualization (InfoVis)}},
+    YEAR = {2015},
+    MONTH = Oct
+}`;
 
 	onMount(async () => {
 		// var vis, biblio;
@@ -111,7 +116,7 @@ MONTH = Oct}`;
 				</a>
 
 				<h2>Or read</h2>
-				<ul class="link_list">
+				<ul id="link_list">
 					<li>
 						<a href="/demo?session=0&datasetName=demo_scientists"
 							>Description of the available visualizations</a
@@ -119,7 +124,7 @@ MONTH = Oct}`;
 					</li>
 
 					<li>
-						<a href="http://vistorian.net/">Help and background information about The Vistorian</a>
+						<a href="http://vistorian.net/">Help and background information</a>
 					</li>
 
 					<li>
@@ -134,15 +139,13 @@ MONTH = Oct}`;
 				<p>
 					<i
 						>Benjamin Bach, Nathalie Henry Riche, Roland Fernandez, Emmanoulis Giannisakis, Bongshin
-						Lee, Jean-Daniel Fekete. NetworkCube: Bringing Dynamic Network Visualizations to Domain
-						Scientists. Posters of the Conference on Information Visualization (InfoVis), Oct 2015,
+						Lee, Jean-Daniel Fekete. <a href="https://hal.inria.fr/hal-01205822/document">NetworkCube: Bringing Dynamic Network Visualizations to Domain
+						Scientists <Fa icon={faExternalLinkAlt} /></a>. Posters of the Conference on Information Visualization (InfoVis), Oct 2015,
 						Chicago, United States. 2015.
 					</i>
 				</p>
 
 				<pre class="citation_bibtex"> {citationBibtex} </pre>
-
-				<a href="https://hal.inria.fr/hal-01205822/document">Read the paper</a>
 			</div>
 		</div>
 	</div>
@@ -154,9 +157,17 @@ MONTH = Oct}`;
 	.citation_bibtex {
 		font-size: 80%;
 		text-align: left;
-		width: fit-content;
+		/* width: fit-content; */
+		max-width: 90%;
+		overflow-x: auto;
 		height: fit-content;
-		overflow: hidden;
+
+		margin-left: auto;
+		margin-right: auto;
+
+		padding: 20px;
+		background: #f3f3f3;
+		color: #636363;
 	}
 
 	#overview_img {
@@ -166,10 +177,9 @@ MONTH = Oct}`;
 	}
 
 	#link_list {
-		text-align: left;
+/*		text-align: left; */
 		margin-left: auto;
-		/* margin-right: auto; */
-		/* display: block; */
+		margin-right: auto;
 		width: fit-content;
 	}
 </style>
