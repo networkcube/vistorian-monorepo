@@ -10,9 +10,22 @@
 
 	async function loadVis(visName) {
 		const SESSION_NAME = getUrlVars()['session'];
-		await importNetwork(settings, $fileStore, reloadNetworks);
+
+		if (!hasImported){
+				await importNetwork(settings, $fileStore, reloadNetworks);
+		}
 		window.location.href = `./${visName}?session=${SESSION_NAME}&datasetName=${settings.name}`;
+		hasImported = true;
 	}
+
+	function saveNetwork(settings, $fileStore, reloadNetworks){
+		if (!hasImported){
+					importNetwork(settings, $fileStore, reloadNetworks)
+		}
+		hasImported = true;
+	}
+
+	let hasImported = false;
 </script>
 
 <Card class="mb-3" style="width: 50%">
@@ -43,7 +56,7 @@
 
 		<h3>or</h3>
 
-		<Button on:click={() => importNetwork(settings, $fileStore, reloadNetworks)}
+		<Button on:click={() => saveNetwork(settings, $fileStore, reloadNetworks)}
 			>Just import network</Button
 		>
 	</CardBody>
