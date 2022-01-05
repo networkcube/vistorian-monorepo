@@ -40,7 +40,7 @@
 	<input bind:value={formatString} id="date-form-input" />
 </label>
 
-In this format, the current datetime is <b>{formatedDate}</b>.
+<p>In this format, the current datetime is <b>{formatedDate}</b>.</p>
 
 <h2>Possible directives</h2>
 
