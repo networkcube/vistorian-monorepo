@@ -5,7 +5,6 @@
 	import Fa from 'svelte-fa';
 	import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 
-
 	import { importData, importIntoNetworkcube } from '../lib/vistorian';
 	import { getLastSessionId } from '../lib/storage';
 
@@ -139,9 +138,12 @@
 				<p>
 					<i
 						>Benjamin Bach, Nathalie Henry Riche, Roland Fernandez, Emmanoulis Giannisakis, Bongshin
-						Lee, Jean-Daniel Fekete. <a href="https://hal.inria.fr/hal-01205822/document">NetworkCube: Bringing Dynamic Network Visualizations to Domain
-						Scientists <Fa icon={faExternalLinkAlt} /></a>. Posters of the Conference on Information Visualization (InfoVis), Oct 2015,
-						Chicago, United States. 2015.
+						Lee, Jean-Daniel Fekete. <a href="https://hal.inria.fr/hal-01205822/document"
+							>NetworkCube: Bringing Dynamic Network Visualizations to Domain Scientists <Fa
+								icon={faExternalLinkAlt}
+							/></a
+						>. Posters of the Conference on Information Visualization (InfoVis), Oct 2015, Chicago,
+						United States. 2015.
 					</i>
 				</p>
 
@@ -177,7 +179,7 @@
 	}
 
 	#link_list {
-/*		text-align: left; */
+		/*		text-align: left; */
 		margin-left: auto;
 		margin-right: auto;
 		width: fit-content;

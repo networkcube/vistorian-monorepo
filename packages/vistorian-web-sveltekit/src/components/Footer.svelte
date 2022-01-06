@@ -21,7 +21,6 @@
 	INRIA <img src="./logos/logo-inria.png" height="20px" />
 </div>
 
-
 <style>
 	#footerDiv {
 		width: fit-content;

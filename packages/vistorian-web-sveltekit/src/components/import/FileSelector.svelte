@@ -12,7 +12,7 @@
 	export let selectedFile = null;
 
 	export let showPreviewTable = true;
-	export let acceptedFormats = ".csv";
+	export let acceptedFormats = '.csv';
 	export let parseAsCSV = true;
 
 	let hasHeaderRow = false;
@@ -28,10 +28,9 @@
 			console.log(`Uploaded file: ${f}`);
 
 			if (parseAsCSV) {
-
 				Papa.parse(f, {
 					header: false,
-					complete: function(results) {
+					complete: function (results) {
 						// TODO: get list of columns
 						// TODO: save the uploaded data to a store
 
@@ -43,10 +42,8 @@
 						selectedFile = f.name;
 					}
 				});
-
 			} else {
-
-				f.text().then(res => {
+				f.text().then((res) => {
 					fileStore.update((oldFileStore) => ({
 						...oldFileStore,
 						[f.name]: { data: res, hasHeaderRow: hasHeaderRow }

@@ -11,26 +11,26 @@
 	async function loadVis(visName) {
 		const SESSION_NAME = getUrlVars()['session'];
 
-		if (!hasImported){
-				await importNetwork(settings, $fileStore, reloadNetworks);
+		if (!hasImported) {
+			await importNetwork(settings, $fileStore, reloadNetworks);
 		}
 		window.location.href = `./${visName}?session=${SESSION_NAME}&datasetName=${settings.name}`;
 		hasImported = true;
 	}
 
-	function saveNetwork(settings, $fileStore, reloadNetworks){
-		if (!hasImported){
-					importNetwork(settings, $fileStore, reloadNetworks)
+	function saveNetwork(settings, $fileStore, reloadNetworks) {
+		if (!hasImported) {
+			importNetwork(settings, $fileStore, reloadNetworks);
 		}
 		hasImported = true;
 	}
 
-	function importNetwork(settings, $fileStore, reloadNetworks){
-		if (settings.fileFormat === "tabular"){
+	function importNetwork(settings, $fileStore, reloadNetworks) {
+		if (settings.fileFormat === 'tabular') {
 			importNetworkFromTables(settings, $fileStore, reloadNetworks);
 		}
 
-		if (settings.fileFormat === "network"){
+		if (settings.fileFormat === 'network') {
 			importNetworkFromFile(settings, $fileStore, reloadNetworks);
 		}
 	}
