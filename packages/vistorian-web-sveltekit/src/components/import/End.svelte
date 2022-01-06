@@ -3,7 +3,7 @@
 
 	import { fileStore } from './stores.js';
 
-	import importNetwork from './import_network';
+	import { importNetworkFromTables, importNetworkFromFile } from './import_network';
 	import { getUrlVars } from '$lib/utils';
 
 	export let settings, reloadNetworks, stage, previous_stage, next_stage;
@@ -23,6 +23,16 @@
 					importNetwork(settings, $fileStore, reloadNetworks)
 		}
 		hasImported = true;
+	}
+
+	function importNetwork(settings, $fileStore, reloadNetworks){
+		if (settings.fileFormat === "tabular"){
+			importNetworkFromTables(settings, $fileStore, reloadNetworks);
+		}
+
+		if (settings.fileFormat === "network"){
+			importNetworkFromFile(settings, $fileStore, reloadNetworks);
+		}
 	}
 
 	let hasImported = false;

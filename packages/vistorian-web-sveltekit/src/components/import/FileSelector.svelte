@@ -5,12 +5,15 @@
 
 	import { fileStore } from './stores.js';
 	import TablePreview from './TablePreview.svelte';
-	/* */
 
 	let fileList;
 	$: fileList = Object.keys($fileStore);
 
 	export let selectedFile = null;
+
+	export let showPreviewTable = true;
+	export let acceptedFormats = ".csv";
+	export let parseAsCSV = true;
 
 	let hasHeaderRow = false;
 
@@ -24,22 +27,34 @@
 
 			console.log(`Uploaded file: ${f}`);
 
-			const d = Papa.parse(f, {
-				header: false,
-				complete: function (results) {
-					// TODO: get list of columns
-					// TODO: save the uploaded data to a store
+			if (parseAsCSV) {
 
+				Papa.parse(f, {
+					header: false,
+					complete: function(results) {
+						// TODO: get list of columns
+						// TODO: save the uploaded data to a store
+
+						fileStore.update((oldFileStore) => ({
+							...oldFileStore,
+							[f.name]: { data: results.data, hasHeaderRow: hasHeaderRow }
+						}));
+
+						selectedFile = f.name;
+					}
+				});
+
+			} else {
+
+				f.text().then(res => {
 					fileStore.update((oldFileStore) => ({
 						...oldFileStore,
-						[f.name]: { data: results.data, hasHeaderRow: hasHeaderRow }
+						[f.name]: { data: res, hasHeaderRow: hasHeaderRow }
 					}));
 
-					selectedFile = f.name; // TODO - create UI elements for multiple selections
-
-					console.log(results);
-				}
-			});
+					selectedFile = f.name;
+				});
+			}
 		}
 	}
 
@@ -51,7 +66,7 @@
 </script>
 
 <div class="fileSelector">
-	Select a previously uploaded table:
+	Select a previously uploaded file:
 	<select bind:value={selectedFile}>
 		{#each Object.keys($fileStore) as file}
 			<option value={file}>{file}</option>
@@ -61,12 +76,12 @@
 	<br />
 
 	<b>or</b>
-	<Dropzone on:drop={handleFilesSelect} accept=".csv">
-		<p>Upload a new table</p>
+	<Dropzone on:drop={handleFilesSelect} accept={acceptedFormats}>
+		<p>Upload a new file</p>
 	</Dropzone>
 </div>
 
-{#if selectedFile}
+{#if selectedFile && showPreviewTable}
 	<TablePreview data={$fileStore[selectedFile].data} {hasHeaderRow} />
 
 	<label>

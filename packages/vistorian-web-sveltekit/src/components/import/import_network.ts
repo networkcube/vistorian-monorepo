@@ -6,6 +6,7 @@ import { Network } from '$lib/vistorian';
 import * as storage from '$lib/storage';
 import * as dynamicgraphutils from 'vistorian-core/build/src/data/dynamicgraphutils';
 import * as main from 'vistorian-core/build/src/data/main';
+import { parseGEDCOM, parsePajek, parseJSON } from 'vistorian-core/build/src/data/importers';
 
 async function geoCode(placeName): Promise<[number, number] | [undefined, undefined]> {
 	if (!placeName) {
@@ -55,7 +56,23 @@ const getLocationsFromFile = (fileStore, settings) => {
 	return locations;
 };
 
-async function importNetwork(settings, fileStore, reloadNetworks): Promise<void> {
+async function saveNetwork(settings, fileStore, reloadNetworks, dataset): Promise<void> {
+	const SESSION_NAME = getUrlVars()['session'];
+
+	const id = new Date().getTime();
+	const currentNetwork = new Network(id);
+	currentNetwork.name = settings.name;
+
+	storage.saveNetwork(currentNetwork, SESSION_NAME);
+
+	currentNetwork.ready = true;
+	storage.saveNetwork(currentNetwork, SESSION_NAME);
+	main.importData(SESSION_NAME, dataset);
+
+	reloadNetworks();
+}
+
+async function importNetworkFromTables(settings, fileStore, reloadNetworks): Promise<void> {
 	const SESSION_NAME = getUrlVars()['session'];
 
 	const id = new Date().getTime();
@@ -384,4 +401,35 @@ async function importNetwork(settings, fileStore, reloadNetworks): Promise<void>
 	reloadNetworks();
 }
 
-export default importNetwork;
+function importNetworkFromFile(settings, fileStore, reloadNetworks) {
+	let dataset;
+	const rawData = fileStore[settings.networkFileConfig.selectedFile].data;
+
+	const fileName = settings.networkFileConfig.selectedFile.toLowerCase();
+	if (fileName.endsWith('.ged')) {
+		dataset = parseGEDCOM(settings.name, rawData);
+	} else if (fileName.endsWith('.paj') | fileName.endsWith('.net')) {
+		dataset = parsePajek(settings.name, rawData);
+	} else if (fileName.endsWith('.json')) {
+		dataset = parseJSON(settings.name, rawData);
+	}
+
+	if (dataset) {
+		const SESSION_NAME = getUrlVars()['session'];
+
+		const id = new Date().getTime();
+		const currentNetwork = new Network(id);
+		currentNetwork.name = settings.name;
+		currentNetwork.directed = true;
+
+		storage.saveNetwork(currentNetwork, SESSION_NAME);
+
+		currentNetwork.ready = true;
+		storage.saveNetwork(currentNetwork, SESSION_NAME);
+		main.importData(SESSION_NAME, dataset);
+
+		reloadNetworks();
+	}
+}
+
+export { importNetworkFromTables, importNetworkFromFile, saveNetwork };

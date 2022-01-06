@@ -19,6 +19,10 @@
 		fileFormat: 'tabular',
 		linkDataType: null,
 
+		networkFileConfig: {
+			selectedFile: null
+		},
+
 		nodeTableConfig: {
 			selectedFile: null,
 			fieldNode: null,
@@ -138,10 +142,11 @@
 {:else if stage === 'network'}
 	<NetworkFileImport
 		bind:stage
+		bind:config={settings.networkFileConfig}
 		previous_stage={() => previousStage}
 		next_stage={() => {
 			previousStage = stage;
-			return 'name';
+			return 'end';
 		}}
 	/>
 {:else if stage === 'tabular'}
