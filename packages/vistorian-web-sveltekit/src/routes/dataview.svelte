@@ -1,5 +1,6 @@
 <script>
 	import { onMount } from 'svelte';
+	import Grid from 'gridjs-svelte';
 
 	import { trace } from '../lib/trace';
 
@@ -26,6 +27,11 @@
 	let SESSION_NAME,
 		params,
 		networks = [];
+
+	let linkData = [],
+		linkColumns = [],
+		nodeData = [],
+		nodeColumns = [];
 
 	const reloadNetworks = () => {
 		networks = storage
@@ -107,6 +113,39 @@
 
 		trace.event('dat_1', 'data view', 'new network', 'created');
 	};
+
+	$: {
+		if (selectedNetwork) {
+			const dgraph = main.getDynamicGraph(selectedNetwork.name, SESSION_NAME);
+			const nodes = dgraph.nodes().toArray();
+
+			nodeColumns = ['id', 'label'];
+			nodeData = dgraph
+				.nodes()
+				.toArray()
+				.map((n) => [n.id(), n.label()]);
+
+			let links = dgraph.links().toArray();
+			linkData = links.map((l) => [
+				l._id,
+				l.source.id(),
+				l.source.label(),
+				l.target.id(),
+				l.target.label(),
+				l.linkType(),
+				l.times().toArray()[0].time().toUTCString()
+			]);
+			linkColumns = [
+				'Link id',
+				'Source ID',
+				'Source label',
+				'Target ID',
+				'Target Label',
+				'Link type',
+				'Date'
+			];
+		}
+	}
 </script>
 
 <svelte:head>
@@ -249,6 +288,32 @@
 		<div id="center">
 			{#if state === 'NEW_NETWORK'}
 				<ImportWizard {reloadNetworks} />
+			{:else if selectedNetwork}
+				<h1>{selectedNetwork.name}</h1>
+
+				<h2>Nodes</h2>
+				<Grid
+					data={nodeData}
+					columns={nodeColumns}
+					sort={true}
+					pagination={true}
+					search={true}
+					resizable={true}
+				/>
+
+				<h2>Links</h2>
+				<Grid
+					data={linkData}
+					columns={linkColumns}
+					sort={true}
+					pagination={true}
+					search={true}
+					resizable={true}
+				/>
+			{:else}
+				<h2 class="vertical-centered">
+					Select a network or create a new one using the panel on the left.
+				</h2>
 			{/if}
 		</div>
 	</div>
@@ -261,6 +326,14 @@
 </main>
 
 <style>
+	@import 'https://cdn.jsdelivr.net/npm/gridjs/dist/theme/mermaid.min.css';
+
+	.vertical-centered {
+		height: fit-content;
+		height: auto;
+		bottom: auto;
+	}
+
 	img.controlIcon {
 		height: 10px;
 		margin-left: 10px;
