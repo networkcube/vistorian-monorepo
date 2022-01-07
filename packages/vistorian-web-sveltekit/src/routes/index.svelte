@@ -111,29 +111,62 @@
 
 			<div>
 				<a href="./dataview?session=0">
-					<Button size="lg">Get started</Button>
+					<Button size="lg">Start session</Button>
 				</a>
+			</div>
 
-				<h2>Or read</h2>
-				<ul id="link_list">
-					<li>
-						<a href="/demo?session=0&datasetName=demo_scientists"
-							>Description of the available visualizations</a
-						>
-					</li>
+			<br />
 
-					<li>
-						<a href="http://vistorian.net/">Help and background information</a>
-					</li>
+			<div>
+				<h4><a href="/demo?session=0&datasetName=demo_scientists"
+				>Description of the available visualizations</a></h4>
+			</div>
 
-					<li>
-						<a href="https://github.com/networkcube/vistorian-monorepo">Issues on GitHub</a>
-					</li>
-				</ul>
+			<br />
+
+			<div style="display: inline-block">
+				<div style="display: flex; text-align: left">
+					<div style="padding-right: 2em">
+						<h5>Overview</h5>
+						<a href="https://vistorian.github.io">Home</a>
+						<br>
+						<a href="https://vistorian.net" target="_blank"><b>Try</b></a>
+						<br>
+						<a href="https://vistorian.github.io/visualizations.html">Visualizations</a>
+						<br>
+						<a href="https://vistorian.github.io/formattingdata.html">Formatting Data</a>
+					</div>
+
+					<div style="padding-right: 2em">
+						<h5>Learning</h5>
+						<a href="https://vistorian.github.io/gettingstarted.html">Getting Started</a>
+						<br>
+						<a href="https://vistorian.github.io/courses.html">Courses</a>
+						<br>
+						<a href="https://vistorian.github.io/tutorials.html">Workshop</a>
+						<br>
+						<a href="https://vistorian.github.io/Troubleshooting.html">Troubleshooting</a>
+						<br>
+						<a href="https://vistorian.github.io/Resources.html">Resources</a>
+					</div>
+
+					<div>
+						<h5>Context</h5>
+						<a href="https://vistorian.github.io/vistorianLab.html">Research &amp; VistorianLab</a>
+						<br>
+						<a href="https://vistorian.github.io/publications.html">Publications</a>
+						<br>
+						<a href="https://vistorian.github.io/development.html">Contribute</a>
+						<br>
+						<a href="https://vistorian.github.io/team.html">Team</a>
+						<br>
+						<a href="mailto: vistorian@inria.fr">Contact</a>
+					</div>
+				</div>
 			</div>
 
 			<div>
-				<h2>Cite</h2>
+				<h2>Please help us sustain the Vistorian by citing our poster:</h2>
 
 				<p>
 					<i
