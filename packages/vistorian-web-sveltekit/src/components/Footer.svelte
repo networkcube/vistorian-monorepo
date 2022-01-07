@@ -1,24 +1,13 @@
 <script>
 	const year = new Date().getFullYear();
+	const height = "40px";
 </script>
 
 <div id="footerDiv">
-	<a class="footer" href="mailto:networkcube@microsoft.com" target="_top">Contact Us</a> |
-	<a class="footer" href="https://go.microsoft.com/fwlink/?LinkId=521839" title="privacy"
-		>Privacy & Cookies</a
-	>
-	|
-	<a class="footer" href="https://go.microsoft.com/fwlink/?LinkID=760869" title="terms of use"
-		>Terms Of Use</a
-	>
-	|
-	<a class="footer" href="http://go.microsoft.com/fwlink/?LinkId=506942" title="trademarks"
-		>Trademarks</a
-	>
-	© {year}
-	Microsoft <img src="./logos/logo-microsoft.png" height="20px" /> © {year}
-
-	INRIA <img src="./logos/logo-inria.png" height="20px" />
+	<a href="https://vishub.net/"><img src="./logos/logo-vishub.png" height={height} alt="Logo for VisHub group" /></a>
+	<a href="https://www.inria.fr/fr"><img src="./logos/logo-inria.png" height={height} alt="Logo for INRIA" /></a>
+	<a href="https://www.microsoft.com/en-us/research/"><img src="./logos/logo-microsoft.png" height={height} alt="Logo for Microsoft" /></a>
+	<a href="https://www.ed.ac.uk/"><img src="./logos/logo-edinburgh.png" height={height} alt="Logo for University of Edinburgh" /></a>
 </div>
 
 <style>
