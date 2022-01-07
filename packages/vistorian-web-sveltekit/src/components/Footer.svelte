@@ -16,4 +16,8 @@
 		margin-left: auto;
 		margin-right: auto;
 	}
+
+	#footerDiv > a {
+		padding-right: 2em;
+	}
 </style>

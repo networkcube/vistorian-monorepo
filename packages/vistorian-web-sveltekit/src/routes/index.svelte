@@ -104,12 +104,6 @@
 			</div>
 
 			<div>
-				<a href="./dataview?session=0"
-					><img id="overview_img" src="./logos/multiple-links.png" alt="" /></a
-				>
-			</div>
-
-			<div>
 				<a href="./dataview?session=0">
 					<Button size="lg">Start session</Button>
 				</a>
@@ -126,18 +120,16 @@
 
 			<div style="display: inline-block">
 				<div style="display: flex; text-align: left">
-					<div style="padding-right: 2em">
+					<div style="padding-right: 3em">
 						<h5>Overview</h5>
 						<a href="https://vistorian.github.io">Home</a>
-						<br>
-						<a href="https://vistorian.net" target="_blank"><b>Try</b></a>
 						<br>
 						<a href="https://vistorian.github.io/visualizations.html">Visualizations</a>
 						<br>
 						<a href="https://vistorian.github.io/formattingdata.html">Formatting Data</a>
 					</div>
 
-					<div style="padding-right: 2em">
+					<div style="padding-right: 3em">
 						<h5>Learning</h5>
 						<a href="https://vistorian.github.io/gettingstarted.html">Getting Started</a>
 						<br>
@@ -165,9 +157,10 @@
 				</div>
 			</div>
 
-			<div>
+			<div style="padding-top: 2em">
 				<h2>Please help us sustain the Vistorian by citing our poster:</h2>
 
+				<br />
 				<p>
 					<i
 						>Benjamin Bach, Nathalie Henry Riche, Roland Fernandez, Emmanoulis Giannisakis, Bongshin
@@ -181,6 +174,7 @@
 				</p>
 
 				<pre class="citation_bibtex"> {citationBibtex} </pre>
+				<br />
 			</div>
 		</div>
 	</div>
