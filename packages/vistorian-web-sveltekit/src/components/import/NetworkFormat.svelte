@@ -17,9 +17,6 @@
 
 		<br />
 
-		<input type="radio" bind:group={fileFormat} value={'network'} />
-		I have a file in a network format (e.g., GEXF, GraphML, GXL)
-
 		{#if fileFormat === 'tabular'}
 			<br />
 			<div>
@@ -44,6 +41,9 @@
 				</ul>
 			</div>
 		{/if}
+
+		<input type="radio" bind:group={fileFormat} value={'network'} />
+		I have a file in a network format (e.g., GEDCOM, PAJEK or GraphML (XML))
 	</CardBody>
 	<CardFooter>
 		<Button style="float: left" on:click={() => (stage = previous_stage())}>Previous</Button>

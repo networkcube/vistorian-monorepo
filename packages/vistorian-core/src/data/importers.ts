@@ -235,7 +235,10 @@ export function loadLinkTable(
     });
 }
 
-export function parseXML(name: string, data: any): DataSet {
+export function parseXML(name: string, dataString: string): DataSet {
+  const parser = new DOMParser();
+  const data = parser.parseFromString(dataString, "text/xml");
+
   const nodes = data.documentElement.getElementsByTagName("node");
   const nodeTable = [];
   const nodeIds = [];
@@ -243,7 +246,7 @@ export function parseXML(name: string, data: any): DataSet {
   for (let i = 0; i < nodes.length; i++) {
     nodeTable.push([
       nodeTable.length,
-      nodes[i].getAttribute("name"),
+      nodes[i].getAttribute("name") || nodes[i].getAttribute("id"),
       nodes[i].getAttribute("type"),
     ]);
     nodeIds.push(nodes[i].id);
@@ -254,8 +257,8 @@ export function parseXML(name: string, data: any): DataSet {
   let s, t;
   let sPrev, tPrev;
   for (let i = 0; i < links.length; i++) {
-    s = nodeIds.indexOf(links[i].getAttribute("source"));
-    t = nodeIds.indexOf(links[i].getAttribute("through"));
+    s = nodeIds.indexOf(links[i].getAttribute("source") || "");
+    t = nodeIds.indexOf(links[i].getAttribute("target") || "");
     if (sPrev == s && tPrev == t) {
       continue;
     }
