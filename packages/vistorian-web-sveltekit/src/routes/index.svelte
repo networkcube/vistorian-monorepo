@@ -112,8 +112,11 @@
 			<br />
 
 			<div>
-				<h4><a href="/demo?session=0&datasetName=demo_scientists"
-				>Description of the available visualizations</a></h4>
+				<h4>
+					<a href="/demo?session=0&datasetName=demo_scientists"
+						>Description of the available visualizations</a
+					>
+				</h4>
 			</div>
 
 			<br />
@@ -123,35 +126,35 @@
 					<div style="padding-right: 3em">
 						<h5>Overview</h5>
 						<a href="https://vistorian.github.io">Home</a>
-						<br>
+						<br />
 						<a href="https://vistorian.github.io/visualizations.html">Visualizations</a>
-						<br>
+						<br />
 						<a href="https://vistorian.github.io/formattingdata.html">Formatting Data</a>
 					</div>
 
 					<div style="padding-right: 3em">
 						<h5>Learning</h5>
 						<a href="https://vistorian.github.io/gettingstarted.html">Getting Started</a>
-						<br>
+						<br />
 						<a href="https://vistorian.github.io/courses.html">Courses</a>
-						<br>
+						<br />
 						<a href="https://vistorian.github.io/tutorials.html">Workshop</a>
-						<br>
+						<br />
 						<a href="https://vistorian.github.io/Troubleshooting.html">Troubleshooting</a>
-						<br>
+						<br />
 						<a href="https://vistorian.github.io/Resources.html">Resources</a>
 					</div>
 
 					<div>
 						<h5>Context</h5>
 						<a href="https://vistorian.github.io/vistorianLab.html">Research &amp; VistorianLab</a>
-						<br>
+						<br />
 						<a href="https://vistorian.github.io/publications.html">Publications</a>
-						<br>
+						<br />
 						<a href="https://vistorian.github.io/development.html">Contribute</a>
-						<br>
+						<br />
 						<a href="https://vistorian.github.io/team.html">Team</a>
-						<br>
+						<br />
 						<a href="mailto: vistorian@inria.fr">Contact</a>
 					</div>
 				</div>
