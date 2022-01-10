@@ -114,6 +114,11 @@
 		trace.event('dat_1', 'data view', 'new network', 'created');
 	};
 
+	const selectNetwork = networkName => {
+		selectedNetwork = networkName;
+		state = "";
+	};
+
 	$: {
 		if (selectedNetwork) {
 			const dgraph = main.getDynamicGraph(selectedNetwork.name, SESSION_NAME);
@@ -190,7 +195,7 @@
 							selectedNetwork && selectedNetwork.id === network.id ? 'bold' : 'normal'
 						}`}
 					>
-						<a on:click={() => (selectedNetwork = network)}>{truncateName(network.name)}</a>
+						<a on:click={() => selectNetwork(network)}>{truncateName(network.name)}</a>
 						<img
 							class="controlIcon"
 							title="Delete this network."
