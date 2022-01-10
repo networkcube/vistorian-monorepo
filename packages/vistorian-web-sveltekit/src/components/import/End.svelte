@@ -42,7 +42,7 @@
 	<CardBody>
 		<h2>Import and view network</h2>
 
-		<div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr;">
+		<div id="iconDiv">
 			<div>
 				<img src="vis_icons/node-link.png" height="75px" on:click={() => loadVis('nodelink')} />
 				<p>Node link</p>
@@ -74,3 +74,14 @@
 		<Button style="float: left" on:click={() => (stage = previous_stage())}>Previous</Button>
 	</CardFooter>
 </Card>
+
+<style>
+	#iconDiv {
+		display: grid;
+		grid-template-columns: 1fr 1fr 1fr 1fr;
+	}
+
+	#iconDiv img {
+		cursor: pointer;
+	}
+</style>
