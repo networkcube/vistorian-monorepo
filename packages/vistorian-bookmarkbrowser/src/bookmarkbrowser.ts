@@ -6,8 +6,6 @@ import * as main from "vistorian-core/src/data/main";
 import * as messenger from "vistorian-core/src/data/messenger";
 import * as dynamicgraphutils from "vistorian-core/src/data/dynamicgraphutils";
 
-import $ from "jquery";
-
 const RECT_SIZE = 13;
 const INTENT = 0;
 const LINE_HEIGHT = 13;
@@ -377,20 +375,31 @@ export function updateList(type: string, name: string): void {
 let searchMessage: messenger.SearchResultMessage;
 export function searchResultHandler(m: messenger.SearchResultMessage): void {
   searchMessage = m;
-  $("#searchResults").empty();
-  const row = $("#searchResults").append("<li></li>");
-  if (m.idCompound.nodeIds)
-    row.append(
+  const results = document.getElementById("searchResults");
+  if (!results) {
+    return;
+  }
+  results.innerHTML = "";
+
+  const row = document.createElement("li");
+  results.appendChild(row);
+
+  if (m.idCompound.nodeIds) {
+    const p = document.createElement("p");
+    row.appendChild(p);
+    p.outerHTML =
       '<p class="searchResult">Nodes: <b>' +
-        m.idCompound.nodeIds.length +
-        "</b> <u onclick=\"saveSearchResultAsSelection('node')\">(Save as selection)</u></p>"
-    );
-  if (m.idCompound.linkIds)
-    row.append(
+      m.idCompound.nodeIds.length +
+      "</b> <u onclick=\"saveSearchResultAsSelection('node')\">(Save as selection)</u></p>";
+  }
+  if (m.idCompound.linkIds) {
+    const p = document.createElement("p");
+    row.appendChild(p);
+    p.outerHTML =
       '<p class="searchResult">Links: <b>' +
-        m.idCompound.linkIds.length +
-        "</b> <u onclick=\"saveSearchResultAsSelection('link')\">(Save as selection)</u></p>"
-    );
+      m.idCompound.linkIds.length +
+      "</b> <u onclick=\"saveSearchResultAsSelection('link')\">(Save as selection)</u></p>";
+  }
 }
 
 export function saveSearchResultAsSelection(type: string): void {
@@ -422,7 +431,11 @@ export function saveSearchResultAsSelection(type: string): void {
 // clear search field and highlighted nodes
 export function clearSearchSelection(): void {
   messenger.highlight("reset");
-  $("#searchResults").empty();
+
+  const results = document.getElementById("searchResults");
+  if (results) {
+    results.innerHTML = "";
+  }
 }
 
 export function getNodeShape(n: string[]): d3.SymbolType {

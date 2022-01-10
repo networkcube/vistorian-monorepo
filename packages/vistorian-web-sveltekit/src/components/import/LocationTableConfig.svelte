@@ -1,0 +1,61 @@
+<script>
+	import { Button, Card, CardBody, CardFooter } from 'sveltestrap';
+
+	import FileSelector from './FileSelector.svelte';
+	import FieldSelector from './FieldSelector.svelte';
+
+	export let config, stage, previous_stage, next_stage;
+
+	let ready;
+	$: ready =
+		!config.usingLocationFile || (config.fieldPlaceName && config.fieldLat && config.fieldLon);
+</script>
+
+<Card class="mb-3" style="width: fit-content">
+	<CardBody>
+		<h2>Do you have a file giving the lat/long of each location?</h2>
+
+		<input type="radio" bind:group={config.usingLocationFile} value={false} /> No, I do not have a
+		file specifying the longitude and latitude of place names. I want to obtain these from an online
+		geocoding service.
+
+		<br />
+
+		<input type="radio" bind:group={config.usingLocationFile} value={'true'} /> Yes, I have a file
+		specifying the longitude and latitude of each place name used in the node-link table
+
+		<br />
+
+		{#if config.usingLocationFile}
+			<FileSelector bind:selectedFile={config.selectedFile} />
+			<br />
+		{/if}
+
+		{#if config.selectedFile}
+			<FieldSelector
+				selectedFile={config.selectedFile}
+				label={'Place name'}
+				bind:selectedField={config.fieldPlaceName}
+				required={true}
+			/>
+			<br />
+			<FieldSelector
+				selectedFile={config.selectedFile}
+				label={'Latitude'}
+				bind:selectedField={config.fieldLat}
+				required={true}
+			/>
+			<br />
+			<FieldSelector
+				selectedFile={config.selectedFile}
+				label={'Longitude'}
+				bind:selectedField={config.fieldLon}
+				required={true}
+			/>
+		{/if}
+	</CardBody>
+	<CardFooter>
+		<Button style="float: left" on:click={() => (stage = previous_stage())}>Previous</Button>
+		<Button style="float: right" on:click={() => (stage = next_stage())}>Next</Button>
+	</CardFooter>
+</Card>

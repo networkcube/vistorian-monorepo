@@ -1,6 +1,7 @@
 import * as d3 from "d3";
+import $ from "jquery";
 
-import * as PIXI from 'pixi.js'
+import * as PIXI from "pixi.js";
 
 import * as dynamicgraph from "vistorian-core/src/data/dynamicgraph";
 import * as utils from "vistorian-core/src/data/utils";
@@ -16,10 +17,12 @@ const COLOR_SELECTION = 0xff0000;
 class NMargin {
   left: number;
   top: number;
+
   constructor(v: number) {
     this.left = v;
     this.top = v;
   }
+
   setMargin(v: number) {
     this.left = v;
     this.top = v;
@@ -46,11 +49,13 @@ interface Cell {
 class MatrixMenu {
   private elem: JQuery;
   private matrix: Matrix;
+
   constructor(elem: JQuery, matrix: Matrix) {
     this.elem = elem;
     this.matrix = matrix;
     this.init();
   }
+
   init() {
     this.elem.append(
       `Zoom:  <input id="cellSizeBox" type="range" 
@@ -89,14 +94,17 @@ class MatrixMenu {
     );
     $("#reorderBtn").click(this.reorderHandler);
   }
+
   updateCellSize() {
     const value: any = $("#cellSizeBox").val();
     matrix.updateCellSize(value);
   }
+
   reorderHandler() {
     const orderType: any = $("#labelOrdering").val();
     matrix.reorderWorker(orderType);
   }
+
   setScale(val: number) {
     $("#cellSizeBox").val(val);
   }
@@ -116,6 +124,7 @@ class MatrixTimeSlider {
     this.height = 50;
     this.init();
   }
+
   init() {
     this.svg = d3
       .select(this.elem.get(0))
@@ -126,6 +135,7 @@ class MatrixTimeSlider {
     this.timeSlider = new TimeSlider.TimeSlider(matrix.dgraph, vizWidth);
     this.timeSlider.appendTo(this.svg);
   }
+
   set(sT: number, eT: number) {
     this.timeSlider.set(sT, eT);
   }
@@ -159,6 +169,7 @@ class MatrixOverview {
     this.canvasRatio = 1;
     this.init();
   }
+
   init() {
     this.focusColor = "#ccc";
 
@@ -219,6 +230,7 @@ class MatrixOverview {
     tr[1] = -tr[1] * this.ratio;
     this.matrix.updateTransform(z, tr);
   }
+
   updateFocus(
     matrixX0: number,
     matrixY0: number,
@@ -232,7 +244,11 @@ class MatrixOverview {
     tr[1] = this.ratio !== 0 ? -tr[1] / this.ratio : 0;
     this.ratio = this.height !== 0 ? r / this.height : 0;
 
-    // this.zoom.transform(this.focus, {k: z, x: tr[0], y: tr[1]});
+    // We need to update the internal state of the zoom after the zoom slider is used
+    // (if we didn't, then panning the focus rectangle will reset the zoom)
+    // But zoom.transform() immediately fires a zoom event, causing infinite recursion;
+    // instead, we set the internal state directly.
+    this.focus._groups[0][0].__zoom.k = z;
 
     const focusX = matrixX0 * this.width;
     const focusY = matrixY0 * this.height;
@@ -248,6 +264,7 @@ class MatrixOverview {
       .attr("x", focusX)
       .attr("y", focusY);
   }
+
   updateOverviewImage(dataImg: any) {
     this.contextImg.attr("xlink:href", dataImg);
     this.context.attr("fill", "url(#bg)");
@@ -350,18 +367,12 @@ class MatrixLabels {
       .text((d: any) => {
         return d.label();
       })
-      .attr("x", (d: any) => {
-        return topLabelPosition(d.id());
-      })
-      .attr("y", this.margin.left - 10)
-      .attr("transform", (d: any, i: any) => {
-        return (
-          "rotate(-90, " +
-          (this.margin.top + cellSize * i + cellSize / 2) +
-          ", " +
-          (this.margin.left - 10) +
-          ")"
-        );
+      .attr("x", 0)
+      .attr("y", 0)
+      .attr("transform", (d: any, i: number) => {
+        const y = this.margin.top - 10;
+        const x = topLabelPosition(d.id());
+        return `translate(${x}, ${y})rotate(-90)`;
       })
       .on("mouseover", (ev: MouseEvent, d: any) => {
         this.matrix.highlightNodes([d.id()]);
@@ -382,21 +393,12 @@ class MatrixLabels {
         return d.label();
       })
       .attr("alignment-baseline", "middle")
-      .attr("x", (d: any) => {
-        return topLabelPosition(d.id());
-      })
-      .attr("y", this.margin.top - 10)
-      .attr("transform", (d: any) => {
-        return (
-          "rotate(-90, " +
-          (this.margin.top +
-            topLabelOffset +
-            cellSize * (nodeOrder[d.id()] - bbox.x0) +
-            cellSize / 2) +
-          ", " +
-          (this.margin.left - 10) +
-          ")"
-        );
+      .attr("x", 0)
+      .attr("y", 0)
+      .attr("transform", (d: any, i: number) => {
+        const y = this.margin.top - 10;
+        const x = topLabelPosition(d.id());
+        return `translate(${x}, ${y})rotate(-90)`;
       });
 
     this.updateHighlightedNodes();
@@ -435,7 +437,6 @@ class MatrixLabels {
   }
 }
 
-
 class MatrixVisualization {
   private elem: any;
   public width: number;
@@ -464,6 +465,7 @@ class MatrixVisualization {
   private showTooltip: boolean;
 
   private data: { [id: number]: { [id: number]: dynamicgraph.NodePair } } = {};
+
   constructor(
     elem: any, // BEFORE d3.Selection
     width: number,
@@ -497,20 +499,25 @@ class MatrixVisualization {
     };
 
     this.pixi_app = new PIXI.Application({
-      width: this.width, height: this.height, backgroundColor: 0xffffff, resolution: window.devicePixelRatio || 1,
+      width: this.width,
+      height: this.height,
+      backgroundColor: 0xffffff,
+      // resolution must be set to 1, not window.devicePixelRatio || 1, or else rects won't line up with text labels
+      resolution: 1,
     });
 
     this.tooltipTextStyle = new PIXI.TextStyle({
       //fontFamily: 'Arial',
       fontSize: "12px",
-      fill: '#000000',
-      stroke: '#000000',
+      fill: "#000000",
+      stroke: "#000000",
     });
     this.tooltip = new PIXI.Text("", this.tooltipTextStyle);
     this.showTooltip = false;
 
     this.init();
   }
+
   init() {
     this.elem.node().appendChild(this.pixi_app.view);
     this.canvas = this.elem.select("canvas").node();
@@ -526,13 +533,11 @@ class MatrixVisualization {
 
   render() {
     // TODO: is this ever called? does it need to do anything?
-   // this.renderer.render(this.scene, this.camera);
+    // this.renderer.render(this.scene, this.camera);
   }
-
 
   // what currently happens
   // - update data iterates through this.cellHighlightFrames and removes form scene; special handling of getImageData
-
 
   updateData(
     data: { [id: number]: { [id: number]: dynamicgraph.NodePair } },
@@ -570,8 +575,11 @@ class MatrixVisualization {
       const smallDim = Math.min(this.height, this.width);
       const largeDim = Math.max(this.height, this.width);
 
-     // this.resizeCanvas(smallDim, smallDim);
-      this.elem.select("canvas").attr("width", smallDim).attr("height", smallDim);
+      // this.resizeCanvas(smallDim, smallDim);
+      this.elem
+        .select("canvas")
+        .attr("width", smallDim)
+        .attr("height", smallDim);
 
       this.pixi_app.stage.removeChild(this.tooltip);
 
@@ -582,8 +590,10 @@ class MatrixVisualization {
       this.matrix.updateOverviewImage(imgData);
 
       // this.resizeCanvas(this.width, this.height);
-      this.elem.select("canvas").attr("width", this.width).attr("height", this.height);
-
+      this.elem
+        .select("canvas")
+        .attr("width", this.width)
+        .attr("height", this.height);
     }
 
     this.updateGuideLines();
@@ -591,9 +601,8 @@ class MatrixVisualization {
     if (this.showTooltip) {
       this.pixi_app.stage.addChild(this.tooltip);
     }
-   // this.render();
+    // this.render();
   }
-
 
   addCell(row: number, col: number, pair: dynamicgraph.NodePair) {
     const links: dynamicgraph.Link[] = pair.links().toArray();
@@ -620,6 +629,42 @@ class MatrixVisualization {
 
       // TODO: paintCell draws a diamond for negative edge weights?
 
+      // Left-Right gradient = from
+      const leftRightGradientFragment = `
+varying vec2 vTextureCoord;
+uniform sampler2D uSampler;
+uniform float alpha;
+
+void main(void)
+{
+   gl_FragColor = texture2D(uSampler, vTextureCoord);
+   gl_FragColor.a = alpha * (1.0 - max(0.2, vTextureCoord.x));
+}
+`;
+
+      const topBottomGradientFragment = `
+varying vec2 vTextureCoord;
+uniform sampler2D uSampler;
+uniform float alpha;
+
+void main(void)
+{
+   gl_FragColor = texture2D(uSampler, vTextureCoord);
+   gl_FragColor.a = alpha * (1.0 - max(0.2, vTextureCoord.y));
+}
+`;
+
+      const leftRightGradientFilter = new PIXI.Filter(
+        undefined,
+        leftRightGradientFragment,
+        { alpha }
+      );
+      const topBottomGradientFilter = new PIXI.Filter(
+        undefined,
+        topBottomGradientFragment,
+        { alpha }
+      );
+
       const sprite = new PIXI.Sprite(PIXI.Texture.WHITE);
       sprite.tint = PIXI.utils.string2hex(webColor);
       sprite.alpha = alpha;
@@ -627,24 +672,33 @@ class MatrixVisualization {
       sprite.y = y;
       sprite.width = seg - 1;
       sprite.height = this.cellSize - 1;
+
+      if (this.matrix._dgraph.directed) {
+        if (+row === this.matrix.nodeOrder[e.source.id()]) {
+          sprite.filters = [topBottomGradientFilter];
+        } else {
+          sprite.filters = [leftRightGradientFilter];
+        }
+      }
+
       this.pixi_app.stage.addChild(sprite);
 
       // highlight frame
       const frame = new PIXI.Graphics();
-      frame.lineStyle(1, COLOR_HIGHLIGHT , 1); // width, color, alpha
+      frame.lineStyle(1, COLOR_HIGHLIGHT, 1); // width, color, alpha
       frame.beginFill(0, 0); // color, alpha: alpha of 0 is transparent
-      frame.drawRect(x, y, seg - 1, this.cellSize - 1) // TODO: should this be -y?
+      frame.drawRect(x, y, seg - 1, this.cellSize - 1); // TODO: should this be -y?
 
-      if (!this.cellHighlightFrames[e.id()]) this.cellHighlightFrames[e.id()] = [];
+      if (!this.cellHighlightFrames[e.id()])
+        this.cellHighlightFrames[e.id()] = [];
       this.cellHighlightFrames[e.id()].push(frame);
 
-      // N.B. selection framews were previously created but not then used
+      // N.B. selection frames were previously created but not then used
       if (!this.linksPos[row]) this.linksPos[row] = {};
       if (!this.linksPos[row][col]) this.linksPos[row][col] = [];
       this.linksPos[row][col].push(e.id());
     }
   }
-
 
   updateGuideLines() {
     if (!this.data) return;
@@ -739,14 +793,15 @@ class MatrixVisualization {
 
   updateTooltip(linkId: number, mx: number, my: number) {
     if (linkId < 0) {
-
       this.showTooltip = false;
       this.pixi_app.stage.removeChild(this.tooltip);
       return;
     }
     const link = this.matrix._dgraph.link(linkId);
     if (link) {
-      const val = link.weights(this.matrix.startTime, this.matrix.endTime).get(0);
+      const val = link
+        .weights(this.matrix.startTime, this.matrix.endTime)
+        .get(0);
       const label = (Math.round(val * 1000) / 1000).toString();
       const fw = this.matrix.initialCellSize;
 
@@ -778,6 +833,7 @@ class MatrixVisualization {
 
     this.render();
   }
+
   private mouseDownHandler = (e: MouseEvent) => {
     if (e.shiftKey) {
       this.mouseDown = true;
@@ -797,8 +853,8 @@ class MatrixVisualization {
     if (this.hoveredLinks)
       for (const id of this.hoveredLinks) {
         if (this.cellHighlightFrames[id])
-          for (const frame of this.cellHighlightFrames[id]){
-              //  this.scene.remove(frame);
+          for (const frame of this.cellHighlightFrames[id]) {
+            //  this.scene.remove(frame);
           }
       }
     this.hoveredLinks = [];
@@ -822,7 +878,7 @@ class Matrix {
   private times: dynamicgraph.Time[];
   public startTime: dynamicgraph.Time;
   public endTime: dynamicgraph.Time;
-  private nodeOrder: number[];
+  nodeOrder: number[];
   private bbox: Box;
   private createOverviewImage: boolean;
   private offset: number[];
@@ -873,22 +929,28 @@ class Matrix {
     else cs = 0;
     return this.initialCellSize !== 0 ? cs / this.initialCellSize : 0;
   }
+
   setVis(matrixVis: MatrixVisualization) {
     this.visualization = matrixVis;
     this.resetTransform();
   }
+
   setLabels(matrixLabels: MatrixLabels) {
     this.labels = matrixLabels;
   }
+
   setOverview(overview: MatrixOverview) {
     this.overview = overview;
   }
+
   setMenu(menu: MatrixMenu) {
     this.menu = menu;
   }
+
   setTimeSlider(timeSlider: MatrixTimeSlider) {
     this.timeSlider = timeSlider;
   }
+
   updateOverviewImage(dataImg: any) {
     if (this.overview) this.overview.updateOverviewImage(dataImg);
   }
@@ -902,6 +964,7 @@ class Matrix {
     const tr = [tr0, tr1];
     if (this.visualization) this.visualization.updateTransform(scale, tr);
   }
+
   resetTransform() {
     const scale = this.getOverviewScale();
     this.createOverviewImage = true;
@@ -986,6 +1049,7 @@ class Matrix {
   longestLabelLength() {
     this.labelLength = 30;
   }
+
   calculatePlotMargin() {
     this.margin.setMargin(this.labelLength * 0.5 * this.cellSize);
   }
@@ -1116,6 +1180,7 @@ class Matrix {
       );
     }
   }
+
   highlightLinks(highlightedIds: number[]) {
     if (highlightedIds.length > 0) {
       const highlightedLinks: (dynamicgraph.Link | undefined)[] =
@@ -1125,6 +1190,7 @@ class Matrix {
       });
     } else messenger.highlight("reset");
   }
+
   nodeClicked(d: dynamicgraph.Node) {
     const selections = d.getSelections();
     const currentSelection = this._dgraph.getCurrentSelection();
@@ -1137,6 +1203,7 @@ class Matrix {
     messenger.selection("add", <utils.ElementCompound>{ nodes: [d] });
     if (this.labels) this.labels.updateHighlightedNodes();
   }
+
   highlightNodes(highlightedIds: number[]) {
     if (highlightedIds.length > 0) {
       const highlightedNodes: (dynamicgraph.Node | undefined)[] =
@@ -1146,6 +1213,7 @@ class Matrix {
       });
     } else messenger.highlight("reset");
   }
+
   updateEvent = () => {
     const highlightedNodesIds = [];
     const highlightedLinksIds = [];

@@ -23,6 +23,7 @@
         "rimraf": "^2.6.3",
         "ts-loader": "^5.3.3",
         "typescript": "^3.2.4",
+        "uglifyjs-webpack-plugin": "^2.2.0",
         "webpack": "^4.29.0",
         "webpack-bundle-analyzer": "^3.0.3",
         "webpack-cli": "^3.2.1",
@@ -39,15 +40,12 @@
     "homepage": "https://github.com/networkcube/vistorian-monorepo#readme",
     "bundledDependencies": [
         "jquery",
-        "moment",
         "vistorian-core"
     ],
     "dependencies": {
         "@types/d3": "^7.0.0",
         "circular-dependency-plugin": "^5.0.2",
         "d3": "^7.0.1",
-        "jquery": "^3.3.1",
-        "moment": "^2.23.0",
         "vistorian-core": "0.0.12"
     }
 }

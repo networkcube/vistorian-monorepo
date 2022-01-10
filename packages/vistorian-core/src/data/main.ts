@@ -3,12 +3,11 @@ import { DataSet } from "./dynamicgraphutils";
 import { DynamicGraph } from "./dynamicgraph";
 import { DataManager, DataManagerOptions } from "./datamanager";
 
-/** A collection of Networkcube's  global function available
+import { TIME_FORMAT } from "./dates";
+
+/** A collection of Networkcube's  global function availeble
  * through networkcube.myFunc()
  * */
-
-// must agree with var of same name in DynamicGraph.initDynamicGraph()
-export const TIME_FORMAT = "YYYY-MM-DD hh:mm:ss";
 
 /**
  * Returns the networkcube standard time format
@@ -94,15 +93,20 @@ export function createTabVisualizations(
   height: number,
   visParams?: any
 ): void {
-  const parent = $("#" + parentId);
+  const parent = document.querySelector("#" + parentId);
+  if (!parent) {
+    return;
+  }
 
-  const tabDiv = $("<div></div>");
-  parent.append(tabDiv);
+  const tabDiv = document.createElement("div");
+  parent.appendChild(tabDiv);
 
-  const visDiv = $("<div></div>");
-  parent.append(visDiv);
+  const visDiv = document.createElement("div");
+  parent.appendChild(visDiv);
 
-  const ul = $(
+  const ul = document.createElement("ul");
+  tabDiv.appendChild(ul);
+  ul.outerHTML =
     '<ul class="networkcube-tabs"\
                     style="\
                         list-style-type: none;\
@@ -111,43 +115,41 @@ export function createTabVisualizations(
                         overflow: hidden;\
                         border: none;\
                         background-color: #f1f1f1;"\
-                    ></ul>'
-  );
-  tabDiv.append(ul);
+                    ></ul>';
 
   // create tabs and divs
   for (let i = 0; i < visSpec.length; i++) {
     visSpec[i].name = visSpec[i].name.replace(" ", "-");
-    ul.append(
-      $(
-        '<li style="float: left;"><a style="\
-                        display: inline-block;\
-                        color: black;\
-                        margin-right: 8px;\
-                        margin-left: 8px;\
-                        padding: 5px;\
-                        text-align: left;\
-                        text-decoration: none;\
-                        transition: 0.3s;\
-                        font-weight: 800;\
-                        border: #fff 1px solid;\
-                        border-radius: 5px;\
-                        font-size: 13px;" href="#" class="networkcube-tablinks" onclick="networkcube.switchVisTab(event, \'' +
-          visSpec[i].name +
-          "')\">" +
-          visSpec[i].name +
-          "</a></li>"
-      )
-    );
-    visDiv.append(
-      $(
-        '<div id="networkcube-visTab-' +
-          visSpec[i].name +
-          '" style="display:' +
-          (i == 0 ? "block" : "none") +
-          ';" class="networkcube-visTabContent"></div>'
-      )
-    );
+
+    const li = document.createElement("li");
+    ul.appendChild(li);
+    li.outerHTML = `
+<li style="float: left;">
+  <a style="\
+      display: inline-block;\
+      color: black;\
+      margin-right: 8px;\
+      margin-left: 8px;\
+      padding: 5px;\
+      text-align: left;\
+      text-decoration: none;\
+      transition: 0.3s;\
+      font-weight: 800;\
+      border: #fff 1px solid;\
+      border-radius: 5px;\
+      font-size: 13px;" href="#" class="networkcube-tablinks" onclick="networkcube.switchVisTab(event, '${visSpec[i].name}')">
+          ${visSpec[i].name}
+  </a>
+</li>`;
+
+    const div = document.createElement("div");
+    visDiv.appendChild(div);
+    div.outerHTML = `<div id="networkcube-visTab-${
+      visSpec[i].name
+    }" style="display:${
+      i == 0 ? "block" : "none"
+    };" class="networkcube-visTabContent"></div>`;
+
     createVisualizationIFrame(
       "networkcube-visTab-" + visSpec[i].name,
       visSpec[i].url,
@@ -194,13 +196,16 @@ export function createVisualizationIFrame(
   width: number,
   height: number,
   visParams?: any
-): JQuery {
-  $("#" + parentId)
-    .append("<iframe></iframe>")
-    .attr("width", width)
-    .attr("height", height);
+): HTMLIFrameElement | undefined {
+  const iframe = document.createElement("iframe");
+  iframe.style.width = width.toString();
+  iframe.style.height = height.toString();
 
-  const iframe = $("#" + parentId + "> iframe");
+  const parent = document.getElementById(parentId);
+  if (!parent) {
+    return;
+  }
+  parent.appendChild(iframe);
 
   let visParamString = "";
   for (const prop in visParams) {
@@ -228,24 +233,16 @@ export function createVisualizationIFrame(
     visUri = server + "/node_modules/vistorian-" + visUri + "/web/index.html";
   }
 
-  iframe.attr(
-    "src",
-    visUri +
-      "?" +
-      "session=" +
-      session +
-      "&datasetName=" +
-      dataName +
-      visParamString
-  );
-  if (width) iframe.attr("width", width);
-  if (height) iframe.attr("height", height);
+  iframe.src = `${visUri}?session=${session}&datasetName=${dataName}${visParamString}`;
+
+  if (width) iframe.width = width.toString();
+  if (height) iframe.height = height.toString();
 
   if (
     visParams != undefined &&
     Object.prototype.hasOwnProperty.call(visParams, "scrolling")
   ) {
-    iframe.attr("scrolling", visParams.scrolling);
+    iframe.scrolling = visParams.scrolling;
   }
 
   return iframe;

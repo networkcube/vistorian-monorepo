@@ -23,5 +23,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm install
+    - run: npm install npm@latest -g
+    - run: npm -v
     - run: lerna bootstrap
     - run: lerna run lint

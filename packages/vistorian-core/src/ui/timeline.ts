@@ -1,10 +1,17 @@
 import * as d3 from "d3";
 
 import * as dynamicgraph from "../data/dynamicgraph";
-import * as moment from "moment";
 import * as utils from "../data/utils";
 
 import { WebGL, WebGLElementQuery } from "./glutils";
+import { timeFormat } from "d3";
+
+import {
+  offsetInMilliseconds,
+  addDate,
+  startOf,
+  formatAsDDMMYYYY,
+} from "../data/dates";
 
 export class Timeline {
   TICK_MIN_DIST = 13;
@@ -24,14 +31,14 @@ export class Timeline {
   minTimeId: any;
   maxTimeId: any;
 
-  timeObjects: moment.Moment[] = []; // INIT
+  timeObjects: Date[] = []; // INIT
   highlightPointer: any;
   highlightLabel: any;
 
   minGran: number; // INIT
   maxGran: number; // INIT
 
-  granules: moment.unitOfTime.Base[];
+  granules: string[];
 
   tickmarks: WebGLElementQuery = new WebGLElementQuery(); // INIT
   timeLabels: WebGLElementQuery = new WebGLElementQuery(); // INIT
@@ -40,6 +47,8 @@ export class Timeline {
   tick_minGran_visible_prev: any = -1; // INIT
 
   label_minGran_visible: any;
+
+  dayOfWeek = timeFormat("%w"); // "Sunday-based weekday as a decimal number [0,6]."
 
   constructor(
     webgl: WebGL,
@@ -72,28 +81,27 @@ export class Timeline {
       ? times[times.length - 1].unixTime()
       : 0;
 
-    const start = moment
-      .utc(unix_start + "", "x")
-      .startOf(this.granules[this.minGran]);
-    const end = moment
-      .utc(unix_end + "", "x")
-      .startOf(this.granules[this.minGran]);
+    const start = startOf(new Date(unix_start), this.granules[this.minGran]);
+    const end = startOf(new Date(unix_end), this.granules[this.minGran]);
     const numTimes = Math.ceil(
-      Math.abs(start.diff(end, this.granules[this.minGran]))
+      Math.abs(
+        (end.getTime() - start.getTime()) /
+          offsetInMilliseconds[this.granules[this.minGran]]
+      )
     ); // WITHOUT 's'
     this.maxGran = Math.min(this.maxGran, this.granules.length - 1);
     const granularity_levels = this.maxGran - this.minGran + 1;
     const granularity_height = this.HEIGHT / granularity_levels;
 
     // create all timeObjects (UTC)
-    let prev = moment.utc(unix_start + "", "x");
-    const prevprev = moment.utc(unix_start - 86400000 + "", "x"); // substract one day
-    // bb: check why 'substract' is not working:
+    let prev = new Date(unix_start);
+    const prevprev = new Date(unix_start - 86400000); // subtract one day
+    // bb: check why 'subtract' is not working:
     // prevprev.substract(1, this.granules[this.minGran] + 's');
     this.timeObjects.push(prev);
     for (let i = 1; i < numTimes; i++) {
-      prev = moment.utc(prev); // ???
-      prev.add(1, this.granules[this.minGran]); // WITHOUT 's'
+      //prev = new Date(prev); // ???
+      prev = addDate(prev, 1, this.granules[this.minGran]);
       this.timeObjects.push(prev);
     }
 
@@ -102,7 +110,7 @@ export class Timeline {
 
     let granularitySet: boolean;
     let y1: any, y2: any;
-    let to1: any, to2: any;
+    let to1: Date, to2: Date;
     for (let i = 0; i < this.timeObjects.length; i++) {
       granularitySet = false;
       if (i == 0) to1 = prevprev;
@@ -114,8 +122,8 @@ export class Timeline {
         gran--
       ) {
         if (gran > 7) {
-          y1 = to1.get(this.granules[7]) + "";
-          y2 = to2.get(this.granules[7]) + "";
+          y1 = utils.formatAtGranularity(to1, 7);
+          y2 = utils.formatAtGranularity(to2, 7);
 
           // test for millenia
           if (y1[y1.length - 4] != y2[y2.length - 4]) {
@@ -133,7 +141,8 @@ export class Timeline {
             granularitySet = true;
           }
         } else if (
-          to1.get(this.granules[gran]) != to2.get(this.granules[gran])
+          utils.formatAtGranularity(to1, gran) !=
+          utils.formatAtGranularity(to2, gran)
         ) {
           this.timeGranularities.push(gran);
           granularitySet = true;
@@ -196,13 +205,13 @@ export class Timeline {
     let startId: any, endId: any;
     let i = 0;
     for (i; i < this.timeObjects.length; i++) {
-      if (this.timeObjects[i].unix() * 1000 > startUnix) {
+      if (this.timeObjects[i].getTime() > startUnix) {
         startId = i - 1;
         break;
       }
     }
     for (i = startId; i < this.timeObjects.length; i++) {
-      if (this.timeObjects[i].unix() * 1000 > endUnix) {
+      if (this.timeObjects[i].getTime() > endUnix) {
         endId = i;
         break;
       }
@@ -231,20 +240,20 @@ export class Timeline {
       g++
     ) {
       // calculate how many times of this granularity can fit.
-      t1 = moment.utc(minTime).startOf(this.granules[g]);
-      t2 = moment.utc(maxTime).startOf(this.granules[g]);
+
+      t1 = startOf(new Date(minTime), this.granules[g]);
+      t2 = startOf(new Date(maxTime), this.granules[g]);
+
+      const ticks = (granularityIndex: number) =>
+        (t2.getTime() - t1.getTime()) /
+        offsetInMilliseconds[this.granules[granularityIndex]];
+
       if (g <= 7) {
-        requiredTicks = moment.duration(t2.diff(t1)).as(this.granules[g]);
+        requiredTicks = ticks(g);
       } else {
-        if (g == 8)
-          requiredTicks =
-            moment.duration(t2.diff(t1)).as(this.granules[7]) / 10;
-        if (g == 9)
-          requiredTicks =
-            moment.duration(t2.diff(t1)).as(this.granules[7]) / 100;
-        if (g == 10)
-          requiredTicks =
-            moment.duration(t2.diff(t1)).as(this.granules[7]) / 1000;
+        if (g == 8) requiredTicks = ticks(7) / 10;
+        if (g == 9) requiredTicks = ticks(7) / 100;
+        if (g == 10) requiredTicks = ticks(7) / 1000;
       }
 
       if (requiredTicks <= ticksFitting) {
@@ -339,10 +348,11 @@ export class Timeline {
       7
     );
 
-    return utils.formatAtGranularity(t, g);
+    return utils.formatTimeAtGranularity(t, g);
   }
 
   highlightId: any; // INIT ???
+
   highlight(unixTime?: number): void {
     if (unixTime == undefined) {
       this.highlightPointer.style("opacity", 0);
@@ -350,7 +360,7 @@ export class Timeline {
     }
 
     for (let i = 0; i < this.timeObjects.length; i++) {
-      if (!unixTime || this.timeObjects[i].unix() * 1000 > unixTime) {
+      if (!unixTime || this.timeObjects[i].getTime() > unixTime) {
         // IS CORRECT !unixTime ??
         this.highlightId = i - 1;
         break;
@@ -368,6 +378,6 @@ export class Timeline {
     this.highlightLabel
       .style("opacity", 1)
       .attr("x", this.position_x(this.highlightId) + 37)
-      .text(this.timeObjects[this.highlightId].format("DD/MM/YYYY"));
+      .text(formatAsDDMMYYYY(this.timeObjects[this.highlightId]));
   }
 }

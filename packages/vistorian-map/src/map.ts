@@ -11,8 +11,6 @@ import * as messenger from "vistorian-core/src/data/messenger";
 import * as ui from "vistorian-core/src/ui/ui";
 import * as timeslider from "vistorian-core/src/ui/timeslider";
 
-import * as moment from "moment";
-
 const COLOR_DEFAULT_LINK = "#999999";
 const COLOR_DEFAULT_NODE = "#999999";
 const COLOR_HIGHLIGHT = "#ff8800";
@@ -44,8 +42,8 @@ let time_end: any = dgraph.times().last(); // BEFORE queries.Time
 
 // world map to show node positions
 const mapCanvas: any = d3.select("#visDiv").node();
-$(mapCanvas).css("width", "100%");
-$(mapCanvas).css("height", $(window).height() - 60);
+mapCanvas.style.width = "100%";
+mapCanvas.style.height = (window.innerHeight - 60).toString() + "px";
 
 // one empty default nodeposition object for every node
 // for the cases this node has no position at a given time.
@@ -211,11 +209,15 @@ function init() {
 
   map = new google.maps.Map(mapCanvas, mapOptions);
   map.addListener("zoom_changed", function () {
-    $("#weirdDiv").css("width", window.innerWidth * Math.random());
-    $("#weirdDiv")
-      .parent()
-      .parent()
-      .css("width", window.innerWidth * Math.random());
+    const weirdDiv = document.getElementById("weirdDiv");
+    if (!weirdDiv) {
+      return;
+    }
+    weirdDiv.style.width = window.innerWidth * Math.random() + "px";
+    const p = weirdDiv?.parentElement?.parentElement;
+    if (p) {
+      p.style.width = window.innerWidth * Math.random() + "px";
+    }
     messenger.zoomInteraction("map", "zoom");
   });
 
@@ -230,11 +232,15 @@ function init() {
   };
 
   map.addListener("center_changed", function () {
-    $("#weirdDiv").css("width", window.innerWidth * Math.random());
-    $("#weirdDiv")
-      .parent()
-      .parent()
-      .css("width", window.innerWidth * Math.random());
+    const weirdDiv = document.getElementById("weirdDiv");
+    if (!weirdDiv) {
+      return;
+    }
+    weirdDiv.style.width = window.innerWidth * Math.random() + "px";
+    const p = weirdDiv?.parentElement?.parentElement;
+    if (p) {
+      p.style.width = window.innerWidth * Math.random() + "px";
+    }
     messenger.zoomInteraction("map", "span");
   });
 
@@ -243,10 +249,12 @@ function init() {
 
   overlay.onAdd = function () {
     layer = document.createElement("div");
-    $(layer).attr("id", "weirdDiv");
-    $(layer).css("width", "100%");
+    layer.id = "weirdDiv";
+    layer.style.width = "100%";
+
     locationsPanelDiv = document.createElement("div");
-    $(locationsPanelDiv).attr("id", "locationsPanel").addClass("hidden");
+    locationsPanelDiv.id = "locationsPanel";
+    locationsPanelDiv.classList.add("hidden");
 
     this.getPanes().overlayLayer.appendChild(layer);
     this.getPanes().overlayLayer.appendChild(locationsPanelDiv);
@@ -254,7 +262,8 @@ function init() {
     // setup locationsWindow
 
     function hideLocationsWindow() {
-      $(locationsPanelDiv).addClass("hidden").removeClass("shown");
+      locationsPanelDiv.classList.add("hidden");
+      locationsPanelDiv.classList.remove("shown");
     }
 
     map.addListener("mouseout", function () {
@@ -561,6 +570,7 @@ function init() {
   overlay.setMap(map);
 }
 
+const toMMDDYYYY = d3.timeFormat("%m/%d/%Y");
 function createNodeLabel(npo: any) {
   let locationLabel = "";
   if (npo.location != undefined && npo.location.label() != undefined) {
@@ -569,8 +579,7 @@ function createNodeLabel(npo: any) {
 
   const time: any = dgraph.time(npo.timeIds[0]);
   let timeLabel = "";
-  if (time)
-    timeLabel = " (" + moment.utc(time.unixTime()).format("MM/DD/YYYY") + ")";
+  if (time) timeLabel = " (" + toMMDDYYYY(new Date(time.unixTime())) + ")";
 
   return npo.node.label() + locationLabel + timeLabel;
 }
@@ -590,7 +599,8 @@ function displayLocationsWindow(
     !hittestRect.isEmpty() &&
     !hittestRect.contains(projection.fromContainerPixelToLatLng(point))
   ) {
-    $(locationsPanelDiv).addClass("hidden").removeClass("shown");
+    locationsPanelDiv.classList.add("hidden");
+    locationsPanelDiv.classList.remove("shown");
   }
   const southwest: google.maps.Point = new google.maps.Point(
     point.x - hittestRadius,
@@ -638,7 +648,7 @@ function displayLocationsWindow(
   // so now we have the locations and the nodes, so we fill out the locationPanel
   //
 
-  $(locationsPanelDiv).html("");
+  locationsPanelDiv.innerHTML = "";
   const locListItemSelection = d3
     .select(locationsPanelDiv)
     .selectAll(".locListItem")
@@ -673,11 +683,11 @@ function displayLocationsWindow(
   translatePoint.x += 20;
   translatePoint.y -= 30;
   // and then show it at the correct location
-  $(locationsPanelDiv)
-    .css("left", translatePoint.x.toString() + "px")
-    .css("top", translatePoint.y.toString() + "px")
-    .addClass("shown")
-    .removeClass("hidden");
+
+  locationsPanelDiv.style.left = translatePoint.x.toString() + "px";
+  locationsPanelDiv.style.top = translatePoint.y.toString() + "px";
+  locationsPanelDiv.classList.add("shown");
+  locationsPanelDiv.classList.remove("hidden");
 
   return true;
 }
@@ -764,7 +774,7 @@ function updateLinks(highlightId?: number) {
           Math.min(1, LINK_OPACITY)
         : LINK_OPACITY;
     })
-    .style("stroke-width", function (d: any) {
+    .attr("stroke-width", function (d: any) {
       let weight =
         linkWeightScale(d.weights(time_start, time_end).mean()) *
         LINK_WIDTH_SCALE;
@@ -777,7 +787,9 @@ function updateLinks(highlightId?: number) {
       }
       if (highlightId && highlightId == d._id) {
         weight *= 3;
-      } else if (d.isHighlighted()) weight *= 2;
+      } else if (d.isHighlighted()) {
+        weight *= 2;
+      }
       return weight;
     });
 }
@@ -1380,9 +1392,7 @@ function getTextWidth(s: string) {
   return s.length * 8.8;
 }
 
-$(document).ready(function () {
-  init();
-});
+document.addEventListener("DOMContentLoaded", init);
 
 function setStateHandler(m: messenger.SetStateMessage) {
   if (m.viewType == "map") {

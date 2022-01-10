@@ -6,8 +6,6 @@ import * as main from "vistorian-core/src/data/main";
 import * as utils from "vistorian-core/src/data/utils";
 import * as ordering from "vistorian-core/src/data/ordering";
 
-import * as THREE from "three";
-
 import * as glutils from "vistorian-core/src/ui/glutils";
 import * as tline from "vistorian-core/src/ui/timeline";
 import * as timeslider from "vistorian-core/src/ui/timeslider";
@@ -69,9 +67,15 @@ for (let i = 0; i < globalNodeOrder.length; i++) {
 
 // UI SETUP
 const HEIGHT: any = window.innerHeight;
-$("#visDiv").append(
-  '<svg id="visSvg"><foreignObject id="visCanvasFO"></foreignObject></svg>'
-);
+
+const svgElement = document.createElement("svg");
+const visDiv = document.getElementById("visDiv");
+if (visDiv) {
+  visDiv.appendChild(svgElement);
+  svgElement.outerHTML =
+    '<svg id="visSvg"><foreignObject id="visCanvasFO"></foreignObject></svg>';
+}
+
 d3.select("#visCanvasFO")
   .attr("x", TABLE_MARGIN_LEFT)
   .attr("y", MARGIN_TOP)
@@ -102,17 +106,21 @@ const timeline: tline.Timeline = new tline.Timeline(
 );
 
 // VERTICAL SCROLL EVENT
-window.addEventListener("mousewheel", mouseWheelHandler, false);
+window.addEventListener("wheel", mouseWheelHandler);
 
-$("#menu").append(
-  '\
+const select = document.createElement("select");
+const menu = document.getElementById("menu");
+if (menu) {
+  menu.appendChild(select);
+  select.outerHTML =
+    '\
             <select id="labelOrdering" onchange=trace.event(\'vis_37\',\'DynamicEgo\',\'labelingType\',this.value)">\
                 <option value="data">As appear in table</option>\
                 <option value="alphanumerical">Alphanumerical</option>\
                 <option value="degree">Number of connections</option>\
             </select>\
-            '
-);
+            ';
+}
 
 const timeSlider: timeslider.TimeSlider = new timeslider.TimeSlider(
   dgraph,
@@ -145,10 +153,7 @@ export function visualize(): void {
 
   // create svg
   // for timeslider and labels only
-  svg = d3
-    .select("#visSvg")
-    .attr("width", WIDTH)
-    .attr("height", ROW_HEIGHT * nodes.length + 200);
+  svg = d3.select("#visSvg").attr("width", WIDTH).attr("height", "100vh");
   timeSlider.appendTo(svg, TABLE_MARGIN_LEFT);
 
   createNodes();
@@ -582,7 +587,7 @@ export function makeArcPath(
 
   const vectors: any = [];
   for (let i = 0; i < points.length; i++) {
-    vectors.push(new THREE.Vector2(points[i].x, points[i].y));
+    vectors.push({ x: points[i].x, y: points[i].y });
   }
   return glutils.curve(points);
 }

@@ -15,7 +15,6 @@
     "author": "Benjamin Bach <benj.bach@gmail.com>",
     "license": "MIT",
     "devDependencies": {
-        "@types/jquery": "^1.10.35",
         "@types/jstorage": "^0.3.30",
         "@typescript-eslint/eslint-plugin": "^4.31.0",
         "@typescript-eslint/parser": "^4.31.0",
@@ -24,6 +23,7 @@
         "rimraf": "^2.6.3",
         "ts-loader": "^5.3.3",
         "typescript": "^3.2.4",
+        "uglifyjs-webpack-plugin": "^2.2.0",
         "webpack": "^4.29.0",
         "webpack-bundle-analyzer": "^3.0.3",
         "webpack-cli": "^3.2.1",
@@ -39,18 +39,14 @@
     ],
     "homepage": "https://github.com/networkcube/vistorian-monorepo#readme",
     "bundledDependencies": [
-        "jquery",
         "jstorage",
-        "moment",
         "vistorian-core"
     ],
     "dependencies": {
         "@types/d3": "^7.0.0",
         "circular-dependency-plugin": "^5.0.2",
         "d3": "^7.0.1",
-        "jquery": "^3.3.1",
         "jstorage": "^0.4.8",
-        "moment": "^2.23.0",
         "vistorian-core": "0.0.12"
     }
 }
