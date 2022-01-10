@@ -12,12 +12,12 @@
 		<CardText>
 			Choose the file containing the network.
 
-			<p>Currently, GEDCOM, PAJEK and JOSN formats are supported.</p>
+			<p>Currently, GEDCOM, PAJEK and GraphML (XML) formats are supported.</p>
 		</CardText>
 
 		<FileSelector
 			bind:selectedFile={config.selectedFile}
-			acceptedFormats=".ged,.paj,.json"
+			acceptedFormats=".ged,.paj,.xml,.graphml"
 			parseAsCSV={false}
 			showPreviewTable={false}
 		/>

@@ -6,7 +6,7 @@ import { Network } from '$lib/vistorian';
 import * as storage from '$lib/storage';
 import * as dynamicgraphutils from 'vistorian-core/build/src/data/dynamicgraphutils';
 import * as main from 'vistorian-core/build/src/data/main';
-import { parseGEDCOM, parsePajek, parseJSON } from 'vistorian-core/build/src/data/importers';
+import { parseGEDCOM, parsePajek, parseXML } from 'vistorian-core/build/src/data/importers';
 
 async function geoCode(placeName): Promise<[number, number] | [undefined, undefined]> {
 	if (!placeName) {
@@ -408,10 +408,10 @@ function importNetworkFromFile(settings, fileStore, reloadNetworks) {
 	const fileName = settings.networkFileConfig.selectedFile.toLowerCase();
 	if (fileName.endsWith('.ged')) {
 		dataset = parseGEDCOM(settings.name, rawData);
-	} else if (fileName.endsWith('.paj') | fileName.endsWith('.net')) {
+	} else if (fileName.endsWith('.paj') || fileName.endsWith('.net')) {
 		dataset = parsePajek(settings.name, rawData);
-	} else if (fileName.endsWith('.json')) {
-		dataset = parseJSON(settings.name, rawData);
+	} else if (fileName.endsWith('.graphml') || fileName.endsWith('.xml')) {
+		dataset = parseXML(settings.name, rawData);
 	}
 
 	if (dataset) {
