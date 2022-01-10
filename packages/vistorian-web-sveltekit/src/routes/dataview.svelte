@@ -114,9 +114,9 @@
 		trace.event('dat_1', 'data view', 'new network', 'created');
 	};
 
-	const selectNetwork = networkName => {
+	const selectNetwork = (networkName) => {
 		selectedNetwork = networkName;
-		state = "";
+		state = '';
 	};
 
 	$: {
