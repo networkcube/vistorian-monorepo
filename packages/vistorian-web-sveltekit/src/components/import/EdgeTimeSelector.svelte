@@ -29,11 +29,6 @@ person to another at a particular time)
 
 <br />
 
-<input type="radio" bind:group={config.edgeTimeType} value={'timeRange'} disabled /> Yes, each edge
-is associated with a
-<i>time range</i> (for example, if edge correspond to political allegiances that lasted for a period
-of time)
-
 <br />
 
 {#if selectedFile}
@@ -42,19 +37,6 @@ of time)
 			{selectedFile}
 			label={'Time'}
 			bind:selectedField={config.timeField}
-			required={true}
-		/>
-	{:else if config.edgeTimeType === 'timeRange'}
-		<FieldSelector
-			{selectedFile}
-			label={'Start time'}
-			bind:selectedField={config.startTimeField}
-			required={true}
-		/>
-		<FieldSelector
-			{selectedFile}
-			label={'End time'}
-			bind:selectedField={config.endTimeField}
 			required={true}
 		/>
 	{/if}
