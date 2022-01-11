@@ -32,7 +32,7 @@ jobs:
     - uses: up9cloud/action-rsync@v1.3
     if: ${{ github.event_name == 'push' }}
     env:
-      USER: ${secrets.DEPLOY_USERNAME}
+      USER: ${{secrets.DEPLOY_USERNAME}}
       HOST: ${{secrets.DEPLOY_SERVER}}
       KEY: ${{secrets.DEPLOY_SSH_KEY}}
       SOURCE: packages/vistorian-web-sveltekit/build/
