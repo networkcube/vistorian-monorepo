@@ -37,4 +37,4 @@ jobs:
       KEY: ${{secrets.DEPLOY_SSH_KEY}}
       SOURCE: packages/vistorian-web-sveltekit/build/
       TARGET: /var/www/vistorian
-      ARGS_MORE: --no-o --no-g --no-t
+      ARGS_MORE: --no-o --no-g --no-t --no-p
