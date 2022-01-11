@@ -20,6 +20,7 @@ jobs:
     - run: npm -v
     - run: lerna bootstrap
     - run: lerna run lint
+    - run: lerna run build
     
     - name: Archive results of build
       uses: actions/upload-artifact@v2
