@@ -28,3 +28,12 @@ jobs:
       with:
         name: vistorian
         path: packages/vistorian-web-sveltekit/build
+        
+    - uses: up9cloud/action-rsync@v1.3
+    if: ${{ github.event_name == 'push' }}
+    env:
+      HOST: ${{secrets.DEPLOY_SERVER}}
+      KEY: ${{secrets.DEPLOY_SSH_KEY}}
+      SOURCE: packages/vistorian-web-sveltekit/build/
+      TARGET: /var/www/vistorian
+  
