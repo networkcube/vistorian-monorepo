@@ -57,7 +57,7 @@
 			</p>
 
 			<p>
-				<a href="/static/logging_consent/Vistorian Tracing Consent form .pdf" download>
+				<a href="/logging_consent/Vistorian Tracing Consent form .pdf" download>
 					<Button
 						on:click={() =>
 							trace.event('log_7', 'consent', 'downloaded', document.location.pathname)}

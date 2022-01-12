@@ -108,5 +108,9 @@
 		margin-top: 10px;
 		/* margin-bottom: -15px; */
 	}
+  #visOptions img {
+    cursor: pointer;
+  }
+
 
 </style>

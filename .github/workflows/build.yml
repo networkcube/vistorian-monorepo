@@ -8,22 +8,33 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [12.x, 14.x, 16.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
     - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
+    - uses: actions/setup-node@v1
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: '16'
     - run: npm install
     - run: npm install npm@latest -g
     - run: npm -v
     - run: lerna bootstrap
     - run: lerna run lint
+    - run: lerna run build
+    
+    - name: Archive results of build
+      uses: actions/upload-artifact@v2
+      if: ${{ github.event_name == 'push' }}
+      with:
+        name: vistorian
+        path: packages/vistorian-web-sveltekit/build
+        
+    - uses: up9cloud/action-rsync@v1.3
+    if: ${{ github.event_name == 'push' }}
+    env:
+      USER: ${{secrets.DEPLOY_USERNAME}}
+      HOST: ${{secrets.DEPLOY_SERVER}}
+      KEY: ${{secrets.DEPLOY_SSH_KEY}}
+      SOURCE: packages/vistorian-web-sveltekit/build/
+      TARGET: /var/www/vistorian
+      ARGS_MORE: --no-o --no-g --no-t --no-p
