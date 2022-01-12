@@ -86,35 +86,33 @@
 		trace.event('err', event + ' ' + source + ' ' + lineno, error, document.location.pathname)}
 	on:beforeunload={() => trace.event('log_12', 'page', 'close', document.location.pathname)} />
 
-	<div id="divMain">
+<div id="divMain">
+	<main>
+		<table>
+			<tr>
+				<td width="220px">
+					<LogoFrame {params} />
+					<br />
+					<div width="220" id="bookmarkFrame" />
+				</td>
+				<td id="nodelinkVisFrame" />
+				<td id="matrixVisFrame" />
+			</tr>
+		</table>
 
-<main>
-	<table>
-		<tr>
-			<td width="220px">
-				<LogoFrame {params} />
-				<br />
-				<div width="220" id="bookmarkFrame" />
-			</td>
-			<td id="nodelinkVisFrame" />
-			<td id="matrixVisFrame" />
-		</tr>
-	</table>
+		<Footer />
 
-	<Footer />
+		<Bookmarks />
 
-	<Bookmarks />
-
-	<Feedback />
-</main>
-	</div>
+		<Feedback />
+	</main>
+</div>
 
 <style>
-	#divMain{
+	#divMain {
 		margin: 20px;
 	}
-	#bookmarkFrame{
+	#bookmarkFrame {
 		margin-right: 20px;
 	}
-
 </style>

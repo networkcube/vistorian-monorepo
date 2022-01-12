@@ -78,33 +78,33 @@
 		trace.event('err', event + ' ' + source + ' ' + lineno, error, document.location.pathname)}
 	on:beforeunload={() => trace.event('log_12', 'page', 'close', document.location.pathname)} />
 
-	<div id="divMain">
-<div style="height: 100vh; overflow: hidden;">
-	<table>
-		<tr>
-			<td width="220px">
-				<LogoFrame {params} />
-				<div width="220" id="bookmarkFrame" />
-			</td>
-			<td width="220px">
-				<div width="220" id="visFrame" />
-			</td>
-		</tr>
-	</table>
+<div id="divMain">
+	<div style="height: 100vh; overflow: hidden;">
+		<table>
+			<tr>
+				<td width="220px">
+					<LogoFrame {params} />
+					<div width="220" id="bookmarkFrame" />
+				</td>
+				<td width="220px">
+					<div width="220" id="visFrame" />
+				</td>
+			</tr>
+		</table>
 
-	<Footer />
+		<Footer />
 
-	<Bookmarks />
+		<Bookmarks />
 
-	<Feedback />
-</div>
+		<Feedback />
 	</div>
+</div>
 
 <style>
-	#divMain{
+	#divMain {
 		margin: 20px;
 	}
-	#visFrame{
+	#visFrame {
 		margin-left: 20px;
 	}
 </style>
