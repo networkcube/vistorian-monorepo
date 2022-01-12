@@ -5,7 +5,7 @@
 	import { trace } from '../lib/trace';
 	import Logbook from './bookmarks/Logbook.svelte';
 
-	let isExpanded = true;
+	let isExpanded = false;
 
 	let toolbarMHeight, toolbarMWidth, maxHeight, maxWidth;
 
