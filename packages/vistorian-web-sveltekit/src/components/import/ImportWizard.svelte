@@ -52,7 +52,7 @@
 				endTimeField: null,
 				timeField: null,
 
-				formatString: ''
+				formatString: '%d/%m/%Y'
 			}
 		},
 
