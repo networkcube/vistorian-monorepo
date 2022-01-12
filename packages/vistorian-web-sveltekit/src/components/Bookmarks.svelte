@@ -5,7 +5,7 @@
 	import { trace } from '../lib/trace';
 	import Logbook from './bookmarks/Logbook.svelte';
 
-	let isExpanded = false;
+	let isExpanded = true;
 
 	let toolbarMHeight, toolbarMWidth, maxHeight, maxWidth;
 
@@ -17,6 +17,7 @@
 			parentUrlTxt.lastIndexOf('/') + 1,
 			parentUrlTxt.indexOf('.')
 		);
+		minimizeBookmarks();
 	});
 
 	const minimizeBookmarks = () => {
