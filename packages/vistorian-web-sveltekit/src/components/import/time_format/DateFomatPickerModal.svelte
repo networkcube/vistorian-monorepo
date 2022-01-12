@@ -10,7 +10,7 @@
 </script>
 
 <div>
-	<h4>4. Specify a date format:</h4> 
+	<h4>4. Specify a date format:</h4>
 	{formatString}
 	<Button outline color="secondary" on:click={toggle}>Edit</Button>
 

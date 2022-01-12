@@ -10,12 +10,11 @@
 		<h4>How are links (edges) represented in your network?</h4>
 	</CardHeader>
 	<CardBody>
-		
 		<h4>Link Table</h4>
 		<input type="radio" bind:group={linkDataType} value={'linkTable'} />
 		A table containing <b>one row per link</b>. Each row contains a pair of nodes that are linked.
-		<br>
-		<br>
+		<br />
+		<br />
 		<h5>Example:</h5>
 		<table class="table table-bordered table-hover table-condensed">
 			<colgroup>
@@ -69,15 +68,13 @@
 
 		<br />
 
-
-
 		<h4>Node Table</h4>
 		<input type="radio" bind:group={linkDataType} value={'nodeTable'} />
-		A table containing <b>one row per node</b>, with columns listing the other nodes it is
-		linked to (a <i>node file</i>)
+		A table containing <b>one row per node</b>, with columns listing the other nodes it is linked to
+		(a <i>node file</i>)
 
-		<br>
-		<br>
+		<br />
+		<br />
 		<h5>Example:</h5>
 
 		<table class="table table-bordered table-hover table-condensed">

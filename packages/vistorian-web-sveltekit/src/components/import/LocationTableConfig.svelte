@@ -15,7 +15,7 @@
 	<CardHeader>
 		<h4>Specifying location table</h4>
 	</CardHeader>
-	
+
 	<CardBody>
 		<h4>Do you have a file giving the lat/long of each location?</h4>
 

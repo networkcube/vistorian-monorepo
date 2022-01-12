@@ -9,11 +9,11 @@
 </script>
 
 <Card class="mb-3" style="width: 100%" title="What is the format of your data?">
-	<CardHeader>	
-	<h4>What is the format of your data?</h4>
+	<CardHeader>
+		<h4>What is the format of your data?</h4>
 	</CardHeader>
 	<CardBody>
-		<br/>
+		<br />
 
 		<input type="radio" bind:group={fileFormat} value={'tabular'} />
 		1. I have one or several files in a <b>tabular format</b> (e.g., spreadsheet, CSV, ...)
@@ -23,8 +23,8 @@
 			<div>
 				<Fa icon={faInfoCircle} />
 				<i>
-					If your data is in Excel, export it to CSV. If you have
-					multiple workbooks, export each as a separate file:
+					If your data is in Excel, export it to CSV. If you have multiple workbooks, export each as
+					a separate file:
 				</i>
 				<ul>
 					<li>

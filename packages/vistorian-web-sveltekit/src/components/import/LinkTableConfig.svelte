@@ -22,7 +22,7 @@
 <Card class="mb-3" style="width: fit-content">
 	<CardHeader>
 		<h4>Specifying your link table</h4>
-	</CardHeader>	
+	</CardHeader>
 	<CardBody>
 		<h4>
 			1. Are links <i>directed</i>?
@@ -38,22 +38,20 @@
 		<input type="radio" bind:group={config.edgesAreDirected} value={false} /> No
 
 		<br />
-		<br>
+		<br />
 
 		<!-- <h5>What is the structure of your link table?</h5> -->
-		<h4>2. Upload your table</h4>	
-		<br>
+		<h4>2. Upload your table</h4>
+		<br />
 
 		<FileSelector bind:selectedFile={config.selectedFile} />
 
-
 		{#if config.selectedFile}
-
-			<br/>
-			<br/>
+			<br />
+			<br />
 			<h4>2. What is the structure of your link table?</h4>
 			<p>From the dropdowns below, select the columns in your link table.</p>
-			<br>
+			<br />
 			<h5>Required fields:</h5>
 
 			<FieldSelector
@@ -62,7 +60,7 @@
 				bind:selectedField={config.fieldSourceId}
 				required={true}
 			/>
-			<br>
+			<br />
 
 			<FieldSelector
 				selectedFile={config.selectedFile}
@@ -71,8 +69,8 @@
 				required={true}
 			/>
 
-			<br/>
-			<br/>
+			<br />
+			<br />
 			<h5>Optional fields:</h5>
 
 			<FieldSelector
@@ -121,8 +119,8 @@
 				<br />
 			{/if}
 
-			<br>
-			<br>
+			<br />
+			<br />
 			<EdgeTimeSelector selectedFile={config.selectedFile} bind:config={config.timeConfig} />
 		{/if}
 	</CardBody>

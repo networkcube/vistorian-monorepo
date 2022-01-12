@@ -45,7 +45,7 @@
 	</CardHeader>
 	<CardBody>
 		<h4>Select a visualization and start exploring:</h4>
-		<br>
+		<br />
 
 		<div id="visOptions" style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr;">
 			<div>
@@ -67,50 +67,45 @@
 			</div>
 
 			<div>
-				<img src="figures/map.png"  on:click={() => loadVis('map')} />
+				<img src="figures/map.png" on:click={() => loadVis('map')} />
 				<!-- <img src="vis_icons/map.png" height="100px" on:click={() => loadVis('map')} /> -->
 				<p>Map</p>
 			</div>
 		</div>
 
-		<br>
-		<br>
+		<br />
+		<br />
 		<h4>Or, import anoter network:</h4>
-		<br>
-		<Button 
-			outline
-			on:click={() => saveNetwork(settings, $fileStore, reloadNetworks)}
+		<br />
+		<Button outline on:click={() => saveNetwork(settings, $fileStore, reloadNetworks)}
 			>+ Create new network</Button
 		>
-		<br>
-		<br>
+		<br />
+		<br />
 	</CardBody>
 	<CardFooter>
 		<Button style="float: left" on:click={() => (stage = previous_stage())}>Previous</Button>
 	</CardFooter>
 </Card>
 
-
 <style>
-	#visOptions img{
-		height:160px;
+	#visOptions img {
+		height: 160px;
 		padding: 0px;
 	}
-	#visOptions div{
+	#visOptions div {
 		text-align: center;
 		border: 2px solid #eee;
 		border-radius: 5px;
 		padding-top: 0px;
 		margin-right: 20px;
 	}
-	#visOptions p{
+	#visOptions p {
 		font-size: 1.2em;
 		margin-top: 10px;
 		/* margin-bottom: -15px; */
 	}
-  #visOptions img {
-    cursor: pointer;
-  }
-
-
+	#visOptions img {
+		cursor: pointer;
+	}
 </style>

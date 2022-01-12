@@ -20,14 +20,11 @@
 
 <Card class="mb-3" style="width: 100%">
 	<CardHeader>
-		<h4>
-			Specifying your node table
-		</h4>
+		<h4>Specifying your node table</h4>
 	</CardHeader>
 	<CardBody>
-
 		<h4>1. Upload your node table:</h4>
-		<br>
+		<br />
 		<FileSelector bind:selectedFile={config.selectedFile} />
 
 		{#if config.selectedFile}
@@ -39,11 +36,10 @@
 				required={true}
 			/>
 
-			<br>
-			<br>
+			<br />
+			<br />
 			<h4>2. Specify relations</h4>
 			<!-- <p>From the dropdowns below, select the columns in your link table.</p> -->
-			
 
 			{#if config.fieldRelations.length === 0}
 				You must define at least one relation type.
@@ -52,17 +48,17 @@
 			<ul>
 				{#each config.fieldRelations as fieldRelation, i}
 					<li style="margin-bottom:25px">
-						<label><span style="display: inline-block; width: 180px;">
-							Link type:
-						</span>
-						<input bind:value={fieldRelation.relation}/></label>
+						<label
+							><span style="display: inline-block; width: 180px;"> Link type: </span>
+							<input bind:value={fieldRelation.relation} /></label
+						>
 						<FieldSelector
 							selectedFile={config.selectedFile}
 							label={'Column:'}
 							bind:selectedField={fieldRelation.field}
 							required={true}
 						/>
-						<br>
+						<br />
 						<Button
 							outline
 							size="sm"

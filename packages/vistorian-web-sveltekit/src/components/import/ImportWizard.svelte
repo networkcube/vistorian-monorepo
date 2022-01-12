@@ -105,7 +105,7 @@
 </script>
 
 <h3>Network data import wizard</h3>
-<br>
+<br />
 {#if stage === 'name'}
 	<Card class="mb-3" style="width: 100%">
 		<CardHeader>
@@ -123,7 +123,7 @@
 					previousStage = 'name';
 					stage = 'network_format';
 				}}
-				>
+			>
 				Next
 			</Button>
 		</CardFooter>
@@ -204,13 +204,10 @@
 	/>
 {/if}
 
-
 <style>
-
-	input{
+	input {
 		width: 100%;
 		margin-top: 20px;
 		margin-bottom: 20px;
 	}
-
 </style>

@@ -8,12 +8,11 @@
 </script>
 
 <Card class="mb-3" style="width: 100%">
-	<CardHeader>	
+	<CardHeader>
 		<h4>Upload your data.</h4>
 		<p>Currently, GEDCOM, PAJEK and GraphML (XML) formats are supported.</p>
 	</CardHeader>
 	<CardBody>
-
 		<FileSelector
 			bind:selectedFile={config.selectedFile}
 			acceptedFormats=".ged,.paj,.xml,.graphml"
