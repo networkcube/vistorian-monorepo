@@ -55,7 +55,7 @@
 
 		createVisualizationIFrame(
 			'visFrame',
-			'nodelink',
+			SERVER + '../node_modules/vistorian-nodelink/web/index.html',
 			params['session'],
 			params['datasetName'],
 			width_col2,
