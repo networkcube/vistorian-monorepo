@@ -1,7 +1,7 @@
 <script>
 	// Refer to the documentation at https://vistorian.github.io/formattingdata.html
 
-	import { Button, Card, CardBody, CardFooter } from 'sveltestrap';
+	import { Button, Card, CardHeader, CardBody, CardFooter } from 'sveltestrap';
 
 	import End from './End.svelte';
 	import NetworkFormat from './NetworkFormat.svelte';
@@ -104,17 +104,15 @@
    */
 </script>
 
-<h1>Network data import wizard</h1>
-
+<h3>Network data import wizard</h3>
+<br>
 {#if stage === 'name'}
-	<Card class="mb-3" style="width: 50%">
+	<Card class="mb-3" style="width: 100%">
+		<CardHeader>
+			<h4>Enter a name for your network:</h4>
+		</CardHeader>
 		<CardBody>
-			<h3>What is the name of this network?</h3>
-
-			<label>
-				Name:
-				<input bind:value={settings.name} on:blur={setName} />
-			</label>
+			<input bind:value={settings.name} on:blur={setName} />
 		</CardBody>
 
 		<CardFooter>
@@ -125,7 +123,8 @@
 					previousStage = 'name';
 					stage = 'network_format';
 				}}
-				>Next
+				>
+				Next
 			</Button>
 		</CardFooter>
 	</Card>
@@ -204,3 +203,14 @@
 		{reloadNetworks}
 	/>
 {/if}
+
+
+<style>
+
+	input{
+		width: 100%;
+		margin-top: 20px;
+		margin-bottom: 20px;
+	}
+
+</style>

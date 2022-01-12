@@ -23,7 +23,8 @@
 		width: fit-content;
 		margin-left: auto;
 		margin-right: auto;
-		margin-bottom: 40px;
+		margin-top: 40px;
+		margin-bottom: 20px;
 	}
 
 	#footerDiv > a {

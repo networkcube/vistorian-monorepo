@@ -1,5 +1,5 @@
 <script>
-	import { Button, Card, CardBody, CardFooter } from 'sveltestrap';
+	import { Button, Card, CardBody, CardFooter, CardHeader } from 'sveltestrap';
 
 	import FileSelector from './FileSelector.svelte';
 	import FieldSelector from './FieldSelector.svelte';
@@ -20,47 +20,64 @@
 </script>
 
 <Card class="mb-3" style="width: fit-content">
+	<CardHeader>
+		<h4>Specifying your link table</h4>
+	</CardHeader>	
 	<CardBody>
-		<h2>
-			Do edges have a direction (i.e., does it matter which node is the source, and which is the
-			target)?
-		</h2>
+		<h4>
+			1. Are links <i>directed</i>?
+		</h4>
+		<p>
+			Doses it matter which node is the <b>source</b>, and which is the
+			<b>target</b>?
+		</p>
 
 		<input type="radio" bind:group={config.edgesAreDirected} value={true} /> Yes
-
 		<br />
 
 		<input type="radio" bind:group={config.edgesAreDirected} value={false} /> No
 
 		<br />
+		<br>
 
-		<h2>What is the structure of this link table?</h2>
+		<!-- <h5>What is the structure of your link table?</h5> -->
+		<h4>2. Upload your table</h4>	
+		<br>
 
 		<FileSelector bind:selectedFile={config.selectedFile} />
 
+
 		{#if config.selectedFile}
-			<h4>Required fields</h4>
+
+			<br/>
+			<br/>
+			<h4>2. What is the structure of your link table?</h4>
+			<p>From the dropdowns below, select the columns in your link table.</p>
+			<br>
+			<h5>Required fields:</h5>
 
 			<FieldSelector
 				selectedFile={config.selectedFile}
-				label={'Source node label'}
+				label={'Source node label:*'}
 				bind:selectedField={config.fieldSourceId}
 				required={true}
 			/>
+			<br>
 
-			<br />
 			<FieldSelector
 				selectedFile={config.selectedFile}
-				label={'Target node label'}
+				label={'Target node label:*'}
 				bind:selectedField={config.fieldTargetId}
 				required={true}
 			/>
 
-			<h4>Optional fields</h4>
+			<br/>
+			<br/>
+			<h5>Optional fields:</h5>
 
 			<FieldSelector
 				selectedFile={config.selectedFile}
-				label={'Link id'}
+				label={'Link ID:'}
 				bind:selectedField={config.fieldLinkId}
 				required={true}
 			/>
@@ -68,21 +85,21 @@
 
 			<FieldSelector
 				selectedFile={config.selectedFile}
-				label={'Location of source node'}
+				label={'Location of source node:'}
 				bind:selectedField={config.fieldLocationSource}
 			/>
 			<br />
 
 			<FieldSelector
 				selectedFile={config.selectedFile}
-				label={'Location of target id'}
+				label={'Location of target node:'}
 				bind:selectedField={config.fieldLocationTarget}
 			/>
 			<br />
 
 			<FieldSelector
 				selectedFile={config.selectedFile}
-				label={'Weight of link'}
+				label={'Link weight:'}
 				helpText={'A numerical measure of the strength of connection between nodes (e.g., the travel time between two locations, the value of a cash transfer.)'}
 				bind:selectedField={config.fieldWeight}
 			/>
@@ -90,7 +107,7 @@
 
 			<FieldSelector
 				selectedFile={config.selectedFile}
-				label={'Link type'}
+				label={'Link type:'}
 				bind:selectedField={config.fieldLinkType}
 			/>
 			<br />
@@ -98,12 +115,14 @@
 			{#if config.edgesAreDirected}
 				<FieldSelector
 					selectedFile={config.selectedFile}
-					label={'Whether link is directed'}
+					label={'Whether a link is directed:'}
 					bind:selectedField={config.fieldLinkIsDirected}
 				/>
 				<br />
 			{/if}
 
+			<br>
+			<br>
 			<EdgeTimeSelector selectedFile={config.selectedFile} bind:config={config.timeConfig} />
 		{/if}
 	</CardBody>

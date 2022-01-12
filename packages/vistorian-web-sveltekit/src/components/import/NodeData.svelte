@@ -2,7 +2,7 @@
 	let fileSelected = true;
 </script>
 
-<h2>Node data</h2>
+<h4>Node data</h4>
 
 {#if !fileSelected}
 	<button> I have a file containing data about nodes </button>

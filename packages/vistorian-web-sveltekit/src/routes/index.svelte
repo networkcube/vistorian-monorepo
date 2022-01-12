@@ -105,12 +105,11 @@
 
 			<div id="divStartSession">
 				<a href="./dataview?session=0">
-					<Button size="lg">Start session</Button>
+					<Button size="lg">Start my session</Button>
 				</a>
 			</div>
 
 			<br />
-
 			<!-- <div id="divMenu">
 				<h4>
 					<a href="/demo?session=0&datasetName=demo_scientists">

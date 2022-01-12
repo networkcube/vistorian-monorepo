@@ -1,20 +1,22 @@
 <script>
-	import { Button, Card, CardBody, CardFooter } from 'sveltestrap';
+	import { Button, Card, CardBody, CardHeader, CardFooter } from 'sveltestrap';
 
 	export let linkDataType;
 	export let stage, previous_stage, next_stage;
 </script>
 
-<Card class="mb-3" style="width: 50%">
+<Card class="mb-3" style="width: 100%">
+	<CardHeader>
+		<h4>How are links (edges) represented in your network?</h4>
+	</CardHeader>
 	<CardBody>
-		<h2>How are links or edges represented in your network?</h2>
-
+		
+		<h4>Link Table</h4>
 		<input type="radio" bind:group={linkDataType} value={'linkTable'} />
-		I have a file containing one row per <i>link</i>, listing pairs of nodes that are linked (a
-		<i>link file</i>)
-
-		<h3>Example</h3>
-
+		A table containing <b>one row per link</b>. Each row contains a pair of nodes that are linked.
+		<br>
+		<br>
+		<h5>Example:</h5>
 		<table class="table table-bordered table-hover table-condensed">
 			<colgroup>
 				<col />
@@ -67,16 +69,28 @@
 
 		<br />
 
+
+
+		<h4>Node Table</h4>
 		<input type="radio" bind:group={linkDataType} value={'nodeTable'} />
-		I have a file containing one row per <i>node</i>, with columns listing the other nodes it is
+		A table containing <b>one row per node</b>, with columns listing the other nodes it is
 		linked to (a <i>node file</i>)
 
-		<h3>Example</h3>
+		<br>
+		<br>
+		<h5>Example:</h5>
 
-		<table>
+		<table class="table table-bordered table-hover table-condensed">
+			<colgroup>
+				<col style="background-color: orange" />
+				<col />
+				<col />
+				<col />
+				<col />
+			</colgroup>
 			<thead>
 				<tr>
-					<th>Person</th>
+					<th>Node</th>
 					<th>Mother</th>
 					<th>Father</th>
 					<th>God-Father</th>

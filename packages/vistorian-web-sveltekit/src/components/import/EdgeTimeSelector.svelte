@@ -16,14 +16,15 @@
 	export let selectedFile = null;
 </script>
 
-<h2>Do edges have associated times?</h2>
+<h4>3. Are link associated with time?</h4>
 
-<input type="radio" bind:group={config.edgeTimeType} value={null} /> No, the edges do not have
-associated times or this information is not recorded
-
+<input type="radio" bind:group={config.edgeTimeType} value={null} /> 
+<b>No</b>, my links do not have 
+associated times or this information is not recorded.
 <br />
 
-<input type="radio" bind:group={config.edgeTimeType} value={'pointTime'} /> Yes, each edge is
+<input type="radio" bind:group={config.edgeTimeType} value={'pointTime'} /> 
+<b>Yes</b>, each link is
 associated with a <i>single time</i> (for example, if edges correspond to letters posted from one
 person to another at a particular time)
 
