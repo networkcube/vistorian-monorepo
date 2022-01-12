@@ -161,12 +161,15 @@
 
 			<div id="divCitation" style="padding-top: 2em">
 				<h2>Help us sustain the Vistorian by citing us:</h2>
-				<p>Benjamin Bach, Nathalie Henry Riche, Roland Fernandez, Emmanoulis Giannisakis, Bongshin Lee, Jean-Daniel Fekete. 
-					<a href="https://hal.inria.fr/hal-01205822/document">NetworkCube: Bringing Dynamic Network Visualizations to Domain Scientists <Fa
-								icon={faExternalLinkAlt}
-							/></a
-						>. Posters of the Conference on Information Visualization (InfoVis), Oct 2015, Chicago,
-						United States. 2015.
+				<p>
+					Benjamin Bach, Nathalie Henry Riche, Roland Fernandez, Emmanoulis Giannisakis, Bongshin
+					Lee, Jean-Daniel Fekete.
+					<a href="https://hal.inria.fr/hal-01205822/document"
+						>NetworkCube: Bringing Dynamic Network Visualizations to Domain Scientists <Fa
+							icon={faExternalLinkAlt}
+						/></a
+					>. Posters of the Conference on Information Visualization (InfoVis), Oct 2015, Chicago,
+					United States. 2015.
 				</p>
 
 				<pre class="citation_bibtex"> {citationBibtex} </pre>
@@ -179,44 +182,42 @@
 </main>
 
 <style>
-
-	#divStartSession{
+	#divStartSession {
 		padding-top: 20px;
 		padding-bottom: 20px;
 		margin: auto;
 	}
 
-	.menuCol{
+	.menuCol {
 		padding-right: 40px;
 		padding-left: 40px;
 	}
 
-	.menuCol h2{
-		margin-bottom:20px
+	.menuCol h2 {
+		margin-bottom: 20px;
 	}
 
-	#divMenu{
+	#divMenu {
 		padding-bottom: 40px;
 		margin: auto;
 	}
 
-	#divCitation{
+	#divCitation {
 		width: 600px;
 		text-align: left;
 		margin: auto;
 	}
 
 	#divCitation h2 {
-		padding-bottom:30px;
+		padding-bottom: 30px;
 		text-align: center;
 	}
 
-
 	#divCitation p {
-		padding-bottom:50px
+		padding-bottom: 50px;
 	}
 
-	Footer{
+	Footer {
 		padding-bottom: 100px;
 	}
 

@@ -162,234 +162,226 @@
 		trace.event('err', event + ' ' + source + ' ' + lineno, error, document.location.pathname)}
 	on:beforeunload={() => trace.event('log_12', 'page', 'close', document.location.pathname)} />
 
-	<div id="divMain">
-<!-- svelte-ignore component-name-lowercase -->
-<main>
-	<div style="display: grid; grid-template-columns: 300px 1fr;">
-
-		<div id="lists" xs="2">
-
-			<div id="menu">
-				<a href="/">
-				<img width="250px" src="../logos/logo-networkcube.png" /></a>
-			</div>
-
-			<div id="networkListDiv" class="boxed">
-				
-				
-				<h3>My Networks</h3>
-				<p>
-					Create or select a network to visualize.
-				</p>	
-				<div id="divAddNetwork">
-					<Button size="sm"
-						on:click={createNetwork}
-						title="Create new network from one or more tables."
-						>
-						<Fa icon={faPlus} />
-						Create network
-					</Button>
+<div id="divMain">
+	<!-- svelte-ignore component-name-lowercase -->
+	<main>
+		<div style="display: grid; grid-template-columns: 300px 1fr;">
+			<div id="lists" xs="2">
+				<div id="menu">
+					<a href="/"> <img width="250px" src="../logos/logo-networkcube.png" /></a>
 				</div>
-				
-				<ul id="networkList" class="nointent" />
 
-				{#each networks as network}
-					<li
-						style={`font-weight: ${
-							selectedNetwork && selectedNetwork.id === network.id ? 'bold' : 'normal'
-						}`}
+				<div id="networkListDiv" class="boxed">
+					<h3>My Networks</h3>
+					<p>Create or select a network to visualize.</p>
+					<div id="divAddNetwork">
+						<Button
+							size="sm"
+							on:click={createNetwork}
+							title="Create new network from one or more tables."
+						>
+							<Fa icon={faPlus} />
+							Create network
+						</Button>
+					</div>
+
+					<ul id="networkList" class="nointent" />
+
+					{#each networks as network}
+						<li
+							style={`font-weight: ${
+								selectedNetwork && selectedNetwork.id === network.id ? 'bold' : 'normal'
+							}`}
+						>
+							<a on:click={() => selectNetwork(network)}>{truncateName(network.name)}</a>
+							<img
+								class="controlIcon"
+								title="Delete this network."
+								src="../logos/delete.png"
+								on:click={() => deleteNetwork(network)}
+							/>
+							<img
+								class="controlIcon"
+								title="Download this network in .vistorian format."
+								src="../logos/download.png"
+								on:click={() => exportNetwork(network)}
+							/>
+						</li>
+					{/each}
+				</div>
+
+				<div id="divVisualizations" class="boxed">
+					<h3>Visualizations</h3>
+					{#if selectedNetwork}
+						<ul class="vis-types">
+							<li>
+								<a href="./nodelink?session=0&datasetName={selectedNetwork.name}">
+									<img src="figures/nodelink.png" width="75px" />
+									Node-link
+									<!-- <img src="vis_icons/node-link.png" width="75px" />Node-link -->
+								</a>
+							</li>
+							<li>
+								<a href="./matrix?session=0&datasetName={selectedNetwork.name}">
+									<img src="figures/matrix.png" width="75px" />
+									Matrix
+									<!-- <img src="vis_icons/matrix.png" width="75px" />Adjacency matrix -->
+								</a>
+							</li>
+							<li>
+								<a href="./dynamicego?session=0&datasetName={selectedNetwork.name}">
+									<img src="figures/dynamicego.png" width="75px" />
+									Timeline
+									<!-- <img src="vis_icons/dynamicego.png" width="75px" />Timeline -->
+								</a>
+							</li>
+							<li>
+								<a href="./map?session=0&datasetName={selectedNetwork.name}">
+									<img src="figures/map.png" width="75px" />
+									Map
+									<!-- <img src="vis_icons/map.png" width="75px" />Map -->
+								</a>
+							</li>
+						</ul>
+					{:else}
+						<p>First select a network.</p>
+						<ul style="opacity: 0.4" class="vis-types">
+							<li>
+								<!-- <img src="vis_icons/node-link.png" width="75px" />Node-link -->
+							</li>
+							<li>
+								<!-- <img src="vis_icons/matrix.png" width="75px" />Adjacency matrix -->
+							</li>
+							<li>
+								<!-- <img src="vis_icons/dynamicego.png" width="75px" />Timeline -->
+							</li>
+							<li>
+								<!-- <img src="vis_icons/map.png" width="75px" />Map -->
+							</li>
+						</ul>
+					{/if}
+				</div>
+
+				<div class="helpSidebar boxed">
+					<h3><span> Quick Help</span></h3>
+					<ul style="list-style-type:disc;">
+						<li>
+							<a
+								href="https://vistorian.github.io/formattingdata.html"
+								on:click={() => trace.event('hlp_8', 'dataview', 'tutorials', 'click')}
+								target="_blank">Formatting data</a
+							>
+						</li>
+
+						<li>
+							<a
+								href="https://vistorian.github.io/visualizations.html"
+								on:click={() => trace.event('hlp_8', 'dataview', 'tutorials', 'click')}
+								target="_blank">Visualization features</a
+							>
+						</li>
+					</ul>
+				</div>
+
+				<div id="divEmptyCache">
+					<Button
+						title="This will remove ALL your networks and tables from your browser cache. FOREVER. Use this function if your browser stops responding. "
+						on:click={clearCache}
+						outline
+						color="danger"
 					>
-						<a on:click={() => selectNetwork(network)}>{truncateName(network.name)}</a>
-						<img
-							class="controlIcon"
-							title="Delete this network."
-							src="../logos/delete.png"
-							on:click={() => deleteNetwork(network)}
-						/>
-						<img
-							class="controlIcon"
-							title="Download this network in .vistorian format."
-							src="../logos/download.png"
-							on:click={() => exportNetwork(network)}
-						/>
-					</li>
-				{/each}
+						<Fa icon={faRedo} /> Empty browser cache</Button
+					>
+				</div>
 			</div>
 
-			<div id="divVisualizations" class="boxed">
-				<h3>Visualizations</h3>
-				{#if selectedNetwork}
-					<ul class="vis-types">
-						<li>
-							<a href="./nodelink?session=0&datasetName={selectedNetwork.name}">
-								<img src="figures/nodelink.png" width="75px" />
-								Node-link
-								<!-- <img src="vis_icons/node-link.png" width="75px" />Node-link -->
-							</a>
-						</li>
-						<li>
-							<a href="./matrix?session=0&datasetName={selectedNetwork.name}">
-								<img src="figures/matrix.png" width="75px" />
-								Matrix
-								<!-- <img src="vis_icons/matrix.png" width="75px" />Adjacency matrix -->
-							</a>
-						</li>
-						<li>
-							<a href="./dynamicego?session=0&datasetName={selectedNetwork.name}">
-								<img src="figures/dynamicego.png" width="75px" />
-								Timeline
-								<!-- <img src="vis_icons/dynamicego.png" width="75px" />Timeline -->
-							</a>
-						</li>
-						<li>
-							<a href="./map?session=0&datasetName={selectedNetwork.name}">
-								<img src="figures/map.png" width="75px" />
-								Map
-								<!-- <img src="vis_icons/map.png" width="75px" />Map -->
-							</a>
-						</li>
-					</ul>
+			<div id="center">
+				{#if state === 'NEW_NETWORK'}
+					<ImportWizard {reloadNetworks} />
+				{:else if selectedNetwork}
+					<h3>{selectedNetwork.name}</h3>
+
+					<br />
+					<h4>Node table</h4>
+					<Grid
+						data={nodeData}
+						columns={nodeColumns}
+						sort={true}
+						pagination={true}
+						search={true}
+						resizable={true}
+					/>
+
+					<br />
+					<h4>Link table</h4>
+					<Grid
+						data={linkData}
+						columns={linkColumns}
+						sort={true}
+						pagination={true}
+						search={true}
+						resizable={true}
+					/>
 				{:else}
-					<p>First select a network.</p>
-					<ul style="opacity: 0.4" class="vis-types">
-						<li>
-							<!-- <img src="vis_icons/node-link.png" width="75px" />Node-link -->
-						</li>
-						<li>
-							<!-- <img src="vis_icons/matrix.png" width="75px" />Adjacency matrix -->
-						</li>
-						<li>
-							<!-- <img src="vis_icons/dynamicego.png" width="75px" />Timeline -->
-						</li>
-						<li>
-							<!-- <img src="vis_icons/map.png" width="75px" />Map -->
-						</li>
-					</ul>
+					<h3 class="vertical-centered">
+						Select a network or create a new one using the panel on the left.
+					</h3>
 				{/if}
 			</div>
-
-			<div class="helpSidebar boxed">
-				<h3><span> Quick Help</span></h3>
-				<ul style="list-style-type:disc;">
-					<li>
-						<a
-							href="https://vistorian.github.io/formattingdata.html"
-							on:click={() => trace.event('hlp_8', 'dataview', 'tutorials', 'click')}
-							target="_blank">Formatting data</a
-						>
-					</li>
-
-					<li>
-						<a
-							href="https://vistorian.github.io/visualizations.html"
-							on:click={() => trace.event('hlp_8', 'dataview', 'tutorials', 'click')}
-							target="_blank">Visualization features</a
-						>
-					</li>
-				</ul>
-			</div>
-
-
-			<div id="divEmptyCache">
-				<Button
-					title="This will remove ALL your networks and tables from your browser cache. FOREVER. Use this function if your browser stops responding. "
-					on:click={clearCache}
-					outline
-					color="danger"
-				>
-					<Fa icon={faRedo} /> Empty browser cache</Button
-				>
-			</div>
 		</div>
+		<Footer />
 
-		<div id="center">
-			{#if state === 'NEW_NETWORK'}
-				<ImportWizard {reloadNetworks} />
-			{:else if selectedNetwork}
-				<h3>{selectedNetwork.name}</h3>
+		<Bookmarks />
 
-				<br>
-				<h4>Node table</h4>
-				<Grid
-					data={nodeData}
-					columns={nodeColumns}
-					sort={true}
-					pagination={true}
-					search={true}
-					resizable={true}
-				/>
-
-				<br>
-				<h4>Link table</h4>
-				<Grid
-					data={linkData}
-					columns={linkColumns}
-					sort={true}
-					pagination={true}
-					search={true}
-					resizable={true}
-				/>
-			{:else}
-				<h3 class="vertical-centered">
-					Select a network or create a new one using the panel on the left.
-				</h3>
-			{/if}
-		</div>
-	</div>
-	<Footer />
-	
-	<Bookmarks />
-
-	<Feedback />
-</main>
+		<Feedback />
+	</main>
 </div>
 
 <style>
 	@import 'https://cdn.jsdelivr.net/npm/gridjs/dist/theme/mermaid.min.css';
 
-	#divMain{
-		padding:20px;
-		padding-left:40px;
-		padding-right:40px;
+	#divMain {
+		padding: 20px;
+		padding-left: 40px;
+		padding-right: 40px;
 	}
 
-	#divAddNetwork{
+	#divAddNetwork {
 		margin-bottom: 15px;
 		margin-top: 15px;
 	}
-	
-	#menu{
+
+	#menu {
 		margin-bottom: 40px;
 	}
-		
-	.boxed{
+
+	.boxed {
 		border-radius: 7px;
 		/* border: 3px solid #eee; */
 		padding: 20px;
-		margin-bottom:20px;
+		margin-bottom: 20px;
 		background-color: #f0f0f0;
-		
 	}
 
-	#divVisualizations li{
+	#divVisualizations li {
 		margin-bottom: 20px;
 		margin-top: 20px;
 	}
-	#divVisualizations ul{
+	#divVisualizations ul {
 		padding-left: 0px;
 	}
 
-	#divVisualizations img{
+	#divVisualizations img {
 		margin-right: 10px;
 		height: 70px;
 		width: 70px;
 	}
 
-	#divEmptyCache{
+	#divEmptyCache {
 		margin-top: 30px;
 	}
 
-	#center{
+	#center {
 		margin-top: 120px;
 		padding-left: 50px;
 	}
@@ -409,6 +401,4 @@
 	.vis-types > li {
 		margin-top: 0.25em;
 	}
-
-
 </style>
