@@ -1,5 +1,5 @@
 <script>
-	import { Button, Card, CardBody, CardFooter } from 'sveltestrap';
+	import { Button, Card, CardBody, CardHeader, CardFooter } from 'sveltestrap';
 
 	import FileSelector from './FileSelector.svelte';
 	import FieldSelector from './FieldSelector.svelte';
@@ -12,8 +12,12 @@
 </script>
 
 <Card class="mb-3" style="width: fit-content">
+	<CardHeader>
+		<h4>Specifying location table</h4>
+	</CardHeader>
+	
 	<CardBody>
-		<h2>Do you have a file giving the lat/long of each location?</h2>
+		<h4>Do you have a file giving the lat/long of each location?</h4>
 
 		<input type="radio" bind:group={config.usingLocationFile} value={false} /> No, I do not have a
 		file specifying the longitude and latitude of place names. I want to obtain these from an online

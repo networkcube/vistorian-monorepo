@@ -1,5 +1,5 @@
 <script>
-	import { Button, Card, CardBody, CardFooter, CardText } from 'sveltestrap';
+	import { Button, Card, CardHeader, CardBody, CardFooter, CardText } from 'sveltestrap';
 	import FileSelector from './FileSelector.svelte';
 
 	export let fileFormat = 'network';
@@ -7,13 +7,12 @@
 	export let stage, previous_stage, next_stage;
 </script>
 
-<Card class="mb-3" style="width: 50%">
+<Card class="mb-3" style="width: 100%">
+	<CardHeader>	
+		<h4>Upload your data.</h4>
+		<p>Currently, GEDCOM, PAJEK and GraphML (XML) formats are supported.</p>
+	</CardHeader>
 	<CardBody>
-		<CardText>
-			Choose the file containing the network.
-
-			<p>Currently, GEDCOM, PAJEK and GraphML (XML) formats are supported.</p>
-		</CardText>
 
 		<FileSelector
 			bind:selectedFile={config.selectedFile}

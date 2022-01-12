@@ -1,5 +1,5 @@
 <script>
-	import { Button, Card, CardBody, CardFooter } from 'sveltestrap';
+	import { Button, Card, CardBody, CardHeader, CardFooter } from 'sveltestrap';
 
 	import FileSelector from './FileSelector.svelte';
 	import FieldSelector from './FieldSelector.svelte';
@@ -18,10 +18,16 @@
 	}
 </script>
 
-<Card class="mb-3" style="width: 50%">
+<Card class="mb-3" style="width: 100%">
+	<CardHeader>
+		<h4>
+			Specifying your node table
+		</h4>
+	</CardHeader>
 	<CardBody>
-		<h3>What is the structure of this node table?</h3>
 
+		<h4>1. Upload your node table:</h4>
+		<br>
 		<FileSelector bind:selectedFile={config.selectedFile} />
 
 		{#if config.selectedFile}
@@ -33,7 +39,11 @@
 				required={true}
 			/>
 
-			<h3>Relations</h3>
+			<br>
+			<br>
+			<h4>2. Specify relations</h4>
+			<!-- <p>From the dropdowns below, select the columns in your link table.</p> -->
+			
 
 			{#if config.fieldRelations.length === 0}
 				You must define at least one relation type.
@@ -41,30 +51,37 @@
 
 			<ul>
 				{#each config.fieldRelations as fieldRelation, i}
-					<li>
-						<label>Relation name/link type: <input bind:value={fieldRelation.relation} /></label>
+					<li style="margin-bottom:25px">
+						<label><span style="display: inline-block; width: 180px;">
+							Link type:
+						</span>
+						<input bind:value={fieldRelation.relation}/></label>
 						<FieldSelector
 							selectedFile={config.selectedFile}
-							label={'Column in CSV file'}
+							label={'Column:'}
 							bind:selectedField={fieldRelation.field}
 							required={true}
 						/>
+						<br>
+						<Button
+							outline
+							size="sm"
+							on:click={() =>
+								(config.fieldRelations = config.fieldRelations.filter((d, i2) => i !== i2))}
+						>
+							Delete this relation
+						</Button>
 					</li>
-					<button
-						on:click={() =>
-							(config.fieldRelations = config.fieldRelations.filter((d, i2) => i !== i2))}
-					>
-						Delete this relation
-					</button>
 				{/each}
 			</ul>
 
-			<button
+			<Button
+				outline
 				on:click={() =>
 					(config.fieldRelations = [...config.fieldRelations, { relation: null, field: null }])}
 			>
-				Add relation
-			</button>
+				+ Add relation
+			</Button>
 		{:else}
 			<p>You must select a file to import.</p>
 		{/if}

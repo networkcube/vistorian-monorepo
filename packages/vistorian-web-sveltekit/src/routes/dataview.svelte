@@ -162,31 +162,35 @@
 		trace.event('err', event + ' ' + source + ' ' + lineno, error, document.location.pathname)}
 	on:beforeunload={() => trace.event('log_12', 'page', 'close', document.location.pathname)} />
 
+	<div id="divMain">
+<!-- svelte-ignore component-name-lowercase -->
 <main>
 	<div style="display: grid; grid-template-columns: 300px 1fr;">
+
 		<div id="lists" xs="2">
+
 			<div id="menu">
-				<a href="/"><img width="250px" src="../logos/logo-networkcube.png" /></a>
+				<a href="/">
+				<img width="250px" src="../logos/logo-networkcube.png" /></a>
 			</div>
 
-			<Button
-				on:click={createNetwork}
-				title="Create new network from one or more tables."
-				color="success"
-			>
-				<Fa icon={faPlus} />
-				Add network
-			</Button>
-
-			<br />
-
-			<div id="networkListDiv">
-				<h2>My Networks</h2>
+			<div id="networkListDiv" class="boxed">
+				
+				
+				<h3>My Networks</h3>
 				<p>
-					These are the networks that you have already created. Click any of them then select a
-					visualization below.
-				</p>
-
+					Create or select a network to visualize.
+				</p>	
+				<div id="divAddNetwork">
+					<Button size="sm"
+						on:click={createNetwork}
+						title="Create new network from one or more tables."
+						>
+						<Fa icon={faPlus} />
+						Create network
+					</Button>
+				</div>
+				
 				<ul id="networkList" class="nointent" />
 
 				{#each networks as network}
@@ -211,30 +215,37 @@
 					</li>
 				{/each}
 			</div>
-			<br />
 
-			<div>
-				<h2>Visualizations</h2>
+			<div id="divVisualizations" class="boxed">
+				<h3>Visualizations</h3>
 				{#if selectedNetwork}
 					<ul class="vis-types">
 						<li>
 							<a href="./nodelink?session=0&datasetName={selectedNetwork.name}">
-								<img src="vis_icons/node-link.png" width="75px" /> Node-link
+								<img src="figures/nodelink.png" width="75px" />
+								Node-link
+								<!-- <img src="vis_icons/node-link.png" width="75px" />Node-link -->
 							</a>
 						</li>
 						<li>
 							<a href="./matrix?session=0&datasetName={selectedNetwork.name}">
-								<img src="vis_icons/matrix.png" width="75px" /> Adjacency matrix
+								<img src="figures/matrix.png" width="75px" />
+								Matrix
+								<!-- <img src="vis_icons/matrix.png" width="75px" />Adjacency matrix -->
 							</a>
 						</li>
 						<li>
 							<a href="./dynamicego?session=0&datasetName={selectedNetwork.name}">
-								<img src="vis_icons/dynamicego.png" width="75px" /> Timeline
+								<img src="figures/dynamicego.png" width="75px" />
+								Timeline
+								<!-- <img src="vis_icons/dynamicego.png" width="75px" />Timeline -->
 							</a>
 						</li>
 						<li>
 							<a href="./map?session=0&datasetName={selectedNetwork.name}">
-								<img src="vis_icons/map.png" width="75px" /> Map
+								<img src="figures/map.png" width="75px" />
+								Map
+								<!-- <img src="vis_icons/map.png" width="75px" />Map -->
 							</a>
 						</li>
 					</ul>
@@ -242,34 +253,23 @@
 					<p>First select a network.</p>
 					<ul style="opacity: 0.4" class="vis-types">
 						<li>
-							<img src="vis_icons/node-link.png" width="75px" /> Node-link
+							<!-- <img src="vis_icons/node-link.png" width="75px" />Node-link -->
 						</li>
 						<li>
-							<img src="vis_icons/matrix.png" width="75px" /> Adjacency matrix
+							<!-- <img src="vis_icons/matrix.png" width="75px" />Adjacency matrix -->
 						</li>
 						<li>
-							<img src="vis_icons/dynamicego.png" width="75px" /> Timeline
+							<!-- <img src="vis_icons/dynamicego.png" width="75px" />Timeline -->
 						</li>
 						<li>
-							<img src="vis_icons/map.png" width="75px" /> Map
+							<!-- <img src="vis_icons/map.png" width="75px" />Map -->
 						</li>
 					</ul>
 				{/if}
 			</div>
 
-			<div>
-				<Button
-					title="This will remove ALL your networks and tables from your browser cache. FOREVER. Use this function if your browser stops responding. "
-					on:click={clearCache}
-					outline
-					color="danger"
-				>
-					<Fa icon={faRedo} /> Empty browser cache</Button
-				>
-			</div>
-			<br />
-			<div class="helpSidebar">
-				<h2><span> Quick Help</span></h2>
+			<div class="helpSidebar boxed">
+				<h3><span> Quick Help</span></h3>
 				<ul style="list-style-type:disc;">
 					<li>
 						<a
@@ -288,15 +288,28 @@
 					</li>
 				</ul>
 			</div>
+
+
+			<div id="divEmptyCache">
+				<Button
+					title="This will remove ALL your networks and tables from your browser cache. FOREVER. Use this function if your browser stops responding. "
+					on:click={clearCache}
+					outline
+					color="danger"
+				>
+					<Fa icon={faRedo} /> Empty browser cache</Button
+				>
+			</div>
 		</div>
 
 		<div id="center">
 			{#if state === 'NEW_NETWORK'}
 				<ImportWizard {reloadNetworks} />
 			{:else if selectedNetwork}
-				<h1>{selectedNetwork.name}</h1>
+				<h3>{selectedNetwork.name}</h3>
 
-				<h2>Nodes</h2>
+				<br>
+				<h4>Node table</h4>
 				<Grid
 					data={nodeData}
 					columns={nodeColumns}
@@ -306,7 +319,8 @@
 					resizable={true}
 				/>
 
-				<h2>Links</h2>
+				<br>
+				<h4>Link table</h4>
 				<Grid
 					data={linkData}
 					columns={linkColumns}
@@ -316,22 +330,69 @@
 					resizable={true}
 				/>
 			{:else}
-				<h2 class="vertical-centered">
+				<h3 class="vertical-centered">
 					Select a network or create a new one using the panel on the left.
-				</h2>
+				</h3>
 			{/if}
 		</div>
 	</div>
-
 	<Footer />
-
+	
 	<Bookmarks />
 
 	<Feedback />
 </main>
+</div>
 
 <style>
 	@import 'https://cdn.jsdelivr.net/npm/gridjs/dist/theme/mermaid.min.css';
+
+	#divMain{
+		padding:20px;
+		padding-left:40px;
+		padding-right:40px;
+	}
+
+	#divAddNetwork{
+		margin-bottom: 15px;
+		margin-top: 15px;
+	}
+	
+	#menu{
+		margin-bottom: 40px;
+	}
+		
+	.boxed{
+		border-radius: 7px;
+		/* border: 3px solid #eee; */
+		padding: 20px;
+		margin-bottom:20px;
+		background-color: #f0f0f0;
+		
+	}
+
+	#divVisualizations li{
+		margin-bottom: 20px;
+		margin-top: 20px;
+	}
+	#divVisualizations ul{
+		padding-left: 0px;
+	}
+
+	#divVisualizations img{
+		margin-right: 10px;
+		height: 70px;
+		width: 70px;
+	}
+
+	#divEmptyCache{
+		margin-top: 30px;
+	}
+
+	#center{
+		margin-top: 120px;
+		padding-left: 50px;
+	}
 
 	.vertical-centered {
 		height: fit-content;
@@ -348,4 +409,6 @@
 	.vis-types > li {
 		margin-top: 0.25em;
 	}
+
+
 </style>

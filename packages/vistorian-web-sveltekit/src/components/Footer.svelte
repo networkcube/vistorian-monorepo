@@ -23,9 +23,12 @@
 		width: fit-content;
 		margin-left: auto;
 		margin-right: auto;
+		margin-top: 40px;
+		margin-bottom: 20px;
 	}
 
 	#footerDiv > a {
-		padding-right: 2em;
+		padding-right: 1em;
+		padding-left: 1em;
 	}
 </style>

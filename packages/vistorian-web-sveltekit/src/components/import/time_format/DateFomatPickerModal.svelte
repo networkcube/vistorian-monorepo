@@ -10,8 +10,9 @@
 </script>
 
 <div>
-	Date format: {formatString}
-	<Button color="primary" on:click={toggle}>Edit</Button>
+	<h4>4. Specify a date format:</h4> 
+	{formatString}
+	<Button outline color="secondary" on:click={toggle}>Edit</Button>
 
 	<Modal isOpen={open} {toggle}>
 		<ModalHeader {toggle}>Datetime format</ModalHeader>

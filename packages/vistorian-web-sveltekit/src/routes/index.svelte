@@ -103,28 +103,27 @@
 				</a>
 			</div>
 
-			<div>
+			<div id="divStartSession">
 				<a href="./dataview?session=0">
-					<Button size="lg">Start session</Button>
+					<Button size="lg">Start my session</Button>
 				</a>
 			</div>
 
 			<br />
-
-			<div>
+			<!-- <div id="divMenu">
 				<h4>
-					<a href="/demo?session=0&datasetName=demo_scientists"
-						>Description of the available visualizations</a
-					>
+					<a href="/demo?session=0&datasetName=demo_scientists">
+						Description of the available visualizations
+					</a>
 				</h4>
-			</div>
+			</div> -->
 
 			<br />
 
-			<div style="display: inline-block">
+			<div id="divMenu" style="display: inline-block">
 				<div style="display: flex; text-align: left">
-					<div style="padding-right: 3em">
-						<h5>Overview</h5>
+					<div class="menuCol">
+						<h2>Overview</h2>
 						<a href="https://vistorian.github.io">Home</a>
 						<br />
 						<a href="https://vistorian.github.io/visualizations.html">Visualizations</a>
@@ -132,8 +131,8 @@
 						<a href="https://vistorian.github.io/formattingdata.html">Formatting Data</a>
 					</div>
 
-					<div style="padding-right: 3em">
-						<h5>Learning</h5>
+					<div class="menuCol">
+						<h2>Learn</h2>
 						<a href="https://vistorian.github.io/gettingstarted.html">Getting Started</a>
 						<br />
 						<a href="https://vistorian.github.io/courses.html">Courses</a>
@@ -145,8 +144,8 @@
 						<a href="https://vistorian.github.io/Resources.html">Resources</a>
 					</div>
 
-					<div>
-						<h5>Context</h5>
+					<div class="menuCol">
+						<h2>Context</h2>
 						<a href="https://vistorian.github.io/vistorianLab.html">Research &amp; VistorianLab</a>
 						<br />
 						<a href="https://vistorian.github.io/publications.html">Publications</a>
@@ -160,20 +159,14 @@
 				</div>
 			</div>
 
-			<div style="padding-top: 2em">
-				<h2>Please help us sustain the Vistorian by citing our poster:</h2>
-
-				<br />
-				<p>
-					<i
-						>Benjamin Bach, Nathalie Henry Riche, Roland Fernandez, Emmanoulis Giannisakis, Bongshin
-						Lee, Jean-Daniel Fekete. <a href="https://hal.inria.fr/hal-01205822/document"
-							>NetworkCube: Bringing Dynamic Network Visualizations to Domain Scientists <Fa
+			<div id="divCitation" style="padding-top: 2em">
+				<h2>Help us sustain the Vistorian by citing us:</h2>
+				<p>Benjamin Bach, Nathalie Henry Riche, Roland Fernandez, Emmanoulis Giannisakis, Bongshin Lee, Jean-Daniel Fekete. 
+					<a href="https://hal.inria.fr/hal-01205822/document">NetworkCube: Bringing Dynamic Network Visualizations to Domain Scientists <Fa
 								icon={faExternalLinkAlt}
 							/></a
 						>. Posters of the Conference on Information Visualization (InfoVis), Oct 2015, Chicago,
 						United States. 2015.
-					</i>
 				</p>
 
 				<pre class="citation_bibtex"> {citationBibtex} </pre>
@@ -186,11 +179,52 @@
 </main>
 
 <style>
+
+	#divStartSession{
+		padding-top: 20px;
+		padding-bottom: 20px;
+		margin: auto;
+	}
+
+	.menuCol{
+		padding-right: 40px;
+		padding-left: 40px;
+	}
+
+	.menuCol h2{
+		margin-bottom:20px
+	}
+
+	#divMenu{
+		padding-bottom: 40px;
+		margin: auto;
+	}
+
+	#divCitation{
+		width: 600px;
+		text-align: left;
+		margin: auto;
+	}
+
+	#divCitation h2 {
+		padding-bottom:30px;
+		text-align: center;
+	}
+
+
+	#divCitation p {
+		padding-bottom:50px
+	}
+
+	Footer{
+		padding-bottom: 100px;
+	}
+
 	.citation_bibtex {
 		font-size: 80%;
 		text-align: left;
 		/* width: fit-content; */
-		max-width: 90%;
+		max-width: 100%;
 		overflow-x: auto;
 		height: fit-content;
 
@@ -200,6 +234,7 @@
 		padding: 20px;
 		background: #f3f3f3;
 		color: #636363;
+		margin-bottom: 100px;
 	}
 
 	#overview_img {

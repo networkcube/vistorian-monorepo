@@ -1,6 +1,7 @@
 <script>
 	import Fa from 'svelte-fa';
 	import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+	import { Button} from 'sveltestrap';
 
 	import { fileStore } from './stores.js';
 
@@ -35,19 +36,23 @@
 	let showHelp = false;
 </script>
 
-<label
-	>{label}
-
-	{#if helpText}
-		<button
+<label style="margin-bottom:10px;">
+	<span style="display: inline-block; width: 180px;">
+		{label}
+		
+		{#if helpText}
+		<Button
+			size="sm"
+			outline
 			on:click={() => {
 				console.log(`showHelp is ${showHelp}`);
 				showHelp = !showHelp;
 			}}
-		>
+			>
 			<Fa icon={faQuestionCircle} />
-		</button>
-	{/if}
+		</Button>
+		{/if}
+	</span>	
 
 	<select bind:value={selectedField}>
 		{#if !required}

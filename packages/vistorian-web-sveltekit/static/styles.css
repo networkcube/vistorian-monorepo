@@ -32,9 +32,8 @@ form {
 }
 div#footer {
 	margin-top: 100px;
-	height: 200px;
-	color: #777;
 	text-align: center;
+	bottom: 20px;
 }
 
 div#logo {
@@ -181,9 +180,11 @@ h2 {
 }
 
 h3 {
-	font-size: 17pt;
-	font-family: 'Poiret One', 'Helvetica Neue', sans-serif;
-	margin: 5px;
+	font-family: -apple-system, BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
+	font-weight: 900;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	color: #444;
 }
 
 a {

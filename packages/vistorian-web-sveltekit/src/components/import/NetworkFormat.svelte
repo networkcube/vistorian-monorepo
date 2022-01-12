@@ -2,29 +2,30 @@
 	import Fa from 'svelte-fa';
 	import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 
-	import { Button, Card, CardBody, CardFooter } from 'sveltestrap';
+	import { Button, Card, CardHeader, CardBody, CardFooter } from 'sveltestrap';
 
 	export let fileFormat = 'network';
 	export let stage, previous_stage, next_stage;
 </script>
 
-<Card class="mb-3" style="width: 50%">
+<Card class="mb-3" style="width: 100%" title="What is the format of your data?">
+	<CardHeader>	
+	<h4>What is the format of your data?</h4>
+	</CardHeader>
 	<CardBody>
-		<h2>What file format is the data that defines your network saved in?</h2>
+		<br/>
 
 		<input type="radio" bind:group={fileFormat} value={'tabular'} />
-		I have a file, or several files, in a tabular data format (e.g., a spreadsheet or CSV file)
-
+		1. I have one or several files in a <b>tabular format</b> (e.g., spreadsheet, CSV, ...)
 		<br />
 
 		{#if fileFormat === 'tabular'}
-			<br />
 			<div>
 				<Fa icon={faInfoCircle} />
-				<b>
-					If your data is in an Excel spreadsheet, please export it to CSV format (if you have
-					multiple workbooks, export each as a separate page):
-				</b>
+				<i>
+					If your data is in Excel, export it to CSV. If you have
+					multiple workbooks, export each as a separate file:
+				</i>
 				<ul>
 					<li>
 						in Microsoft Excel, click <a
@@ -43,7 +44,7 @@
 		{/if}
 
 		<input type="radio" bind:group={fileFormat} value={'network'} />
-		I have a file in a network format (e.g., GEDCOM, PAJEK or GraphML (XML))
+		2. I have a file in a specific <b>network format</b> (e.g., GEDCOM, PAJEK or GraphML (XML))
 	</CardBody>
 	<CardFooter>
 		<Button style="float: left" on:click={() => (stage = previous_stage())}>Previous</Button>
