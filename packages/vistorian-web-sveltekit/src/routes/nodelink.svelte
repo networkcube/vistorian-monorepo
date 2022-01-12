@@ -55,7 +55,7 @@
 
 		createVisualizationIFrame(
 			'visFrame',
-			SERVER + '../node_modules/vistorian-nodelink/web/index.html',
+			'nodelink',
 			params['session'],
 			params['datasetName'],
 			width_col2,
@@ -75,8 +75,11 @@
 		trace.event('err', event + ' ' + source + ' ' + lineno, error, document.location.pathname)}
 	on:beforeunload={() => trace.event('log_12', 'page', 'close', document.location.pathname)} />
 
-<main>
-	<table>
+
+	<div id="divMain">
+
+		<main>
+			<table>
 		<tr>
 			<td width="220px">
 				<LogoFrame {params} />
@@ -88,10 +91,22 @@
 			</td>
 		</tr>
 	</table>
-
+	
 	<Footer />
-
+	
 	<Bookmarks />
-
+	
 	<Feedback />
 </main>
+</div>
+
+
+<style>
+	#divMain{
+		margin: 20px;
+	}
+
+	#visFrame{
+		margin-left: 20px;
+	}
+</style>

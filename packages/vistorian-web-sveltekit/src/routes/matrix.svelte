@@ -80,6 +80,7 @@
 		trace.event('err', event + ' ' + source + ' ' + lineno, error, document.location.pathname)}
 	on:beforeunload={() => trace.event('log_12', 'page', 'close', document.location.pathname)} />
 
+	<div id="divMain">
 <main>
 	<table>
 		<tr>
@@ -100,3 +101,15 @@
 
 	<Feedback />
 </main>
+</div>
+
+
+<style>
+	#divMain{
+		margin: 20px;
+	}
+	#visFrame{
+		margin-left: 20px;
+	}
+
+</style>
