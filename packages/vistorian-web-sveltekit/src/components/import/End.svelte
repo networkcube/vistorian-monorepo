@@ -75,10 +75,14 @@
 
 		<br />
 		<br />
-		<h4>Or, import anoter network:</h4>
+		<h4>Or, import another network:</h4>
 		<br />
-		<Button outline on:click={() => saveNetwork(settings, $fileStore, reloadNetworks)}
-			>+ Create new network</Button
+		<Button
+			outline
+			on:click={() => {
+				saveNetwork(settings, $fileStore, reloadNetworks);
+				stage = 'name';
+			}}>+ Create new network</Button
 		>
 		<br />
 		<br />
