@@ -18,15 +18,19 @@
 
 	<CardBody>
 		<h4>Do you have a file giving the lat/long of each location?</h4>
-
-		<input type="radio" bind:group={config.usingLocationFile} value={false} /> No, I do not have a
-		file specifying the longitude and latitude of place names. I want to obtain these from an online
-		geocoding service.
-
 		<br />
 
-		<input type="radio" bind:group={config.usingLocationFile} value={'true'} /> Yes, I have a file
-		specifying the longitude and latitude of each place name used in the node-link table
+
+		<h5>No, ... </h5>
+		<input type="radio" bind:group={config.usingLocationFile} value={false} />... I do not have a
+		file specifying the longitude and latitude of place names. I want the Vistorian to get these for me, please. 
+
+		<br />
+		<br />
+
+		<h5>Yes, ... </h5>
+		<input type="radio" bind:group={config.usingLocationFile} value={'true'} /> ... I have a file
+		specifying the longitude and latitude of each place name used in the node-link table.
 
 		<br />
 
