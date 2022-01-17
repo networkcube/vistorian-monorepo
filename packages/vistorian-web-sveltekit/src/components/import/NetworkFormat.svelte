@@ -15,8 +15,9 @@
 	<CardBody>
 		<br />
 
+		<h4>Table Format</h4>
 		<input type="radio" bind:group={fileFormat} value={'tabular'} />
-		1. I have one or several files in a <b>tabular format</b> (e.g., spreadsheet, CSV, ...)
+		I have one or several files in a <b>tabular format</b> (e.g., spreadsheet, CSV, ...)
 		<br />
 
 		{#if fileFormat === 'tabular'}
@@ -42,7 +43,9 @@
 				</ul>
 			</div>
 		{/if}
+			<br>
 
+		<h4>Other Format</h4>
 		<input type="radio" bind:group={fileFormat} value={'network'} />
 		2. I have a file in a specific <b>network format</b> (e.g., GEDCOM, PAJEK or GraphML (XML))
 	</CardBody>

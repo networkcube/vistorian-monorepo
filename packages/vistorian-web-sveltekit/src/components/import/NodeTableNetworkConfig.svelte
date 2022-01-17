@@ -48,21 +48,22 @@
 			<ul>
 				{#each config.fieldRelations as fieldRelation, i}
 					<li style="margin-bottom:25px">
-						<label
-							><span style="display: inline-block; width: 180px;"> Link type: </span>
-							<input bind:value={fieldRelation.relation} /></label
-						>
 						<FieldSelector
 							selectedFile={config.selectedFile}
 							label={'Column:'}
 							bind:selectedField={fieldRelation.field}
 							required={true}
 						/>
+						<label
+							><span style="display: inline-block; width: 180px;"> Link name (type): </span>
+							<input bind:value={fieldRelation.relation} /></label
+						>
+						<br />
 						<br />
 						<Button
-							outline
-							size="sm"
-							on:click={() =>
+						outline
+						size="sm"
+						on:click={() =>
 								(config.fieldRelations = config.fieldRelations.filter((d, i2) => i !== i2))}
 						>
 							Delete this relation
