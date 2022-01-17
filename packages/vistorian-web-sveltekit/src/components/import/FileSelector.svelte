@@ -79,14 +79,19 @@
 </div>
 
 {#if selectedFile && showPreviewTable}
-	<TablePreview data={$fileStore[selectedFile].data} {hasHeaderRow} />
-
-	<label>
-		<input type="checkbox" bind:checked={hasHeaderRow} /> Has header row
+	<label id="headerCheckbox">
+		<input type="checkbox" bind:checked={hasHeaderRow} /> Has header row?
 	</label>
+
+	<TablePreview data={$fileStore[selectedFile].data} {hasHeaderRow} />
 {/if}
 
 <style>
+	#headerCheckbox {
+		font-weight: bold;
+		padding-bottom: 0.25em;
+	}
+
 	.fileSelector {
 		font-weight: 100;
 		font-size: 12pt;
