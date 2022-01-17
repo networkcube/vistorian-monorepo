@@ -43,7 +43,7 @@
 				</ul>
 			</div>
 		{/if}
-			<br>
+		<br />
 
 		<h4>Other Format</h4>
 		<input type="radio" bind:group={fileFormat} value={'network'} />

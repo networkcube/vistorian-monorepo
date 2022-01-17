@@ -20,15 +20,15 @@
 		<h4>Do you have a file giving the lat/long of each location?</h4>
 		<br />
 
-
-		<h5>No, ... </h5>
+		<h5>No, ...</h5>
 		<input type="radio" bind:group={config.usingLocationFile} value={false} />... I do not have a
-		file specifying the longitude and latitude of place names. I want the Vistorian to get these for me, please. 
+		file specifying the longitude and latitude of place names. I want the Vistorian to get these for
+		me, please.
 
 		<br />
 		<br />
 
-		<h5>Yes, ... </h5>
+		<h5>Yes, ...</h5>
 		<input type="radio" bind:group={config.usingLocationFile} value={'true'} /> ... I have a file
 		specifying the longitude and latitude of each place name used in the node-link table.
 

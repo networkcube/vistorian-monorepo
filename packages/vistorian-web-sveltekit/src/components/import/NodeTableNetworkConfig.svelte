@@ -61,9 +61,9 @@
 						<br />
 						<br />
 						<Button
-						outline
-						size="sm"
-						on:click={() =>
+							outline
+							size="sm"
+							on:click={() =>
 								(config.fieldRelations = config.fieldRelations.filter((d, i2) => i !== i2))}
 						>
 							Delete this relation
