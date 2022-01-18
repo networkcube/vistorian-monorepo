@@ -14,6 +14,10 @@ async function geoCode(placeName): Promise<[number, number] | [undefined, undefi
 	}
 
 	const place = placeName.split(',')[0].trim();
+	if (!place) {
+		return [undefined, undefined];
+	}
+
 	const url = `https://api.maptiler.com/geocoding/${place}.json?key=4JfMdMSpqOnXq9pxP8x4`;
 
 	const res = await fetch(url, { mode: 'cors' });
@@ -43,7 +47,7 @@ const getLocationsFromFile = (fileStore, settings) => {
 		if (firstRow && hasHeaderRow) {
 			firstRow = false;
 			continue;
-		} else if (row.every((d) => d === null)) {
+		} else if (row.every((d) => !d)) {
 			continue; // skip blank lines
 		}
 
@@ -123,7 +127,7 @@ async function importNetworkFromTables(settings, fileStore, reloadNetworks): Pro
 			if (firstRow && hasHeaderRow) {
 				firstRow = false;
 				continue;
-			} else if (row.every((d) => d === null)) {
+			} else if (row.every((d) => !d)) {
 				continue; // skip blank lines
 			}
 
@@ -145,7 +149,7 @@ async function importNetworkFromTables(settings, fileStore, reloadNetworks): Pro
 			if (firstRow && hasHeaderRow) {
 				firstRow = false;
 				continue;
-			} else if (row.every((d) => d === null)) {
+			} else if (row.every((d) => !d)) {
 				continue; // skip blank lines
 			}
 
@@ -190,6 +194,11 @@ async function importNetworkFromTables(settings, fileStore, reloadNetworks): Pro
 
 		const locationsFromFile = getLocationsFromFile(fileStore, settings);
 
+		const getSourceLocation = (row) =>
+			(row[settings.linkTableConfig.fieldLocationSource] || '').trim();
+		const getTargetLocation = (row) =>
+			(row[settings.linkTableConfig.fieldLocationTarget] || '').trim();
+
 		// iterate over raw link table, populating the normalized node and location tables
 		let firstRow = true;
 		for (const row of rawData) {
@@ -197,13 +206,13 @@ async function importNetworkFromTables(settings, fileStore, reloadNetworks): Pro
 			if (firstRow && hasHeaderRow) {
 				firstRow = false;
 				continue;
-			} else if (row.every((d) => d === null)) {
+			} else if (row.every((d) => !d)) {
 				continue; // skip blank lines
 			}
 
 			// ensure source location is in location table
 			if (settings.linkTableConfig.fieldLocationSource) {
-				const sourceLocation = row[settings.linkTableConfig.fieldLocationSource];
+				const sourceLocation = getSourceLocation(row);
 
 				if (!locationNames.includes(sourceLocation)) {
 					locationNames.push(sourceLocation);
@@ -224,7 +233,7 @@ async function importNetworkFromTables(settings, fileStore, reloadNetworks): Pro
 
 			// ensure target location is in location table
 			if (settings.linkTableConfig.fieldLocationTarget) {
-				const targetLocation = row[settings.linkTableConfig.fieldLocationTarget];
+				const targetLocation = getTargetLocation(row);
 
 				if (!locationNames.includes(targetLocation)) {
 					locationNames.push(targetLocation);
@@ -256,7 +265,7 @@ async function importNetworkFromTables(settings, fileStore, reloadNetworks): Pro
 				const node = [nodeNames.length - 1, nodeName];
 
 				if (settings.linkTableConfig.fieldLocationSource) {
-					node.push(locationIndexes[row[settings.linkTableConfig.fieldLocationSource]]);
+					node.push(locationIndexes[getSourceLocation(row)]);
 
 					if (settings.linkTableConfig.timeConfig.timeField) {
 						const originalTime = row[settings.linkTableConfig.timeConfig.timeField];
@@ -272,7 +281,7 @@ async function importNetworkFromTables(settings, fileStore, reloadNetworks): Pro
 				const node = [nodeIndex[nodeName], nodeName];
 
 				if (settings.linkTableConfig.fieldLocationSource) {
-					node.push(locationIndexes[row[settings.linkTableConfig.fieldLocationSource]]);
+					node.push(locationIndexes[getSourceLocation(row)]);
 
 					const originalTime = row[settings.linkTableConfig.timeConfig.timeField];
 					const convertedTime = formatStandardTime(timeParser(originalTime));
@@ -293,7 +302,7 @@ async function importNetworkFromTables(settings, fileStore, reloadNetworks): Pro
 				const node = [nodeNames.length - 1, nodeName];
 
 				if (settings.linkTableConfig.fieldLocationTarget) {
-					node.push(locationIndexes[row[settings.linkTableConfig.fieldLocationTarget]]);
+					node.push(locationIndexes[getTargetLocation(row)]);
 
 					if (settings.linkTableConfig.timeConfig.timeField) {
 						const originalTime = row[settings.linkTableConfig.timeConfig.timeField];
@@ -309,7 +318,7 @@ async function importNetworkFromTables(settings, fileStore, reloadNetworks): Pro
 				const node = [nodeIndex[nodeName], nodeName];
 
 				if (settings.linkTableConfig.fieldLocationTarget) {
-					node.push(locationIndexes[row[settings.linkTableConfig.fieldLocationTarget]]);
+					node.push(locationIndexes[getTargetLocation(row)]);
 
 					const originalTime = row[settings.linkTableConfig.timeConfig.timeField];
 					const convertedTime = formatStandardTime(timeParser(originalTime));
@@ -346,7 +355,7 @@ async function importNetworkFromTables(settings, fileStore, reloadNetworks): Pro
 			if (firstRow && hasHeaderRow) {
 				firstRow = false;
 				continue;
-			} else if (row.every((d) => d === null)) {
+			} else if (row.every((d) => !d)) {
 				continue; // skip blank lines
 			}
 

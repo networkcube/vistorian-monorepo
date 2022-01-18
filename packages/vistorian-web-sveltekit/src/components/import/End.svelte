@@ -18,21 +18,27 @@
 		hasImported = true;
 	}
 
-	function saveNetwork(settings, $fileStore, reloadNetworks) {
+	async function saveNetwork(settings, $fileStore, reloadNetworks) {
 		if (!hasImported) {
-			importNetwork(settings, $fileStore, reloadNetworks);
+			await importNetwork(settings, $fileStore, reloadNetworks);
 		}
 		hasImported = true;
 	}
 
-	function importNetwork(settings, $fileStore, reloadNetworks) {
+	async function importNetwork(settings, $fileStore, reloadNetworks) {
 		if (settings.fileFormat === 'tabular') {
-			importNetworkFromTables(settings, $fileStore, reloadNetworks);
+			await importNetworkFromTables(settings, $fileStore, reloadNetworks);
 		}
 
 		if (settings.fileFormat === 'network') {
-			importNetworkFromFile(settings, $fileStore, reloadNetworks);
+			await importNetworkFromFile(settings, $fileStore, reloadNetworks);
 		}
+	}
+
+	async function saveNetworkWithoutLoadingVis() {
+		await saveNetwork(settings, $fileStore, reloadNetworks);
+		stage = 'name';
+		hasImported = false;
 	}
 
 	let hasImported = false;
@@ -77,13 +83,7 @@
 		<br />
 		<h4>Or, import another network:</h4>
 		<br />
-		<Button
-			outline
-			on:click={() => {
-				saveNetwork(settings, $fileStore, reloadNetworks);
-				stage = 'name';
-			}}>+ Create new network</Button
-		>
+		<Button outline on:click={() => saveNetworkWithoutLoadingVis()}>+ Create new network</Button>
 		<br />
 		<br />
 	</CardBody>
