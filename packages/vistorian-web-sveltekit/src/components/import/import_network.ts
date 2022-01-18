@@ -60,6 +60,37 @@ const getLocationsFromFile = (fileStore, settings) => {
 	return locations;
 };
 
+const getNodeTypesFromFile = (fileStore, settings) => {
+	if (!settings.nodeMetadataConfig.hasMetadata) {
+		return null;
+	}
+
+	const rawData = fileStore[settings.nodeMetadataConfig.selectedFile].data;
+	const hasHeaderRow = fileStore[settings.nodeMetadataConfig.selectedFile].hasHeaderRow;
+
+	const nodeTypes = [];
+
+	let firstRow = true;
+	for (const row of rawData) {
+		// skip header row if required
+		if (firstRow && hasHeaderRow) {
+			firstRow = false;
+			continue;
+		} else if (row.every((d) => !d)) {
+			continue; // skip blank lines
+		}
+
+		const nodeType = row[settings.nodeMetadataConfig.fieldNodeType];
+		const nodeId = row[settings.nodeMetadataConfig.fieldNodeId];
+
+		nodeTypes[nodeId] = nodeType;
+	}
+
+	console.log({ nodeTypes });
+
+	return nodeTypes;
+};
+
 async function saveNetwork(settings, fileStore, reloadNetworks, dataset): Promise<void> {
 	const SESSION_NAME = getUrlVars()['session'];
 
@@ -184,13 +215,23 @@ async function importNetworkFromTables(settings, fileStore, reloadNetworks): Pro
 		// check if the link table contains locations, and if so whether it also contains times
 		const hasNodeLocations =
 			settings.linkTableConfig.fieldLocationSource || settings.linkTableConfig.fieldLocationTarget;
+		let maxIndex = 1;
 		if (hasNodeLocations) {
-			normalizedNodeSchema.location = 2;
+			maxIndex++;
+			normalizedNodeSchema.location = maxIndex;
 
 			if (settings.linkTableConfig.timeConfig.timeField) {
-				normalizedNodeSchema.time = 3;
+				maxIndex++;
+				normalizedNodeSchema.time = maxIndex;
 			}
 		}
+
+		const nodeTypes = getNodeTypesFromFile(fileStore, settings);
+		if (nodeTypes) {
+			maxIndex++;
+			normalizedNodeSchema.nodeType = maxIndex;
+		}
+		// TODO: add nodeType to schema
 
 		const locationsFromFile = getLocationsFromFile(fileStore, settings);
 
@@ -273,6 +314,9 @@ async function importNetworkFromTables(settings, fileStore, reloadNetworks): Pro
 						node.push(convertedTime);
 					}
 				}
+				if (nodeTypes) {
+					node.push(nodeTypes[nodeName]);
+				}
 
 				normalizedNodeTable.push(node);
 			} else if (settings.linkTableConfig.timeConfig.timeField) {
@@ -286,6 +330,9 @@ async function importNetworkFromTables(settings, fileStore, reloadNetworks): Pro
 					const originalTime = row[settings.linkTableConfig.timeConfig.timeField];
 					const convertedTime = formatStandardTime(timeParser(originalTime));
 					node.push(convertedTime);
+				}
+				if (nodeTypes) {
+					node.push(nodeTypes[nodeName]);
 				}
 				normalizedNodeTable.push(node);
 			}
@@ -310,7 +357,9 @@ async function importNetworkFromTables(settings, fileStore, reloadNetworks): Pro
 						node.push(convertedTime);
 					}
 				}
-
+				if (nodeTypes) {
+					node.push(nodeTypes[nodeName]);
+				}
 				normalizedNodeTable.push(node);
 			} else if (settings.linkTableConfig.timeConfig.timeField) {
 				// node has already been recorded, but add another entry with same id but this time + location
@@ -323,6 +372,9 @@ async function importNetworkFromTables(settings, fileStore, reloadNetworks): Pro
 					const originalTime = row[settings.linkTableConfig.timeConfig.timeField];
 					const convertedTime = formatStandardTime(timeParser(originalTime));
 					node.push(convertedTime);
+				}
+				if (nodeTypes) {
+					node.push(nodeTypes[nodeName]);
 				}
 				normalizedNodeTable.push(node);
 			}

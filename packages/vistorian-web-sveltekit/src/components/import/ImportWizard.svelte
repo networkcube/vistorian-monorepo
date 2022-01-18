@@ -74,12 +74,15 @@
 			fieldY: null
 		},
 
-		// currently disabled
 		nodeMetadataConfig: {
 			hasMetadata: false,
-			fieldLabel: null,
-			fieldColor: null,
-			selectedFile: null
+			selectedFile: null,
+			fieldNodeId: null,
+			fieldNodeType: null
+
+			//	fieldLabel: null,
+			//	fieldColor: null,
+			//	selectedFile: null
 		}
 	};
 
@@ -93,15 +96,6 @@
 
 	let stage = 'name',
 		previousStage = null;
-
-	/* "nodes" stage is currently sipped:
-    <ExtraNodeDate
-    bind:settings={settings}
-    bind:stage={stage}
-    previous_stage={() => settings.linkDataType}
-    next_stage={() => "end"}
-  />
-   */
 </script>
 
 <h3>Network data import wizard</h3>
@@ -168,7 +162,17 @@
 			return settings.linkTableConfig.fieldLocationSource ||
 				settings.linkTableConfig.fieldLocationTarget
 				? 'location_table'
-				: 'end';
+				: 'extraNodeData';
+		}}
+	/>
+{:else if stage === 'extraNodeData'}
+	<ExtraNodeDate
+		bind:config={settings.nodeMetadataConfig}
+		bind:stage
+		previous_stage={() => previousStage}
+		next_stage={() => {
+			previousStage = stage;
+			return 'end';
 		}}
 	/>
 {:else if stage === 'nodeTable'}
@@ -188,7 +192,7 @@
 		previous_stage={() => previousStage}
 		next_stage={() => {
 			previousStage = stage;
-			return 'end';
+			return 'extraNodeData';
 		}}
 	/>
 {:else if stage === 'end'}

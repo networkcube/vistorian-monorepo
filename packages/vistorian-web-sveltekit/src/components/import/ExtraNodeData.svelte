@@ -1,26 +1,56 @@
 <script>
 	import { Button, Card, CardBody, CardFooter } from 'sveltestrap';
 
-	import NodeMetadataConfig from './NodeMetadataConfig.svelte';
-	import NodeLocationConfig from './NodeLocationConfig.svelte';
+	import FileSelector from './FileSelector.svelte';
+	import FieldSelector from './FieldSelector.svelte';
 
-	export let settings, stage, previous_stage, next_stage;
+	export let config, stage, previous_stage, next_stage;
 
-	// I've removed
-	//     <NodeMetadataConfig bind:config={settings.nodeMetadataConfig} />
-	// This will be more useful in future if we can select variables of metadata to be added to node objects.
+	$: ready =
+		!config.hasMetadata ||
+		(config.hasMetadata &&
+			config.selectedFile &&
+			config.fieldNodeId !== null &&
+			config.fieldNodeType !== null);
 </script>
 
 <Card class="mb-3" style="width: 50%">
+	<h4>Do you have an extra file recording node types?</h4>
+
 	<CardBody>
-		{#if settings.linkTableConfig.locationFormat}
-			<p>Node locations are being extracted from the link table.</p>
-		{:else}
-			<NodeLocationConfig bind:config={settings.nodeLocationConfig} />
+		<input type="radio" bind:group={config.hasMetadata} value={true} />
+		Yes, I have a file recording the type for each node.
+		<br />
+
+		<input type="radio" bind:group={config.hasMetadata} value={false} />
+		No, I do not have a file recording the type for each node.
+		<br />
+
+		{#if config.hasMetadata}
+			<FileSelector bind:selectedFile={config.selectedFile} />
+			<br />
+
+			{#if config.selectedFile}
+				<FieldSelector
+					selectedFile={config.selectedFile}
+					label={'Node ID'}
+					bind:selectedField={config.fieldNodeId}
+					required={true}
+				/>
+				<br />
+				<FieldSelector
+					selectedFile={config.selectedFile}
+					label={'Node type'}
+					bind:selectedField={config.fieldNodeType}
+					required={true}
+				/>
+			{/if}
 		{/if}
 	</CardBody>
 	<CardFooter>
 		<Button style="float: left" on:click={() => (stage = previous_stage())}>Previous</Button>
-		<Button style="float: right" on:click={() => (stage = next_stage())}>Next</Button>
+		<Button style="float: right" on:click={() => (stage = next_stage())} disabled={!ready}
+			>Next</Button
+		>
 	</CardFooter>
 </Card>
