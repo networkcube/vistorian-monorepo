@@ -95,7 +95,8 @@
 	};
 
 	let stage = 'name',
-		previousStage = null;
+		previousStage = null,
+		previousStages = [];
 </script>
 
 <h3>Network data import wizard</h3>
@@ -114,7 +115,7 @@
 				style="float: right"
 				disabled={!settings.name}
 				on:click={() => {
-					previousStage = 'name';
+					previousStages.push('name');
 					stage = 'network_format';
 				}}
 			>
@@ -126,19 +127,19 @@
 	<NetworkFormat
 		bind:stage
 		next_stage={() => {
-			previousStage = stage;
+			previousStages.push(stage);
 			return settings.fileFormat;
 		}}
-		previous_stage={() => previousStage}
+		previous_stage={() => previousStages.pop()}
 		bind:fileFormat={settings.fileFormat}
 	/>
 {:else if stage === 'network'}
 	<NetworkFileImport
 		bind:stage
 		bind:config={settings.networkFileConfig}
-		previous_stage={() => previousStage}
+		previous_stage={() => previousStages.pop()}
 		next_stage={() => {
-			previousStage = stage;
+			previousStages.push(stage);
 			return 'end';
 		}}
 	/>
@@ -146,9 +147,9 @@
 	<LinkDataType
 		bind:linkDataType={settings.linkDataType}
 		bind:stage
-		previous_stage={() => previousStage}
+		previous_stage={() => previousStages.pop()}
 		next_stage={() => {
-			previousStage = stage;
+			previousStages.push(stage);
 			return settings.linkDataType;
 		}}
 	/>
@@ -156,9 +157,9 @@
 	<LinkTableConfig
 		bind:config={settings.linkTableConfig}
 		bind:stage
-		previous_stage={() => previousStage}
+		previous_stage={() => previousStages.pop()}
 		next_stage={() => {
-			previousStage = stage;
+			previousStages.push(stage);
 			return settings.linkTableConfig.fieldLocationSource ||
 				settings.linkTableConfig.fieldLocationTarget
 				? 'location_table'
@@ -169,9 +170,9 @@
 	<ExtraNodeDate
 		bind:config={settings.nodeMetadataConfig}
 		bind:stage
-		previous_stage={() => previousStage}
+		previous_stage={() => previousStages.pop()}
 		next_stage={() => {
-			previousStage = stage;
+			previousStages.push(stage);
 			return 'end';
 		}}
 	/>
@@ -179,9 +180,9 @@
 	<NodeTableNetworkConfig
 		bind:config={settings.nodeTableConfig}
 		bind:stage
-		previous_stage={() => previousStage}
+		previous_stage={() => previousStages.pop()}
 		next_stage={() => {
-			previousStage = stage;
+			previousStage.push(stage);
 			return 'end';
 		}}
 	/>
@@ -189,9 +190,9 @@
 	<LocationTableConfig
 		bind:config={settings.locationTableConfig}
 		bind:stage
-		previous_stage={() => previousStage}
+		previous_stage={() => previousStages.pop()}
 		next_stage={() => {
-			previousStage = stage;
+			previousStage.push(stage);
 			return 'extraNodeData';
 		}}
 	/>
@@ -199,9 +200,9 @@
 	<End
 		bind:settings
 		bind:stage
-		previous_stage={() => previousStage}
+		previous_stage={() => previousStages.pop()}
 		next_stage={() => {
-			previousStage = stage;
+			previousStage.push(stage);
 			return null;
 		}}
 		{reloadNetworks}
