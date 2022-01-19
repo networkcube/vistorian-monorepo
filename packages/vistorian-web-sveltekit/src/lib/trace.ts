@@ -91,7 +91,7 @@ const sendLogs_ = function (list) {
 		httpRequest.setRequestHeader('Accept', 'text/plain');
 		//    httpRequest.setRequestHeader("Content-Length", json.length);
 	}
-	// httpRequest.send(json);
+	httpRequest.send(json);
 };
 
 const sendLogs = function () {
