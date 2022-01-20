@@ -95,7 +95,6 @@
 	};
 
 	let stage = 'name',
-		previousStage = null,
 		previousStages = [];
 </script>
 
@@ -182,7 +181,7 @@
 		bind:stage
 		previous_stage={() => previousStages.pop()}
 		next_stage={() => {
-			previousStage.push(stage);
+			previousStages.push(stage);
 			return 'end';
 		}}
 	/>
@@ -192,7 +191,7 @@
 		bind:stage
 		previous_stage={() => previousStages.pop()}
 		next_stage={() => {
-			previousStage.push(stage);
+			previousStages.push(stage);
 			return 'extraNodeData';
 		}}
 	/>
@@ -202,7 +201,7 @@
 		bind:stage
 		previous_stage={() => previousStages.pop()}
 		next_stage={() => {
-			previousStage.push(stage);
+			previousStages.push(stage);
 			return null;
 		}}
 		{reloadNetworks}

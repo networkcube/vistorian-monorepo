@@ -124,11 +124,18 @@
 			const dgraph = main.getDynamicGraph(selectedNetwork.name, SESSION_NAME);
 			const nodes = dgraph.nodes().toArray();
 
-			nodeColumns = ['id', 'label'];
-			nodeData = dgraph
-				.nodes()
-				.toArray()
-				.map((n) => [n.id(), n.label()]);
+			const nodesHaveTypes = nodes.some((n) => n.nodeType());
+
+			if (nodesHaveTypes) {
+				nodeColumns = ['id', 'label', 'node type'];
+
+				nodeData = nodes.map((n) => [n.id(), n.label() || '', n.nodeType() || '']);
+				// N.B. we need to replace any nulls with empty string for sort to work
+			} else {
+				nodeColumns = ['id', 'label'];
+
+				nodeData = nodes.map((n) => [n.id(), n.label() || '']);
+			}
 
 			let links = dgraph.links().toArray();
 			linkData = links.map((l) => [
