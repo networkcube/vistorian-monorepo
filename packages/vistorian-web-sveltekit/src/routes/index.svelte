@@ -117,6 +117,7 @@
 					</a>
 				</h4>
 			</div> -->
+			<h2>Or explore our resources:</h2>
 
 			<br />
 
@@ -124,7 +125,7 @@
 				<div style="display: flex; text-align: left">
 					<div class="menuCol">
 						<h2>Overview</h2>
-						<a href="https://vistorian.github.io">Home</a>
+						<a href="https://vistorian.github.io">Project</a>
 						<br />
 						<a href="https://vistorian.github.io/visualizations.html">Visualizations</a>
 						<br />
@@ -137,11 +138,11 @@
 						<br />
 						<a href="https://vistorian.github.io/courses.html">Courses</a>
 						<br />
-						<a href="https://vistorian.github.io/tutorials.html">Workshop</a>
+						<a href="https://vistorian.github.io/tutorials.html">Workshops</a>
 						<br />
 						<a href="https://vistorian.github.io/Troubleshooting.html">Troubleshooting</a>
 						<br />
-						<a href="https://vistorian.github.io/Resources.html">Resources</a>
+						<a href="https://vistorian.github.io/Resources.html">Network Resources</a>
 					</div>
 
 					<div class="menuCol">

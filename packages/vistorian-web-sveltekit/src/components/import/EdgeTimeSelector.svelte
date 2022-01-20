@@ -16,7 +16,7 @@
 	export let selectedFile = null;
 </script>
 
-<h4>3. Are link associated with time?</h4>
+<h4>3. Are links associated with time?</h4>
 
 <input type="radio" bind:group={config.edgeTimeType} value={null} />
 <b>No</b>, my links do not have associated times or this information is not recorded.

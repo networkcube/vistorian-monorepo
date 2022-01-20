@@ -323,9 +323,10 @@
 						resizable={true}
 					/>
 				{:else}
-					<h3 class="vertical-centered">
+					<h3>This is your Data View</h3>
+					<h5 class="vertical-centered">
 						Select a network or create a new one using the panel on the left.
-					</h3>
+					</h5>
 				{/if}
 			</div>
 		</div>
