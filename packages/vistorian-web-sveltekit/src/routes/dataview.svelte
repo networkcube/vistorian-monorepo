@@ -7,7 +7,7 @@
 	import { Button } from 'sveltestrap';
 
 	import Fa from 'svelte-fa';
-	import { faPlus, faRedo } from '@fortawesome/free-solid-svg-icons';
+	import { faPlus, faRedo, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 
 	import Bookmarks from '../components/Bookmarks.svelte';
 	import Feedback from '../components/Feedback.svelte';
@@ -118,6 +118,18 @@
 		selectedNetwork = networkName;
 		state = '';
 	};
+
+	const launchNetworkNarratives = () => {
+		const url = "http://localhost:8090/external.html";
+
+		const w = window.open(url, "_blank");
+
+		// using a fixed delay to wait for the page to have loaded is a hack, but is the simplest solution for now
+		new Promise(resolve => setTimeout(resolve, 2000)).then(() => {
+			w.postMessage(selectedNetwork, "*");
+		});
+	};
+
 
 	$: {
 		if (selectedNetwork) {
@@ -250,6 +262,11 @@
 								</a>
 							</li>
 						</ul>
+
+						<Button on:click={launchNetworkNarratives}>Open in NetworkNarratives
+							<Fa icon={faExternalLinkAlt} />
+						</Button>
+
 					{:else}
 						<p>First select a network.</p>
 						<ul style="opacity: 0.4" class="vis-types">
