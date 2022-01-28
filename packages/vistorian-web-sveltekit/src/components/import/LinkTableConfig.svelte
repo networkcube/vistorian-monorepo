@@ -77,7 +77,6 @@
 				selectedFile={config.selectedFile}
 				label={'Link ID:'}
 				bind:selectedField={config.fieldLinkId}
-				required={true}
 			/>
 			<br />
 
