@@ -39,12 +39,10 @@ This means that if you make changes to code in `packages/vistorian_core` and run
 
 To view the vistorian web site:
 
-    cd packages/vistorian_web
-    http-server
+    cd packages/vistorian-web-sveltekit
+    npm run dev
 
 Then open the URL printed in the console.
-
-(instead of http-server, you can use an alternative from this [Big list of http static server one-liners ](https://gist.github.com/willurd/5720255)))
 
 
 You can apply an `npm run` command to all packages using `lerna run` (e.g., `lerna run build`)
