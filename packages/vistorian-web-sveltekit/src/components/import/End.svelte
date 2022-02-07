@@ -55,25 +55,25 @@
 
 		<div id="visOptions" style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr;">
 			<div>
-				<img src="figures/nodelink.png" on:click={() => loadVis('nodelink')} />
+				<img src="/figures/nodelink.png" on:click={() => loadVis('nodelink')} />
 				<!-- <img src="vis_icons/node-link.png" height="100px" on:click={() => loadVis('nodelink')} /> -->
 				<p>Node link</p>
 			</div>
 
 			<div>
-				<img src="figures/matrix.png" on:click={() => loadVis('matrix')} />
+				<img src="/figures/matrix.png" on:click={() => loadVis('matrix')} />
 				<!-- <img src="vis_icons/matrix.png" height="100px" on:click={() => loadVis('matrix')} /> -->
 				<p>Matrix</p>
 			</div>
 
 			<div>
-				<img src="figures/dynamicego.png" on:click={() => loadVis('dynamicego')} />
+				<img src="/figures/dynamicego.png" on:click={() => loadVis('dynamicego')} />
 				<!-- <img src="vis_icons/dynamicego.png" height="100px" on:click={() => loadVis('dynamicego')} /> -->
 				<p>Timeline</p>
 			</div>
 
 			<div>
-				<img src="figures/map.png" on:click={() => loadVis('map')} />
+				<img src="/figures/map.png" on:click={() => loadVis('map')} />
 				<!-- <img src="vis_icons/map.png" height="100px" on:click={() => loadVis('map')} /> -->
 				<p>Map</p>
 			</div>
