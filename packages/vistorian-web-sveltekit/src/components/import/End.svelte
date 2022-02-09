@@ -77,6 +77,12 @@
 				<!-- <img src="vis_icons/map.png" height="100px" on:click={() => loadVis('map')} /> -->
 				<p>Map</p>
 			</div>
+
+			<div>
+				<img src="/figures/nl+mat.png" on:click={() => loadVis('mat-nl')} />
+				<!-- <img src="vis_icons/map.png" height="100px" on:click={() => loadVis('map')} /> -->
+				<p>Node-Link &amp; map</p>
+			</div>
 		</div>
 
 		<br />
