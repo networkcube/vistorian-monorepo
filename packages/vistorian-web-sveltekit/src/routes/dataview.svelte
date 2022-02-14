@@ -120,16 +120,15 @@
 	};
 
 	const launchNetworkNarratives = () => {
-		const url = "https://networknarratives.github.io";
+		const url = 'https://networknarratives.github.io';
 
-		const w = window.open(url, "_blank");
+		const w = window.open(url, '_blank');
 
 		// using a fixed delay to wait for the page to have loaded is a hack, but is the simplest solution for now
-		new Promise(resolve => setTimeout(resolve, 2000)).then(() => {
-			w.postMessage(selectedNetwork, "*");
+		new Promise((resolve) => setTimeout(resolve, 2000)).then(() => {
+			w.postMessage(selectedNetwork, '*');
 		});
 	};
-
 
 	$: {
 		if (selectedNetwork) {
@@ -269,10 +268,10 @@
 							</li>
 						</ul>
 
-						<Button on:click={launchNetworkNarratives}>Open in NetworkNarratives
+						<Button on:click={launchNetworkNarratives}
+							>Open in NetworkNarratives
 							<Fa icon={faExternalLinkAlt} />
 						</Button>
-
 					{:else}
 						<p>First select a network.</p>
 						<ul style="opacity: 0.4" class="vis-types">
