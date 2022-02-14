@@ -411,32 +411,30 @@ async function importNetworkFromTables(settings, fileStore, reloadNetworks): Pro
 				continue; // skip blank lines
 			}
 
-			for (const index of nodeColumnIndexes) {
-				const link = [
-					settings.linkTableConfig.fieldLinkId
-						? row[settings.linkTableConfig.fieldLinkId]
-						: normalizedLinkTable.length, // link id
-					nodeIndex[row[settings.linkTableConfig.fieldSourceId]], // source node
-					nodeIndex[row[settings.linkTableConfig.fieldTargetId]] // target node
-				];
-				if (settings.linkTableConfig.fieldLinkType) {
-					link.push(row[settings.linkTableConfig.fieldLinkType]);
-				}
-				if (settings.linkTableConfig.fieldWeight) {
-					link.push(row[settings.linkTableConfig.fieldWeight]);
-				}
-				if (settings.linkTableConfig.fieldLinkIsDirected) {
-					link.push(row[settings.linkTableConfig.fieldLinkIsDirected]);
-				}
-				if (settings.linkTableConfig.timeConfig.timeField) {
-					const originalTime = row[settings.linkTableConfig.timeConfig.timeField];
-					const convertedTime = formatStandardTime(timeParser(originalTime));
-
-					link.push(convertedTime);
-				}
-
-				normalizedLinkTable.push(link);
+			const link = [
+				settings.linkTableConfig.fieldLinkId
+					? row[settings.linkTableConfig.fieldLinkId]
+					: normalizedLinkTable.length, // link id
+				nodeIndex[row[settings.linkTableConfig.fieldSourceId]], // source node
+				nodeIndex[row[settings.linkTableConfig.fieldTargetId]] // target node
+			];
+			if (settings.linkTableConfig.fieldLinkType) {
+				link.push(row[settings.linkTableConfig.fieldLinkType]);
 			}
+			if (settings.linkTableConfig.fieldWeight) {
+				link.push(row[settings.linkTableConfig.fieldWeight]);
+			}
+			if (settings.linkTableConfig.fieldLinkIsDirected) {
+				link.push(row[settings.linkTableConfig.fieldLinkIsDirected]);
+			}
+			if (settings.linkTableConfig.timeConfig.timeField) {
+				const originalTime = row[settings.linkTableConfig.timeConfig.timeField];
+				const convertedTime = formatStandardTime(timeParser(originalTime));
+
+				link.push(convertedTime);
+			}
+
+			normalizedLinkTable.push(link);
 		}
 	}
 

@@ -18,7 +18,20 @@ export function timeFormat(): string {
 }
 
 // GLOBAL VARIABLES
-const dataManager: DataManager = new DataManager();
+declare global {
+  interface Window {
+    dataManager: DataManager;
+  }
+}
+
+let dataManager: DataManager;
+if (typeof window !== "undefined") {
+  if (!window.dataManager) {
+    window.dataManager = new DataManager();
+  }
+  dataManager = window.dataManager;
+}
+
 let session: string;
 
 export function getSessionId(): string {

@@ -13,6 +13,14 @@ Previously, they were scattered across multiple repositories (
 
 It uses [Lerna](https://lerna.js.org/) to manage the repository.
 
+
+## Git branches
+
+The `master` branch is deployed automatically to [vistorian.net](https://vistorian.net). This branch is now protected: rather than pushing directly to `master`, push to a different branch and then create a pull request.
+
+The `staging` branch is deployed automatically to [testing.vistorian.net](https://testing.vistorian.net).
+
+
 ## Getting started
 
 If you just want to *use* The Vistorian, you can use it at [vistorian.online](http://vistorian.online).
@@ -39,12 +47,10 @@ This means that if you make changes to code in `packages/vistorian_core` and run
 
 To view the vistorian web site:
 
-    cd packages/vistorian_web
-    http-server
+    cd packages/vistorian-web-sveltekit
+    npm run dev
 
 Then open the URL printed in the console.
-
-(instead of http-server, you can use an alternative from this [Big list of http static server one-liners ](https://gist.github.com/willurd/5720255)))
 
 
 You can apply an `npm run` command to all packages using `lerna run` (e.g., `lerna run build`)

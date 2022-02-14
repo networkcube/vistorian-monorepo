@@ -125,6 +125,10 @@ function traceMetadata(action, label, value) {
 }
 
 function traceEvent(cat, action, label, value) {
+	if (localStorage.getItem('disableLogging') == 'true') {
+		return;
+	}
+
 	if (localStorage.getItem('acceptLogging') === 'true') {
 		if (starting) {
 			//if (StartedLogging()) {

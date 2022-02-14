@@ -3,7 +3,7 @@ import * as d3 from "d3";
 import * as utils from "vistorian-core/src/data/utils";
 import * as dynamicgraph from "vistorian-core/src/data/dynamicgraph";
 import * as main from "vistorian-core/src/data/main";
-import * as messenger from "vistorian-core/src/data/messenger";
+import { SearchResultMessage } from "vistorian-core/src/data/messenger";
 import * as dynamicgraphutils from "vistorian-core/src/data/dynamicgraphutils";
 
 const RECT_SIZE = 13;
@@ -16,6 +16,15 @@ const width = window.innerWidth;
 // Get data
 const dgraph: dynamicgraph.DynamicGraph = main.getDynamicGraph();
 
+declare global {
+  interface Window {
+    vc: any;
+    saveSearchResultAsSelection: any;
+  }
+}
+
+// We need to register callbacks on the global messenger, or they won't fire
+const messenger = window.vc.messenger;
 messenger.setDefaultEventListener(updateLists);
 messenger.addEventListener("searchResult", searchResultHandler);
 
@@ -372,8 +381,8 @@ export function updateList(type: string, name: string): void {
   nodeGs.selectAll(".icon").attr("height", RECT_SIZE).attr("width", RECT_SIZE);
 }
 
-let searchMessage: messenger.SearchResultMessage;
-export function searchResultHandler(m: messenger.SearchResultMessage): void {
+let searchMessage: SearchResultMessage;
+export function searchResultHandler(m: SearchResultMessage): void {
   searchMessage = m;
   const results = document.getElementById("searchResults");
   if (!results) {
@@ -401,6 +410,8 @@ export function searchResultHandler(m: messenger.SearchResultMessage): void {
       "</b> <u onclick=\"saveSearchResultAsSelection('link')\">(Save as selection)</u></p>";
   }
 }
+
+window.saveSearchResultAsSelection = saveSearchResultAsSelection;
 
 export function saveSearchResultAsSelection(type: string): void {
   const s: dynamicgraphutils.Selection = messenger.createSelection(

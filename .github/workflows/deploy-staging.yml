@@ -2,9 +2,9 @@ name: Bootstrap, build and lint
 
 on:
   push:
-    branches: [ master ]
+    branches: [ staging ]
   pull_request:
-    branches: [ master ]
+    branches: [ staging ]
   workflow_dispatch:
 
 jobs:
@@ -22,19 +22,12 @@ jobs:
     - run: lerna bootstrap
     - run: lerna run lint
     - run: lerna run build
-    
-    - name: Archive results of build
-      uses: actions/upload-artifact@v2
-      if: ${{ github.event_name == 'push' }}
-      with:
-        name: vistorian
-        path: packages/vistorian-web-sveltekit/build
         
     - uses: up9cloud/action-rsync@v1.3
     if: ${{ github.event_name == 'push' }}
     env:
       USER: ${{secrets.DEPLOY_USERNAME}}
-      HOST: ${{secrets.DEPLOY_SERVER}}
+      HOST: ${{secrets.DEPLOY_STAGING_SERVER}}
       KEY: ${{secrets.DEPLOY_SSH_KEY}}
       SOURCE: packages/vistorian-web-sveltekit/build/
       TARGET: /var/www/vistorian
