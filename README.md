@@ -13,6 +13,14 @@ Previously, they were scattered across multiple repositories (
 
 It uses [Lerna](https://lerna.js.org/) to manage the repository.
 
+
+## Git branches
+
+The `master` branch is deployed automatically to [vistorian.net](https://vistorian.net). This branch is now protected: rather than pushing directly to `master`, push to a different branch and then create a pull request.
+
+The `staging` branch is deployed automatically to [testing.vistorian.net](https://testing.vistorian.net).
+
+
 ## Getting started
 
 If you just want to *use* The Vistorian, you can use it at [vistorian.online](http://vistorian.online).
