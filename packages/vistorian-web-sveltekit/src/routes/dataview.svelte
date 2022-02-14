@@ -120,7 +120,7 @@
 	};
 
 	const launchNetworkNarratives = () => {
-		const url = "http://localhost:8090/external.html";
+		const url = "https://networknarratives.github.io";
 
 		const w = window.open(url, "_blank");
 
