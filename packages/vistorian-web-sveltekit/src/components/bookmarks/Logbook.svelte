@@ -141,6 +141,54 @@
 		trace.event('bkm_1', ' new bookmark button', 'clicked', window.parent.location.pathname);
 	};
 
+
+	const publishBookmarks = () => {
+
+		function getUrlVars() {
+			const vars = {};
+			const params = window.location.search.replace("?", "").split("&");
+			let tmp;
+			let value;
+			params.forEach(function(item) {
+				tmp = item.split("=");
+				value = decodeURIComponent(tmp[1]);
+				vars[tmp[0]] = value;
+			});
+			return vars;
+		};
+
+		const read = (key) => {
+			return JSON.parse(localStorage.getItem(key));
+		};
+
+		const bookmarks = read("vistorianBookmarks");
+
+
+		let params = getUrlVars();
+		let datasetName = params["datasetName"].replace(/___/g, " ");
+		let sessionid = params["session"].replace(/___/g, " ");
+
+		let selectedNetwork = null;
+		const getNetwork = (networkId, sid) => read(`${sid}#Network#${networkId}`);
+		const networks = read(`${sessionid}#NetworkIds`)
+			.map((id) => getNetwork(id, sessionid));
+		const nets = networks.filter((n) => n.name === datasetName);
+		if (nets.length > 0) {
+			selectedNetwork = nets[0];
+		}
+
+		const url = "http://localhost:8081";
+
+		const w = window.open(url, "_blank");
+
+		const msg = { selectedNetwork, bookmarks };
+
+		// using a fixed delay to wait for the page to have loaded is a hack, but is the simplest solution for now
+		new Promise((resolve) => setTimeout(resolve, 2000)).then(() => {
+			w.postMessage(msg, "*");
+		});
+	};
+
 	let viewType;
 	onMount(async () => {
 		// from logbook.html
@@ -248,6 +296,12 @@
 
 			<Button outline on:click={clearBookmarks} style="width: 100%">
 				<u>C</u>lear Bookmarks
+			</Button>
+		</div>
+
+		<div>
+			<Button on:click={publishBookmarks}>
+				Push bookmarks to blog editor
 			</Button>
 		</div>
 
