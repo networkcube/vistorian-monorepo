@@ -13,7 +13,7 @@
 		config.fieldSourceId !== null &&
 		config.fieldTargetId !== null &&
 		(config.timeConfig.edgeTimeType == null ||
-		(config.timeConfig.formatString && config.timeConfig.timeField !== null));
+			(config.timeConfig.formatString && config.timeConfig.timeField !== null));
 	// TODO: check location set
 
 	$: console.log(config);
