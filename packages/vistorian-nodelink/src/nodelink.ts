@@ -310,7 +310,7 @@ parentSvg
       ) {
         const node = nodes[i];
         const [node_x, node_y] = node
-          .attr("transform")
+          .getAttribute("transform")
           .replace("translate(", "")
           .replace(")", "")
           .split(",");
@@ -322,11 +322,14 @@ parentSvg
         );
       });
 
-      console.log("Selected nodes:", selectedNodes);
       // N.B. node objects are selectedNodes
       // ids are selectedNodes.data().map(d => d._id)
       // labels are selectedNodes.data().map(d => d.label())
-      // TODO: publish message announcing this selection
+
+      const newElementCompound: utils.ElementCompound =
+        new utils.ElementCompound();
+      newElementCompound.nodes = selectedNodes.data();
+      messenger.highlight("set", newElementCompound);
     } else {
       panOffsetGlobal[0] += panOffsetLocal[0];
       panOffsetGlobal[1] += panOffsetLocal[1];
@@ -466,6 +469,7 @@ d3.forceSimulation(nodes)
 showMessage("Calculating<br/>layout");
 
 init();
+
 function init() {
   visualNodes = nodeLayer
     .selectAll("nodes")
@@ -584,12 +588,15 @@ function updateLayout() {
   // update nodelabel visibility after layout update.
   updateLabelVisibility();
 }
+
 function getLabelWidth(n: any) {
   return n.label().length * 8.5 + 10;
 }
+
 function getLabelHeight(n: any) {
   return 18;
 }
+
 function getNodeRadius(n: dynamicgraph.Node) {
   return Math.sqrt(n.links().length) * NODE_SIZE + 1;
 }
@@ -698,6 +705,7 @@ function mouseOverNode(ev: MouseEvent, n: any) {
   // BEFORE
   // messenger.highlight('set', { nodes: [n] })
 }
+
 function mouseOutNode() {
   messenger.highlight("reset");
 }
@@ -1028,6 +1036,7 @@ function calculateCurvedLinks() {
     }
   }
 }
+
 function stretchVector(vec: any, finalLength: any) {
   let len = 0;
   for (let i = 0; i < vec.length; i++) {
@@ -1040,6 +1049,7 @@ function stretchVector(vec: any, finalLength: any) {
 
   return vec;
 }
+
 function showMessage(message: string) {
   const messageBox = document.querySelector(".messageBox");
   if (messageBox) {
