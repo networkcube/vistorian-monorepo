@@ -57,10 +57,10 @@
         "moment": "^2.23.0",
         "papaparse": "^5.3.1",
         "vistorian-bookmarkbrowser": "0.0.1-alpha",
-        "vistorian-core": "0.0.12",
+        "vistorian-core": "0.1.0",
         "vistorian-dynamicego": "0.0.1-alpha",
         "vistorian-map": "0.0.5",
         "vistorian-matrix": "0.0.2-alpha",
-        "vistorian-nodelink": "0.0.11"
+        "vistorian-nodelink": "0.1.1"
     }
 }
