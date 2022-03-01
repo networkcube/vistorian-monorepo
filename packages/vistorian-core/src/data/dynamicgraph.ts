@@ -132,6 +132,7 @@ export class DynamicGraph {
 
   // highlighted objects
   highlightArrays: IDCompound = new IDCompound();
+  highlightFreezeArrays: IDCompound = new IDCompound();
 
   currentSelection_id = 0;
 
@@ -1614,6 +1615,22 @@ export class DynamicGraph {
   // // selections store ids of objects only.
 
   highlight(action: string, idCompound?: IDCompound): void {
+
+
+    if (action == 'freeze'){
+      this.highlight("resetFreeze");
+      this.highlight("addFreeze", idCompound);
+      return;
+    }
+    if (action == "unfreeze") {
+      // reset all
+      this.highlightFreezeArrays.nodeIds = [];
+      this.highlightFreezeArrays.linkIds = [];
+      this.highlightFreezeArrays.nodePairIds = [];
+      this.highlightFreezeArrays.timeIds = [];
+      return;
+    }
+
     if (action == "reset") {
       // reset all
       this.highlightArrays.nodeIds = [];
@@ -1627,24 +1644,11 @@ export class DynamicGraph {
       return;
     }
 
-    if (action == "set") {
+    if (action == "set"){
       this.highlight("reset");
       this.highlight("add", idCompound);
       return;
     }
-
-    // if(action == 'add'){
-    //     for(var i=0 ; i<elementIds.length ; i++){
-    //         if(this.highlightArrays[type].indexOf(elementIds[i]) == -1)
-    //             this.highlightArrays[type].push(elementIds[i]);
-    //     }
-    // }else
-    // if(action == 'remove'){
-    //     for(var i=0 ; i<elementIds.length ; i++){
-    //         if(this.highlightArrays[type].indexOf(elementIds[i]) > -1)
-    //              this.highlightArrays[type].splice(this.highlightArrays[type].indexOf(elementIds[i]),1)
-    //     }
-    // }
     if (action == "add") {
       for (const type in idCompound) {
         for (let i = 0; i < (idCompound as any)[type].length; i++) {
@@ -1661,6 +1665,25 @@ export class DynamicGraph {
             (idCompound as any)[type][i]
           );
           if (index >= 0) (this.highlightArrays as any)[type].splice(index, 1);
+        }
+      }
+    }
+    if (action == "addFreeze") {
+      for (const type in idCompound) {
+        for (let i = 0; i < (idCompound as any)[type].length; i++) {
+          (this.highlightFreezeArrays as any)[type].push(
+            (idCompound as any)[type][i]
+          );
+        }
+      }
+    } else if (action == "removeFreeze") {
+      let index: number;
+      for (const type in idCompound) {
+        for (let i = 0; i < (idCompound as any)[type].length; i++) {
+          index = (this.highlightFreezeArrays as any)[type].indexOf(
+            (idCompound as any)[type][i]
+          );
+          if (index >= 0) (this.highlightFreezeArrays as any)[type].splice(index, 1);
         }
       }
     }
@@ -1884,7 +1907,11 @@ export class DynamicGraph {
   }
 
   isHighlighted(id: number, type: string): boolean {
-    return (this.highlightArrays as any)[type + "Ids"].indexOf(id) > -1;
+    return (this.highlightArrays as any)[type + "Ids"].indexOf(id) > -1
+      || (this.highlightFreezeArrays as any)[type + "Ids"].indexOf(id) > -1;
+  }
+  isFrozen(id: number, type: string): boolean {
+    return (this.highlightFreezeArrays as any)[type + "Ids"].indexOf(id) > -1 
   }
 
   getHighlightedIds(type: string): any {
@@ -2545,7 +2572,11 @@ export class BasicElement {
 
   /** @returns true if this object is highlighted */
   isHighlighted(): boolean {
-    return this.g.isHighlighted(this._id, this.type);
+    return this.g.isHighlighted(this._id, this.type)
+  }
+  /** @returns true if this object is highlighted frozen */
+  isFrozen(): boolean {
+    return this.g.isFrozen(this._id, this.type)
   }
 
   /** @returns true if this object is filtered, i.e. removed from display. */
