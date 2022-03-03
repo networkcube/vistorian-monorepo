@@ -28,7 +28,7 @@
 		"vistorian-dynamicego": "0.0.1-alpha",
 		"vistorian-map": "0.0.5",
 		"vistorian-matrix": "0.0.2-alpha",
-		"vistorian-nodelink": "0.1.1"
+		"vistorian-nodelink": "0.1.4"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-static": "next",
