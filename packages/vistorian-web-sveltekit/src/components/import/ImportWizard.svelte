@@ -11,10 +11,8 @@
 	import NodeTableNetworkConfig from './NodeTableNetworkConfig.svelte';
 	import ExtraNodeDate from './ExtraNodeData.svelte';
 	import LocationTableConfig from './LocationTableConfig.svelte';
-	import * as main from "vistorian-core/src/data/main";
-	import {trace} from '../../lib/trace';
-
-
+	import * as main from 'vistorian-core/src/data/main';
+	import { trace } from '../../lib/trace';
 
 	export let reloadNetworks;
 
