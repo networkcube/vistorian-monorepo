@@ -3,7 +3,7 @@
 	import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 
 	import { Button, Card, CardHeader, CardBody, CardFooter } from 'sveltestrap';
-
+	import {trace} from '../../lib/trace';
 	export let fileFormat = 'network';
 	export let stage, previous_stage, next_stage;
 </script>
@@ -16,7 +16,7 @@
 		<br />
 
 		<h4>Table Format</h4>
-		<input type="radio" bind:group={fileFormat} value={'tabular'} />
+		<input type="radio" bind:group={fileFormat} value={'tabular'} on:click="{()=>{trace.event('dat_2_DT', 'data view', 'new network', 'Table Format');}}"/>
 		I have one or several files in a <b>tabular format</b> (e.g., spreadsheet, CSV, ...)
 		<br />
 
@@ -46,7 +46,7 @@
 		<br />
 
 		<h4>Other Format</h4>
-		<input type="radio" bind:group={fileFormat} value={'network'} />
+		<input type="radio" bind:group={fileFormat} value={'network'} on:click="{()=>{trace.event('dat_2_DT', 'data view', 'new network', 'Other Format');}}"/>
 		2. I have a file in a specific <b>network format</b> (e.g., GEDCOM, PAJEK or GraphML (XML))
 	</CardBody>
 	<CardFooter>

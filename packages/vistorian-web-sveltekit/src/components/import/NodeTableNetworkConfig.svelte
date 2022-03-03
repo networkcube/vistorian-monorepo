@@ -3,7 +3,7 @@
 
 	import FileSelector from './FileSelector.svelte';
 	import FieldSelector from './FieldSelector.svelte';
-
+	import {trace} from '../../lib/trace';
 	export let config = {
 		selectedFile: null,
 		fieldNode: null,
@@ -25,7 +25,7 @@
 	<CardBody>
 		<h4>1. Upload your node table:</h4>
 		<br />
-		<FileSelector bind:selectedFile={config.selectedFile} />
+		<FileSelector bind:selectedFile={config.selectedFile}  on:click="{()=>{trace.event('dat_2_NT', 'data view', 'Upload File', 'Node Table');}}"/>
 
 		{#if config.selectedFile}
 			<br />
@@ -75,7 +75,7 @@
 			<Button
 				outline
 				on:click={() =>
-					(config.fieldRelations = [...config.fieldRelations, { relation: null, field: null }])}
+					{(config.fieldRelations = [...config.fieldRelations, { relation: null, field: null }]);trace.event('dat_11', 'data view', 'Node Table', 'Add Relation');}}
 			>
 				+ Add relation
 			</Button>
