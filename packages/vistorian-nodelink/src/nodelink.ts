@@ -889,21 +889,13 @@ function updateNodes(highlightId?: number)
   }
 
   visualNodes
-    // .style("fill", (d: any) => {
-    //   let color: string | undefined;
-    //   if (highlightId && highlightId == d._id) 
-    //   {
-    //     color = COLOR_HIGHLIGHT;
-    //   } else if (d.isHighlighted()) 
-    //   {
-    //     color = COLOR_HIGHLIGHT;
-    //   } else {
-    //     color = utils.getPriorityColor(d);
-    //   }
-    //   if (!color) color = getNodeColor(d);
-    //   // console.log('>>>>nodecolor', color)
-    //   return color;
-    // })
+    .style("fill", (d: any) => {
+      let color: string | undefined;
+      color = utils.getPriorityColor(d);
+      if (!color) color = getNodeColor(d);
+      // console.log('>>>>nodecolor', color)
+      return color;
+    })
     .style("opacity", (d: any) => {
       const visible: boolean = d.isVisible();
       if (!visible) return 0;
