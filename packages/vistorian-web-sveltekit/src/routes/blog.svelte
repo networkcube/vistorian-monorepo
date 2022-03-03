@@ -31,7 +31,10 @@
     });
 
     const visUrls = {
-        "nodelink": '../node_modules/vistorian-nodelink/web/index.html'
+        "nodelink": '../node_modules/vistorian-nodelink/web/index.html',
+        "matrix": '../node_modules/vistorian-matrix/web/index.html',
+        "dynamicego": '../node_modules/vistorian-dynamicego/web/index.html',
+        "map": '../node_modules/vistorian-map/web/index.html'
     }
 
     const loadVisFromBookmark = (bookmarks, index) => {
