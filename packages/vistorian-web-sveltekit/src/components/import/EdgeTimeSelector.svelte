@@ -2,7 +2,7 @@
 	import FieldSelector from './FieldSelector.svelte';
 
 	import DateFormatPickerModal from './time_format/DateFomatPickerModal.svelte';
-	import {trace} from '../../lib/trace';
+	import { trace } from '../../lib/trace';
 
 	export let config = {
 		edgeTimeType: null,
@@ -19,11 +19,25 @@
 
 <h4>3. Are links associated with time?</h4>
 
-<input type="radio" bind:group={config.edgeTimeType} value={null} on:click="{()=>{trace.event('dat_11', 'Column Type Specified', 'Time', 'No');}}" />
+<input
+	type="radio"
+	bind:group={config.edgeTimeType}
+	value={null}
+	on:click={() => {
+		trace.event('dat_11', 'Column Type Specified', 'Time', 'No');
+	}}
+/>
 <b>No</b>, my links do not have associated times or this information is not recorded.
 <br />
 
-<input type="radio" bind:group={config.edgeTimeType} value={'pointTime'} on:click="{()=>{trace.event('dat_11', 'Column Type Specified', 'Time', 'Yes');}}"/>
+<input
+	type="radio"
+	bind:group={config.edgeTimeType}
+	value={'pointTime'}
+	on:click={() => {
+		trace.event('dat_11', 'Column Type Specified', 'Time', 'Yes');
+	}}
+/>
 <b>Yes</b>, each link is associated with a <i>single time</i> (for example, if edges correspond to
 letters posted from one person to another at a particular time)
 
