@@ -29,6 +29,11 @@ const height = window.innerHeight - 100;
 
 const TIMELINE_HEIGHT = 50;
 
+// STATE VARIABLES
+
+var highlightNeighbors: boolean = false;
+
+
 // get dynamic graph
 const dgraph: dynamicgraph.DynamicGraph = main.getDynamicGraph();
 const times: dynamicgraph.Time[] = dgraph.times().toArray();
@@ -46,6 +51,8 @@ let links: any = dgraph.links().toArray();
 const linkArrays = dgraph.linkArrays;
 links = addDirectionToLinks(links, linkArrays);
 
+
+
 //When a link row is hovered over in dataview.ts, a message is received here to highlight the corresponding link.
 const bcLink = new BroadcastChannel("row_hovered_over_link");
 bcLink.onmessage = function (ev) {
@@ -54,9 +61,9 @@ bcLink.onmessage = function (ev) {
 
 //When a node row is hovered over in dataview.ts, a message is received here to highlight the corresponding link.
 const bcNode = new BroadcastChannel("row_hovered_over_node");
-bcNode.onmessage = function (ev) {
-  updateNodes(ev.data.id);
-};
+// bcNode.onmessage = function (ev) {
+//   updateNodes(ev.data.id);
+// };
 
 // states
 let hiddenLabels: any = [];
@@ -241,8 +248,10 @@ const selectionRect = svg
   .attr("y", 0)
   .attr("width", 0)
   .attr("height", 0)
-  .style("opacity", 0.2);
-
+  .style("fill", 'none')
+  .style("stroke", '#ccc')
+  .style("stroke-dasharray", '5');
+  
 parentSvg
   .on("mousedown", (ev: MouseEvent) => {
     isMouseDown = true;
@@ -276,6 +285,7 @@ parentSvg
         Math.min(mouseStart[1], mouseEnd[1]) - topOffset - panOffsetGlobal[1];
 
       selectionRect
+        .attr('visibility', 'visible')
         .attr("x", r_x)
         .attr("width", r_w)
         .attr("y", r_y)
@@ -304,6 +314,9 @@ parentSvg
         .attr("width", r_w)
         .attr("y", r_y)
         .attr("height", r_h);
+      selectionRect
+        .attr('visibility', 'hidden')
+      
 
       const selectedNodes = visualNodes.filter(function (
         d: any,
@@ -331,7 +344,9 @@ parentSvg
       const newElementCompound: utils.ElementCompound =
         new utils.ElementCompound();
       newElementCompound.nodes = selectedNodes.data();
-      messenger.highlight("set", newElementCompound);
+      console.log('selectedNodes.data()', selectedNodes.data().length)
+      messenger.highlight("addFreeze", newElementCompound, {highlightNeighbors: false});
+
     } else {
       panOffsetGlobal[0] += panOffsetLocal[0];
       panOffsetGlobal[1] += panOffsetLocal[1];
@@ -739,7 +754,7 @@ function isHidingNode(n1: any, n2: any) {
 function mouseOverNode(ev: MouseEvent, n: any) {
   const newElementCompound: utils.ElementCompound = new utils.ElementCompound();
   newElementCompound.nodes = [n];
-  messenger.highlight("set", newElementCompound);
+  messenger.highlight("set", newElementCompound, {highlightNeighbors: true});
   // BEFORE
   // messenger.highlight('set', { nodes: [n] })
 }
@@ -748,10 +763,11 @@ function mouseClickNode(ev: MouseEvent, n: any) {
   console.log('>>> mouseClick', n.isFrozen())
   const newElementCompound: utils.ElementCompound = new utils.ElementCompound();
   newElementCompound.nodes = [n];
+
   if(n.isFrozen()){
     messenger.highlight("removeFreeze", newElementCompound);
   }else{
-    messenger.highlight("addFreeze", newElementCompound);
+    messenger.highlight("addFreeze", newElementCompound, {highlightNeighbors: false});
   }
 }
 
@@ -863,7 +879,11 @@ function timeChangedHandler(m: messenger.TimeRangeMessage) {
   updateNodes();
 }
 
-function updateEvent() {
+function updateEvent(m:messenger.Message) 
+{
+  if(m.type == messenger.MESSAGE_HIGHLIGHT){
+    highlightNeighbors = (<messenger.HighlightMessage>m).highlightNeighbors;
+  }
   updateLinks();
   updateNodes();
 }
@@ -879,7 +899,7 @@ function updateNodeSize() {
     );
 }
 
-function updateNodes(highlightId?: number) 
+function updateNodes() 
 {
   // check if any node is highlighted
   let somethingIsHighlighted = false;
@@ -889,28 +909,13 @@ function updateNodes(highlightId?: number)
   }
 
   visualNodes
-    // .style("fill", (d: any) => {
-    //   let color: string | undefined;
-    //   if (highlightId && highlightId == d._id) 
-    //   {
-    //     color = COLOR_HIGHLIGHT;
-    //   } else if (d.isHighlighted()) 
-    //   {
-    //     color = COLOR_HIGHLIGHT;
-    //   } else {
-    //     color = utils.getPriorityColor(d);
-    //   }
-    //   if (!color) color = getNodeColor(d);
-    //   // console.log('>>>>nodecolor', color)
-    //   return color;
-    // })
     .style("opacity", (d: any) => {
       const visible: boolean = d.isVisible();
       if (!visible) return 0;
-      if(somethingIsHighlighted && !
-        (d.isHighlighted() 
-        || d.neighbors().highlighted().length > 0
-        || d.links().highlighted().length > 0)
+      if(somethingIsHighlighted &&
+        !(d.isHighlighted()) 
+        || (highlightNeighbors && d.neighbors().highlighted().length > 0)
+        || d.links().highlighted().length > 0
       )
       {
           return NODE_OPACITY * OPACITY_UNSELECTED
@@ -923,7 +928,7 @@ function updateNodes(highlightId?: number)
     .style('visibility', (d:any) =>{
       if (d.isHighlighted() 
       || d.links().highlighted().length > 0
-      || d.neighbors().highlighted().length > 0
+      || (highlightNeighbors && d.neighbors().highlighted().length > 0)
       ) 
       {
         return 'visible';

@@ -9,6 +9,7 @@ import {
 } from "./dynamicgraph";
 import { getDynamicGraph } from "./main";
 import { searchForTerm } from "./search";
+import { ParticleBasicMaterial } from "three";
 
 export const MESSAGE_HIGHLIGHT = "highlight";
 export const MESSAGE_SELECTION = "selection";
@@ -75,6 +76,7 @@ export class Message {
   id: number;
   type: string;
   body: any;
+  params: any;
 
   constructor(type: string) {
     this.id = Math.random();
@@ -107,7 +109,8 @@ function isEmpty(obj: any) {
 // HIGHLIGHT
 export function highlight(
   action: string,
-  elementCompound?: ElementCompound
+  elementCompound?: ElementCompound,
+  params?: Object
 ): void {
   const g: DynamicGraph = getDynamicGraph();
   const idCompound: IDCompound = makeIdCompound(elementCompound);
@@ -120,7 +123,7 @@ export function highlight(
   if (!elementCompound == undefined) action = "reset";
 
   // create message
-  const m: HighlightMessage = new HighlightMessage(action, idCompound);
+  const m: HighlightMessage = new HighlightMessage(action, idCompound, params);
   distributeMessage(m);
 
   let cursor = "auto";
@@ -136,10 +139,18 @@ export function highlight(
 export class HighlightMessage extends Message {
   action: string;
   idCompound: IDCompound;
+  highlightNeighbors: boolean = false; // default value
+  // freeze: Boolean = false;
 
-  constructor(action: string, idCompound?: IDCompound) {
+  constructor(action: string, idCompound?: IDCompound, params?:any) {
     super(MESSAGE_HIGHLIGHT);
     this.action = action;
+    if(params){
+      if(params.highlightNeighbors != undefined)
+        this.highlightNeighbors = <boolean>params.highlightNeighbors
+      // if(params.freeze != undefined)
+      //   this.freeze = params.freeze
+    }
     this.idCompound = idCompound != undefined ? idCompound : new IDCompound(); // WHAT HAPPEND IF IT IS UNDEFINED??
   }
 }
