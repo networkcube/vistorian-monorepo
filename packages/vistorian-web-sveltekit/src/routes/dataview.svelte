@@ -286,6 +286,14 @@
 								</a>
 							</li>
 						</ul>
+
+							<a
+									href="/blog?session=0&datasetName={selectedNetwork.name}"
+									target="blank"
+								>
+									Blog editor
+								</a>
+
 					{:else}
 						<p>First select a network.</p>
 						<ul style="opacity: 0.4" class="vis-types">
