@@ -13,6 +13,7 @@ Previously, they were scattered across multiple repositories (
 
 It uses [Lerna](https://lerna.js.org/) to manage the repository.
 
+For the code documentation for Vistorian, refer to the [wiki of the old repository](https://github.com/networkcube/vistorian/wiki) 
 
 ## Git branches
 
