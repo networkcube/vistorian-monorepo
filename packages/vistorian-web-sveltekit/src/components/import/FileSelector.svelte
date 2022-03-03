@@ -5,6 +5,7 @@
 
 	import { fileStore } from './stores.js';
 	import TablePreview from './TablePreview.svelte';
+	import {trace} from '../../lib/trace';
 
 	let fileList;
 	$: fileList = Object.keys($fileStore);
@@ -80,7 +81,7 @@
 
 {#if selectedFile && showPreviewTable}
 	<label id="headerCheckbox">
-		<input type="checkbox" bind:checked={hasHeaderRow} /> Has header row?
+		<input type="checkbox" bind:checked={hasHeaderRow} on:click="{()=>{trace.event('dat_2', 'data view', 'table has header', this.value);}}"/> Has header row?
 	</label>
 
 	<TablePreview data={$fileStore[selectedFile].data} {hasHeaderRow} />

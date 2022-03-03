@@ -11,6 +11,10 @@
 	import NodeTableNetworkConfig from './NodeTableNetworkConfig.svelte';
 	import ExtraNodeDate from './ExtraNodeData.svelte';
 	import LocationTableConfig from './LocationTableConfig.svelte';
+	import * as main from "vistorian-core/src/data/main";
+	import {trace} from '../../lib/trace';
+
+
 
 	export let reloadNetworks;
 
@@ -202,6 +206,11 @@
 		previous_stage={() => previousStages.pop()}
 		next_stage={() => {
 			previousStages.push(stage);
+			const dgraph = main.getDynamicGraph();
+			const num_visible_nodes = dgraph.nodes().visible().toArray().length;
+			trace.event('dat_', 'Network size', 'visible nodes', num_visible_nodes);
+			const num_visible_links = dgraph.links().visible().toArray().length;
+			trace.event('dat_', 'Network size', 'visible links', num_visible_links);
 			return null;
 		}}
 		{reloadNetworks}

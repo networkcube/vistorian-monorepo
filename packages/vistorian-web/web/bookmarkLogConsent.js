@@ -105,7 +105,7 @@ function minimizeBookmarks(){
     document.getElementById("myFrame").style.display = "none";
     document.getElementById("mydiv").style.maxHeight = document.getElementById("mydivheader").scrollHeight +"px";
     bookmarkMinimized=true;
-    trace.event('bkm_8', ' bookmark window ', 'minimized', parentUrlTxt);
+   // trace.event('bkm_8', ' bookmark window ', 'minimized', parentUrlTxt);
     localStorage.setItem("bookmarkMinimized","true");
   }
 }
@@ -120,7 +120,7 @@ function maxmizeBookmarks(){
     document.getElementById("mydiv").style.left=toolbarLeft+"px";
     document.getElementById("myFrame").style.display = "Block";
     bookmarkMinimized=false;
-    trace.event('bkm_8', ' bookmark window ', 'maximized', parentUrlTxt);
+    //trace.event('bkm_8', ' bookmark window ', 'maximized', parentUrlTxt);
     localStorage.setItem("bookmarkMinimized","false");
 
 
