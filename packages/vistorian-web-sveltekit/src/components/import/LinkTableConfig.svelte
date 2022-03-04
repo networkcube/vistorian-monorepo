@@ -66,6 +66,9 @@
 			on:click={() => {
 				trace.event('dat_2_LK', 'data view', 'Upload File', 'Link Table');
 			}}
+			on:change={() => {
+				trace.event('dat_3_LK', 'data view', 'Uploaded File changed', 'Link Table');
+			}}
 		/>
 
 		{#if config.selectedFile}
@@ -81,7 +84,8 @@
 				label={'Source node label:*'}
 				bind:selectedField={config.fieldSourceId}
 				required={true}
-				on:click={() => {
+				
+				on:change={() => {
 					trace.event('dat_11', 'data view', 'Source Node', this.value);
 				}}
 			/>
@@ -92,7 +96,7 @@
 				label={'Target node label:*'}
 				bind:selectedField={config.fieldTargetId}
 				required={true}
-				on:click={() => {
+				on:change={() => {
 					trace.event('dat_11', 'Column Type Specified', 'Target Node', this.value);
 				}}
 			/>
@@ -105,7 +109,8 @@
 				selectedFile={config.selectedFile}
 				label={'Link ID:'}
 				bind:selectedField={config.fieldLinkId}
-				on:click={() => {
+				
+				on:change={() => {
 					trace.event('dat_11', 'Column Type Specified', 'Link ID', this.value);
 				}}
 			/>
@@ -115,7 +120,8 @@
 				selectedFile={config.selectedFile}
 				label={'Location of source node:'}
 				bind:selectedField={config.fieldLocationSource}
-				on:click={() => {
+				
+				on:change={() => {
 					trace.event('dat_11', 'Column Type Specified', 'Source Node Location', this.value);
 				}}
 			/>
@@ -125,7 +131,8 @@
 				selectedFile={config.selectedFile}
 				label={'Location of target node:'}
 				bind:selectedField={config.fieldLocationTarget}
-				on:click={() => {
+				
+				on:change={() => {
 					trace.event('dat_11', 'Column Type Specified', 'Target Node Location', this.value);
 				}}
 			/>
@@ -136,7 +143,8 @@
 				label={'Link weight:'}
 				helpText={'A numerical measure of the strength of connection between nodes (e.g., the travel time between two locations, the value of a cash transfer.)'}
 				bind:selectedField={config.fieldWeight}
-				on:click={() => {
+				
+				on:change={() => {
 					trace.event('dat_11', 'Column Type Specified', 'Link Weight', this.value);
 				}}
 			/>
@@ -146,7 +154,8 @@
 				selectedFile={config.selectedFile}
 				label={'Link type:'}
 				bind:selectedField={config.fieldLinkType}
-				on:click={() => {
+				
+				on:change={() => {
 					trace.event('dat_11', 'Column Type Specified', 'Link Type', this.value);
 				}}
 			/>
