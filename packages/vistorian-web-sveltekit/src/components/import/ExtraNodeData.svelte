@@ -51,7 +51,7 @@
 					label={'Node ID'}
 					bind:selectedField={config.fieldNodeId}
 					required={true}
-					on:change ={() => {
+					on:change={() => {
 						trace.event('dat_11', 'Column Type Specified', 'Node ID', this.value);
 					}}
 				/>

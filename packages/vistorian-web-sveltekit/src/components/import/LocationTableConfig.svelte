@@ -3,7 +3,7 @@
 
 	import FileSelector from './FileSelector.svelte';
 	import FieldSelector from './FieldSelector.svelte';
-	import {trace} from '../../lib/trace';
+	import { trace } from '../../lib/trace';
 
 	export let config, stage, previous_stage, next_stage;
 

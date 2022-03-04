@@ -5,7 +5,6 @@
 	import { trace } from '../../lib/trace';
 	import { fileStore } from './stores.js';
 
-
 	import { importNetworkFromTables, importNetworkFromFile } from './import_network';
 	import { getUrlVars } from '$lib/utils';
 	export let settings, reloadNetworks, stage, previous_stage, next_stage;
@@ -50,7 +49,6 @@
 		trace.event('dat_19', 'Network size', 'visible nodes', num_visible_nodes);
 		const num_visible_links = dgraph.links().visible().toArray().length;
 		trace.event('dat_19', 'Network size', 'visible links', num_visible_links);
-
 	});
 </script>
 
@@ -65,31 +63,61 @@
 
 		<div id="visOptions" style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr;">
 			<div>
-				<img src="/figures/nodelink.png" on:click={() => {loadVis('nodelink');trace.event('vis_1', 'data view', 'Create Visualization', 'Node-link');}} />
+				<img
+					src="/figures/nodelink.png"
+					on:click={() => {
+						loadVis('nodelink');
+						trace.event('vis_1', 'data view', 'Create Visualization', 'Node-link');
+					}}
+				/>
 				<!-- <img src="vis_icons/node-link.png" height="100px" on:click={() => loadVis('nodelink')} /> -->
 				<p>Node link</p>
 			</div>
 
 			<div>
-				<img src="/figures/matrix.png" on:click={() => {loadVis('matrix');trace.event('vis_1', 'data view', 'Create Visualization', 'Matrix');}} />
+				<img
+					src="/figures/matrix.png"
+					on:click={() => {
+						loadVis('matrix');
+						trace.event('vis_1', 'data view', 'Create Visualization', 'Matrix');
+					}}
+				/>
 				<!-- <img src="vis_icons/matrix.png" height="100px" on:click={() => loadVis('matrix')} /> -->
 				<p>Matrix</p>
 			</div>
 
 			<div>
-				<img src="/figures/dynamicego.png" on:click={() => {loadVis('dynamicego');trace.event('vis_1', 'data view', 'Create Visualization', 'Timeline');}} />
+				<img
+					src="/figures/dynamicego.png"
+					on:click={() => {
+						loadVis('dynamicego');
+						trace.event('vis_1', 'data view', 'Create Visualization', 'Timeline');
+					}}
+				/>
 				<!-- <img src="vis_icons/dynamicego.png" height="100px" on:click={() => loadVis('dynamicego')} /> -->
 				<p>Timeline</p>
 			</div>
 
 			<div>
-				<img src="/figures/map.png" on:click={() => {loadVis('map');trace.event('vis_1', 'data view', 'Create Visualization', 'Map');}} />
+				<img
+					src="/figures/map.png"
+					on:click={() => {
+						loadVis('map');
+						trace.event('vis_1', 'data view', 'Create Visualization', 'Map');
+					}}
+				/>
 				<!-- <img src="vis_icons/map.png" height="100px" on:click={() => loadVis('map')} /> -->
 				<p>Map</p>
 			</div>
 
 			<div>
-				<img src="/figures/nl+mat.png" on:click={() => {loadVis('mat-nl');trace.event('vis_1', 'data view', 'Create Visualization', 'Mat+Nl');}} />
+				<img
+					src="/figures/nl+mat.png"
+					on:click={() => {
+						loadVis('mat-nl');
+						trace.event('vis_1', 'data view', 'Create Visualization', 'Mat+Nl');
+					}}
+				/>
 				<!-- <img src="vis_icons/map.png" height="100px" on:click={() => loadVis('map')} /> -->
 				<p>Node-Link &amp; map</p>
 			</div>

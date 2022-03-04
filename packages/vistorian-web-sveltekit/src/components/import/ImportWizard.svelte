@@ -12,7 +12,6 @@
 	import ExtraNodeDate from './ExtraNodeData.svelte';
 	import LocationTableConfig from './LocationTableConfig.svelte';
 
-
 	export let reloadNetworks;
 
 	let settings = {
