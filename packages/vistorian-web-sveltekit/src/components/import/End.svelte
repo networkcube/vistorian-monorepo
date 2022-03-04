@@ -17,6 +17,11 @@
 		}
 		window.location.href = `./${visName}?session=${SESSION_NAME}&datasetName=${settings.name}`;
 		hasImported = true;
+		const dgraph = main.getDynamicGraph();
+		const num_visible_nodes = dgraph.nodes().visible().toArray().length;
+		trace.event('dat_19', 'Network size', 'visible nodes', num_visible_nodes);
+		const num_visible_links = dgraph.links().visible().toArray().length;
+		trace.event('dat_19', 'Network size', 'visible links', num_visible_links);
 	}
 
 	async function saveNetwork(settings, $fileStore, reloadNetworks) {
@@ -43,13 +48,6 @@
 	}
 
 	let hasImported = false;
-	onMount(async () => {
-		const dgraph = main.getDynamicGraph();
-		const num_visible_nodes = dgraph.nodes().visible().toArray().length;
-		trace.event('dat_19', 'Network size', 'visible nodes', num_visible_nodes);
-		const num_visible_links = dgraph.links().visible().toArray().length;
-		trace.event('dat_19', 'Network size', 'visible links', num_visible_links);
-	});
 </script>
 
 <Card class="mb-3" style="width: 100%">

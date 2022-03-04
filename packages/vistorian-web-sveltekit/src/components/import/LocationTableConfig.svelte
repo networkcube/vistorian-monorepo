@@ -46,9 +46,6 @@
 				label={'Place name'}
 				bind:selectedField={config.fieldPlaceName}
 				required={true}
-				on:change={() => {
-					trace.event('dat_11', 'Column Type Specified', 'Place Name', this.value);
-				}}
 			/>
 			<br />
 			<FieldSelector
@@ -56,9 +53,6 @@
 				label={'Latitude'}
 				bind:selectedField={config.fieldLat}
 				required={true}
-				on:change={() => {
-					trace.event('dat_11', 'Column Type Specified', 'Latitude', this.value);
-				}}
 			/>
 			<br />
 			<FieldSelector
@@ -66,9 +60,6 @@
 				label={'Longitude'}
 				bind:selectedField={config.fieldLon}
 				required={true}
-				on:change={() => {
-					trace.event('dat_11', 'Column Type Specified', 'Longitude', this.value);
-				}}
 			/>
 		{/if}
 	</CardBody>

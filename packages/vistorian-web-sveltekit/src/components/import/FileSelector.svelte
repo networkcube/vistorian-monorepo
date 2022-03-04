@@ -65,7 +65,12 @@
 
 <div class="fileSelector">
 	Select a previously uploaded file:
-	<select bind:value={selectedFile}>
+	<select
+		bind:value={selectedFile}
+		on:change={() => {
+			trace.event('dat_3', 'Selected File Changed', this.label, this.value);
+		}}
+	>
 		{#each Object.keys($fileStore) as file}
 			<option value={file}>{file}</option>
 		{/each}
@@ -74,7 +79,13 @@
 	<br />
 
 	<b>or</b>
-	<Dropzone on:drop={handleFilesSelect} accept={acceptedFormats}>
+	<Dropzone
+		on:drop={() => {
+			handleFilesSelect;
+			trace.event('dat_2', 'File Uploaded', this.label, this.value);
+		}}
+		accept={acceptedFormats}
+	>
 		<p>Upload a new file</p>
 	</Dropzone>
 </div>
@@ -85,7 +96,7 @@
 			type="checkbox"
 			bind:checked={hasHeaderRow}
 			on:click={() => {
-				trace.event('dat_2', 'data view', 'table has header', this.value);
+				trace.event('dat_2', 'data view', 'table has header', this.checked);
 			}}
 		/> Has header row?
 	</label>

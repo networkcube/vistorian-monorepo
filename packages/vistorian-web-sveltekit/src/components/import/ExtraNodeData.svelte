@@ -51,9 +51,6 @@
 					label={'Node ID'}
 					bind:selectedField={config.fieldNodeId}
 					required={true}
-					on:change={() => {
-						trace.event('dat_11', 'Column Type Specified', 'Node ID', this.value);
-					}}
 				/>
 				<br />
 				<FieldSelector
@@ -61,9 +58,6 @@
 					label={'Node type'}
 					bind:selectedField={config.fieldNodeType}
 					required={true}
-					on:change={() => {
-						trace.event('dat_11', 'Column Type Specified', 'Node Type', this.value);
-					}}
 				/>
 			{/if}
 		{/if}

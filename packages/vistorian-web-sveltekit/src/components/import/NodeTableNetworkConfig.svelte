@@ -39,9 +39,6 @@
 				label={'Node'}
 				bind:selectedField={config.fieldNode}
 				required={true}
-				on:change={() => {
-					trace.event('dat_11', 'Column Type Specified', 'Node', this.value);
-				}}
 			/>
 
 			<br />
@@ -61,9 +58,6 @@
 							label={'Column:'}
 							bind:selectedField={fieldRelation.field}
 							required={true}
-							on:change={() => {
-								trace.event('dat_11', 'Column Type Specified', 'Relation Column', this.value);
-							}}
 						/>
 						<label
 							><span style="display: inline-block; width: 180px;"> Link name (type): </span>
