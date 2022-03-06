@@ -28,6 +28,8 @@
 
 			console.log(`Uploaded file: ${f}`);
 
+			trace.event('dat_2', 'File Uploaded', 'File Uploaded', f.name);
+
 			if (parseAsCSV) {
 				Papa.parse(f, {
 					header: false,
@@ -67,11 +69,6 @@
 	Select a previously uploaded file:
 	<select
 		bind:value={selectedFile}
-		on:change={() => {
-			if (this.value){
-				trace.event('dat_3', 'Selected File Changed', 'File Changed', this.value);
-			}
-		}}
 	>
 		{#each Object.keys($fileStore) as file}
 			<option value={file}>{file}</option>
@@ -84,9 +81,7 @@
 	<Dropzone
 		on:drop={() => {
 			handleFilesSelect;
-			if (this.value){
-				trace.event('dat_2', 'File Uploaded', 'File Uploaded', this.value);
-			}
+			
 		}}
 		accept={acceptedFormats}
 	>
