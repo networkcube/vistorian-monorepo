@@ -18,10 +18,10 @@
 		window.location.href = `./${visName}?session=${SESSION_NAME}&datasetName=${settings.name}`;
 		hasImported = true;
 		const dgraph = main.getDynamicGraph();
-		const num_visible_nodes = dgraph.nodes().visible().toArray().length;
-		trace.event('dat_19', 'Network size', 'visible nodes', num_visible_nodes);
-		const num_visible_links = dgraph.links().visible().toArray().length;
-		trace.event('dat_19', 'Network size', 'visible links', num_visible_links);
+		const num_nodes = dgraph.nodes().size();
+		trace.event('dat_19', 'Network size', 'nodes', num_nodes);
+		const num_links = dgraph.links().size();
+		trace.event('dat_19', 'Network size', 'links', num_links);
 	}
 
 	async function saveNetwork(settings, $fileStore, reloadNetworks) {
@@ -65,7 +65,7 @@
 					src="/figures/nodelink.png"
 					on:click={() => {
 						loadVis('nodelink');
-						trace.event('vis_1', 'data view', 'Create Visualization', 'Node-link');
+						trace.event('vis_1', 'data view', 'Create Visualization', 'Node-Link');
 					}}
 				/>
 				<!-- <img src="vis_icons/node-link.png" height="100px" on:click={() => loadVis('nodelink')} /> -->

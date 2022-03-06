@@ -59,7 +59,7 @@
 		bind:value={selectedField}
 		on:change={() => {
 			if (selectedField) {
-				trace.event('dat_11', 'Column Type Specified', label, selectedField);
+				trace.event('dat_11', 'Column Type Specified', label, fields[selectedField]);
 			}
 		}}
 	>
