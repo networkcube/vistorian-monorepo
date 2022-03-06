@@ -58,7 +58,7 @@
 	<select
 		bind:value={selectedField}
 		on:change={() => {
-			if (this.value){
+			if (this.value) {
 				trace.event('dat_11', 'Column Type Specified', label, this.value);
 			}
 		}}

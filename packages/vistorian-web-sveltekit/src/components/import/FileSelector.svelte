@@ -67,9 +67,7 @@
 
 <div class="fileSelector">
 	Select a previously uploaded file:
-	<select
-		bind:value={selectedFile}
-	>
+	<select bind:value={selectedFile}>
 		{#each Object.keys($fileStore) as file}
 			<option value={file}>{file}</option>
 		{/each}
@@ -81,7 +79,6 @@
 	<Dropzone
 		on:drop={() => {
 			handleFilesSelect;
-			
 		}}
 		accept={acceptedFormats}
 	>
