@@ -68,7 +68,7 @@
 	<select
 		bind:value={selectedFile}
 		on:change={() => {
-			trace.event('dat_3', 'Selected File Changed', this.label, this.value);
+			trace.event('dat_3', 'Selected File Changed', 'File Changed', this.value);
 		}}
 	>
 		{#each Object.keys($fileStore) as file}
@@ -82,7 +82,7 @@
 	<Dropzone
 		on:drop={() => {
 			handleFilesSelect;
-			trace.event('dat_2', 'File Uploaded', this.label, this.value);
+			trace.event('dat_2', 'File Uploaded', 'File Uploaded', this.value);
 		}}
 		accept={acceptedFormats}
 	>
