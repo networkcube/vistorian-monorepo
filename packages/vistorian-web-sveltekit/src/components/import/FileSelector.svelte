@@ -86,7 +86,7 @@
 		<input
 			type="checkbox"
 			bind:checked={hasHeaderRow}
-			on:click={() => {
+			on:change={() => {
 				trace.event('dat_2', 'data view', 'table has header', hasHeaderRow);
 			}}
 		/> Has header row?

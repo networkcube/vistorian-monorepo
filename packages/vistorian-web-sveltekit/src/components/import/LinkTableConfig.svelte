@@ -76,6 +76,11 @@
 				label={'Source node label:*'}
 				bind:selectedField={config.fieldSourceId}
 				required={true}
+				on:change={() => {
+					if (this.selectedField) {
+						trace.event('dat_11', 'Column Type Specified', this.label, this.selectedField);
+					}
+				}}
 			/>
 			<br />
 
@@ -84,6 +89,11 @@
 				label={'Target node label:*'}
 				bind:selectedField={config.fieldTargetId}
 				required={true}
+				on:change={() => {
+					if (this.selectedField) {
+						trace.event('dat_11', 'Column Type Specified', 'Target node', config.fieldTargetId);
+					}
+				}}
 			/>
 
 			<br />
