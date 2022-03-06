@@ -76,10 +76,7 @@
 	<br />
 
 	<b>or</b>
-	<Dropzone
-		on:drop={handleFilesSelect}
-		accept={acceptedFormats}
-	>
+	<Dropzone on:drop={handleFilesSelect} accept={acceptedFormats}>
 		<p>Upload a new file</p>
 	</Dropzone>
 </div>
