@@ -58,7 +58,7 @@
 	<select
 		bind:value={selectedField}
 		on:change={() => {
-			trace.event('dat_11', 'Column Type Specified', label, this.value);
+			trace.event('dat_11', 'Column Type Specified', label, selectedField);
 		}}
 	>
 		{#if !required}
