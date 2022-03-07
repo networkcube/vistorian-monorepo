@@ -1617,7 +1617,7 @@ export class DynamicGraph {
   highlight(action: string, idCompound?: IDCompound): void {
 
 
-    if (action == 'freeze'){
+    if (action == 'freeze' || action == 'setFreeze'){
       this.highlight("resetFreeze");
       this.highlight("addFreeze", idCompound);
       return;
