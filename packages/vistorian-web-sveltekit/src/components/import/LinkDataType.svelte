@@ -1,6 +1,6 @@
 <script>
 	import { Button, Card, CardBody, CardHeader, CardFooter } from 'sveltestrap';
-
+	import { trace } from '../../lib/trace';
 	export let linkDataType;
 	export let stage, previous_stage, next_stage;
 </script>
@@ -11,7 +11,14 @@
 	</CardHeader>
 	<CardBody>
 		<h4>Link Table</h4>
-		<input type="radio" bind:group={linkDataType} value={'linkTable'} />
+		<input
+			type="radio"
+			bind:group={linkDataType}
+			value={'linkTable'}
+			on:click={() => {
+				trace.event('dat_2_LT', 'data view', 'upload LK', 'Link Table');
+			}}
+		/>
 		A table containing <b>one row per link</b>. Each row contains a pair of nodes that are linked.
 		<br />
 		<br />
@@ -69,7 +76,14 @@
 		<br />
 
 		<h4>Node Table</h4>
-		<input type="radio" bind:group={linkDataType} value={'nodeTable'} />
+		<input
+			type="radio"
+			bind:group={linkDataType}
+			value={'nodeTable'}
+			on:click={() => {
+				trace.event('dat_2_NT', 'data view', 'upload NT', 'Node Table');
+			}}
+		/>
 		A table containing <b>one row per node</b>, with columns listing the other nodes it is linked to
 		(a <i>node file</i>)
 
