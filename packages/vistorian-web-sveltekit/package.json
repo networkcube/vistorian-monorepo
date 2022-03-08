@@ -24,11 +24,11 @@
 		"svelte-file-dropzone": "0.0.15",
 		"sveltestrap": "^5.6.3",
 		"vistorian-bookmarkbrowser": "0.0.1-alpha",
-		"vistorian-core": "0.1.1",
+		"vistorian-core": "0.1.2",
 		"vistorian-dynamicego": "0.0.1-alpha",
 		"vistorian-map": "0.0.5",
 		"vistorian-matrix": "0.0.2-alpha",
-		"vistorian-nodelink": "0.1.4"
+		"vistorian-nodelink": "0.1.5"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-static": "next",
