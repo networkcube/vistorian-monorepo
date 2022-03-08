@@ -7,6 +7,7 @@ import * as messenger from "vistorian-core/src/data/messenger";
 
 import * as ui from "vistorian-core/src/ui/ui";
 import * as timeslider from "vistorian-core/src/ui/timeslider";
+import { Selection } from "vistorian-core/src/data/dynamicgraphutils";
 
 const COLOR_DEFAULT_LINK = "#999999";
 const COLOR_DEFAULT_NODE = "#333333";
@@ -753,6 +754,13 @@ function mouseClickNode(ev: MouseEvent, n: any) {
   }else{
     messenger.highlight("addFreeze", newElementCompound);
   }
+
+
+  // test -> create selection
+  var s:Selection = messenger.createSelection('node', 'Cluster 1')
+  messenger.setSelectionColor(s,'#f00');
+  messenger.selection('add', newElementCompound, s.id);
+
 }
 
 function mouseOutNode() {

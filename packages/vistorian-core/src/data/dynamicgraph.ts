@@ -1710,7 +1710,7 @@ export class DynamicGraph {
 
     if (action == "set") {
       const c: IDCompound = new IDCompound();
-      (c as any)[selection.acceptedType] = selection.elementIds;
+      (c as any)[selection.acceptedType +'s'] = selection.elementIds;
       this.selection("remove", c, selectionId);
       this.selection("add", idCompound, selectionId);
     } else if (action == "add") {
@@ -1791,7 +1791,7 @@ export class DynamicGraph {
   ): void {
     if (type != selection.acceptedType) {
       console.log(
-        "attempting to put object of the wrong type into a selection"
+        "attempting to put object of the wrong type into a selection. " + type + ' !=' +selection.acceptedType
       );
       return; // don't proceed with selection;
     }
