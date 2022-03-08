@@ -757,9 +757,9 @@ function mouseClickNode(ev: MouseEvent, n: any) {
 
 
   // test -> create selection
-  var s:Selection = messenger.createSelection('node', 'Cluster 1')
-  messenger.setSelectionColor(s,'#f00');
-  messenger.selection('add', newElementCompound, s.id);
+  // var s:Selection = messenger.createSelection('node', 'Cluster 1')
+  // messenger.setSelectionColor(s,'#f00');
+  // messenger.selection('add', newElementCompound, s.id);
 
 }
 
