@@ -5,6 +5,7 @@
 
 	import { fileStore } from './stores.js';
 	import TablePreview from './TablePreview.svelte';
+	import { trace } from '../../lib/trace';
 
 	let fileList;
 	$: fileList = Object.keys($fileStore);
@@ -26,6 +27,8 @@
 			// has a .path and .name
 
 			console.log(`Uploaded file: ${f}`);
+
+			trace.event('dat_2', 'File Uploaded', 'File Uploaded', f.name);
 
 			if (parseAsCSV) {
 				Papa.parse(f, {
@@ -80,7 +83,13 @@
 
 {#if selectedFile && showPreviewTable}
 	<label id="headerCheckbox">
-		<input type="checkbox" bind:checked={hasHeaderRow} /> Has header row?
+		<input
+			type="checkbox"
+			bind:checked={hasHeaderRow}
+			on:change={() => {
+				trace.event('dat_2', 'data view', 'table has header', hasHeaderRow);
+			}}
+		/> Has header row?
 	</label>
 
 	<TablePreview data={$fileStore[selectedFile].data} {hasHeaderRow} />
