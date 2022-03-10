@@ -17,8 +17,10 @@ const config = {
 		}),
 
 		prerender: {
-			default: true
-		}
+			default: true,
+			onError: 'continue'
+		},
+		trailingSlash: 'always'
 	}
 };
 
