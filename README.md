@@ -49,9 +49,19 @@ This means that if you make changes to code in `packages/vistorian_core` and run
 To view the vistorian web site:
 
     cd packages/vistorian-web-sveltekit
+    npm run build
     npm run dev
 
 Then open the URL printed in the console.
 
+The `npm run build` command is only needed once, and can be ommitted on subsequent occassions.
 
 You can apply an `npm run` command to all packages using `lerna run` (e.g., `lerna run build`)
+
+
+### Using windows
+
+If you are using windows, then you may encounter problems with both the prebuild/postbuild script in and sveltkit itself when trying to run the website.
+The recommended solution is to install the [Windows Subsystem for Linux (WSL)](https://docs.microsoft.com/en-us/windows/wsl/about).
+
+
