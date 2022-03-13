@@ -15,7 +15,7 @@
 		if (!hasImported) {
 			await importNetwork(settings, $fileStore, reloadNetworks);
 		}
-		window.location.href = `./${visName}?session=${SESSION_NAME}&datasetName=${settings.name}`;
+		window.location.href = `/${visName}?session=${SESSION_NAME}&datasetName=${settings.name}`;
 		hasImported = true;
 		const dgraph = main.getDynamicGraph();
 		const num_nodes = dgraph.nodes().size();
