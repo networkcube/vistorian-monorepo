@@ -288,20 +288,6 @@
 						</ul>
 					{:else}
 						<p>First select a network.</p>
-						<ul style="opacity: 0.4" class="vis-types">
-							<li>
-								<!-- <img src="vis_icons/node-link.png" width="75px" />Node-link -->
-							</li>
-							<li>
-								<!-- <img src="vis_icons/matrix.png" width="75px" />Adjacency matrix -->
-							</li>
-							<li>
-								<!-- <img src="vis_icons/dynamicego.png" width="75px" />Timeline -->
-							</li>
-							<li>
-								<!-- <img src="vis_icons/map.png" width="75px" />Map -->
-							</li>
-						</ul>
 					{/if}
 				</div>
 
