@@ -43,7 +43,7 @@
 		//document.getElementById("resumeSessionLink3").href = "./dataview?session=" + PREVIOUS_SESSION;
 
 		// Load demo data
-		fetch('./demo/demo_scientists.vistorian')
+		fetch('./demo/Marie_Boucher.vistorian')
 			.then((res) => res.json())
 			.then((data) => {
 				importData(data, 0);
@@ -74,28 +74,28 @@
 
 			<div id="vistiles">
 				<a
-					href="./nodelink?session=0&datasetName=demo_scientists"
+					href="./nodelink?session=0&datasetName=Marie_Boucher"
 					target="_blank"
 					on:click={() => trace.event('hlp_4', 'index', 'Node Link Example', 'click')}
 				>
 					<img class="visimage" src="./figures/nodelink.png" />
 				</a>
 				<a
-					href="./dynamicego?session=0&datasetName=demo_scientists"
+					href="./dynamicego?session=0&datasetName=Marie_Boucher"
 					target="_blank"
 					on:click={() => trace.event('hlp_4', 'index', 'Dynamic Ego Example', 'click')}
 				>
 					<img class="visimage" src="./figures/dynamicego.png" />
 				</a>
 				<a
-					href="./matrix?session=0&datasetName=demo_scientists"
+					href="./matrix?session=0&datasetName=Marie_Boucher"
 					target="_blank"
 					on:click={() => trace.event('hlp_4', 'index', 'Matrix Example', 'click')}
 				>
 					<img class="visimage" src="./figures/matrix.png" />
 				</a>
 				<a
-					href="./map?session=0&datasetName=demo_scientists"
+					href="./map?session=0&datasetName=Marie_Boucher"
 					target="_blank"
 					on:click={() => trace.event('hlp_4', 'index', 'Map Example', 'click')}
 				>
@@ -112,7 +112,7 @@
 			<br />
 			<!-- <div id="divMenu">
 				<h4>
-					<a href="/demo?session=0&datasetName=demo_scientists">
+					<a href="/demo?session=0&datasetName=Marie_Boucher">
 						Description of the available visualizations
 					</a>
 				</h4>
