@@ -101,7 +101,6 @@ async function saveNetwork(settings, fileStore, reloadNetworks, dataset): Promis
 	storage.saveNetwork(currentNetwork, SESSION_NAME);
 
 	currentNetwork.ready = true;
-	storage.saveNetwork(currentNetwork, SESSION_NAME);
 	main.importData(SESSION_NAME, dataset);
 
 	reloadNetworks();
@@ -454,6 +453,17 @@ async function importNetworkFromTables(settings, fileStore, reloadNetworks): Pro
 	const dataset = new dynamicgraphutils.DataSet(params);
 
 	currentNetwork.ready = true;
+	currentNetwork.userNodeTable = { name: 'userNodeTable', data: normalizedNodeTable };
+	currentNetwork.userNodeSchema = { ...normalizedNodeSchema, relation: [] };
+	currentNetwork.userLinkTable = { name: 'userLinkTable', data: normalizedLinkTable };
+	currentNetwork.userLinkSchema = {
+		...normalizedLinkSchema,
+		location_source: -1,
+		location_target: -1
+	};
+	currentNetwork.userLocationTable = { name: 'userLocationTable', data: normalizedLocationTable };
+	currentNetwork.userLocationSchema = normalizedLocationSchema;
+
 	storage.saveNetwork(currentNetwork, SESSION_NAME);
 	main.importData(SESSION_NAME, dataset);
 
@@ -484,7 +494,16 @@ function importNetworkFromFile(settings, fileStore, reloadNetworks) {
 		storage.saveNetwork(currentNetwork, SESSION_NAME);
 
 		currentNetwork.ready = true;
+		currentNetwork.userNodeTable = { name: 'userNodeTable', data: dataset.nodeTable };
+		currentNetwork.userNodeSchema = { ...dataset.nodeSchema, relation: [] };
+		currentNetwork.userLinkTable = { name: 'userLinkTable', data: dataset.linkTable };
+		currentNetwork.userLinkSchema = {
+			...dataset.linkSchema,
+			location_source: -1,
+			location_target: -1
+		};
 		storage.saveNetwork(currentNetwork, SESSION_NAME);
+
 		main.importData(SESSION_NAME, dataset);
 
 		reloadNetworks();
