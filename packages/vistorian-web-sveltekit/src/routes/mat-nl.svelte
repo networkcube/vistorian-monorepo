@@ -58,7 +58,7 @@
 			SERVER + '../node_modules/vistorian-nodelink/web/index.html',
 			params['session'],
 			params['datasetName'],
-			width_col2,
+			width_col2 / 2,
 			height
 		);
 
@@ -67,7 +67,7 @@
 			SERVER + '../node_modules/vistorian-matrix/web/index.html',
 			params['session'],
 			params['datasetName'],
-			width_col2,
+			width_col2 / 2,
 			height
 		);
 

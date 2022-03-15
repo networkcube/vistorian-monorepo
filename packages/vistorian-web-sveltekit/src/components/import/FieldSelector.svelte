@@ -4,6 +4,7 @@
 	import { Button } from 'sveltestrap';
 
 	import { fileStore } from './stores.js';
+	import { trace } from '../../lib/trace';
 
 	export let selectedFile;
 	export let helpText = '';
@@ -54,7 +55,14 @@
 		{/if}
 	</span>
 
-	<select bind:value={selectedField}>
+	<select
+		bind:value={selectedField}
+		on:change={() => {
+			if (selectedField) {
+				trace.event('dat_11', 'Column Type Specified', label, fields[selectedField]);
+			}
+		}}
+	>
 		{#if !required}
 			<option value={null}>-</option>
 		{/if}

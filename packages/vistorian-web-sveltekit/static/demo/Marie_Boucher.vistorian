@@ -1,0 +1,391 @@
+{
+    "networkConfig": "link",
+    "id": 1,
+    "directed": true,
+    "userNodeSchema": {
+        "name": "userNodeSchema",
+        "relation": [],
+        "location": -1,
+        "id": 0,
+        "label": -1,
+        "time": -1,
+        "nodeType": -1
+    },
+    "userLinkSchema": {
+        "name": "userLinkSchema",
+        "location_source": 2,
+        "location_target": 5,
+        "id": 0,
+        "source": 1,
+        "target": 4,
+        "weight": -1,
+        "time": 6,
+        "linkType": 3
+    },
+    "name": "Marie_Boucher",
+    "userLinkTable": {
+        "name": "timmysmith",
+        "data": [["Index", "Name 1", "Location 1", "Relation Type", "Name 2", "Location 2", "Date"], ["0", "Hubert Antheaume", "St Nicolas, Nantes", "Commerce", "Jacques Yvon, sr des Landes", "L\u00e9ogane, Ile St Domingue", "03/08/1673"], ["1", "Marie Boucher", "St Nicolas, Nantes", "Commerce", "Hubert Antheaume", "St Nicolas, Nantes", "06/08/1675"], ["2", "Marie Boucher", "St Nicolas, Nantes", "Famille", "Hubert Antheaume", "St Nicolas, Nantes", "06/08/1675"], ["3", "Marie Boucher", "St Nicolas, Nantes", "Famille", "Roze Boucher", "St Nicolas, Nantes", "15/09/1671"], ["4", "Marie Boucher", "Paris", "Commerce", "Roze Boucher", "St Nicolas, Nantes", "15/09/1671"], ["5", "Marie Boucher", "Paris", "Commerce", "Hubert Antheaume", "Paris", "15/09/1671"], ["6", "? Vallet", "Ile St Domingue", "Travail", "? Bec de Fort", "", "01/01/1676"], ["7", "? Vallet", "Ile St Domingue", "Commerce", "Joseph Labelle", "L\u00e9ogane, Ile St Domingue", "01/01/1676"], ["8", "? Vallet", "Ile St Domingue", "Famille", "? Vallet", "Ile Guadeloupe", "01/01/1676"], ["9", "? Vallet", "Ile St Domingue", "Famille", "Joseph Vallet", "Brest", "01/01/1676"], ["10", "? Vallet", "Ile St Domingue", "Commerce", "Jean Michel", "", "01/01/1676"], ["11", "? Vallet", "Ile St Domingue", "Commerce", "Jacques Allain", "", "01/01/1676"], ["12", "? Vallet", "Ile St Domingue", "Commerce", "Hubert Antheaume", "St Nicolas, Nantes", "01/01/1676"], ["13", "? Vallet", "Ile St Domingue", "Finance", "Guillaume Gray le jeune", "", "01/01/1676"], ["14", "? Vallet", "Ile St Domingue", "Finance", "Madeleine Gassau", "La Rochelle", "01/01/1676"], ["15", "Madeleine Gassau", "St Nicolas, Nantes", "Famille", "Renexent Vanarsen", "St Nicolas, Nantes", "01/01/1676"], ["16", "Ren\u00e9e Maheur", "St Eustache Paris", "Travail", "Marie Paulet", "St Eustache Paris", "12/06/1676"], ["17", "Ren\u00e9e Maheur", "St Eustache Paris", "Commerce", "Isabelle Maheu", "St Eustache Paris", "12/06/1676"], ["18", "Ren\u00e9e Maheur", "St Eustache Paris", "Famille", "Isabelle Maheu", "St Eustache Paris", "12/06/1676"], ["19", "Marie Paulet", "St Eustache Paris", "Famille", "Marie-Anne de Lamarche", "St Eustache Paris", "12/06/1676"], ["20", "Ren\u00e9e Maheur", "St Eustache Paris", "Commerce", "Hubert Antheaume", "Ile St Domingue", "12/06/1676"], ["21", "Marie Paulet", "St Eustache Paris", "Commerce", "Marie-Anne de Lamarche", "St Eustache Paris", "12/06/1676"], ["22", "Marie Paulet", "St Eustache Paris", "Commerce", "Hubert Antheaume", "Ile St Domingue", "12/06/1676"], ["23", "Isabelle Maheu", "St Eustache Paris", "Travail", "Hubert Antheaume", "Ile St Domingue", "12/06/1676"], ["24", "Isabelle Maheu", "St Eustache Paris", "Famille", "Georges Maheu", "St Eustache Paris", "12/06/1676"], ["25", "Ren\u00e9e Maheur", "St Eustache Paris", "Famille", "Georges Maheu", "St Eustache Paris", "12/06/1676"], ["26", "Marie-Anne de Lamarche", "St Eustache Paris", "Travail", "Hubert Antheaume", "Ile St Domingue", "12/06/1676"], ["27", "Marie-Anne de Lamarche", "St Eustache Paris", "Famille", "Pierre de Lamarche", "St Eustache Paris", "12/06/1676"], ["28", "Pierre de Lamarche", "St Eustache Paris", "Famille", "Marie Paulet", "St Eustache Paris", "12/06/1676"], ["29", "Marie-Anne de Lamarche", "St Eustache Paris", "Travail", "Michel Villette", "St Nicolas, Nantes", "31/07/1676"], ["30", "Marie-Anne de Lamarche", "St Eustache Paris", "Famille", "Pierre de Lamarche", "St Eustache Paris", "31/07/1676"], ["31", "Pierre de Lamarche", "St Eustache Paris", "Famille", "Marie Paulet", "St Eustache Paris", "31/07/1676"], ["32", "Marie Paulet", "St Eustache Paris", "Famille", "Marie-Anne de Lamarche", "St Eustache Paris", "31/07/1676"], ["33", "Michel Villette", "St Nicolas, Nantes", "Commerce", "Hubert Antheaume", "St Nicolas, Nantes", "31/07/1676"], ["34", "Hubert Antheaume", "St Nicolas, Nantes", "Commerce", "Jacques Yvon, sr des Landes", "L\u00e9ogane, Ile St Domingue", "31/07/1676"], ["35", "Marie-Anne de Lamarche", "St Eustache, Paris", "Travail", "Jacques Yvon, sr des Landes", "L\u00e9ogane, Ile St Domingue", "31/07/1676"], ["36", "Robert Bussiere", "Orl\u00e9ans", "Commerce", "Christophe Provost", "Orl\u00e9ans", "18/09/1676"], ["37", "Christophe Provost", "Orl\u00e9ans", "Commerce", "Hubert Antheaume", "St Nicolas, Nantes", "18/09/1676"], ["38", "Robert Bussi\u00e8re", "Orl\u00e9ans", "Commerce", "Hubert Antheaume", "St Nicolas, Nantes", "18/09/1676"], ["39", "Robert Bussi\u00e8re", "Orl\u00e9ans", "Commerce", "Paul Bonneau", "Orl\u00e9ans", "18/09/1676"], ["40", "Christophe Provost", "Orl\u00e9ans", "Commerce", "Paul Bonneau", "Orl\u00e9ans", "18/09/1676"], ["41", "Hubert Antheaume", "St Nicolas, Nantes", "Commerce", "Michel Villette", "St Nicolas, Nantes", "03/12/1676"], ["42", "Hubert Antheaume", "St Nicolas, Nantes", "Commerce", "Michel Villette", "St Nicolas, Nantes", "07/02/1681"], ["43", "Hubert Antheaume", "St Nicolas, Nantes", "Commerce", "Jacques Martin", "St Paul, Orl\u00e9ans", "24/03/1682"], ["44", "Hubert Antheaume", "St Nicolas, Nantes", "Famille", "Madeleine Boucher", "St Nicolas, Nantes", "28/11/1685"], ["45", "Hubert Antheaume", "St Nicolas, Nantes", "Famille", "Madeleine Boucher", "St Nicolas, Nantes", "02/09/1683"], ["46", "Madeleine Boucher", "St Nicolas, Nantes", "Famille", "Hubert Antheaume", "St Nicolas, Nantes", "25/10/1689"], ["47", "Madeleine Boucher", "St Nicolas, Nantes", "Famille", "Hubert Antheaume", "St Nicolas, Nantes", "25/10/1689"], ["48", "Hubert Antheaume", "St Nicolas, Nantes", "Commerce", "Louis Vassal", "Paris", "25/10/1689"], ["49", "Hubert Antheaume", "St Nicolas, Nantes", "Commerce", "? Guillocheau", "Nantes", "25/10/1689"], ["50", "Madeleine Boucher", "St Nicolas, Nantes", "Commerce", "? Guillocheau", "Nantes", "25/10/1689"], ["51", "Hubert Antheaume", "St Nicolas, Nantes", "Finance", "Roze Boucher", "St Nicolas, Nantes", "26/12/1689"], ["52", "Hubert Antheaume", "St Nicolas, Nantes", "Finance", "Jean Baptiste Boiset, sr de Favel", "", "20/12/1683"], ["53", "Hubert Antheaume", "St Nicolas, Nantes", "Famille", "Madelaine Boucher", "St Nicolas, Nantes", "31/12/1689"], ["54", "Hubert Antheaume", "St Nicolas, Nantes", "Famille", "Roze Boucher", "St Nicolas, Nantes", "31/12/1689"], ["55", "Roze Boucher", "St Nicolas, Nantes", "Famille", "Madelaine Boucher", "St Nicolas, Nantes", "31/12/1689"], ["56", "Roze Boucher", "St Nicolas, Nantes", "Famille", "Marie Boucher", "St Nicolas, Nantes", "31/12/1689"], ["57", "Hubert Antheaume", "St Nicolas, Nantes", "Famille", "Marie Boucher", "St Nicolas, Nantes", "31/12/1689"], ["58", "Hubert Antheaume", "St Nicolas, Nantes", "Finance", "Veuve Boucher", "Ile St Domingue", "31/12/1689"], ["59", "Hubert Antheaume", "St Nicolas, Nantes", "Famille", "Veuve Boucher", "Ile St Domingue", "31/12/1689"], ["60", "Madeleine Boucher", "St Nicolas, Nantes", "Famille", "Veuve Boucher", "Ile St Domingue", "31/12/1689"], ["61", "Hubert Antheaume", "St Nicolas, Nantes", "Commerce", "Jean Gauret", "Ile St Domingue", "31/12/1689"], ["62", "Hubert Antheaume", "St Nicolas, Nantes", "Commerce", "? Lesergent", "Ile St Domingue", "31/12/1689"], ["63", "Jean Gauret", "Ile St Domingue", "Commerce", "? Lesergent", "Ile St Domingue", "31/12/1689"], ["64", "Hubert Antheaume", "St Nicolas, Nantes", "Travail", "Julienne ?", "St Nicolas, Nantes", "31/12/1689"], ["65", "Hubert Antheaume", "St Nicolas, Nantes", "Famille", "Eloy Antheaume", "Paris", "07/01/1690"], ["66", "Hubert Antheaume", "St Nicolas, Nantes", "Famille", "Anne Vallet", "Paris", "07/01/1690"], ["67", "Eloy Antheaume", "Paris", "Famille", "Anne Vallet", "Paris", "07/01/1690"], ["68", "Madeleine Boucher", "St Nicolas, Nantes", "Finance", "Eloy Antheaume", "Paris", "07/01/1690"], ["69", "Hubert Antheaume", "St Nicolas, Nantes", "Finance", "Eloy Antheaume", "Paris", "07/01/1690"], ["70", "Madeleine Boucher", "St Nicolas, Nantes", "Famille", "Eloy Antheaume", "Paris", "07/01/1690"], ["71", "Madeleine Boucher", "St Nicolas, Nantes", "Finance", "Fran\u00e7ois Bouchaud sr de la Foretterie", "St Nicolas, Nantes", "06/06/1690"], ["72", "Madeleine Boucher", "St Nicolas, Nantes", "Finance", "Jacques Souchay et Bouchaud", "St Nicolas, Nantes", "06/06/1690"], ["73", "Madeleine Boucher", "St Nicolas, Nantes", "Finance", "? Gauvain", "St Nicolas, Nantes", "06/06/1690"], ["74", "Madeleine Boucher", "St Nicolas, Nantes", "Finance", "? Belot", "St Nicolas, Nantes", "06/06/1690"], ["75", "Madeleine Boucher", "St Nicolas, Nantes", "Finance", "? De la Maison Rouge Perrault", "St Nicolas, Nantes", "06/06/1690"], ["76", "Madeleine Boucher", "St Nicolas, Nantes", "Finance", "? Bruneau", "St Nicolas, Nantes", "06/06/1690"], ["77", "Madeleine Boucher", "St Nicolas, Nantes", "Finance", "Claude Berthelot", "St Nicolas, Nantes", "06/06/1690"], ["78", "Madeleine Boucher", "St Nicolas, Nantes", "Finance", "Maximilien Lebreton", "St Nicolas, Nantes", "06/06/1690"], ["79", "Madeleine Boucher", "St Nicolas, Nantes", "Finance", "? De Vonnes Lucas", "St Nicolas, Nantes", "06/06/1690"], ["80", "Madeleine Boucher", "St Nicolas, Nantes", "Finance", "Ren\u00e9 Budan", "St Nicolas, Nantes", "06/06/1690"], ["81", "Madeleine Boucher", "St Nicolas, Nantes", "Finance", "Jacques Danguy", "St Nicolas, Nantes", "06/06/1690"], ["82", "Madeleine Boucher", "St Nicolas, Nantes", "Finance", "? Stalpart", "St S\u00e9bastien", "06/06/1690"], ["83", "Madeleine Boucher", "St Nicolas, Nantes", "Finance", "? Montaudoin", "St Nicolas, Nantes", "06/06/1690"], ["84", "Hubert Antheaume", "St Nicolas, Nantes", "Finance", "Fran\u00e7ois Bouchaud sr de la Foretterie", "St Nicolas, Nantes", "06/06/1690"], ["85", "Hubert Antheaume", "St Nicolas, Nantes", "Finance", "? Souchay", "St Nicolas, Nantes", "06/06/1690"], ["86", "Hubert Antheaume", "St Nicolas, Nantes", "Finance", "? Gauvain", "St Nicolas, Nantes", "06/06/1690"], ["87", "Hubert Antheaume", "St Nicolas, Nantes", "Finance", "? Belot", "St Nicolas, Nantes", "06/06/1690"], ["88", "Hubert Antheaume", "St Nicolas, Nantes", "Finance", "? De la Maison Rouge Perrault", "St Nicolas, Nantes", "06/06/1690"], ["89", "Hubert Antheaume", "St Nicolas, Nantes", "Finance", "? Bruneau", "St Nicolas, Nantes", "06/06/1690"], ["90", "Hubert Antheaume", "St Nicolas, Nantes", "Finance", "Claude Berthelot", "St Nicolas, Nantes", "06/06/1690"], ["91", "Hubert Antheaume", "St Nicolas, Nantes", "Finance", "Maximilien Lebreton", "St Nicolas, Nantes", "06/06/1690"], ["92", "Hubert Antheaume", "St Nicolas, Nantes", "Finance", "? De Vonnes Lucas", "St Nicolas, Nantes", "06/06/1690"], ["93", "Hubert Antheaume", "St Nicolas, Nantes", "Finance", "Ren\u00e9 Budan", "St Nicolas, Nantes", "06/06/1690"], ["94", "Hubert Antheaume", "St Nicolas, Nantes", "Finance", "Jacques Danguy", "St Nicolas, Nantes", "06/06/1690"], ["95", "Hubert Antheaume", "St Nicolas, Nantes", "Finance", "? Stalpart", "St S\u00e9bastien", "06/06/1690"], ["96", "Hubert Antheaume", "St Nicolas, Nantes", "Finance", "? Montaudoin", "St Nicolas, Nantes", "06/06/1690"], ["97", "Madeleine Boucher", "St Nicolas, Nantes", "Famille", "Hubert Antheaume", "St Nicolas, Nantes", "06/06/1690"], ["98", "Madeleine Boucher", "St Nicolas, Nantes", "Travail", "Ancelme Beaugrand", "Dunkerque", "06/06/1690"], ["99", "Jean Mersant", "St Nicolas, Nantes", "Commerce", "Madeleine Boucher", "St Nicolas, Nantes", "19/01/1692"], ["100", "Andr\u00e9 Delaville sr de la Foucherie", "St Saturnin, Nantes", "Famille", "Madeleine Boucher", "St Nicolas, Nantes", "03/06/1692"], ["101", "Marie Boucher", "St Nicolas, Nantes", "Travail", "Fran\u00e7ois Truseau", "Rhuys", "13/12/1660"], ["102", "Marie Boucher", "St Nicolas, Nantes", "Commerce", "Bernard Gillabert", "Bordeaux", "11/07/1662"], ["103", "Bernard Gillabert", "Bordeaux", "Travail", "Daniel de Vassal", "Mornac sur Seudre", "11/07/1662"], ["104", "Bernard Gillabert", "Bordeaux", "Travail", "Michel Tessier", "Chastain en Saintonge", "11/07/1662"], ["105", "Bernard Gillabert", "Bordeaux", "Travail", "Josu\u00e9 de Bargeau", "Chastain en Saintonge", "11/07/1662"], ["106", "Marie Boucher", "St Nicolas, Nantes", "Travail", "Daniel de Vassal", "Mornac sur Seudre", "11/07/1662"], ["107", "Marie Boucher", "St Nicolas, Nantes", "Travail", "Michel Tessier", "Chastain en Saintonge", "11/07/1662"], ["108", "Marie Boucher", "St Nicolas, Nantes", "Travail", "Josu\u00e9 de Bargeau", "Chastain en Saintonge", "11/07/1662"], ["109", "Marie Boucher", "St Nicolas, Nantes", "Famille", "Jean Boucher", "Amsterdam", "14/12/1663"], ["110", "Cornelius Wils", "Nantes", "Famille", "Jean Wills", "Amsterdam", "14/12/1663"], ["111", "Cornelius Wils", "Nantes", "Famille", "Jean Wills", "Amsterdam", "14/12/1663"], ["112", "Marie Boucher", "St Nicolas, Nantes", "Commerce", "Cornelius Wils", "Nantes", "14/12/1663"], ["113", "Jean Boucher", "Amsterdam", "Commerce", "Jean Wills", "Amsterdam", "14/12/1663"], ["114", "Anne Gallier", "St Nicolas, Nantes", "Famille", "Mathurin Marion", "St Nicolas, Nantes", "01/02/1664"], ["115", "Mathurin Marion", "St Nicolas, Nantes", "Travail", "Moyse Febvre", "La Chaume", "01/02/1664"], ["116", "Cornelis Wils", "", "Commerce", "Thymen Van Schoonhoven", "", "01/02/1664"], ["117", "Wils et Van Schoonhoven Cie", "", "Finance", "Pierre Guyonneau", "", "01/02/1664"], ["118", "Wils et Van Schoonhoven Cie", "", "Finance", "Pierre Guinebaud", "", "01/02/1664"], ["119", "Pierre Guinebaud", "", "Commerce", "Euzebe de Loynes", "Orl\u00e9ans", "01/02/1664"], ["120", "Wils et Van Schoonhoven Cie", "", "Finance", "Marie Boucher", "St Nicolas, Nantes", "01/02/1664"], ["121", "Marie Boucher", "St Nicolas, Nantes", "Commerce", "Jean Baptiste Foucaud", "Orl\u00e9ans", "01/02/1664"], ["122", "Pierre Guyonneau", "", "Finance", "Pierre Guinebaud", "", "01/02/1664"], ["123", "Pierre Guyonneau", "", "Finance", "Marie Boucher", "St Nicolas, Nantes", "01/02/1664"], ["124", "Pierre Guinebaud", "", "Finance", "Marie Boucher", "St Nicolas, Nantes", "01/02/1664"], ["125", "Mathurin Marion", "", "Finance", "Wils et Van Schoonhoven Cie", "", "01/02/1664"], ["126", "Mathurin Marion", "", "Finance", "Pierre Guyonneau", "", "01/02/1664"], ["127", "Mathurin Marion", "", "Finance", "Pierre Guinebaud", "", "01/02/1664"], ["128", "Mathurin Marion", "", "Finance", "Marie Boucher", "St Nicolas, Nantes", "01/02/1664"], ["129", "Anne Gallier", "St Nicolas, Nantes", "Finance", "Wils et Van Schoonhoven Cie", "", "01/02/1664"], ["130", "Anne Gallier", "St Nicolas, Nantes", "Finance", "Pierre Guyonneau", "", "01/02/1664"], ["131", "Anne Gallier", "St Nicolas, Nantes", "Finance", "Pierre Guinebaud", "", "01/02/1664"], ["132", "Anne Gallier", "St Nicolas, Nantes", "Finance", "Marie Boucher", "St Nicolas, Nantes", "01/02/1664"], ["133", "Marie Boucher", "St Nicolas, Nantes", "Commerce", "Bernard Gillabert", " Bordeaux", "09/04/1664"], ["134", "Bernard Gillabert", "Bordeaux", "Travail", "Pierre Goudin", "Olonne", "09/04/1664"], ["135", "Bernard Gillabert", "Bordeaux", "Travail", "Arnault de La Conforque", "Bordeaux", "09/04/1664"], ["136", "Bernard Gillabert", "Bordeaux", "Travail", "Jean Batau", "Mesquer", "09/04/1664"], ["137", "Bernard Gillabert", "Bordeaux", "Travail", "Fran\u00e7ois Laragon", "Le Pouliguen", "09/04/1664"], ["138", "Bernard Gillabert", "Bordeaux", "Travail", "Daniel Caneret", "Audierne", "09/04/1664"], ["139", "Marie Boucher", "St Nicolas, Nantes", "Travail", "Pierre Goudin", "Olonne", "09/04/1664"], ["140", "Marie Boucher", "St Nicolas, Nantes", "Travail", "Arnault de La Conforque", "Bordeaux", "09/04/1664"], ["141", "Marie Boucher", "St Nicolas, Nantes", "Travail", "Jean Batau", "Mesquer", "09/04/1664"], ["142", "Marie Boucher", "St Nicolas, Nantes", "Travail", "Fran\u00e7ois Laragon", "Le Pouliguen", "09/04/1664"], ["143", "Marie Boucher", "St Nicolas, Nantes", "Travail", "Daniel Caneret", "Audierne", "09/04/1664"], ["144", "Marie Boucher", "St Nicolas, Nantes", "Famille", "Jean Boucher", "St Nicolas, Nantes", "12/08/1666"], ["145", "Marie Boucher", "St Nicolas, Nantes", "Commerce", "Jean Boucher", "St Nicolas, Nantes", "12/08/1666"], ["146", "Marie Boucher", "St Nicolas, Nantes", "Travail", "Yves Le Fauch\u00e9", "Le Pouliguen", "12/08/1666"], ["147", "Marie Boucher", "St Nicolas, Nantes", "Finance", "? Grilleau Cie", "", "12/08/1666"], ["148", "Marie Boucher", "St Nicolas, Nantes", "Finance", "Thomas Barnaval", "", "12/08/1666"], ["149", "? Grilleau Cie", "", "Finance", "Thomas Barnaval", "", "12/08/1666"], ["150", "Marie Boucher", "St Nicolas, Nantes", "Finance", "Veuve Massuau et Fresneau", " ", "25/08/1666"], ["151", "Veuve Massuau", " ", "Commerce", "? Fresneau", " ", "25/08/1666"], ["152", "Marie Boucher", "St Nicolas, Nantes", "Finance", "Jacques Souchay et Bouchaud", " ", "25/08/1666"], ["153", "Jacques Souchay", " ", "Commerce", "? Bouchaud", " ", "25/08/1666"], ["154", "Marie Boucher", "St Nicolas, Nantes", "Finance", "Gabriel Michel", " ", "25/08/1666"], ["155", "Marie Boucher", "St Nicolas, Nantes", "Finance", "Julien G\u00e9rard sr de Nays", "", "25/08/1666"], ["156", "Marie Boucher", "St Nicolas, Nantes", "Finance", "Andr\u00e9 Boussineau", "", "25/08/1666"], ["157", "Marie Boucher", "St Nicolas, Nantes", "Finance", "Claude Marion", "", "25/08/1666"], ["158", "Marie Boucher", "St Nicolas, Nantes", "Finance", "Jacob Van den ?", "", "25/08/1666"], ["159", "Marie Boucher", "St Nicolas, Nantes", "Finance", "?", "Orl\u00e9ans", "25/08/1666"], ["160", "? Jego sr Des Preaux ", "Le Croisic", "Finance", "Pierre Le Gruyer sr du Couhourdez", "Le Croisic", "31/08/1666"], ["161", "Marie Boucher", "St Nicolas, Nantes", "Finance", "Pierre Le Gruyer sr du Couhourdez", "Le Croisic", "31/08/1666"], ["162", "Fran\u00e7ois Lestoubec", "Le Croisic", "Finance", "Lorant Hubac", "Brest", "31/08/1666"], ["163", "Lorant Hubac", "Brest", "Finance", "Yvon Le Danteux", "Le Croisic", "31/08/1666"], ["164", "Yvon Le Danteux", "Le Croisic", "Finance", "? Jego sr Des Preaux ", "Le Croisic", "31/08/1666"], ["165", "Marie Boucher", "St Nicolas, Nantes", "Finance", "Fran\u00e7ois Lestoubec", "Le Croisic", "31/08/1666"], ["166", "Marie Boucher", "St Nicolas, Nantes", "Finance", "? Jego sr Des Preaux ", "Le Croisic", "31/08/1666"], ["167", "Marie Boucher", "St Nicolas, Nantes", "Finance", "Lorant Hubac", "Brest", "31/08/1666"], ["168", "Marie Boucher", "St Nicolas, Nantes", "Finance", "Yvon Le Danteux", "Le Croisic", "31/08/1666"], ["169", "Marie Boucher", "St Nicolas, Nantes", "Commerce", "Michel Foucault", "Orl\u00e9ans", "17/11/1666"], ["170", "Marie Boucher", "St Nicolas, Nantes", "Commerce", "Euz\u00e8be Foucault", "Orl\u00e9ans", "17/11/1666"], ["171", "Michel Foucault", "Orl\u00e9ans", "Famille", "Euz\u00e8be Foucault", "Orl\u00e9ans", "17/11/1666"], ["172", "Michel Foucault", "Orl\u00e9ans", "Commerce", "Euz\u00e8be Foucault", "Orl\u00e9ans", "17/11/1666"], ["173", "Marie Boucher", "St Nicolas, Nantes", "Travail", "Nicolas de Gonnor", "St Gilles sur Vie", "17/11/1666"], ["174", "Marie Boucher", "St Nicolas, Nantes", "Travail", "Pierre Bernard", "Bourgneuf", "28/09/1667"], ["175", "Marie Boucher", "St Nicolas, Nantes", "Famille", "Jean Boucher", "Bouffay, Nantes", "28/09/1667"], ["176", "Jean Boucher", "Bouffay, Nantes", "Finance", "", "", "08/03/1667"], ["177", "Jean Boucher", "St Nicolas, Nantes", "Famille", "Marie Boucher", "St Nicolas, Nantes", "27/11/1667"], ["178", "Jean Boucher", "St Nicolas, Nantes", "Commerce", "Marie Boucher", "St Nicolas, Nantes", "27/11/1667"], ["179", "Jean Boucher", "St Nicolas, Nantes", "Travail", "Euz\u00e8be de Loynes", "Orl\u00e9ans", "27/11/1667"], ["180", "Jean Boucher", "St Nicolas, Nantes", "Travail", "Euz\u00e8be Foucault", "Orl\u00e9ans", "27/11/1667"], ["181", "Jean Boucher", "St Nicolas, Nantes", "Travail", "Veuve Louis Le Vassor", "Orl\u00e9ans", "27/11/1667"], ["182", "Euz\u00e8be de Loynes", "Orl\u00e9ans", "Finance", "Euz\u00e8be Foucault", "Orl\u00e9ans", "27/11/1667"], ["183", "Euz\u00e8be de Loynes", "Orl\u00e9ans", "Finance", "Veuve Louis Le Vassor", "Orl\u00e9ans", "27/11/1667"], ["184", "Euz\u00e8be Foucault", "Orl\u00e9ans", "Finance", "Veuve Louis Le Vassor", "Orl\u00e9ans", "27/11/1667"], ["185", "Jean Boucher", "St Nicolas, Nantes", "Travail", "Pierre Benast\u00e9", "Bourgneuf", "27/11/1667"], ["186", "Jean Boucher", "St Nicolas, Nantes", "Commerce", "Charles Pocquelin et Heron Cie", "Lisbonne", "27/11/1667"], ["187", "Charles Pocquelin", "Lisbonne", "Commerce", "? Heron", "Lisbonne", "27/11/1667"], ["188", "Jean Boucher", "St Nicolas, Nantes", "Commerce", "Julien Forget", "Nantes", "27/11/1667"], ["189", "Catherine Lefebvre", "Bourgneuf", "Commerce", "Elizabeth Monnier, dame de la Joffrairie", "Bourgneuf", "28/04/1668"], ["190", "Elizabeth Monnier, dame de la Joffrairie", "Bourgneuf", "Finance", "? de Loign\u00e9", "", "28/04/1668"], ["191", "Catherine Lefebvre", "Bourgneuf", "Finance", "? de Loign\u00e9", "", "28/04/1668"], ["192", "Marie Boucher", "St Nicolas, Nantes", "Commerce", "Fran\u00e7ois Masson", "", "01/05/1668"], ["193", "Elizabeth Monnier, dame de la Joffrairie", "Bourgneuf", "Commerce", "Marie Boucher", "St Nicolas, Nantes", "01/05/1668"], ["194", "Elizabeth Monnier, dame de la Joffrairie", "Bourgneuf", "Famille", "Julien Hubin, sr de la Joffrairie", "Bourgneuf", "01/05/1668"], ["195", "Marie Boucher", "St Nicolas, Nantes", "Finance", "Charles Cassard", "Nantes", "22/07/1670"], ["196", "Charles Cassard", "Nantes", "Finance", "Robert Miron", "Orl\u00e9ans", "22/07/1670"], ["197", "Robert Miron", "Orl\u00e9ans", "Finance", "Denis Jaumier", "", "22/07/1670"], ["198", "Denis Jaumier", "", "Finance", "Charles Cassard", "Nantes", "22/07/1670"], ["199", "Marie Boucher", "St Nicolas, Nantes", "Finance", "Robert Miron", "Orl\u00e9ans", "22/07/1670"], ["200", "Ren\u00e9 Cisson", "Nantes", "Finance", "Charles Cassard", "Nantes", "22/07/1670"], ["201", "Jean Renou", "Nantes", "Finance", "Charles Cassard", "Nantes", "22/07/1670"], ["202", "Bonnaventure Dup\u00e9", "Nantes", "Finance", "Charles Cassard", "Nantes", "22/07/1670"], ["203", "Marie Boucher", "St Nicolas, Nantes", "Famille", "Jacques Boucher", "St Nicolas, Nantes", "09/09/1670"], ["204", "Marie Boucher", "St Nicolas, Nantes", "Commerce", "Claude Courdon", "St Nicolas, Nantes", "09/09/1670"], ["205", "Jacques Boucher", "St Nicolas, Nantes", "Commerce", "Claude Courdon", "St Nicolas, Nantes", "09/09/1670"], ["206", "Herv\u00e9 Le Prince", "Le Croisic", "Travail", "Jacques Boucher", "St Nicolas, Nantes", "09/09/1670"], ["207", "Herv\u00e9 Le Prince", "Le Croisic", "Travail", "Claude Courdon", "St Nicolas, Nantes", "09/09/1670"], ["208", "Herv\u00e9 Le Prince", "Le Croisic", "Travail", "Marie Boucher", "St Nicolas, Nantes", "09/09/1670"], ["209", "Marie Boucher", "St Nicolas, Nantes", "Commerce", "Jacques Boucher", "St Nicolas, Nantes", "09/09/1670"], ["210", "Herv\u00e9 Le Prince", "Le Croisic", "Travail", "Michel Yviquel", "Le Croisic", "09/09/1670"], ["211", "Hubert Antheaume", "St Nicolas, Nantes", "Famille", "Madeleine Boucher", "St Nicolas, Nantes", "12/10/1670"], ["212", "Hubert Antheaume", "St Nicolas, Nantes", "Famille", "Eloy Antheaume", "St Sulpice, Paris", "12/10/1670"], ["213", "Hubert Antheaume", "St Nicolas, Nantes", "Famille", "Claude Du Mesnil", "St Sulpice, Paris", "12/10/1670"], ["214", "Eloy Antheaume", "St Sulpice, Paris", "Famille", "Claude Du Mesnil", "St Sulpice, Paris", "12/10/1670"], ["215", "Hubert Antheaume", "St Nicolas, Nantes", "Famille", "Marie Boucher", "St Nicolas, Nantes", "12/10/1670"], ["216", "Madeleine Boucher", "St Nicolas, Nantes", "Famille", "Jean Boucher", "Ile St Christophe", "12/10/1670"], ["217", "Madeleine Boucher", "St Nicolas, Nantes", "Famille", "Fran\u00e7oise Seurat", "Ile St Christophe", "12/10/1670"], ["218", "Jean Boucher", "Ile St Christophe", "Famille", "Fran\u00e7oise Seurat", "Ile St Christophe", "12/10/1670"], ["219", "Madeleine Boucher", "St Nicolas, Nantes", "Famille", "Marie Boucher", "St Nicolas, Nantes", "12/10/1670"], ["220", "Marie Boucher", "St Nicolas, Nantes", "Famille", "Jean Boucher", "Ile St Christophe", "12/10/1670"], ["221", "Marie Boucher", "St Nicolas, Nantes", "Commerce", "Jean Boucher", "Ile St Christophe", "12/10/1670"], ["222", "Jean Merceron sr de la Poitevini\u00e8re", "St Nicolas, Nantes", "Finance", "Madeleine Boucher", "St Nicolas, Nantes", "12/10/1670"], ["223", "Jean Merceron sr de la Poitevini\u00e8re", "St Nicolas, Nantes", "Commerce", "Hubert Antheaume", "St Nicolas, Nantes", "12/10/1670"], ["224", "Jacques Antheaume", "Ile St Domingue", "Famille", "Hubert Antheaume", "St Nicolas, Nantes", "12/06/1669"], ["225", "Jacques Antheaume", "Ile St Domingue", "Commerce", "Hubert Antheaume", "St Nicolas, Nantes", "12/06/1669"], ["226", "Jean Chesneau", "Ancenis", "Travail", "Hubert Antheaume", "St Nicolas, Nantes", "11/02/1671"], ["227", "Jean Chesneau", "Ancenis", "Famille", "Simon Chesneau", "Ancenis", "11/02/1671"], ["228", "Jean Chesneau", "Ancenis", "Famille", "Ren\u00e9e Leboisteux", "Ancenis", "11/02/1671"], ["229", "Simon Chesneau", "Ancenis", "Famille", "Ren\u00e9e Leboisteux", "Ancenis", "11/02/1671"], ["230", "Hubert Antheaume", "St Nicolas, Nantes", "Commerce", "Bernard Godin", "Ile St Domingue", "11/02/1671"], ["231", "Jean Chesneau", "Ancenis", "Travail", "? Belliotte", "St Nazaire", "11/02/1671"], ["232", "Jean Chesneau", "Ancenis", "Travail", "Bernard Godin", "Ile St Domingue", "11/02/1671"], ["233", "J\u00e9r\u00f4me de Vocelle", "Ile de la Tortue", " ", "Jean Grouart", "Ile de la Tortue", "23/02/1671"], ["234", "Hubert Antheaume", "St Nicolas, Nantes", "Finance", "J\u00e9r\u00f4me de Vocelle", "Ile de la Tortue", "23/02/1671"], ["235", "Marie Boucher", "St Nicolas, Nantes", "Famille", "Hubert Antheaume", "St Nicolas, Nantes", "11/03/1671"], ["236", "Marie Boucher", "St Nicolas, Nantes", "Famille", "Madeleine Boucher", "St Nicolas, Nantes", "11/03/1671"], ["237", "Hubert Antheaume", "St Nicolas, Nantes", "Famille", "Madeline Boucher", "St Nicolas, Nantes", "11/03/1671"], ["238", "Marie Boucher", "St Nicolas, Nantes", "Commerce", "Hubert Antheaume", "St Nicolas, Nantes", "11/03/1671"], ["239", "Marie Boucher", "St Nicolas, Nantes", "Commerce", "Madeleine Boucher", "St Nicolas, Nantes", "11/03/1671"], ["240", "Hubert Antheaume", "St Nicolas, Nantes", "Commerce", "Madeline Boucher", "St Nicolas, Nantes", "11/03/1671"], ["241", "Marie Boucher", "St Nicolas, Nantes", "Famille", "Roze Boucher", "St Nicolas, Nantes", "28/01/1672"], ["242", "Marie Boucher", "St Nicolas, Nantes", "Commerce", "Roze Boucher", "St Nicolas, Nantes", "28/01/1672"], ["243", "Pierre Gaigneur", "La Rochelle", "Commerce", "Jean Ragniau", "La Rochelle", "08/01/1672"], ["244", "Pierre Gaigneur", "La Rochelle", "Commerce", "Fran\u00e7ois Pachon", "La Rochelle", "08/01/1672"], ["245", "Pierre Gaigneur", "La Rochelle", "Commerce", "? Arnaud P\u00e8re", "La Rochelle", "08/01/1672"], ["246", "Fran\u00e7ois Pachon", "La Rochelle", "Commerce", "? Arnaud P\u00e8re", "La Rochelle", "08/01/1672"], ["247", "Fran\u00e7ois Pachon", "La Rochelle", "Commerce", "Jean Ragniau", "La Rochelle", "08/01/1672"], ["248", "? Arnaud P\u00e8re", "La Rochelle", "Commerce", "Jean Ragniau", "La Rochelle", "08/01/1672"], ["249", "Jean Ragniau", "La Rochelle", "Commerce", "Josu\u00e9 Valens", "Ile de R\u00e9", "08/01/1672"], ["250", "Nicolas Bachelier sr du Pinier", "", "Finance", "J\u00e9r\u00f4me Merceron", "", "08/01/1672"], ["251", "J\u00e9r\u00f4me Merceron", "", "Finance", "Claude de Cornillier", "", "08/01/1672"], ["252", "Claude de Cornillier", "", "Finance", "Nicolas Bachelier sr du Pinier", "", "08/01/1672"], ["253", "Robert Miron", "Orl\u00e9ans", "Finance", "Jean de Beausse", "Orl\u00e9ans", "08/01/1672"], ["254", "Marie Boucher et Hubert Antheaume Cie", "St Nicolas, Nantes", "Finance", "Robert Miron", "Orl\u00e9ans", "08/01/1672"], ["255", "Marie Boucher et Hubert Antheaume Cie", "St Nicolas, Nantes", "Commerce", "Jean de Beausse", "Orl\u00e9ans", "08/01/1672"], ["256", "Robert Miron", "Orl\u00e9ans", "Commerce", "Jean de Beausse", "Orl\u00e9ans", "08/01/1672"], ["257", "Fran\u00e7ois Pachon", "La Rochelle", "Commerce", "Josu\u00e9 Valens", "Ile de R\u00e9", "08/01/1672"], ["258", "? Arnaud P\u00e8re", "La Rochelle", "Commerce", "Josu\u00e9 Valens", "Ile de R\u00e9", "08/01/1672"], ["259", "Pierre Gaigneur", "La Rochelle", "Commerce", "Josu\u00e9 Valens", "Ile de R\u00e9", "08/01/1672"], ["260", "Marie Boucher et Hubert Antheaume Cie", "St Nicolas, Nantes", "Finance", "Nicolas Bachelier sr du Pinier", "", "08/01/1672"], ["261", "Marie Boucher et Hubert Antheaume Cie", "St Nicolas, Nantes", "Finance", "J\u00e9r\u00f4me Merceron", "", "08/01/1672"], ["262", "Marie Boucher et Hubert Antheaume Cie", "St Nicolas, Nantes", "Finance", "Claude de Cornillier", "", "08/01/1672"], ["263", "Nicolas Bachelier", "", "Finance", "J\u00e9r\u00f4me Merceron", "", "12/10/1672"], ["264", "Nicolas Bachelier", "", "Finance", "Etienne Huet", "", "12/10/1672"], ["265", "Nicolas Bachelier", "", "Finance", "Marie Boucher et Hubert Antheaume Cie", "St Nicolas, Nantes", "12/10/1672"], ["266", "Nicolas Bachelier", "", "Finance", "? de Flacon", "", "12/10/1672"], ["267", "Nicolas Bachelier", "", "Finance", "Pierre Guinebaud", "", "12/10/1672"], ["268", "Nicolas Bachelier", "", "Finance", "Claude Lemasne", "", "12/10/1672"], ["269", "Nicolas Bachelier", "", "Finance", "Louis Germain", "", "12/10/1672"], ["270", "J\u00e9r\u00f4me Merceron", "", "Finance", "Etienne Huet", "", "12/10/1672"], ["271", "J\u00e9r\u00f4me Merceron", "", "Finance", "Marie Boucher et Hubert Antheaume Cie", "St Nicolas, Nantes", "12/10/1672"], ["272", "J\u00e9r\u00f4me Merceron", "", "Finance", "? de Flacon", "", "12/10/1672"], ["273", "J\u00e9r\u00f4me Merceron", "", "Finance", "Pierre Guinebaud", "", "12/10/1672"], ["274", "J\u00e9r\u00f4me Merceron", "", "Finance", "Claude Lemasne", "", "12/10/1672"], ["275", "J\u00e9r\u00f4me Merceron", "", "Finance", "Louis Germain", "", "12/10/1672"], ["276", "Etienne Huet", "", "Finance", "Marie Boucher et Hubert Antheaume Cie", "St Nicolas, Nantes", "12/10/1672"], ["277", "Etienne Huet", "", "Finance", "? de Flacon", "", "12/10/1672"], ["278", "Etienne Huet", "", "Finance", "Pierre Guinebaud", "", "12/10/1672"], ["279", "Etienne Huet", "", "Finance", "Claude Lemasne", "", "12/10/1672"], ["280", "Etienne Huet", "", "Finance", "Louis Germain", "", "12/10/1672"], ["281", "Louis Germain", "", "Commerce", "Michel Germain sieur de Valecourt", "", "12/10/1672"], ["282", "Louis Germain", "", "Famille", "Michel Germain sieur de Valecourt", "", "12/10/1672"], ["283", "Louis Germain", "", "Finance", "Marie Boucher et Hubert Antheaume Cie", "St Nicolas, Nantes", "12/10/1672"], ["284", "Louis Germain", "", "Finance", "? de Flacon", "", "12/10/1672"], ["285", "Louis Germain", "", "Finance", "Pierre Guinebaud", "", "12/10/1672"], ["286", "Louis Germain", "", "Finance", "Claude Lemasne", "", "12/10/1672"], ["287", "Marie Boucher et Hubert Antheaume Cie", "St Nicolas, Nantes", "Commerce", "Robert Miron", "", "12/10/1672"], ["288", "Marie Boucher et Hubert Antheaume Cie", "St Nicolas, Nantes", "Commerce", "Jean de Beausse", "Orl\u00e9ans", "12/10/1672"], ["289", "Robert Miron", "Orl\u00e9ans", "Finance", "Jean de Beausse", "Orl\u00e9ans", "12/10/1672"], ["290", "Marie Boucher et Hubert Antheaume Cie", "St Nicolas, Nantes", "Finance", "? de Flacon", "", "12/10/1672"], ["291", "Marie Boucher et Hubert Antheaume Cie", "St Nicolas, Nantes", "Finance", "Pierre Guinebaud", "", "12/10/1672"], ["292", "Marie Boucher et Hubert Antheaume Cie", "St Nicolas, Nantes", "Finance", "Claude Lemasne", "", "12/10/1672"], ["293", "? de Flacon", "", "Commerce", "Damoiselle de Perpignan", "", "12/10/1672"], ["294", "? de Flacon", "", "Finance", "Pierre Guinebaud", "", "12/10/1672"], ["295", "? de Flacon", "", "Finance", "Claude Lemasne", "", "12/10/1672"], ["296", "Pierre Guinebaud", "", "Commerce", "Euzebe de Loynes", "", "12/10/1672"], ["297", "Pierre Guinebaud", "", "Finance", "Claude Lemasne", "", "12/10/1672"], ["298", "Nicolas Bachelier", "", "Finance", "Raoul Sanson", "Montoir", "12/10/1672"], ["299", "J\u00e9r\u00f4me Merceron", "", "Finance", "Raoul Sanson", "Montoir", "12/10/1672"], ["300", "Etienne Huet", " ", "Finance", "Raoul Sanson", "Montoir", "12/10/1672"], ["301", "Louis Germain", "", "Finance", "Raoul Sanson", "Montoir", "12/10/1672"], ["302", "Marie Boucher et Hubert Antheaume Cie", "St Nicolas, Nantes", "Finance", "Raoul Sanson", "Montoir", "12/10/1672"], ["303", "? de Flacon", "", "Finance", "Raoul Sanson", "Montoir", "12/10/1672"], ["304", "Pierre Guinebaud", "", "Finance", "Raoul Sanson", "Montoir", "12/10/1672"], ["305", "Claude Lemasne", "", "Finance", "Raoul Sanson", "Montoir", "12/10/1672"], ["306", "Julien Chesne le jeune", "St Nicolas, Nantes", "Finance", "Nicolas Bachelier", "", "12/10/1672"], ["307", "Julien Chesne le jeune", "St Nicolas, Nantes", "Finance", "Marie Boucher et Hubert Antheaume Cie", "St Nicolas, Nantes", "12/10/1672"], ["308", "Eloy Antheaume", "St Gilles, Paris", "Famille", "Eloy Antheaume, p\u00e8re", "Paris", "19/03/1668"], ["309", "Eloy Antheaume", "St Gilles, Paris", "Famille", "Pierre de Marle", "St Nicolas des Champs, Paris", "19/03/1668"], ["310", "Eloy Antheaume", "St Gilles, Paris", "Famille", "Marguerite Antheaume", "St Nicolas des Champs, Paris", "19/03/1668"], ["311", "Pierre de Marle", "St Nicolas des Champs, Paris", "Famille", "Marguerite Antheaume", "St Nicolas des Champs, Paris", "19/03/1668"], ["312", "Eloy Antheaume, p\u00e8re", "Paris", "Famille", "St Severin, Paris", "St Nicolas des Champs, Paris", "19/03/1668"], ["313", "Pierre de Marle", "St Nicolas des Champs, Paris", "Famille", "Eloy Antheaume", "St Gilles, Paris", "19/03/1668"], ["314", "Eloy Antheaume", "St Gilles, Paris", "Famille", "Eloy Antheaume, p\u00e8re", "Paris", "25/06/1673"], ["315", "Marie Boucher", "St Nicolas des Champs, Paris", "Commerce", "Hubert Antheaume", "St Nicolas, Nantes", "25/06/1673"], ["316", "Marie Boucher", "St Nicolas des Champs, Paris", "Famille", "Hubert Antheaume", "St Nicolas, Nantes", "25/06/1673"], ["317", "Eloy Antheaume, p\u00e8re", "Paris", "Famille", "Hubert Antheaume", "St Nicolas, Nantes", "25/06/1673"], ["318", "Eloy Antheaume, p\u00e8re", "Paris", "Famille", "Marguerite Antheaume", "St Eustache, Paris", "25/06/1673"], ["319", "Eloy Antheaume, p\u00e8re", "Paris", "Famille", "Jacques Antheaume", "St Nicolas des Champs, Paris", "25/06/1673"], ["320", "Eloy Antheaume, p\u00e8re", "Paris", "Famille", "Claude Du Mesnil", "Paris", "25/06/1673"], ["321", "Marguerite Antheaume", "St Eustache, Paris", "Famille", "Pierre de Marle", "St Eustache, Paris", "25/06/1673"], ["322", "Eloy Antheaume", "St Gilles, Paris", "Famille", "Hubert Antheaume", "St Nicolas, Nantes", "25/06/1673"], ["323", "Eloy Antheaume", "St Gilles, Paris", "Famille", "Marguerite Antheaume", "St Eustache, Paris", "25/06/1673"], ["324", "Eloy Antheaume", "St Gilles, Paris", "Famille", "Jacques Antheaume", "St Nicolas des Champs, Paris", "25/06/1673"], ["325", "Hubert Antheaume", "St Nicolas, Nantes", "Famille", "Marguerite Antheaume", "St Eustache, Paris", "25/06/1673"], ["326", "Hubert Antheaume", "St Nicolas, Nantes", "Famille", "Jacques Antheaume", "St Nicolas des Champs, Paris", "25/06/1673"], ["327", "Marguerite Antheaume", "St Eustache, Paris", "Famille", "Jacques Antheaume", "St Nicolas des Champs, Paris", "25/06/1673"], ["328", "Claude Du Mesnil", "Paris", "Famille", "Jehan Ory, p\u00e8re", "", "25/06/1673"], ["329", "Claude Du Mesnil", "Paris", "Famille", "Jehan Ory  ", "", "25/06/1673"], ["330", "Jehan Ory, p\u00e8re", "Paris", "Famille", "Jehan Ory  ", "", "25/06/1673"], ["331", "Eloy Antheaume", "St Gilles, Paris", "Famille", "Eloy Antheaume, p\u00e8re", "Paris", "17/03/1674"], ["332", "Marie Boucher", "St Severin, Paris", "Commerce", "Hubert Antheaume", "St Nicolas, Nantes", "17/03/1674"], ["333", "Marie Boucher", "St Severin, Paris", "Famille", "Hubert Antheaume", "St Nicolas, Nantes", "17/03/1674"], ["334", "Eloy Antheaume, p\u00e8re", "Paris", "Famille", "Hubert Antheaume", "St Nicolas, Nantes", "17/03/1674"], ["335", "Eloy Antheaume, p\u00e8re", "Paris", "Famille", "Marguerite Antheaume", "St Germain L'Auxerrois, Paris", "17/03/1674"], ["336", "Eloy Antheaume, p\u00e8re", "Paris", "Famille", "Jacques Antheaume", "St Nicolas des Champs, Paris", "17/03/1674"], ["337", "Eloy Antheaume, p\u00e8re", "Paris", "Famille", "Claude Du Mesnil", "Paris", "17/03/1674"], ["338", "Marguerite Antheaume", "St Germain L'Auxerrois, Paris", "Famille", "Pierre de Marle", "St Germain L'Auxerrois, Paris", "17/03/1674"], ["339", "Eloy Antheaume", "St Gilles, Paris", "Famille", "Hubert Antheaume", "St Nicolas, Nantes", "17/03/1674"], ["340", "Eloy Antheaume", "St Gilles, Paris", "Famille", "Marguerite Antheaume", "St Germain L'Auxerrois, Paris", "17/03/1674"], ["341", "Eloy Antheaume", "St Gilles, Paris", "Famille", "Jacques Antheaume", "St Nicolas des Champs, Paris", "17/03/1674"], ["342", "Hubert Antheaume", "St Nicolas, Nantes", "Famille", "Marguerite Antheaume", "St Germain L'Auxerrois, Paris", "17/03/1674"], ["343", "Hubert Antheaume", "St Nicolas, Nantes", "Famille", "Jacques Antheaume", "St Nicolas des Champs, Paris", "17/03/1674"], ["344", "Marguerite Antheaume", "St Germain L'Auxerrois, Paris", "Famille", "Jacques Antheaume", "St Nicolas des Champs, Paris", "17/03/1674"], ["345", "Claude Du Mesnil", "Paris", "Famille", "Jehan Du Mesnil", "", "17/03/1674"], ["346", "Catherine Benard", "Paris", "Famille", "Pierre Girard", "", "17/03/1674"], ["347", "Claude Gohard", "St Sulpice, Paris", "Finance", "Eloy Antheaume", "St Gilles, Paris", "17/03/1674"], ["348", "Claude Gohard", "St Sulpice, Paris", "Finance", "Marie Boucher", "St Severin, Paris", "17/03/1674"], ["349", "Claude Gohard", "St Sulpice, Paris", "Finance", "Marguerite Antheaume", "St Germain L'Auxerrois, Paris", "17/03/1674"], ["350", "Claude Gohard", "St Sulpice, Paris", "Finance", "Jacques Antheaume", "St Nicolas des Champs, Paris", "17/03/1674"], ["351", "Claude Du Mesnil", "Paris", "Finance", "Catherine Benard", "Paris", "17/03/1674"], ["352", "Eloy Antheaume, p\u00e8re", "Paris", "Finance", "Catherine Benard", "Paris", "17/03/1674"], ["353", "Hubert Antheaume", "St Severin, Paris", "Commerce", "Marie Boucher", "", "19/08/1671"], ["354", "Hubert Antheaume", "St Severin, Paris", "Famille", "Marie Boucher", "", "19/08/1671"], ["355", "Eloy Antheaume p\u00e8re", "St Germain des Pr\u00e9s, Paris", "Famille", "Claude Du Mesnil", "St Germain des Pr\u00e9s, Paris", "19/08/1671"], ["356", "Hubert Antheaume", "St Severin, Paris", "Famille", "Eloy Antheaume p\u00e8re", "St Germain des Pr\u00e9s, Paris", "19/08/1671"], ["357", "Hubert Antheaume", "St Severin, Paris", "Famille", "Claude Du Mesnil", "St Germain des Pr\u00e9s, Paris", "19/08/1671"], ["358", "Eloy Antheaume", "St Leu St Gilles, Paris", "Famille", "Anne Vallet", "St Leu St Gilles, Paris", "28/08/1671"], ["359", "Eloy Antheaume", "St Leu St Gilles, Paris", "Famille", "Hubert Antheaume", "St Severin, Paris", "28/08/1671"], ["360", "Eloy Antheaume", "St Leu St Gilles, Paris", "Famille", "Jacques Antheaume", "St Nicolas des Champs, Paris", "28/08/1671"], ["361", "Eloy Antheaume", "St Leu St Gilles, Paris", "Famille", "Madeleine Antheaume", "St Lazare, Paris", "28/08/1671"], ["362", "Hubert Antheaume", "St Severin, Paris", "Famille", "Jacques Antheaume", "St Nicolas des Champs, Paris", "28/08/1671"], ["363", "Hubert Antheaume", "St Severin, Paris", "Famille", "Madeleine Antheaume", "St Nicolas des Champs, Paris", "28/08/1671"], ["364", "Jacques Antheaume", "St Nicolas des Champs, Paris", "Famille", "Madeleine Antheaume", "St Nicolas des Champs, Paris", "28/08/1671"], ["365", "Madeleine Antheaume", "St Nicolas des Champs, Paris", "Famille", "Pierre de Marle", "St Nicolas des Champs, Paris", "28/08/1671"], ["366", "Marguerite Lescallier", "St Nicolas des Champs, Paris", "Famille", "Jean Antheaume p\u00e8re", "St Nicolas des Champs, Paris", "28/08/1671"], ["367", "Marguerite Lescallier", "St Nicolas des Champs, Paris", "Famille", "Joseph Estienne Antheaume", "St Nicolas des Champs, Paris", "28/08/1671"], ["368", "Marguerite Lescallier", "St Nicolas des Champs, Paris", "Famille", "Jean Antheaume", "St Nicolas des Champs, Paris", "28/08/1671"], ["369", "Marguerite Lescallier", "St Nicolas des Champs, Paris", "Famille", "Marie Antheaume", "St Eustache, Paris", "28/08/1671"], ["370", "Marguerite Lescallier", "St Nicolas des Champs, Paris", "Famille", "Madeleine Antheaume 2", "St Andr\u00e9 des Arts, Paris", "28/08/1671"], ["371", "Joseph Estienne Antheaume", "St Nicolas des Champs, Paris", "Famille", "Jean Antheaume", "St Nicolas des Champs, Paris", "28/08/1671"], ["372", "Joseph Estienne Antheaume", "", "Famille", "Marie Antheaume", "St Eustache, Paris", "28/08/1671"], ["373", "Joseph Estienne Antheaume", "", "Famille", "Madeleine Antheaume 2", "St Andr\u00e9 des Arts, Paris", "28/08/1671"], ["374", "Jean Antheaume", "St Nicolas des Champs, Paris", "Famille", "Marie Antheaume", "St Eustache, Paris", "28/08/1671"], ["375", "Jean Antheaume", "St Nicolas des Champs, Paris", "Famille", "Madeleine Antheaume \u00e9", "St Andr\u00e9 des Arts, Paris", "28/08/1671"], ["376", "Marie Antheaume", "St Eustache, Paris", "Famille", "Madeleine Antheaume 2", "St Andr\u00e9 des Arts, Paris", "28/08/1671"], ["377", "Marie Antheaume", "St Eustache, Paris", "Famille", "Jean Estienne Martin", "St Eustache, Paris", "28/08/1671"], ["378", "Madeleine Antheaume 2", "St Andr\u00e9 des Arts, Paris", "Famille", "Pierre Damoiseau", "St Andr\u00e9 des Arts, Paris", "28/08/1671"], ["379", "Eloy Antheaume p\u00e8re", " ", "Famille", "Eloy Antheaume", "St Leu St Gilles, Paris", "28/08/1671"], ["380", "Eloy Antheaume p\u00e8re", " ", "Famille", "Hubert Antheaume", "St Severin, Paris", "28/08/1671"], ["381", "Eloy Antheaume p\u00e8re", " ", "Famille", "Jacques Antheaume", "St Nicolas des Champs, Paris", "28/08/1671"], ["382", "Eloy Antheaume p\u00e8re", "", "Famille", "Madeleine Antheaume", "St Nicolas des Champs, Paris", "28/08/1671"], ["383", "Eloy Antheaume p\u00e8re", "", "Famille", "Claude Du Mesnil", "", "28/08/1671"], ["384", "Claude Du Mesnil", "", "Famille", "Eloy Antheaume", "St Leu St Gilles, Paris", "28/08/1671"], ["385", "Claude Du Mesnil", "", "Famille", "Hubert Antheaume", "St Severin, Paris", "28/08/1671"], ["386", "Claude Du Mesnil", "", "Famille", "Jacques Antheaume", "St Nicolas des Champs, Paris", "28/08/1671"], ["387", "Claude Du Mesnil", "", "Famille", "Madeleine Antheaume", "St Nicolas des Champs, Paris", "28/08/1671"], ["388", "Claude Du Mesnil", "", "Famille", "Jean Ory p\u00e8re", "", "28/08/1671"], ["389", "Claude Du Mesnil", "", "Famille", "Jean Ory  ", "", "28/08/1671"], ["390", "Jean Ory p\u00e8re", "", "Famille", "Jean Ory  ", "", "28/08/1671"], ["391", "Eloy Antheaume", "St Leu St Gilles, Paris", "", "Nicolas de Longueil", "St Germain l'Auxerrois, Paris", "28/08/1671"], ["392", "Hubert Antheaume", "St Severin, Paris", "Finance", "Nicolas de Longueil", "St Germain l'Auxerrois, Paris", "28/08/1671"], ["393", "Jacques Antheaume", "St Nicolas des Champs, Paris", "", "Nicolas de Longueil", "St Germain l'Auxerrois, Paris", "28/08/1671"], ["394", "Madeleine Antheaume", "St Nicolas des Champs, Paris", "", "Nicolas de Longueil", "St Germain l'Auxerrois, Paris", "28/08/1671"], ["395", "Eloy Antheaume", "St Leu St Gilles, Paris", "", "Marguerite Lescallier", "St Nicolas des Champs, Paris", "28/08/1671"], ["396", "Hubert Antheaume", "St Severin, Paris", "Finance", "Marguerite Lescallier", "St Nicolas des Champs, Paris", "28/08/1671"], ["397", "Jacques Antheaume", "St Nicolas des Champs, Paris", "", "Marguerite Lescallier", "St Nicolas des Champs, Paris", "28/08/1671"], ["398", "Madeleine Antheaume", "St Nicolas des Champs, Paris", "", "Marguerite Lescallier", "St Nicolas des Champs, Paris", "28/08/1671"], ["399", "Eloy Antheaume", "St Leu St Gilles, Paris", "Famille", "Anne Vallet", "St Leu St Gilles, Paris", "28/08/1671"], ["400", "Eloy Antheaume", "St Leu St Gilles, Paris", "Famille", "Hubert Antheaume", "St Severin, Paris", "28/08/1671"], ["401", "Eloy Antheaume", "St Leu St Gilles, Paris", "Famille", "Jacques Antheaume", "St Nicolas des Champs, Paris", "28/08/1671"], ["402", "Eloy Antheaume", "St Leu St Gilles, Paris", "Famille", "Pierre de Marle", "St Nicolas des Champs, Paris", "28/08/1671"], ["403", "Eloy Antheaume", "St Leu St Gilles, Paris", "Famille", "Madeleine Antheaume", "St Nicolas des Champs, Paris", "28/08/1671"], ["404", "Hubert Antheaume", "St Severin, Paris", "Famille", "Jacques Antheaume", "St Nicolas des Champs, Paris", "28/08/1671"], ["405", "Hubert Antheaume", "St Severin, Paris", "Famille", "Madeleine Antheaume", "St Nicolas des Champs, Paris", "28/08/1671"], ["406", "Jacques Antheaume", "St Nicolas des Champs, Paris", "Famille", "Madeleine Antheaume", "St Nicolas des Champs, Paris", "28/08/1671"], ["407", "Madeleine Antheaume", "St Nicolas des Champs, Paris", "Famille", "Pierre de Marle", "St Nicolas des Champs, Paris", "28/08/1671"], ["408", "Marguerite Lescallier", "St Nicolas des Champs, Paris", "Famille", "Jean Antheaume p\u00e8re", "St Nicolas des Champs, Paris", "28/08/1671"], ["409", "Eloy Antheaume", "St Leu St Gilles, Paris", "Finance", "Marguerite Lescallier", "St Nicolas des Champs, Paris", "28/08/1671"], ["410", "Hubert Antheaume", "St Severin, Paris", "Finance", "Marguerite Lescallier", "St Nicolas des Champs, Paris", "28/08/1671"], ["411", "Jacques Antheaume", "St Nicolas des Champs, Paris", "", "Marguerite Lescallier", "St Nicolas des Champs, Paris", "28/08/1671"], ["412", "Madeleine Antheaume", "St Nicolas des Champs, Paris", "", "Marguerite Lescallier", "St Nicolas des Champs, Paris", "28/08/1671"], ["413", "Eloy Antheaume", "St Leu St Gilles, Paris", "Famille", "Anne Vallet", "St Leu St Gilles, Paris", "28/08/1671"], ["414", "Eloy Antheaume", "St Leu St Gilles, Paris", "Famille", "Hubert Antheaume", "St Severin, Paris", "28/08/1671"], ["415", "Eloy Antheaume", "St Leu St Gilles, Paris", "Famille", "Jacques Antheaume", "St Nicolas des Champs, Paris", "28/08/1671"], ["416", "Eloy Antheaume", "St Leu St Gilles, Paris", "Famille", "Pierre de Marle", "St Nicolas des Champs, Paris", "28/08/1671"], ["417", "Eloy Antheaume", "St Leu St Gilles, Paris", "Famille", "Madeleine Antheaume", "St Nicolas des Champs, Paris", "28/08/1671"], ["418", "Hubert Antheaume", "St Severin, Paris", "Famille", "Jacques Antheaume", "St Nicolas des Champs, Paris", "28/08/1671"], ["419", "Hubert Antheaume", "St Severin, Paris", "Famille", "Madeleine Antheaume", "St Nicolas des Champs, Paris", "28/08/1671"], ["420", "Jacques Antheaume", "St Nicolas des Champs, Paris", "Famille", "Madeleine Antheaume", "St Nicolas des Champs, Paris", "28/08/1671"], ["421", "Madeleine Antheaume", "St Nicolas des Champs, Paris", "Famille", "Pierre de Marle", "St Nicolas des Champs, Paris", "28/08/1671"], ["422", "Marguerite Lescallier", "St Nicolas des Champs, Paris", "Famille", "Jean Antheaume p\u00e8re", "St Nicolas des Champs, Paris", "28/08/1671"], ["423", "Eloy Antheaume", "St Leu St Gilles, Paris", "", "Marguerite Lescallier", "St Nicolas des Champs, Paris", "28/08/1671"], ["424", "Hubert Antheaume", "St Severin, Paris", "Finance", "Marguerite Lescallier", "St Nicolas des Champs, Paris", "28/08/1671"], ["425", "Jacques Antheaume", "St Nicolas des Champs, Paris", "", "Marguerite Lescallier", "St Nicolas des Champs, Paris", "28/08/1671"], ["426", "Madeleine Antheaume", "St Nicolas des Champs, Paris", "", "Marguerite Lescallier", "St Nicolas des Champs, Paris", "28/08/1671"], ["427", "Eloy Antheaume", "St Leu St Gilles, Paris", "", "Hubert Antheaume", "St Severin, Paris", "28/08/1671"], ["428", "Eloy Antheaume", "St Leu St Gilles, Paris", "", "Jacques Antheaume", "St Nicolas des Champs, Paris", "28/08/1671"], ["429", "Eloy Antheaume", "St Leu St Gilles, Paris", "", "Madeleine Antheaume", "St Nicolas des Champs, Paris", "28/08/1671"], ["430", "Madeleine Antheaume", "St Nicolas des Champs, Paris", "Famille", "Pierre de Marle", "St Nicolas des Champs, Paris", "28/08/1671"], ["431", "Hubert Antheaume", "St Severin, Paris", "Finance", "Jacques Antheaume", "St Nicolas des Champs, Paris", "28/08/1671"], ["432", "Hubert Antheaume", "St Severin, Paris", "Finance", "Madeleine Antheaume", "St Nicolas des Champs, Paris", "28/08/1671"], ["433", "Jacques Antheaume", "St Nicolas des Champs, Paris", "", "Madeleine Antheaume", "St Nicolas des Champs, Paris", "28/08/1671"], ["434", "Eloy Antheaume p\u00e8re", " ", "Famille", "Eloy Antheaume", "St Leu St Gilles, Paris", "28/08/1671"], ["435", "Eloy Antheaume p\u00e8re", " ", "Famille", "Hubert Antheaume", "St Severin, Paris", "28/08/1671"], ["436", "Eloy Antheaume p\u00e8re", " ", "Famille", "Jacques Antheaume", "St Nicolas des Champs, Paris", "28/08/1671"], ["437", "Eloy Antheaume p\u00e8re", "", "Famille", "Madeleine Antheaume", "St Nicolas des Champs, Paris", "28/08/1671"], ["438", "Eloy Antheaume p\u00e8re", "", "Famille", "Claude Du Mesnil", "", "28/08/1671"], ["439", "Claude Du Mesnil", "", "Famille", "Eloy Antheaume", "St Leu St Gilles, Paris", "28/08/1671"], ["440", "Claude Du Mesnil", "", "Famille", "Hubert Antheaume", "St Severin, Paris", "28/08/1671"], ["441", "Claude Du Mesnil", "", "Famille", "Jacques Antheaume", "St Nicolas des Champs, Paris", "28/08/1671"], ["442", "Claude Du Mesnil", "", "Famille", "Madeleine Antheaume", "St Nicolas des Champs, Paris", "28/08/1671"], ["443", "Claude Du Mesnil", "", "Famille", "Jean Ory p\u00e8re", "", "28/08/1671"], ["444", "Claude Du Mesnil", "", "Famille", "Jean Ory  ", "", "28/08/1671"], ["445", "Jean Ory p\u00e8re", "", "Famille", "Jean Ory  ", "", "28/08/1671"], ["446", "Eloy Antheaume", "St Leu St Gilles, Paris", "Famille", "Antoine Antheaume", "", "28/08/1671"], ["447", "Marie Boucher", "St Nicolas, Nantes", "", "Mathurin Dugast", "St Saturnin, Nantes", "26/06/1666"], ["448", "Marie Boucher", "St Nicolas, Nantes", "Commerce", "Jean Masson Lesn\u00e9", "Orl\u00e9ans", "26/06/1666"], ["449", "Marie Boucher", "St Nicolas, Nantes", "Finance", "Julien Gerard sr de Nays", "St Nicolas, Nantes", "27/10/1667"], ["450", "Marie Boucher", "St Nicolas, Nantes", "Commerce", "Jean Masson Lesn\u00e9", "Orl\u00e9ans", "27/10/1667"], ["451", "Marie Boucher", "St Nicolas, Nantes", "Finance", "Julien Gerard sr de Nays", "St Nicolas, Nantes", "27/10/1667"], ["452", "Marie Boucher", "St Nicolas, Nantes", "Commerce", "Jean Masson Lesn\u00e9", "Orl\u00e9ans", "27/10/1667"], ["453", "Marie Boucher", "St Nicolas, Nantes", "Finance", "Julien Gerard sr de Nays", "St Nicolas, Nantes", "31/10/1667"], ["454", "Marie Boucher", "St Nicolas, Nantes", "Commerce", "Jean Masson Lesn\u00e9", "Orl\u00e9ans", "31/10/1667"], ["455", "Marie Boucher", "St Nicolas, Nantes", "Finance", "Julien Gerard sr de Nays", "St Nicolas, Nantes", "01/11/1667"], ["456", "Marie Boucher", "St Nicolas, Nantes", "Commerce", "Jean Masson Lesn\u00e9", "Orl\u00e9ans", "01/11/1667"], ["457", "Marie Boucher", "St Nicolas, Nantes", "Finance", "Julien Gerard sr de Nays", "St Nicolas, Nantes", "27/10/1667"], ["458", "Marie Boucher", "St Nicolas, Nantes", "Commerce", "Euzebe de Loynes", "Orl\u00e9ans", "27/10/1667"], ["459", "Marie Boucher", "St Nicolas, Nantes", "Finance", "Julien Gerard sr de Nays", "St Nicolas, Nantes", "27/10/1667"], ["460", "Marie Boucher", "St Nicolas, Nantes", "Commerce", "Euzebe de Loynes", "Orl\u00e9ans", "27/10/1667"], ["461", "Marie Boucher", "St Nicolas, Nantes", "Finance", "Julien Gerard sr de Nays", "St Nicolas, Nantes", "13/01/1668"], ["462", "Marie Boucher", "St Nicolas, Nantes", "Commerce", "Jean Masson Lesn\u00e9", "Orl\u00e9ans", "13/01/1668"], ["463", "Marie Boucher", "St Nicolas, Nantes", "Finance", "Jean Ruyo", "Penerf", "11/07/1668"], ["464", "Marie Boucher", "St Nicolas, Nantes", "Finance", "Fran\u00e7ois Le Pelletier", "Penerf", "11/07/1668"], ["465", "Marie Boucher", "St Nicolas, Nantes", "Commerce", "Fran\u00e7ois Lemasson", "Orl\u00e9ans", "11/07/1668"], ["466", "Marie Boucher", "St Nicolas, Nantes", "Finance", "Jeanne Renard", "", "19/02/1670"], ["467", "Jeanne Renard", "", "Famille", "Charles Souyn d\u00e9funt", "", "19/02/1670"], ["468", "Jeanne Renard", "", "Famille", "Charles Souyn fils", "", "19/02/1670"], ["469", "Marie Boucher", "St Nicolas, Nantes", "Finance", "Charles Souyn fils", "", "19/02/1670"], ["470", "Marie Boucher et Hubert Antheaume Cie", "St Nicolas, Nantes", "Finance", "Maude Lequere", "Le Croisic", "12/01/1672"], ["471", "Marie Boucher et Hubert Antheaume Cie", "St Nicolas, Nantes", "Finance", "Charles Moruan", "Le Croisic", "12/01/1672"], ["472", "Maude Lequere", "Le Croisic", "Finance", "Charles Moruan", "Le Croisic", "12/01/1672"], ["473", "Marie Boucher et Hubert Antheaume Cie", "St Nicolas, Nantes", "Commerce", "Robert Miron", "Orl\u00e9ans", "12/01/1672"], ["474", "Marie Boucher et Hubert Antheaume Cie", "St Nicolas, Nantes", "Commerce", "Jean de Beausse", "Orl\u00e9ans", "12/01/1672"], ["475", "Robert Miron", "Orl\u00e9ans", "Commerce", "Jean de Beausse", "Orl\u00e9ans", "12/01/1672"], ["476", "Marie Boucher et Hubert Antheaume Cie", "St Nicolas, Nantes", "Finance", "Maude Lequere", "Le Croisic", "02/01/1673"], ["477", "Marie Boucher et Hubert Antheaume Cie", "St Nicolas, Nantes", "Finance", "Charles Moruan", "Le Croisic", "02/01/1673"], ["478", "Maude Lequere", "Le Croisic", "Finance", "Charles Moruan", "Le Croisic", "02/01/1673"], ["479", "Marie Boucher et Hubert Antheaume Cie", "St Nicolas, Nantes", "Commerce", "Robert Miron", "Orl\u00e9ans", "02/01/1673"], ["480", "Marie Boucher et Hubert Antheaume Cie", "St Nicolas, Nantes", "Commerce", "Jean de Beausse", "Orl\u00e9ans", "02/01/1673"], ["481", "Robert Miron", "Orl\u00e9ans", "Finance", "Jean de Beausse", "Orl\u00e9ans", "02/01/1673"], ["482", "Marie Boucher et Hubert Antheaume Cie", "St Nicolas, Nantes", "Finance", "Nicolas Hotman", "Orl\u00e9ans", "25/08/1672"], ["483", "Marie Boucher et Hubert Antheaume Cie", "St Nicolas, Nantes", "Commerce", "Fran\u00e7ois Lemasson", "Orl\u00e9ans", "25/08/1672"], ["484", "Marie Boucher et Hubert Antheaume Cie", "St Nicolas, Nantes", "Finance", "Nicolas Hotman", "Orl\u00e9ans", "25/08/1672"], ["485", "Marie Boucher et Hubert Antheaume Cie", "St Nicolas, Nantes", "Commerce", "Robert Miron", "Orl\u00e9ans", "25/08/1672"], ["486", "Marie Boucher et Hubert Antheaume Cie", "St Nicolas, Nantes", "Commerce", "Jean de Beausse", "Orl\u00e9ans", "25/08/1672"], ["487", "Marie Boucher et Hubert Antheaume Cie", "St Nicolas, Nantes", "Finance", "Nicolas Hotman", "Orl\u00e9ans", "23/09/1672"], ["488", "Marie Boucher et Hubert Antheaume Cie", "St Nicolas, Nantes", "Commerce", "Fran\u00e7ois Lemasson", "Orl\u00e9ans", "23/09/1672"]]
+    },
+    "timeFormat": "%d/%m/%Y",
+    "userLocationTable": {
+    "name": "userLocationTable",
+    "data": [
+        [
+            "Id",
+            "User Label",
+            "Geo Name",
+            "Longitude",
+            "Latitude"
+        ],
+      [
+        0,
+        "St Nicolas, Nantes",
+        "St Nicolas, Nantes",
+        -1.3313282,
+        53.46592
+      ],
+      [
+        1,
+        "Léogane, Ile St Domingue",
+        "Léogane, Ile St Domingue",
+        null,
+        null
+      ],
+      [
+        2,
+        "Paris",
+        "Paris",
+        2.320031,
+        48.85881
+      ],
+      [
+        3,
+        "Ile St Domingue",
+        "Ile St Domingue",
+        -0.2588767,
+        44.6625852
+      ],
+      [
+        4,
+        "",
+        "",
+        null,
+        null
+      ],
+      [
+        5,
+        "Ile Guadeloupe",
+        "Ile Guadeloupe",
+        -61.4281099,
+        16.1791816
+      ],
+      [
+        6,
+        "Brest",
+        "Brest",
+        -4.4871141,
+        48.4083581
+      ],
+      [
+        7,
+        "La Rochelle",
+        "La Rochelle",
+        -1.1814852,
+        46.1620111
+      ],
+      [
+        8,
+        "St Eustache Paris",
+        "St Eustache Paris",
+        2.320031,
+        48.85881
+      ],
+      [
+        9,
+        "St Eustache, Paris",
+        "St Eustache, Paris",
+        -97.7808072,
+        49.9750565
+      ],
+      [
+        10,
+        "Orléans",
+        "Orléans",
+        1.9173155,
+        47.8733434
+      ],
+      [
+        11,
+        "St Paul, Orléans",
+        "St Paul, Orléans",
+        -93.1027042,
+        44.939801
+      ],
+      [
+        12,
+        "Nantes",
+        "Nantes",
+        -1.5372544,
+        47.2382012
+      ],
+      [
+        13,
+        "St Sébastien",
+        "St Sébastien",
+        73.1070446,
+        33.5899091
+      ],
+      [
+        14,
+        "Dunkerque",
+        "Dunkerque",
+        -70.5426504,
+        -33.3945491
+      ],
+      [
+        15,
+        "St Saturnin, Nantes",
+        "St Saturnin, Nantes",
+        121.070309,
+        14.5151351
+      ],
+      [
+        16,
+        "Rhuys",
+        "Rhuys",
+        null,
+        null
+      ],
+      [
+        17,
+        "Bordeaux",
+        "Bordeaux",
+        -0.5600394,
+        44.8634634
+      ],
+      [
+        18,
+        "Mornac sur Seudre",
+        "Mornac sur Seudre",
+        -1.0217908,
+        45.7082958
+      ],
+      [
+        19,
+        "Chastain en Saintonge",
+        "Chastain en Saintonge",
+        -72.1571958,
+        18.7415376
+      ],
+      [
+        20,
+        "Amsterdam",
+        "Amsterdam",
+        4.8979755,
+        52.3745402
+      ],
+      [
+        21,
+        "La Chaume",
+        "La Chaume",
+        2.2259183,
+        46.3569142
+      ],
+      [
+        22,
+        "Olonne",
+        "Olonne",
+        -1.8075358,
+        46.548848
+      ],
+      [
+        23,
+        "Mesquer",
+        "Mesquer",
+        -2.4693171,
+        47.3990551
+      ],
+      [
+        24,
+        "Le Pouliguen",
+        "Le Pouliguen",
+        -2.4327991,
+        47.2732173
+      ],
+      [
+        25,
+        "Audierne",
+        "Audierne",
+        -4.545142,
+        48.0241074
+      ],
+      [
+        26,
+        "Le Croisic",
+        "Le Croisic",
+        -2.5281623,
+        47.2939216
+      ],
+      [
+        27,
+        "St Gilles sur Vie",
+        "St Gilles sur Vie",
+        40.372893,
+        38.0294117
+      ],
+      [
+        28,
+        "Bourgneuf",
+        "Bourgneuf",
+        -1.022402,
+        46.1672709
+      ],
+      [
+        29,
+        "Bouffay, Nantes",
+        "Bouffay, Nantes",
+        0.4800518,
+        47.5575542
+      ],
+      [
+        30,
+        "Lisbonne",
+        "Lisbonne",
+        -1.069215,
+        48.2000626
+      ],
+      [
+        31,
+        "St Sulpice, Paris",
+        "St Sulpice, Paris",
+        44.5373936,
+        36.6490072
+      ],
+      [
+        32,
+        "Ile St Christophe",
+        "Ile St Christophe",
+        6.2069149,
+        6.760397
+      ],
+      [
+        33,
+        "Ancenis",
+        "Ancenis",
+        -1.1838618,
+        47.3815946
+      ],
+      [
+        34,
+        "St Nazaire",
+        "St Nazaire",
+        -71.5498338,
+        48.5881118
+      ],
+      [
+        35,
+        "Ile de la Tortue",
+        "Ile de la Tortue",
+        -72.785587,
+        20.0410035
+      ],
+      [
+        36,
+        "Ile de Ré",
+        "Ile de Ré",
+        8.4530149,
+        49.2359245
+      ],
+      [
+        37,
+        "Montoir",
+        "Montoir",
+        2.8513456,
+        48.3938108
+      ],
+      [
+        38,
+        "St Gilles, Paris",
+        "St Gilles, Paris",
+        1.522086,
+        48.9088298
+      ],
+      [
+        39,
+        "St Nicolas des Champs, Paris",
+        "St Nicolas des Champs, Paris",
+        -1.5471104,
+        49.6365684
+      ],
+      [
+        40,
+        "St Severin, Paris",
+        "St Severin, Paris",
+        7.3014985,
+        46.2341661
+      ],
+      [
+        41,
+        "St Germain L'Auxerrois, Paris",
+        "St Germain L'Auxerrois, Paris",
+        -92.4898885,
+        31.2734776
+      ],
+      [
+        42,
+        "St Germain des Prés, Paris",
+        "St Germain des Prés, Paris",
+        4.4474457,
+        44.5537775
+      ],
+      [
+        43,
+        "St Leu St Gilles, Paris",
+        "St Leu St Gilles, Paris",
+        1.522086,
+        48.9088298
+      ],
+      [
+        44,
+        "St Lazare, Paris",
+        "St Lazare, Paris",
+        -101.3042283,
+        50.4469591
+      ],
+      [
+        45,
+        "St André des Arts, Paris",
+        "St André des Arts, Paris",
+        -8.1550016,
+        42.6249211
+      ],
+      [
+        46,
+        "St Germain l'Auxerrois, Paris",
+        "St Germain l'Auxerrois, Paris",
+        -92.4898885,
+        31.2734776
+      ],
+      [
+        47,
+        "Penerf",
+        "Penerf",
+        -2.6230885,
+        47.5136739
+      ]
+    ]
+  },
+    "userLocationSchema": {
+        "name": "locationSchema",
+        "geoname": 2,
+        "longitude": 3,
+        "latitude": 4,
+        "x": -1,
+        "y": -1,
+        "z": -1,
+        "radius": -1,
+        "id": 0,
+        "label": 1
+    }
+}

@@ -234,29 +234,53 @@
 					{#if selectedNetwork}
 						<ul class="vis-types">
 							<li>
-								<a href="./nodelink?session=0&datasetName={selectedNetwork.name}" target="blank">
-									<img src="figures/nodelink.png" width="75px" />
+								<a
+									href="/nodelink?session=0&datasetName={selectedNetwork.name}"
+									target="blank"
+									on:click={() => {
+										trace.event('vis_1', 'data view', 'Create Visualization', 'Node-link');
+									}}
+								>
+									<img src="/figures/nodelink.png" width="75px" />
 									Node-link
 									<!-- <img src="vis_icons/node-link.png" width="75px" />Node-link -->
 								</a>
 							</li>
 							<li>
-								<a href="./matrix?session=0&datasetName={selectedNetwork.name}" target="blank">
-									<img src="figures/matrix.png" width="75px" />
+								<a
+									href="/matrix?session=0&datasetName={selectedNetwork.name}"
+									target="blank"
+									on:click={() => {
+										trace.event('vis_1', 'data view', 'Create Visualization', 'Matrix');
+									}}
+								>
+									<img src="/figures/matrix.png" width="75px" />
 									Matrix
 									<!-- <img src="vis_icons/matrix.png" width="75px" />Adjacency matrix -->
 								</a>
 							</li>
 							<li>
-								<a href="./dynamicego?session=0&datasetName={selectedNetwork.name}" target="blank">
-									<img src="figures/dynamicego.png" width="75px" />
+								<a
+									href="/dynamicego?session=0&datasetName={selectedNetwork.name}"
+									target="blank"
+									on:click={() => {
+										trace.event('vis_1', 'data view', 'Create Visualization', 'Timeline');
+									}}
+								>
+									<img src="/figures/dynamicego.png" width="75px" />
 									Timeline
 									<!-- <img src="vis_icons/dynamicego.png" width="75px" />Timeline -->
 								</a>
 							</li>
 							<li>
-								<a href="./map?session=0&datasetName={selectedNetwork.name}" target="blank">
-									<img src="figures/map.png" width="75px" />
+								<a
+									href="/map?session=0&datasetName={selectedNetwork.name}"
+									target="blank"
+									on:click={() => {
+										trace.event('vis_1', 'data view', 'Create Visualization', 'Map');
+									}}
+								>
+									<img src="/figures/map.png" width="75px" />
 									Map
 									<!-- <img src="vis_icons/map.png" width="75px" />Map -->
 								</a>
@@ -269,20 +293,6 @@
 
 					{:else}
 						<p>First select a network.</p>
-						<ul style="opacity: 0.4" class="vis-types">
-							<li>
-								<!-- <img src="vis_icons/node-link.png" width="75px" />Node-link -->
-							</li>
-							<li>
-								<!-- <img src="vis_icons/matrix.png" width="75px" />Adjacency matrix -->
-							</li>
-							<li>
-								<!-- <img src="vis_icons/dynamicego.png" width="75px" />Timeline -->
-							</li>
-							<li>
-								<!-- <img src="vis_icons/map.png" width="75px" />Map -->
-							</li>
-						</ul>
 					{/if}
 				</div>
 

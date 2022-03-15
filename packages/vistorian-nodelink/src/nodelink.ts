@@ -7,10 +7,13 @@ import * as messenger from "vistorian-core/src/data/messenger";
 
 import * as ui from "vistorian-core/src/ui/ui";
 import * as timeslider from "vistorian-core/src/ui/timeslider";
+import { Selection } from "vistorian-core/src/data/dynamicgraphutils";
 
 const COLOR_DEFAULT_LINK = "#999999";
 const COLOR_DEFAULT_NODE = "#333333";
 const COLOR_HIGHLIGHT = "#ff8800";
+const OPACITY_UNSELECTED = .2;
+
 let LINK_OPACITY = 0.5;
 let NODE_OPACITY = 1;
 let LINK_WIDTH_SCALE = 1;
@@ -142,7 +145,7 @@ ui.makeSlider(
 makeDropdown(
   menuDiv,
   "Labeling",
-  ["Automatic", "Hide All", "Show All", "Neighbors"],
+  ["Automatic/Importance", "Hide All", "Show All"],
   (selection: any) => {
     LABELING_STRATEGY = parseInt(selection);
     updateLabelVisibility();
@@ -310,7 +313,7 @@ parentSvg
       ) {
         const node = nodes[i];
         const [node_x, node_y] = node
-          .attr("transform")
+          .getAttribute("transform")
           .replace("translate(", "")
           .replace(")", "")
           .split(",");
@@ -322,11 +325,14 @@ parentSvg
         );
       });
 
-      console.log("Selected nodes:", selectedNodes);
       // N.B. node objects are selectedNodes
       // ids are selectedNodes.data().map(d => d._id)
       // labels are selectedNodes.data().map(d => d.label())
-      // TODO: publish message announcing this selection
+
+      const newElementCompound: utils.ElementCompound =
+        new utils.ElementCompound();
+      newElementCompound.nodes = selectedNodes.data();
+      messenger.highlight("set", newElementCompound);
     } else {
       panOffsetGlobal[0] += panOffsetLocal[0];
       panOffsetGlobal[1] += panOffsetLocal[1];
@@ -407,9 +413,11 @@ const nodeLayer: any = svg.append("g");
 const labelLayer: any = svg.append("g");
 
 let visualNodes: any;
+let nodeHighlights: any;
 let nodeLabels: any;
 let nodeLabelOutlines: any;
 let visualLinks: any;
+// let linkHighlights: any;
 
 // line function for straight links
 const lineFunction: any = d3
@@ -466,7 +474,22 @@ d3.forceSimulation(nodes)
 showMessage("Calculating<br/>layout");
 
 init();
-function init() {
+
+function init() 
+{
+  
+  nodeHighlights = linkLayer
+    .selectAll("nodeHighlights") 
+    .data(nodes)
+    .enter()
+    .append("circle")
+    .attr('r', 10)
+    // .style('opacity', .6)
+    .attr("class", "nodeHighlights")
+    .attr("class", "nodeHighlights")
+    .style('stroke', '#ddd')
+    .style("fill", '#eee')
+
   visualNodes = nodeLayer
     .selectAll("nodes")
     .data(nodes)
@@ -475,27 +498,28 @@ function init() {
     .attr("d", (n: dynamicgraph.Node) => d3.symbol().type(getNodeShape(n))())
     .attr("class", "nodes")
     .style("fill", (n: dynamicgraph.Node) => getNodeColor(n))
-    .attr(
-      "onclick",
-      "trace.event('vis_29',document.location.pathname,'Node','Click')"
-    )
+    // .attr(
+    //   "onclick",
+    //   "trace.event('vis_29',document.location.pathname,'Node','Click')"
+    // )
+    .on("click", mouseClickNode)
     .attr(
       "onmouseover",
       "trace.event('vis_30',document.location.pathname,'Node','Mouse Over')"
     )
     .on("mouseover", mouseOverNode)
     .on("mouseout", mouseOutNode)
-    .on("click", (ev: MouseEvent, d: any) => {
-      const selections = d.getSelections();
-      const currentSelection = dgraph.getCurrentSelection();
-      for (let j = 0; j < selections.length; j++) {
-        if (selections[j] == currentSelection) {
-          messenger.selection("remove", <utils.ElementCompound>{ nodes: [d] });
-          return;
-        }
-      }
-      messenger.selection("add", <utils.ElementCompound>{ nodes: [d] });
-    });
+    // .on("click", (ev: MouseEvent, d: any) => {
+    //   const selections = d.getSelections();
+    //   const currentSelection = dgraph.getCurrentSelection();
+    //   for (let j = 0; j < selections.length; j++) {
+    //     if (selections[j] == currentSelection) {
+    //       messenger.selection("remove", <utils.ElementCompound>{ nodes: [d] });
+    //       return;
+    //     }
+    //   }
+    //   messenger.selection("add", <utils.ElementCompound>{ nodes: [d] });
+    // });
 
   // node labels
 
@@ -522,6 +546,20 @@ function init() {
 
   // CREATE LINKS
   calculateCurvedLinks();
+
+  // linkHighlights = linkLayer
+  //   .selectAll(".linkHighlights")
+  //   .data(links)
+  //   .enter()
+  //   .append("path")
+  //   .attr("d", (d: dynamicgraph.Link) => {
+  //     lineFunction((d as any).path);
+  //   })
+  //   .style('stroke-width', 10)
+  //   .style('opacity', .5)
+  //   .attr("class", "linkHighlights")
+  //   .style("stroke", COLOR_HIGHLIGHT)
+
   visualLinks = linkLayer
     .selectAll("visualLinks")
     .data(links)
@@ -569,6 +607,9 @@ function updateLayout() {
   visualNodes.attr("transform", function (d: any) {
     return "translate(" + d.x + "," + d.y + ")";
   });
+  nodeHighlights.attr("transform", function (d: any) {
+    return "translate(" + d.x + "," + d.y + ")";
+  });
 
   nodeLabels
     .attr("x", (d: any) => d.x + OFFSET_LABEL.x)
@@ -580,16 +621,20 @@ function updateLayout() {
   // update link positions
   calculateCurvedLinks();
   visualLinks.attr("d", (d: any) => lineFunction(d.path));
+  // linkHighlights.attr("d", (d: any) => lineFunction(d.path));
 
   // update nodelabel visibility after layout update.
   updateLabelVisibility();
 }
+
 function getLabelWidth(n: any) {
   return n.label().length * 8.5 + 10;
 }
+
 function getLabelHeight(n: any) {
   return 18;
 }
+
 function getNodeRadius(n: dynamicgraph.Node) {
   return Math.sqrt(n.links().length) * NODE_SIZE + 1;
 }
@@ -647,10 +692,11 @@ function updateLabelVisibility() {
   } else if (LABELING_STRATEGY == 2) {
     // show all
     hiddenLabels = [];
-  } else if (LABELING_STRATEGY == 3) {
-    // neighbors of highligted nodes
-    hiddenLabels = nodes.slice(0);
   }
+  // } else if (LABELING_STRATEGY == 3) {
+  //   // neighbors of highligted nodes
+  //   hiddenLabels = nodes.slice(0);
+  // }
 
   // render;
   nodeLabels.attr("visibility", (n: any) =>
@@ -698,6 +744,25 @@ function mouseOverNode(ev: MouseEvent, n: any) {
   // BEFORE
   // messenger.highlight('set', { nodes: [n] })
 }
+
+function mouseClickNode(ev: MouseEvent, n: any) {
+  console.log('>>> mouseClick', n.isFrozen())
+  const newElementCompound: utils.ElementCompound = new utils.ElementCompound();
+  newElementCompound.nodes = [n];
+  if(n.isFrozen()){
+    messenger.highlight("removeFreeze", newElementCompound);
+  }else{
+    messenger.highlight("addFreeze", newElementCompound);
+  }
+
+
+  // test -> create selection
+  // var s:Selection = messenger.createSelection('node', 'Cluster 1')
+  // messenger.setSelectionColor(s,'#f00');
+  // messenger.selection('add', newElementCompound, s.id);
+
+}
+
 function mouseOutNode() {
   messenger.highlight("reset");
 }
@@ -813,23 +878,28 @@ function updateEvent() {
 
 function updateNodeSize() {
   visualNodes
-    // .attr('r', (n: any) => getNodeRadius(n))
     .attr("d", (n: any) =>
       d3.symbol().size(getNodeRadius(n)).type(getNodeShape(n))()
     );
+  nodeHighlights
+    .attr('r', (n: any) =>
+      getNodeRadius(n) / 10 + 5 
+    );
 }
 
-function updateNodes(highlightId?: number) {
+function updateNodes(highlightId?: number) 
+{
+  // check if any node is highlighted
+  let somethingIsHighlighted = false;
+  if(dgraph.nodes().highlighted().length > 0
+  || dgraph.links().highlighted().length > 0 ){
+    somethingIsHighlighted = true;
+  }
+
   visualNodes
     .style("fill", (d: any) => {
       let color: string | undefined;
-      if (highlightId && highlightId == d._id) {
-        color = COLOR_HIGHLIGHT;
-      } else if (d.isHighlighted()) {
-        color = COLOR_HIGHLIGHT;
-      } else {
-        color = utils.getPriorityColor(d);
-      }
+      color = utils.getPriorityColor(d);
       if (!color) color = getNodeColor(d);
       // console.log('>>>>nodecolor', color)
       return color;
@@ -837,19 +907,58 @@ function updateNodes(highlightId?: number) {
     .style("opacity", (d: any) => {
       const visible: boolean = d.isVisible();
       if (!visible) return 0;
-      else return NODE_OPACITY;
+      if(somethingIsHighlighted && !
+        (d.isHighlighted() 
+        || d.neighbors().highlighted().length > 0
+        || d.links().highlighted().length > 0)
+      )
+      {
+          return NODE_OPACITY * OPACITY_UNSELECTED
+      }else{
+          return NODE_OPACITY;
+      }
     });
 
-  nodeLabels
-    .attr("visibility", (e: any) =>
-      e.isHighlighted() ||
-      e.links().highlighted().length > 0 ||
-      hiddenLabels.indexOf(e) == -1 ||
-      (LABELING_STRATEGY == 3 && e.neighbors().highlighted().length > 0)
-        ? "visible"
-        : "hidden"
-    )
+  nodeHighlights
+    .style('visibility', (d:any) =>{
+      if (d.isHighlighted() 
+      || d.links().highlighted().length > 0
+      || d.neighbors().highlighted().length > 0
+      ) 
+      {
+        return 'visible';
+      } 
+      return 'hidden';
+    })
 
+  nodeLabels
+    .attr("visibility", (d: any) => {
+      // e.isHighlighted() ||
+      // e.links().highlighted().length > 0 ||
+      // hiddenLabels.indexOf(e) == -1 ||
+      // (LABELING_STRATEGY == 3 && e.neighbors().highlighted().length > 0)
+      //   ? "visible"
+      //   : "hidden"
+      if(somethingIsHighlighted)
+      {
+        if(d.isHighlighted() 
+          // || d.neighbors().highlighted().length > 0
+          || hiddenLabels.indexOf(d) == -1
+          || d.links().highlighted().length > 0)
+        {
+          return 'visible'
+        }else
+        {
+            return 'hidden'
+        }
+      }else{
+        if(hiddenLabels.indexOf(d) == -1){
+        // || (LABELING_STRATEGY == 3 && d.neighbors().highlighted().length > 0)){
+          return 'visible'
+        }
+        return 'hidden';
+      }
+    })
     .style("color", (d: any) => {
       let color: string | undefined; // BEFORE string
       if (d.isHighlighted()) {
@@ -861,18 +970,40 @@ function updateNodes(highlightId?: number) {
       return color;
     });
 
-  nodeLabelOutlines.attr("visibility", (e: any) =>
-    e.isHighlighted() ||
-    e.links().highlighted().length > 0 ||
-    hiddenLabels.indexOf(e) == -1 ||
-    (LABELING_STRATEGY == 3 && e.neighbors().highlighted().length > 0)
-      ? "visible"
-      : "hidden"
-  );
+  nodeLabelOutlines.attr("visibility", (d: any) =>{
+    // e.isHighlighted() ||
+    // e.links().highlighted().length > 0 ||
+    // hiddenLabels.indexOf(e) == -1 ||
+    // (LABELING_STRATEGY == 3 && e.neighbors().highlighted().length > 0)
+    //   ? "visible"
+    //   : "hidden"
+    if(somethingIsHighlighted && 
+      !(d.isHighlighted() 
+      // || d.neighbors().highlighted().length > 0
+      || hiddenLabels.indexOf(d) == -1
+      || d.links().highlighted().length > 0)
+    )
+    {
+        return 'hidden'
+    }else{
+      if(hiddenLabels.indexOf(d) == -1){
+      // || (LABELING_STRATEGY == 3 && d.neighbors().highlighted().length > 0)){
+        return 'visible'
+      }
+      return 'hidden';
+    }
+  });
 }
 
 //Optional parameter highlightId used to highlight specific link on receiving hoverover message.
-function updateLinks(highlightId?: number) {
+function updateLinks(highlightId?: number) 
+{
+  let somethingIsHighlighted = false;
+  if(dgraph.nodes().highlighted().length > 0
+  || dgraph.links().highlighted().length > 0){
+    somethingIsHighlighted = true;
+  }
+
   visualLinks
     .attr("marker-end", function (d: any) {
       if (d.directed) {
@@ -887,34 +1018,62 @@ function updateLinks(highlightId?: number) {
     .style("stroke", function (d: any) {
       let color = utils.getPriorityColor(d);
       if (!color) color = COLOR_DEFAULT_LINK;
-      if (highlightId && highlightId == d._id) {
-        return "black";
-      }
+      // if (highlightId && highlightId == d._id) {
+      //   return "black";
+      // }
       return color;
     })
     .style("opacity", (d: any) => {
       const visible: boolean = d.isVisible();
-      if (!visible || !d.source.isVisible() || !d.target.isVisible()) return 0;
-      if (d.presentIn(time_start, time_end)) {
-        if (highlightId && highlightId == d._id) {
-          return 1;
-        }
-        return d.isHighlighted() ||
-          d.source.isHighlighted() ||
-          d.target.isHighlighted()
-          ? Math.min(1, LINK_OPACITY + 0.2)
-          : LINK_OPACITY;
-      } else {
+      if (!visible || !d.source.isVisible() || !d.target.isVisible()) 
         return 0;
+      if (!d.presentIn(time_start, time_end)) 
+        return 0;
+      if(somethingIsHighlighted && 
+        !(d.isHighlighted() ||
+            d.source.isHighlighted() ||
+            d.target.isHighlighted() 
+        ))
+      {
+        return LINK_OPACITY  * OPACITY_UNSELECTED;
+      }else{
+        return LINK_OPACITY
       }
+      // {
+      //   if (){
+      //     if(d.isHighlighted() ||
+      //       d.source.isHighlighted() ||
+      //       d.target.isHighlighted() 
+      //     )
+      //     {
+      //       return LINK_OPACITY;
+      //     }else{
+      //       return LINK_OPACITY * OPACITY_UNSELECTED;
+      //     }
+      //   }else{
+      //     return LINK_OPACITY;
+      //   }
+      // } else {
+      //   return 0;
+      // }
     })
     .style("stroke-width", function (d: any) {
       const w: any =
         linkWeightScale(d.weights(time_start, time_end).mean()) *
         LINK_WIDTH_SCALE;
       // console.log('mean weight for this link ', w);
-      return d.isHighlighted() ? w * 2 : w;
+      // return d.isHighlighted() ? w * 2 : w;
+      return w;
     });
+
+    // linkHighlights
+    //   .style("visibility", function (d: any) {
+    //     console.log(d._id, highlightId)
+    //     if (highlightId && highlightId == d._id)
+    //       return 'visible';
+    //     else
+    //       return 'hidden';
+    //   })
 }
 
 function calculateCurvedLinks() {
@@ -1028,6 +1187,7 @@ function calculateCurvedLinks() {
     }
   }
 }
+
 function stretchVector(vec: any, finalLength: any) {
   let len = 0;
   for (let i = 0; i < vec.length; i++) {
@@ -1040,6 +1200,7 @@ function stretchVector(vec: any, finalLength: any) {
 
   return vec;
 }
+
 function showMessage(message: string) {
   const messageBox = document.querySelector(".messageBox");
   if (messageBox) {

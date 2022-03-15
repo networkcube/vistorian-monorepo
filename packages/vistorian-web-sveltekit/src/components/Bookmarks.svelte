@@ -23,7 +23,7 @@
 	const minimizeBookmarks = () => {
 		isExpanded = false;
 
-		trace.event('bkm_8', ' bookmark window ', 'minimized', parentUrlTxt);
+		//trace.event('bkm_8', ' bookmark window ', 'minimized', parentUrlTxt);
 		localStorage.setItem('bookmarkMinimized', 'true');
 
 		// save for maximized
@@ -39,7 +39,7 @@
 		maxHeight = toolbarMHeight + 'px';
 		maxWidth = toolbarMWidth + 'px';
 
-		trace.event('bkm_8', ' bookmark window ', 'maximized', parentUrlTxt);
+		//trace.event('bkm_8', ' bookmark window ', 'maximized', parentUrlTxt);
 		localStorage.setItem('bookmarkMinimized', 'false');
 	};
 

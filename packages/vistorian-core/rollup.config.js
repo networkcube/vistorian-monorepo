@@ -6,14 +6,13 @@ import { terser } from "rollup-plugin-terser";
 
 export default {
   input: "build/src/index.js",
-  external: ["lz-string", "reorder.js", "netclustering", "swiftset", "three"],
+  external: ["reorder.js", "netclustering", "swiftset", "three"],
   output: {
     file: "lib/vistorian-core.js",
     format: "umd",
     sourcemap: true,
     name: "vc",
     globals: {
-      "lz-string": "LZString",
       "reorder.js": "reorder",
       netclustering: "netClustering",
       swiftset: "Set",

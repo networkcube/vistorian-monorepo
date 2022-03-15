@@ -101,7 +101,6 @@ async function saveNetwork(settings, fileStore, reloadNetworks, dataset): Promis
 	storage.saveNetwork(currentNetwork, SESSION_NAME);
 
 	currentNetwork.ready = true;
-	storage.saveNetwork(currentNetwork, SESSION_NAME);
 	main.importData(SESSION_NAME, dataset);
 
 	reloadNetworks();
@@ -411,32 +410,30 @@ async function importNetworkFromTables(settings, fileStore, reloadNetworks): Pro
 				continue; // skip blank lines
 			}
 
-			for (const index of nodeColumnIndexes) {
-				const link = [
-					settings.linkTableConfig.fieldLinkId
-						? row[settings.linkTableConfig.fieldLinkId]
-						: normalizedLinkTable.length, // link id
-					nodeIndex[row[settings.linkTableConfig.fieldSourceId]], // source node
-					nodeIndex[row[settings.linkTableConfig.fieldTargetId]] // target node
-				];
-				if (settings.linkTableConfig.fieldLinkType) {
-					link.push(row[settings.linkTableConfig.fieldLinkType]);
-				}
-				if (settings.linkTableConfig.fieldWeight) {
-					link.push(row[settings.linkTableConfig.fieldWeight]);
-				}
-				if (settings.linkTableConfig.fieldLinkIsDirected) {
-					link.push(row[settings.linkTableConfig.fieldLinkIsDirected]);
-				}
-				if (settings.linkTableConfig.timeConfig.timeField) {
-					const originalTime = row[settings.linkTableConfig.timeConfig.timeField];
-					const convertedTime = formatStandardTime(timeParser(originalTime));
-
-					link.push(convertedTime);
-				}
-
-				normalizedLinkTable.push(link);
+			const link = [
+				settings.linkTableConfig.fieldLinkId
+					? row[settings.linkTableConfig.fieldLinkId]
+					: normalizedLinkTable.length, // link id
+				nodeIndex[row[settings.linkTableConfig.fieldSourceId]], // source node
+				nodeIndex[row[settings.linkTableConfig.fieldTargetId]] // target node
+			];
+			if (settings.linkTableConfig.fieldLinkType) {
+				link.push(row[settings.linkTableConfig.fieldLinkType]);
 			}
+			if (settings.linkTableConfig.fieldWeight) {
+				link.push(row[settings.linkTableConfig.fieldWeight]);
+			}
+			if (settings.linkTableConfig.fieldLinkIsDirected) {
+				link.push(row[settings.linkTableConfig.fieldLinkIsDirected]);
+			}
+			if (settings.linkTableConfig.timeConfig.timeField) {
+				const originalTime = row[settings.linkTableConfig.timeConfig.timeField];
+				const convertedTime = formatStandardTime(timeParser(originalTime));
+
+				link.push(convertedTime);
+			}
+
+			normalizedLinkTable.push(link);
 		}
 	}
 
@@ -456,6 +453,17 @@ async function importNetworkFromTables(settings, fileStore, reloadNetworks): Pro
 	const dataset = new dynamicgraphutils.DataSet(params);
 
 	currentNetwork.ready = true;
+	currentNetwork.userNodeTable = { name: 'userNodeTable', data: normalizedNodeTable };
+	currentNetwork.userNodeSchema = { ...normalizedNodeSchema, relation: [] };
+	currentNetwork.userLinkTable = { name: 'userLinkTable', data: normalizedLinkTable };
+	currentNetwork.userLinkSchema = {
+		...normalizedLinkSchema,
+		location_source: -1,
+		location_target: -1
+	};
+	currentNetwork.userLocationTable = { name: 'userLocationTable', data: normalizedLocationTable };
+	currentNetwork.userLocationSchema = normalizedLocationSchema;
+
 	storage.saveNetwork(currentNetwork, SESSION_NAME);
 	main.importData(SESSION_NAME, dataset);
 
@@ -486,7 +494,16 @@ function importNetworkFromFile(settings, fileStore, reloadNetworks) {
 		storage.saveNetwork(currentNetwork, SESSION_NAME);
 
 		currentNetwork.ready = true;
+		currentNetwork.userNodeTable = { name: 'userNodeTable', data: dataset.nodeTable };
+		currentNetwork.userNodeSchema = { ...dataset.nodeSchema, relation: [] };
+		currentNetwork.userLinkTable = { name: 'userLinkTable', data: dataset.linkTable };
+		currentNetwork.userLinkSchema = {
+			...dataset.linkSchema,
+			location_source: -1,
+			location_target: -1
+		};
 		storage.saveNetwork(currentNetwork, SESSION_NAME);
+
 		main.importData(SESSION_NAME, dataset);
 
 		reloadNetworks();

@@ -3,6 +3,7 @@
 
 	import FileSelector from './FileSelector.svelte';
 	import FieldSelector from './FieldSelector.svelte';
+	import { trace } from '../../lib/trace';
 
 	export let config, stage, previous_stage, next_stage;
 
@@ -18,11 +19,25 @@
 	<h4>Do you have an extra file recording node types?</h4>
 
 	<CardBody>
-		<input type="radio" bind:group={config.hasMetadata} value={true} />
+		<input
+			type="radio"
+			bind:group={config.hasMetadata}
+			value={true}
+			on:click={() => {
+				trace.event('dat_11', 'data view', 'Node Types', 'Yes');
+			}}
+		/>
 		Yes, I have a file recording the type for each node.
 		<br />
 
-		<input type="radio" bind:group={config.hasMetadata} value={false} />
+		<input
+			type="radio"
+			bind:group={config.hasMetadata}
+			value={false}
+			on:click={() => {
+				trace.event('dat_11', 'data view', 'Node Types', 'No');
+			}}
+		/>
 		No, I do not have a file recording the type for each node.
 		<br />
 
