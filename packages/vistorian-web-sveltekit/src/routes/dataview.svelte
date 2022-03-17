@@ -152,8 +152,8 @@
 					"relation": [],
 					"location": -1,
 					"id": 0,
-					"label": -1,
-					"time": 1,
+					"label": 1,
+					"time": -1,
 					"nodeType": 2
 				};
 
@@ -168,8 +168,8 @@
 					"relation": [],
 					"location": -1,
 					"id": 0,
-					"label": -1,
-					"time": 1,
+					"label": 1,
+					"time": -1,
 					"nodeType": -1
 				};
 
