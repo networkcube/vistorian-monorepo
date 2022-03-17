@@ -31,7 +31,8 @@
 	let linkData = [],
 		linkColumns = [],
 		nodeData = [],
-		nodeColumns = [];
+		nodeColumns = [],
+		nodeSchema = {};
 
 	const reloadNetworks = () => {
 		networks = storage
@@ -126,7 +127,12 @@
 
 		// using a fixed delay to wait for the page to have loaded is a hack, but is the simplest solution for now
 		new Promise(resolve => setTimeout(resolve, 2000)).then(() => {
-			w.postMessage(selectedNetwork, "*");
+			const msg = {
+				...selectedNetwork,
+				nodeSchema,
+				nodeTable: nodeData
+			}
+			w.postMessage(msg, "*");
 		});
 	};
 
@@ -141,10 +147,31 @@
 			if (nodesHaveTypes) {
 				nodeColumns = ['id', 'label', 'node type'];
 
+				nodeSchema = {
+					"name": "nodeSchema",
+					"relation": [],
+					"location": -1,
+					"id": 0,
+					"label": -1,
+					"time": 1,
+					"nodeType": 2
+				};
+
+
 				nodeData = nodes.map((n) => [n.id(), n.label() || '', n.nodeType() || '']);
 				// N.B. we need to replace any nulls with empty string for sort to work
 			} else {
 				nodeColumns = ['id', 'label'];
+
+				nodeSchema = {
+					"name": "nodeSchema",
+					"relation": [],
+					"location": -1,
+					"id": 0,
+					"label": -1,
+					"time": 1,
+					"nodeType": -1
+				};
 
 				nodeData = nodes.map((n) => [n.id(), n.label() || '']);
 			}
