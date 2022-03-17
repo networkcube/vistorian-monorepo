@@ -284,6 +284,18 @@
 									<!-- <img src="vis_icons/map.png" width="75px" />Map -->
 								</a>
 							</li>
+							<li>
+								<a
+									href="/mat-nl?session=0&datasetName={selectedNetwork.name}"
+									target="blank"
+									on:click={() => {
+										trace.event('vis_1', 'data view', 'Create Visualization', 'Mat+Nl');
+									}}
+								>
+									<img src="/figures/nl+mat.png" width="75px" />
+									Node-link &amp; Matrix
+								</a>
+							</li>
 						</ul>
 
 						<Button on:click={launchNetworkNarratives}
