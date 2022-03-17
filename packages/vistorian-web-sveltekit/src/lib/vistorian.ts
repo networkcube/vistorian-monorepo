@@ -87,6 +87,7 @@ export class Network {
 	timeFormat = '';
 	ready: boolean; // placeholder indicating if network is complete and ready to be visualized.
 	directed: boolean;
+	networkCubeDataSet: dynamicgraphutils.DataSet;
 
 	constructor(id: number) {
 		this.id = id;

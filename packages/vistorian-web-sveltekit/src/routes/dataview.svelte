@@ -121,21 +121,15 @@
 	};
 
 	const launchNetworkNarratives = () => {
-		const url = "http://localhost:8090/external.html";
+		const url = 'https://networknarratives.github.io/';
 
-		const w = window.open(url, "_blank");
+		const w = window.open(url, '_blank');
 
 		// using a fixed delay to wait for the page to have loaded is a hack, but is the simplest solution for now
-		new Promise(resolve => setTimeout(resolve, 2000)).then(() => {
-			const msg = {
-				...selectedNetwork,
-				nodeSchema,
-				nodeTable: nodeData
-			}
-			w.postMessage(msg, "*");
+		new Promise((resolve) => setTimeout(resolve, 2000)).then(() => {
+			w.postMessage(selectedNetwork, '*');
 		});
 	};
-
 
 	$: {
 		if (selectedNetwork) {
@@ -148,15 +142,14 @@
 				nodeColumns = ['id', 'label', 'node type'];
 
 				nodeSchema = {
-					"name": "nodeSchema",
-					"relation": [],
-					"location": -1,
-					"id": 0,
-					"label": 1,
-					"time": -1,
-					"nodeType": 2
+					name: 'nodeSchema',
+					relation: [],
+					location: -1,
+					id: 0,
+					label: 1,
+					time: -1,
+					nodeType: 2
 				};
-
 
 				nodeData = nodes.map((n) => [n.id(), n.label() || '', n.nodeType() || '']);
 				// N.B. we need to replace any nulls with empty string for sort to work
@@ -164,13 +157,13 @@
 				nodeColumns = ['id', 'label'];
 
 				nodeSchema = {
-					"name": "nodeSchema",
-					"relation": [],
-					"location": -1,
-					"id": 0,
-					"label": 1,
-					"time": -1,
-					"nodeType": -1
+					name: 'nodeSchema',
+					relation: [],
+					location: -1,
+					id: 0,
+					label: 1,
+					time: -1,
+					nodeType: -1
 				};
 
 				nodeData = nodes.map((n) => [n.id(), n.label() || '']);
@@ -314,10 +307,10 @@
 							</li>
 						</ul>
 
-						<Button on:click={launchNetworkNarratives}>Open in NetworkNarratives
+						<Button on:click={launchNetworkNarratives}
+							>Open in NetworkNarratives
 							<Fa icon={faExternalLinkAlt} />
 						</Button>
-
 					{:else}
 						<p>First select a network.</p>
 					{/if}

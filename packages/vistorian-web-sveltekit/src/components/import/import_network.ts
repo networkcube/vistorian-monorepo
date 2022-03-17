@@ -97,6 +97,7 @@ async function saveNetwork(settings, fileStore, reloadNetworks, dataset): Promis
 	const id = new Date().getTime();
 	const currentNetwork = new Network(id);
 	currentNetwork.name = settings.name;
+	currentNetwork.networkCubeDataSet = dataset;
 
 	storage.saveNetwork(currentNetwork, SESSION_NAME);
 
@@ -464,6 +465,8 @@ async function importNetworkFromTables(settings, fileStore, reloadNetworks): Pro
 	currentNetwork.userLocationTable = { name: 'userLocationTable', data: normalizedLocationTable };
 	currentNetwork.userLocationSchema = normalizedLocationSchema;
 
+	currentNetwork.networkCubeDataSet = dataset;
+
 	storage.saveNetwork(currentNetwork, SESSION_NAME);
 	main.importData(SESSION_NAME, dataset);
 
@@ -502,6 +505,7 @@ function importNetworkFromFile(settings, fileStore, reloadNetworks) {
 			location_source: -1,
 			location_target: -1
 		};
+		currentNetwork.networkCubeDataSet = dataset;
 		storage.saveNetwork(currentNetwork, SESSION_NAME);
 
 		main.importData(SESSION_NAME, dataset);
