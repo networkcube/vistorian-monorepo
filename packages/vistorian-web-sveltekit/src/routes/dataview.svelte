@@ -125,7 +125,7 @@
 		const w = window.open(url, '_blank');
 
 		// using a fixed delay to wait for the page to have loaded is a hack, but is the simplest solution for now
-		new Promise((resolve) => setTimeout(resolve, 2000)).then(() => {
+		new Promise((resolve) => setTimeout(resolve, 10000)).then(() => {
 			w.postMessage(selectedNetwork, '*');
 		});
 	};
