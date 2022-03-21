@@ -46,6 +46,6 @@
         "@types/d3": "^7.0.0",
         "circular-dependency-plugin": "^5.0.2",
         "d3": "^7.0.1",
-        "vistorian-core": "0.1.2"
+        "vistorian-core": "0.1.3"
     }
 }

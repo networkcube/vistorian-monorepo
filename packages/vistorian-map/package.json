@@ -47,6 +47,6 @@
         "circular-dependency-plugin": "^5.0.2",
         "d3": "^7.0.1",
         "jstorage": "^0.4.8",
-        "vistorian-core": "0.1.2"
+        "vistorian-core": "0.1.3"
     }
 }
