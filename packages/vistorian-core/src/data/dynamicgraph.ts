@@ -1622,7 +1622,7 @@ export class DynamicGraph {
       this.highlight("addFreeze", idCompound);
       return;
     }
-    if (action == "unfreeze") {
+    if (action == "resetFreeze") {
       // reset all
       this.highlightFreezeArrays.nodeIds = [];
       this.highlightFreezeArrays.linkIds = [];
