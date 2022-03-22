@@ -301,13 +301,16 @@
 						<div>
 							<Button on:click={launchNetworkNarratives}>
 								Open in NetworkNarratives
-								<Fa icon={faExternalLinkAlt}/>
+								<Fa icon={faExternalLinkAlt} />
 							</Button>
-							<a href="https://vistorian.github.io/networknarratives.html"
-							   target="_blank" rel="noreferrer noopener"
-							   style="margin-left: 0.75rem; color: gray;">
+							<a
+								href="https://vistorian.github.io/networknarratives.html"
+								target="_blank"
+								rel="noreferrer noopener"
+								style="margin-left: 0.75rem; color: gray;"
+							>
 								What is NetworkNarratives?
-								<Fa icon={faExternalLinkAlt}/>
+								<Fa icon={faExternalLinkAlt} />
 							</a>
 						</div>
 					{:else}
