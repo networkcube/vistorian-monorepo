@@ -4,9 +4,9 @@ import { formatStandardTime } from 'vistorian-core/src/data/dates';
 import { getUrlVars } from '$lib/utils';
 import { Network } from '$lib/vistorian';
 import * as storage from '$lib/storage';
-import * as dynamicgraphutils from 'vistorian-core/build/src/data/dynamicgraphutils';
-import * as main from 'vistorian-core/build/src/data/main';
-import { parseGEDCOM, parsePajek, parseXML } from 'vistorian-core/build/src/data/importers';
+import * as dynamicgraphutils from 'vistorian-core/src/data/dynamicgraphutils';
+import * as main from 'vistorian-core/src/data/main';
+import { parseGEDCOM, parsePajek, parseXML } from 'vistorian-core/src/data/importers';
 
 async function geoCode(placeName): Promise<[number, number] | [undefined, undefined]> {
 	if (!placeName) {
