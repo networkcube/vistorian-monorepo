@@ -4,7 +4,7 @@ import * as main from 'vistorian-core/src/data/main';
 import { timeFormat, timeParse } from 'd3-time-format';
 
 import * as storage from './storage';
-import * as utils from 'vistorian-core/build/src/data/utils';
+import * as utils from 'vistorian-core/src/data/utils';
 
 // N.B. - this contains only some of the code in the equivalent file in vistorian-web/web/src
 
