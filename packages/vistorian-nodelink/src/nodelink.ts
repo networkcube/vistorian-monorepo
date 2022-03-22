@@ -752,7 +752,7 @@ function mouseClickNode(ev: MouseEvent, n: any) {
   if(n.isFrozen()){
     messenger.highlight("removeFreeze", newElementCompound);
   }else{
-    messenger.highlight("addFreeze", newElementCompound);
+    messenger.highlight("freeze", newElementCompound);
   }
 
 
