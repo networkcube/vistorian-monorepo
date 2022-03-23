@@ -332,7 +332,7 @@ parentSvg
       const newElementCompound: utils.ElementCompound =
         new utils.ElementCompound();
       newElementCompound.nodes = selectedNodes.data();
-      messenger.highlight("set", newElementCompound);
+      messenger.highlight("set", newElementCompound, "RECTANGULAR_BRUSH");
     } else {
       panOffsetGlobal[0] += panOffsetLocal[0];
       panOffsetGlobal[1] += panOffsetLocal[1];
@@ -578,10 +578,10 @@ function init()
     )
     .style("opacity", LINK_OPACITY)
     .on("mouseover", (ev: MouseEvent, d: any) => {
-      messenger.highlight("set", <utils.ElementCompound>{ links: [d] });
+      messenger.highlight("set", <utils.ElementCompound>{ links: [d] }, "NODE_MOUSEOVER");
     })
     .on("mouseout", () => {
-      messenger.highlight("reset");
+      messenger.highlight("reset", undefined, "NODE_MOUSEOUT");
     })
     .on("click", (ev: MouseEvent, d: any) => {
       const selections = d.getSelections();
@@ -740,7 +740,7 @@ function isHidingNode(n1: any, n2: any) {
 function mouseOverNode(ev: MouseEvent, n: any) {
   const newElementCompound: utils.ElementCompound = new utils.ElementCompound();
   newElementCompound.nodes = [n];
-  messenger.highlight("set", newElementCompound);
+  messenger.highlight("set", newElementCompound, "NODE_MOUSEOVER");
   // BEFORE
   // messenger.highlight('set', { nodes: [n] })
 }
@@ -750,9 +750,9 @@ function mouseClickNode(ev: MouseEvent, n: any) {
   const newElementCompound: utils.ElementCompound = new utils.ElementCompound();
   newElementCompound.nodes = [n];
   if(n.isFrozen()){
-    messenger.highlight("removeFreeze", newElementCompound);
+    messenger.highlight("removeFreeze", newElementCompound, "NODE_CLICK");
   }else{
-    messenger.highlight("freeze", newElementCompound);
+    messenger.highlight("freeze", newElementCompound, "NODE_CLICK");
   }
 
 
@@ -764,7 +764,7 @@ function mouseClickNode(ev: MouseEvent, n: any) {
 }
 
 function mouseOutNode() {
-  messenger.highlight("reset");
+  messenger.highlight("reset", undefined, "NODE_MOUSEOUT");
 }
 
 /////////////////

@@ -107,7 +107,8 @@ function isEmpty(obj: any) {
 // HIGHLIGHT
 export function highlight(
   action: string,
-  elementCompound?: ElementCompound
+  elementCompound?: ElementCompound,
+  msg?: string
 ): void {
   const g: DynamicGraph = getDynamicGraph();
   const idCompound: IDCompound = makeIdCompound(elementCompound);
@@ -120,7 +121,7 @@ export function highlight(
   if (!elementCompound == undefined) action = "reset";
 
   // create message
-  const m: HighlightMessage = new HighlightMessage(action, idCompound);
+  const m: HighlightMessage = new HighlightMessage(action, idCompound, msg);
   distributeMessage(m);
 
   let cursor = "auto";
@@ -136,11 +137,13 @@ export function highlight(
 export class HighlightMessage extends Message {
   action: string;
   idCompound: IDCompound;
+  msg: string;
 
-  constructor(action: string, idCompound?: IDCompound) {
+  constructor(action: string, idCompound?: IDCompound, msg?: string) {
     super(MESSAGE_HIGHLIGHT);
     this.action = action;
     this.idCompound = idCompound != undefined ? idCompound : new IDCompound(); // WHAT HAPPEND IF IT IS UNDEFINED??
+    this.msg = msg ?? "";
   }
 }
 
