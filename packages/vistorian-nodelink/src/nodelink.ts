@@ -739,7 +739,10 @@ function isHidingNode(n1: any, n2: any) {
 
 function mouseOverNode(ev: MouseEvent, n: any) {
   const newElementCompound: utils.ElementCompound = new utils.ElementCompound();
-  newElementCompound.nodes = [n];
+
+  const nodes =  [n, ...n.neighbors().toArray()];
+  newElementCompound.nodes = Array.from(new Set(nodes));
+
   messenger.highlight("set", newElementCompound, "NODE_MOUSEOVER");
   // BEFORE
   // messenger.highlight('set', { nodes: [n] })
@@ -748,7 +751,10 @@ function mouseOverNode(ev: MouseEvent, n: any) {
 function mouseClickNode(ev: MouseEvent, n: any) {
   console.log('>>> mouseClick', n.isFrozen())
   const newElementCompound: utils.ElementCompound = new utils.ElementCompound();
-  newElementCompound.nodes = [n];
+  
+  const nodes =  [n, ...n.neighbors().toArray()];
+  newElementCompound.nodes = Array.from(new Set(nodes));
+
   if(n.isFrozen()){
     messenger.highlight("removeFreeze", newElementCompound, "NODE_CLICK");
   }else{
@@ -921,11 +927,7 @@ function updateNodes(highlightId?: number)
 
   nodeHighlights
     .style('visibility', (d:any) =>{
-      if (d.isHighlighted() 
-      || d.links().highlighted().length > 0
-      || d.neighbors().highlighted().length > 0
-      ) 
-      {
+      if (d.isHighlighted() || d.links().highlighted().length > 0) {
         return 'visible';
       } 
       return 'hidden';
