@@ -913,12 +913,7 @@ function updateNodes(highlightId?: number)
     .style("opacity", (d: any) => {
       const visible: boolean = d.isVisible();
       if (!visible) return 0;
-      if(somethingIsHighlighted && !
-        (d.isHighlighted() 
-        || d.neighbors().highlighted().length > 0
-        || d.links().highlighted().length > 0)
-      )
-      {
+      if (somethingIsHighlighted && !(d.isHighlighted() || d.links().highlighted().length > 0)) {
           return NODE_OPACITY * OPACITY_UNSELECTED
       }else{
           return NODE_OPACITY;
