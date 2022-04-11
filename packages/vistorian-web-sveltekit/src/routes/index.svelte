@@ -130,6 +130,8 @@
 						<a href="https://vistorian.github.io/visualizations.html">Visualizations</a>
 						<br />
 						<a href="https://vistorian.github.io/formattingdata.html">Formatting Data</a>
+						<br />
+						<a href="https://vistorian.github.io/networknarratives.html">NetworkNarratives</a>
 					</div>
 
 					<div class="menuCol">
