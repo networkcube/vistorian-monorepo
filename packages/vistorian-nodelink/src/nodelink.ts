@@ -229,8 +229,6 @@ let panOffsetGlobal: number[] = [0, 0];
 let isMouseDown = false;
 let globalZoom = 1;
 
-let shiftDown = false;
-
 const parentSvg: any = d3.select("#visSvg");
 
 const svg = parentSvg.append("g").attr("width", width).attr("height", height);
@@ -250,7 +248,7 @@ parentSvg
     mouseStart = [ev.clientX, ev.clientY];
   })
   .on("mousemove", (ev: MouseEvent) => {
-    if (isMouseDown && !shiftDown) {
+    if (isMouseDown && !ev.ctrlKey) {
       panOffsetLocal[0] = (ev.clientX - mouseStart[0]) * globalZoom;
       panOffsetLocal[1] = (ev.clientY - mouseStart[1]) * globalZoom;
       svg.attr(
@@ -285,7 +283,7 @@ parentSvg
   })
   .on("mouseup", (ev: MouseEvent) => {
     isMouseDown = false;
-    if (shiftDown) {
+    if (ev.ctrlKey) {
       mouseEnd = [ev.clientX, ev.clientY];
 
       // mouse positions are  clientX/clientY in local (DOM content) cooordinates - NOT relative to the parent SVG
@@ -396,17 +394,6 @@ parentSvg
     messenger.zoomInteraction("nodelink", "zoom");
   });
 
-document.addEventListener("keydown", (event) => {
-  if (event.key === "Shift") {
-    shiftDown = true;
-    // TODO: finish any in-progress pans
-  }
-});
-document.addEventListener("keyup", (event) => {
-  if (event.key === "Shift") {
-    shiftDown = false;
-  }
-});
 
 const linkLayer: any = svg.append("g");
 const nodeLayer: any = svg.append("g");
@@ -755,10 +742,14 @@ function mouseClickNode(ev: MouseEvent, n: any) {
   const nodes =  [n, ...n.neighbors().toArray()];
   newElementCompound.nodes = Array.from(new Set(nodes));
 
-  if(n.isFrozen()){
+  if (n.isFrozen()) {
     messenger.highlight("removeFreeze", newElementCompound, "NODE_CLICK");
-  }else{
-    messenger.highlight("freeze", newElementCompound, "NODE_CLICK");
+  } else {
+      if (ev.shiftKey){
+          messenger.highlight("addFreeze", newElementCompound, "NODE_CLICK");
+      } else {
+        messenger.highlight("freeze", newElementCompound, "NODE_CLICK");
+      }
   }
 
 
