@@ -74,6 +74,58 @@ messenger.setDefaultEventListener(updateEvent);
 messenger.addEventListener(messenger.MESSAGE_SET_STATE, setStateHandler);
 messenger.addEventListener(messenger.MESSAGE_GET_STATE, getStateHandler);
 
+messenger.addEventListener(messenger.MESSAGE_CENTER_VIEW_ON_SELECTION, centerViewOnSelection);
+
+function centerViewOnSelection(m: messenger.CenterViewMessage) {
+    const selectionId = m.selectionId;
+
+    console.log(nodes.map((n: any) => n.getSelections()));
+
+    let minX = +Infinity;
+    let minY = +Infinity;
+    let maxX = -Infinity;
+    let maxY = -Infinity;
+    for (const node of nodes) {
+        const selectionIds = node.getSelections().map((s: Selection) => s.id);
+        if (!selectionIds.includes(selectionId)) {
+            continue;
+        }
+
+        minX = Math.min(minX, node.x);
+        minY = Math.min(minY, node.y);
+
+        maxX = Math.max(maxX, node.x);
+        maxY = Math.max(maxY, node.y);
+    }
+
+    // add some padding
+    minX -= 150;
+    minY -= 150;
+
+    maxX += 150;
+    maxY += 150;
+
+    const svgBB = document.getElementById("visSvg")?.getBoundingClientRect() || {width: 0, height: 0};
+
+    const xScaling = svgBB.width / (maxX - minX);
+    const yScaling = svgBB.height / (maxY - minY);
+
+    const globalZoom = Math.min(xScaling, yScaling);
+    const center: [number, number] = [minX + (maxX - minX) / 2, minY + (maxY - minY) / 2]; // center of points in this cluster
+
+    for (let i = 0; i < nodes.length; i++) {
+        const n = nodes[i];
+        n.x = svgBB.width / 2 + (n.x - center[0]) * globalZoom
+        n.y = svgBB.height / 2 + (n.y - center[1]) * globalZoom;
+    }
+
+    panOffsetGlobal = [0, 0];
+    panOffsetLocal = [0, 0];
+
+    svg.attr("transform", "translate(0,0)");
+    updateLayout();
+}
+
 // MENU
 const menuDiv = d3.select("#menuDiv");
 /* widget/ui.js */
@@ -229,8 +281,6 @@ let panOffsetGlobal: number[] = [0, 0];
 let isMouseDown = false;
 let globalZoom = 1;
 
-let shiftDown = false;
-
 const parentSvg: any = d3.select("#visSvg");
 
 const svg = parentSvg.append("g").attr("width", width).attr("height", height);
@@ -250,7 +300,7 @@ parentSvg
     mouseStart = [ev.clientX, ev.clientY];
   })
   .on("mousemove", (ev: MouseEvent) => {
-    if (isMouseDown && !shiftDown) {
+    if (isMouseDown && !ev.ctrlKey) {
       panOffsetLocal[0] = (ev.clientX - mouseStart[0]) * globalZoom;
       panOffsetLocal[1] = (ev.clientY - mouseStart[1]) * globalZoom;
       svg.attr(
@@ -285,7 +335,7 @@ parentSvg
   })
   .on("mouseup", (ev: MouseEvent) => {
     isMouseDown = false;
-    if (shiftDown) {
+    if (ev.ctrlKey) {
       mouseEnd = [ev.clientX, ev.clientY];
 
       // mouse positions are  clientX/clientY in local (DOM content) cooordinates - NOT relative to the parent SVG
@@ -396,17 +446,6 @@ parentSvg
     messenger.zoomInteraction("nodelink", "zoom");
   });
 
-document.addEventListener("keydown", (event) => {
-  if (event.key === "Shift") {
-    shiftDown = true;
-    // TODO: finish any in-progress pans
-  }
-});
-document.addEventListener("keyup", (event) => {
-  if (event.key === "Shift") {
-    shiftDown = false;
-  }
-});
 
 const linkLayer: any = svg.append("g");
 const nodeLayer: any = svg.append("g");
@@ -755,10 +794,14 @@ function mouseClickNode(ev: MouseEvent, n: any) {
   const nodes =  [n, ...n.neighbors().toArray()];
   newElementCompound.nodes = Array.from(new Set(nodes));
 
-  if(n.isFrozen()){
+  if (n.isFrozen()) {
     messenger.highlight("removeFreeze", newElementCompound, "NODE_CLICK");
-  }else{
-    messenger.highlight("freeze", newElementCompound, "NODE_CLICK");
+  } else {
+      if (ev.shiftKey){
+          messenger.highlight("addFreeze", newElementCompound, "NODE_CLICK");
+      } else {
+        messenger.highlight("freeze", newElementCompound, "NODE_CLICK");
+      }
   }
 
 

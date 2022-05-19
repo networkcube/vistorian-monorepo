@@ -25,6 +25,7 @@ export const MESSAGE_SET_STATE = "SET_STATE";
 export const MESSAGE_GET_STATE = "GET_STATE";
 export const MESSAGE_STATE_CREATED = "STATE_CREATED";
 export const MESSAGE_ZOOM_INTERACTION = "ZOOM_INTERACTION";
+export const MESSAGE_CENTER_VIEW_ON_SELECTION = "CENTER_VIEW";
 
 const MESSENGER_PROPAGATE = true;
 
@@ -337,6 +338,18 @@ class SelectionColorMessage extends Message {
     super(MESSAGE_SELECTION_COLORING);
     this.selectionId = selection.id;
     this.color = color;
+  }
+}
+
+export function centerViewOnSelection(selection: Selection): void {
+  distributeMessage(new CenterViewMessage(selection));
+}
+export class CenterViewMessage extends Message {
+  selectionId: number;
+
+  constructor(selection: Selection) {
+    super(MESSAGE_CENTER_VIEW_ON_SELECTION);
+    this.selectionId = selection.id;
   }
 }
 
