@@ -45,6 +45,6 @@
     "lz-string": "^1.3.32",
     "netclustering": "0.0.4",
     "reorder.js": "^2.2.4",
-    "three": "^0.100.0"
+    "three": "^0.141.0"
   }
 }
