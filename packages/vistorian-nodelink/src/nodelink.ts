@@ -616,12 +616,15 @@ function init()
       "trace.event('vis_32',document.location.pathname,'Link','Mouse Over')"
     )
     .style("opacity", LINK_OPACITY)
+      // mouseover interactions with links are disabled: they caused confusion when trying to select nodes in a dense region
+      /*
     .on("mouseover", (ev: MouseEvent, d: any) => {
       messenger.highlight("set", <utils.ElementCompound>{ links: [d] }, "NODE_MOUSEOVER");
     })
     .on("mouseout", () => {
       messenger.highlight("reset", undefined, "NODE_MOUSEOUT");
     })
+    */
     .on("click", (ev: MouseEvent, d: any) => {
       const selections = d.getSelections();
       const currentSelection = dgraph.getCurrentSelection();
