@@ -9,6 +9,9 @@ import * as ui from "vistorian-core/src/ui/ui";
 import * as timeslider from "vistorian-core/src/ui/timeslider";
 import { Selection } from "vistorian-core/src/data/dynamicgraphutils";
 
+// @ts-ignore
+import lasso from "../static/lasso";
+
 const COLOR_DEFAULT_LINK = "#999999";
 const COLOR_DEFAULT_NODE = "#333333";
 const COLOR_HIGHLIGHT = "#ff8800";
@@ -296,10 +299,12 @@ const selectionRect = svg
 
 parentSvg
   .on("mousedown", (ev: MouseEvent) => {
+    if (ev.shiftKey){ return; }
     isMouseDown = true;
     mouseStart = [ev.clientX, ev.clientY];
   })
   .on("mousemove", (ev: MouseEvent) => {
+    if (ev.shiftKey){ return; }
     if (isMouseDown && !ev.ctrlKey) {
       panOffsetLocal[0] = (ev.clientX - mouseStart[0]) * globalZoom;
       panOffsetLocal[1] = (ev.clientY - mouseStart[1]) * globalZoom;
@@ -335,6 +340,8 @@ parentSvg
   })
   .on("mouseup", (ev: MouseEvent) => {
     isMouseDown = false;
+    if (ev.shiftKey){ return; }
+
     if (ev.ctrlKey) {
       mouseEnd = [ev.clientX, ev.clientY];
 
@@ -642,6 +649,34 @@ function init()
   updateNodeSize();
 
   updateLayout();
+
+  handleLasso();
+}
+
+function handleLasso() {
+    const lasso_draw = function () {
+        const newElementCompound: utils.ElementCompound = new utils.ElementCompound();
+        newElementCompound.nodes = l.notPossibleItems().nodes().map((n: any) => n.__data__);
+
+        messenger.highlight("set", newElementCompound, "NODE_LASSO");
+    };
+
+    const lasso_end = function () {
+        const newElementCompound: utils.ElementCompound = new utils.ElementCompound();
+        newElementCompound.nodes = l.selectedItems().nodes().map((n: any) => n.__data__);
+
+        messenger.highlight("set", newElementCompound, "NODE_LASSO");
+    };
+
+    const l = lasso()
+        .closePathSelect(true)
+        .closePathDistance(100)
+        .items(visualNodes)
+        .targetArea(parentSvg)
+        .on("draw", lasso_draw)
+        .on("end", lasso_end);
+
+    parentSvg.call(l);
 }
 
 function updateLayout() {
