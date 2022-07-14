@@ -51,6 +51,7 @@
         "d3": "^7.0.1",
         "jstorage": "^0.4.8",
         "moment": "^2.23.0",
+        "robust-point-in-polygon": "^1.0.3",
         "vistorian-core": "0.1.5"
     }
 }
