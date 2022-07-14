@@ -9,6 +9,8 @@ import * as ui from "vistorian-core/src/ui/ui";
 import * as timeslider from "vistorian-core/src/ui/timeslider";
 import { Selection } from "vistorian-core/src/data/dynamicgraphutils";
 
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-ignore
 import lasso from "../static/lasso";
 
 const COLOR_DEFAULT_LINK = "#999999";
