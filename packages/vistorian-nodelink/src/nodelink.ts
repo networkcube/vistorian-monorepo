@@ -1108,12 +1108,10 @@ function updateLinks(highlightId?: number)
         return 0;
       if (!d.presentIn(time_start, time_end)) 
         return 0;
-      if(somethingIsHighlighted && 
-        !(d.isHighlighted() ||
-            d.source.isHighlighted() ||
-            d.target.isHighlighted() 
-        ))
-      {
+        if (somethingIsHighlighted &&
+            !(d.isHighlighted() ||
+                (d.source.isHighlighted() && d.target.isHighlighted())
+            )) {
         return LINK_OPACITY  * OPACITY_UNSELECTED;
       }else{
         return LINK_OPACITY
