@@ -1018,25 +1018,11 @@ function updateNodes(highlightId?: number)
       // (LABELING_STRATEGY == 3 && e.neighbors().highlighted().length > 0)
       //   ? "visible"
       //   : "hidden"
-      if(somethingIsHighlighted)
-      {
-        if(d.isHighlighted() 
-          // || d.neighbors().highlighted().length > 0
-          || hiddenLabels.indexOf(d) == -1
-          || d.links().highlighted().length > 0)
-        {
-          return 'visible'
-        }else
-        {
-            return 'hidden'
+        if (somethingIsHighlighted) {
+            return (d.isHighlighted() || d.links().highlighted().length > 0) ? "visible" : "hidden";
+        } else {
+            return hiddenLabels.includes(d) ? "hidden" : "visible";
         }
-      }else{
-        if(hiddenLabels.indexOf(d) == -1){
-        // || (LABELING_STRATEGY == 3 && d.neighbors().highlighted().length > 0)){
-          return 'visible'
-        }
-        return 'hidden';
-      }
     })
     .style("color", (d: any) => {
       let color: string | undefined; // BEFORE string
