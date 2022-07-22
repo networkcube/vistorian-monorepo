@@ -5,7 +5,7 @@
 		"dev": "svelte-kit dev",
 		"prebuild": "bash prebuild.sh",
 		"postbuild": "bash prebuild.sh",
-		"build": "svelte-kit build",
+		"build": "vite build",
 		"preview": "svelte-kit preview",
 		"check": "svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
