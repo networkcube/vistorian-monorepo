@@ -1284,3 +1284,24 @@ function unshowMessage() {
     messageBox.outerHTML = "";
   }
 }
+
+// This function was added to support integration into NetworkNarratives
+const addedSelections: Selection[] = [];
+window.addEventListener("message", (event) => {
+    if (event.data.type === "clearSelections"){
+        console.log("Received clearSelection message");
+        for (const selection of addedSelections){
+            messenger.deleteSelection(selection);
+        }
+    } else if (event.data.type === "colorNodes"){
+        console.log("Received colorNodes message");
+        const clusterSelection: Selection = messenger.createSelection('node', `cluster-${addedSelections.length + 1}`);
+        messenger.setSelectionColor(clusterSelection, event.data.color);
+
+        const newElementCompound = new utils.ElementCompound();
+        newElementCompound.nodes = event.data.highlightNodes;
+        messenger.selection('add', newElementCompound, clusterSelection.id);
+
+        addedSelections.push(clusterSelection);
+    }
+}, false);
