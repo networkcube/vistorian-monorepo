@@ -1,6 +1,6 @@
 <script>
 	const year = new Date().getFullYear();
-	const height = '40px';
+	const height = '35px';
 </script>
 
 <div id="footerDiv">
