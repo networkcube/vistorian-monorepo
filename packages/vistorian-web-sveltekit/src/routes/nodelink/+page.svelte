@@ -1,16 +1,16 @@
 <script>
 	import { onMount, setContext } from 'svelte';
 
-	import { createVisualizationIFrame } from '../lib/createVisIframe';
-	import { getUrlVars } from '../lib/utils';
-	import { trace } from '../lib/trace';
+	import { createVisualizationIFrame } from '../../lib/createVisIframe';
+	import { getUrlVars } from '../../lib/utils';
+	import { trace } from '../../lib/trace';
 
-	import Bookmarks from '../components/Bookmarks.svelte';
-	import Feedback from '../components/Feedback.svelte';
-	import Footer from '../components/Footer.svelte';
-	import LogoFrame from '../components/LogoFrame.svelte';
+	import Bookmarks from '../../components/Bookmarks.svelte';
+	import Feedback from '../../components/Feedback.svelte';
+	import Footer from '../../components/Footer.svelte';
+	import LogoFrame from '../../components/LogoFrame.svelte';
 
-	setContext('viewType', 'map');
+	setContext('viewType', 'nodelink');
 
 	// TODO: implement the scripts from the body tag
 
@@ -55,7 +55,7 @@
 
 		createVisualizationIFrame(
 			'visFrame',
-			SERVER + '../node_modules/vistorian-map/web/index.html',
+			SERVER + '../node_modules/vistorian-nodelink/web/index.html',
 			params['session'],
 			params['datasetName'],
 			width_col2,
@@ -63,13 +63,11 @@
 		);
 
 		trace.event('log_2', 'load', 'webpage', document.location.pathname);
-
-		// window.exports.networkcube.vistorian.setHeader('logoFrame', params['datasetName']);
 	});
 </script>
 
 <svelte:head>
-	<title>Map</title>
+	<title>Node Link diagram</title>
 </svelte:head>
 
 <svelte:body
@@ -83,6 +81,7 @@
 			<tr>
 				<td width="220px">
 					<LogoFrame {params} />
+					<br />
 					<div width="220" id="bookmarkFrame" />
 				</td>
 				<td width="220px">

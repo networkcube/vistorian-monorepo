@@ -1,16 +1,16 @@
 <script>
 	import { onMount, setContext } from 'svelte';
 
-	import { createVisualizationIFrame } from '../lib/createVisIframe';
-	import { getUrlVars } from '../lib/utils';
-	import { trace } from '../lib/trace';
+	import { createVisualizationIFrame } from '../../lib/createVisIframe';
+	import { getUrlVars } from '../../lib/utils';
+	import { trace } from '../../lib/trace';
 
-	import Bookmarks from '../components/Bookmarks.svelte';
-	import Feedback from '../components/Feedback.svelte';
-	import Footer from '../components/Footer.svelte';
-	import LogoFrame from '../components/LogoFrame.svelte';
+	import Bookmarks from '../../components/Bookmarks.svelte';
+	import Feedback from '../../components/Feedback.svelte';
+	import Footer from '../../components/Footer.svelte';
+	import LogoFrame from '../../components/LogoFrame.svelte';
 
-	setContext('viewType', 'matrix');
+	setContext('viewType', 'map');
 
 	// TODO: implement the scripts from the body tag
 
@@ -54,20 +54,11 @@
 		);
 
 		createVisualizationIFrame(
-			'nodelinkVisFrame',
-			SERVER + '../node_modules/vistorian-nodelink/web/index.html',
+			'visFrame',
+			SERVER + '../node_modules/vistorian-map/web/index.html',
 			params['session'],
 			params['datasetName'],
-			width_col2 / 2,
-			height
-		);
-
-		createVisualizationIFrame(
-			'matrixVisFrame',
-			SERVER + '../node_modules/vistorian-matrix/web/index.html',
-			params['session'],
-			params['datasetName'],
-			width_col2 / 2,
+			width_col2,
 			height
 		);
 
@@ -78,7 +69,7 @@
 </script>
 
 <svelte:head>
-	<title>Matrix & Node-Link Diagram</title>
+	<title>Map</title>
 </svelte:head>
 
 <svelte:body
@@ -92,11 +83,11 @@
 			<tr>
 				<td width="220px">
 					<LogoFrame {params} />
-					<br />
 					<div width="220" id="bookmarkFrame" />
 				</td>
-				<td id="nodelinkVisFrame" />
-				<td id="matrixVisFrame" />
+				<td width="220px">
+					<div width="220" id="visFrame" />
+				</td>
 			</tr>
 		</table>
 
@@ -112,7 +103,8 @@
 	#divMain {
 		margin: 20px;
 	}
-	#bookmarkFrame {
-		margin-right: 20px;
+
+	#visFrame {
+		margin-left: 20px;
 	}
 </style>
