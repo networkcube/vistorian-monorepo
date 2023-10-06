@@ -5,7 +5,7 @@
     "main": "lib/index.js",
     "types": "lib/index.d.js",
     "scripts": {
-        "build": "tsc --pretty false && webpack --config webpack.config.js",
+        "build": "tsc --pretty false; webpack --config webpack.config.js",
         "lint": "eslint src/",
         "clean": "rimraf lib",
         "reformat": "prettier --write src/",

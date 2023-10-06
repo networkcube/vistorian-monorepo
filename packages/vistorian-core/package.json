@@ -5,7 +5,7 @@
   "private": false,
   "types": "lib/index.d.ts",
   "scripts": {
-    "build": "tsc --pretty false && rollup -c",
+    "build": "tsc --pretty false; rollup -c",
     "lint": "eslint src/",
     "clean": "rimraf lib",
     "reformat": "prettier --write src/",
