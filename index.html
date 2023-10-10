@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" href="/favicon.png" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta http-equiv="content-security-policy" content=""><title>The Vistorian</title>
+	<link rel="stylesheet" href="/_app/immutable/assets/index-6bc5a9d9.css">
+	<link rel="stylesheet" href="/_app/immutable/assets/Offcanvas-60614438.css">
+	<link rel="stylesheet" href="/_app/immutable/assets/vistorian-af927694.css">
+	<link rel="stylesheet" href="/_app/immutable/assets/Footer-53efbaec.css">
+	<link rel="modulepreload" href="/_app/immutable/start-0def186f.js">
+	<link rel="modulepreload" href="/_app/immutable/chunks/index-93102edf.js">
+	<link rel="modulepreload" href="/_app/immutable/chunks/index-cb133a72.js">
+	<link rel="modulepreload" href="/_app/immutable/chunks/preload-helper-c28b9807.js">
+	<link rel="modulepreload" href="/_app/immutable/layout.svelte-b3aaefdb.js">
+	<link rel="modulepreload" href="/_app/immutable/pages/index.svelte-73b4cdaf.js">
+	<link rel="modulepreload" href="/_app/immutable/chunks/Offcanvas.svelte_svelte_type_style_lang-964f3055.js">
+	<link rel="modulepreload" href="/_app/immutable/chunks/vistorian-faad5068.js">
+	<link rel="modulepreload" href="/_app/immutable/chunks/main-ba7be054.js">
+	<link rel="modulepreload" href="/_app/immutable/chunks/Footer-a301bf05.js">
+
+		<link rel="stylesheet" type="text/css" href="./styles.css" />
+		<link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" />
+		<link
+			href="https://fonts.googleapis.com/css?family=Montserrat:400,700"
+			rel="stylesheet"
+			type="text/css"
+		/>
+		<link href="https://fonts.googleapis.com/css?family=Poiret+One" rel="stylesheet" />
+		<link href="https://fonts.googleapis.com/css?family=Nunito+Sans" rel="stylesheet" />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+			rel="stylesheet"
+		/>
+
+		<!---  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> --->
+
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css"
+		/>
+
+		<!-- Needed to use <Icon> in sveltstrap -->
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"
+		/>
+	</head>
+	<body>
+		<div id="svelte">
+
+
+
+
+<main><div id="main"><main>
+<div></div></main>
+
+		<p id="sessId" style="display:none"></p>
+		<div id="intro"><img width="350px" id="logo" src="./logos/logo-networkcube.png">
+			<p class="subtitle">Interactive Visualizations for Dynamic and Multivariate Networks. <br> Free, online, and open
+				source.
+			</p>
+			<br>
+
+			<div id="vistiles"><a href="./nodelink?session=0&datasetName=Marie_Boucher" target="_blank"><img class="visimage" src="./figures/nodelink.png"></a>
+				<a href="./dynamicego?session=0&datasetName=Marie_Boucher" target="_blank"><img class="visimage" src="./figures/dynamicego.png"></a>
+				<a href="./matrix?session=0&datasetName=Marie_Boucher" target="_blank"><img class="visimage" src="./figures/matrix.png"></a>
+				<a href="./map?session=0&datasetName=Marie_Boucher" target="_blank"><img class="visimage" src="./figures/map.png"></a></div>
+
+			<div id="divStartSession" class="svelte-98t2hf"><a href="./dataview?session=0"><button class="btn btn-secondary btn-lg" value="" style="">Start my session</button></a></div>
+
+			<br>
+			
+			<h2>Or explore our resources:</h2>
+
+			<br>
+
+			<div id="divMenu" style="display: inline-block" class="svelte-98t2hf"><div style="display: flex; text-align: left"><div class="menuCol svelte-98t2hf"><h2 class="svelte-98t2hf">Overview</h2>
+						<a href="https://vistorian.github.io">Project</a>
+						<br>
+						<a href="https://vistorian.github.io/visualizations.html">Visualizations</a>
+						<br>
+						<a href="https://vistorian.github.io/formattingdata.html">Formatting Data</a>
+						<br>
+						<a href="https://vistorian.github.io/networknarratives.html">NetworkNarratives</a></div>
+
+					<div class="menuCol svelte-98t2hf"><h2 class="svelte-98t2hf">Learn</h2>
+						<a href="https://vistorian.github.io/gettingstarted.html">Getting Started</a>
+						<br>
+						<a href="https://vistorian.github.io/courses.html">Courses</a>
+						<br>
+						<a href="https://vistorian.github.io/tutorials.html">Workshops</a>
+						<br>
+						<a href="https://vistorian.github.io/Troubleshooting.html">Troubleshooting</a>
+						<br>
+						<a href="https://vistorian.github.io/Resources.html">Network Resources</a></div>
+
+					<div class="menuCol svelte-98t2hf"><h2 class="svelte-98t2hf">Context</h2>
+						<a href="https://vistorian.github.io/vistorianLab.html">Research &amp; VistorianLab</a>
+						<br>
+						<a href="https://vistorian.github.io/publications.html">Publications</a>
+						<br>
+						<a href="https://vistorian.github.io/development.html">Contribute</a>
+						<br>
+						<a href="https://vistorian.github.io/team.html">Team</a>
+						<br>
+						<a href="mailto: vistorian@inria.fr">Contact</a></div></div></div>
+
+			<div id="divCitation" style="padding-top: 2em" class="svelte-98t2hf"><h2 class="svelte-98t2hf">Help us sustain the Vistorian by citing us:</h2>
+				<p class="svelte-98t2hf">Benjamin Bach, Nathalie Henry Riche, Roland Fernandez, Emmanoulis Giannisakis, Bongshin
+					Lee, Jean-Daniel Fekete.
+					<a href="https://hal.inria.fr/hal-01205822/document">NetworkCube: Bringing Dynamic Network Visualizations to Domain Scientists <svg id="" class="svelte-fa svelte-1cj2gr0" style="height:1em;vertical-align:-.125em;transform-origin:center;overflow:visible" viewBox="0 0 512 512" aria-hidden="true" role="img" xmlns="http://www.w3.org/2000/svg"><g transform="translate(256 256)" transform-origin="128 0"><g transform="translate(0,0) scale(1,1)"><path d="M432,320H400a16,16,0,0,0-16,16V448H64V128H208a16,16,0,0,0,16-16V80a16,16,0,0,0-16-16H48A48,48,0,0,0,0,112V464a48,48,0,0,0,48,48H400a48,48,0,0,0,48-48V336A16,16,0,0,0,432,320ZM488,0h-128c-21.37,0-32.05,25.91-17,41l35.73,35.73L135,320.37a24,24,0,0,0,0,34L157.67,377a24,24,0,0,0,34,0L435.28,133.32,471,169c15,15,41,4.5,41-17V24A24,24,0,0,0,488,0Z" fill="currentColor" transform="translate(-256 -256)"></path></g></g></svg></a>. Posters of the Conference on Information Visualization (InfoVis), Oct 2015, Chicago,
+					United States. 2015.
+				</p>
+
+				<pre class="citation_bibtex svelte-98t2hf">@misc{bach:hal-01205822,
+    TITLE = {{NetworkCube: Bringing Dynamic Network Visualizations to Domain Scientists}},
+    AUTHOR = {Bach, Benjamin and Henry Riche, Nathalie and Fernandez, Roland and Giannisakis, Emmanoulis and Lee, Bongshin and Fekete, Jean-Daniel},
+    URL = {https://hal.inria.fr/hal-01205822},
+    NOTE = {Poster},
+    HOWPUBLISHED = {{Posters of the Conference on Information Visualization (InfoVis)}},
+    YEAR = {2015},
+    MONTH = Oct
+}</pre>
+				<br></div></div></div>
+
+	<div id="footerDiv" class="svelte-u6xs46"><a href="https://vishub.net/" class="svelte-u6xs46"><img src="/logos/logo-vishub.png" height="40px" alt="Logo for VisHub group"></a>
+	<a href="https://www.inria.fr/fr" class="svelte-u6xs46"><img src="/logos/logo-inria.png" height="40px" alt="Logo for INRIA"></a>
+	<a href="https://www.microsoft.com/en-us/research/" class="svelte-u6xs46"><img src="/logos/logo-msr.png" height="40px" alt="Logo for Microsoft"></a>
+	<a href="https://www.ed.ac.uk/" class="svelte-u6xs46"><img src="/logos/logo-edinburgh.png" height="40px" alt="Logo for University of Edinburgh"></a>
+</div>
+</main>
+
+
+		<script type="module" data-sveltekit-hydrate="19ykxyr">
+		import { start } from "/_app/immutable/start-0def186f.js";
+		start({
+			target: document.querySelector('[data-sveltekit-hydrate="19ykxyr"]').parentNode,
+			paths: {"base":"","assets":""},
+			session: {},
+			route: true,
+			spa: false,
+			trailing_slash: "always",
+			hydrate: {
+				status: 200,
+				error: null,
+				nodes: [0, 5],
+				params: {},
+				routeId: ""
+			}
+		});
+	</script></div>
+	</body>
+</html>

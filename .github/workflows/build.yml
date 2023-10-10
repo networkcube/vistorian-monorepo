@@ -1,0 +1,41 @@
+name: Bootstrap, build and lint
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '16'
+    - run: npm install
+    - run: npm install npm@latest -g
+    - run: npm -v
+    - run: lerna bootstrap
+    - run: lerna run lint
+    - run: lerna run build
+    
+    - name: Archive results of build
+      uses: actions/upload-artifact@v2
+      if: ${{ github.event_name == 'push' }}
+      with:
+        name: vistorian
+        path: packages/vistorian-web-sveltekit/build
+        
+    - uses: up9cloud/action-rsync@v1.3
+    if: ${{ github.event_name == 'push' }}
+    env:
+      USER: ${{secrets.DEPLOY_USERNAME}}
+      HOST: ${{secrets.DEPLOY_SERVER}}
+      KEY: ${{secrets.DEPLOY_SSH_KEY}}
+      SOURCE: packages/vistorian-web-sveltekit/build/
+      TARGET: /var/www/vistorian
+      ARGS_MORE: --no-o --no-g --no-t --no-p

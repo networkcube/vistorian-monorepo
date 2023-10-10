@@ -1,0 +1,20 @@
+{
+    "compilerOptions": {
+        "outDir": "./build/",
+        "target": "es6",
+        "module": "es2015",
+        "sourceMap": true,
+        "strict": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
+        "declaration": true,
+        "allowJs": true
+    },
+    "pretty": false,
+    "files": ["src/index.ts"],
+    "include": [
+        "src/**/*.ts"
+    ]
+}

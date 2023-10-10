@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" href="/favicon.png" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta http-equiv="content-security-policy" content=""><title>Map</title>
+	<link rel="stylesheet" href="/_app/immutable/assets/map-1ae7ff36.css">
+	<link rel="stylesheet" href="/_app/immutable/assets/Offcanvas-60614438.css">
+	<link rel="stylesheet" href="/_app/immutable/assets/Feedback-88a652c2.css">
+	<link rel="stylesheet" href="/_app/immutable/assets/Footer-53efbaec.css">
+	<link rel="modulepreload" href="/_app/immutable/start-0def186f.js">
+	<link rel="modulepreload" href="/_app/immutable/chunks/index-93102edf.js">
+	<link rel="modulepreload" href="/_app/immutable/chunks/index-cb133a72.js">
+	<link rel="modulepreload" href="/_app/immutable/chunks/preload-helper-c28b9807.js">
+	<link rel="modulepreload" href="/_app/immutable/layout.svelte-b3aaefdb.js">
+	<link rel="modulepreload" href="/_app/immutable/pages/map.svelte-3303347c.js">
+	<link rel="modulepreload" href="/_app/immutable/chunks/createVisIframe-5c5b424f.js">
+	<link rel="modulepreload" href="/_app/immutable/chunks/utils-9aa79bf4.js">
+	<link rel="modulepreload" href="/_app/immutable/chunks/Offcanvas.svelte_svelte_type_style_lang-964f3055.js">
+	<link rel="modulepreload" href="/_app/immutable/chunks/Feedback-234e0fd5.js">
+	<link rel="modulepreload" href="/_app/immutable/chunks/Footer-a301bf05.js">
+	<link rel="modulepreload" href="/_app/immutable/chunks/LogoFrame-6516478b.js">
+
+		<link rel="stylesheet" type="text/css" href="./styles.css" />
+		<link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" />
+		<link
+			href="https://fonts.googleapis.com/css?family=Montserrat:400,700"
+			rel="stylesheet"
+			type="text/css"
+		/>
+		<link href="https://fonts.googleapis.com/css?family=Poiret+One" rel="stylesheet" />
+		<link href="https://fonts.googleapis.com/css?family=Nunito+Sans" rel="stylesheet" />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+			rel="stylesheet"
+		/>
+
+		<!---  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> --->
+
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css"
+		/>
+
+		<!-- Needed to use <Icon> in sveltstrap -->
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"
+		/>
+	</head>
+	<body>
+		<div id="svelte">
+
+
+
+
+
+
+<div id="divMain" class="svelte-1yxyi8i"><main><table><tr><td width="220px"><main><div id="logoFrame"><a href="/"><img src="../logos/logo-networkcube.png" width="100%"></a>
+		<p style="margin:5px;background-color:#eeeeee;border-radius:2px;padding-left:10px;padding:5px;"><b>Data:</b>
+			undefined</p>
+		<a style="margin:5px;padding-left:5px;">Return to Dataview</a>
+		<br><br></div></main>
+					<div width="220" id="bookmarkFrame"></div></td>
+				<td width="220px"><div width="220" id="visFrame" class="svelte-1yxyi8i"></div></td></tr></table>
+
+		<div id="footerDiv" class="svelte-u6xs46"><a href="https://vishub.net/" class="svelte-u6xs46"><img src="/logos/logo-vishub.png" height="40px" alt="Logo for VisHub group"></a>
+	<a href="https://www.inria.fr/fr" class="svelte-u6xs46"><img src="/logos/logo-inria.png" height="40px" alt="Logo for INRIA"></a>
+	<a href="https://www.microsoft.com/en-us/research/" class="svelte-u6xs46"><img src="/logos/logo-msr.png" height="40px" alt="Logo for Microsoft"></a>
+	<a href="https://www.ed.ac.uk/" class="svelte-u6xs46"><img src="/logos/logo-edinburgh.png" height="40px" alt="Logo for University of Edinburgh"></a>
+</div>
+
+		<main><div id="mydiv" style="top: 0; left: null; max-height: undefined; max-width: undefined" class="svelte-1obo20w"><div id="mydivheader" class="svelte-1obo20w"><strong>Bookmarks</strong> (Drag header to move)
+
+			<button class="close btn btn-secondary" value="" style="">Collapse</button></div>
+
+		<main><div id="logbook_container" class="svelte-fovtmc"><div>
+<div></div></div>
+
+		<div class="mb-3"><div class="form-check"><input placeholder="" class="form-check-input" id="r1" type="radio" name="" value="all" checked>
+  <label class="form-check-label" for="r1">Show all bookmarks</label></div>
+
+			<div class="form-check"><input placeholder="" class="form-check-input" id="r2" type="radio" name="" value="specific">
+  <label class="form-check-label" for="r2">Show only bookmarks of current visualization</label></div>
+</div>
+
+		<p>No bookmarks to display.</p>
+
+		<button class="btn btn-outline-secondary d-block w-100" value="" style=""><u>A</u>dd New
+		</button>
+
+		<button class="btn btn-outline-secondary d-block w-100" value="" style=""><u>E</u>mail Us &amp; Consult an Expert
+		</button>
+
+		<button class="btn btn-outline-secondary d-block w-100" value="" style="">Report a Technical B<u>u</u>g
+		</button>
+
+		<div style="float: left; width: 45%" class="svelte-fovtmc"><button class="btn btn-outline-secondary" value="" style="width: 100%">E<u>x</u>port Bookmarks
+			</button>
+
+			<button class="btn btn-outline-secondary" value="" style="width: 100%">Show/<u>H</u>ide My Session ID
+			</button></div>
+
+		<div style="float: right; width: 45%" class="svelte-fovtmc"><button class="btn btn-outline-secondary" value="" style="width: 100%"><u>I</u>mport Bookmarks
+			</button>
+
+			<button class="btn btn-outline-secondary" value="" style="width: 100%"><u>C</u>lear Bookmarks
+			</button></div>
+
+		</div>
+</main></div>
+</main>
+
+		<main>
+<div></div>
+
+	<div class="feedback svelte-1bcl956"><button class="btn btn-secondary" value="" style=""><i class="bi-pencil-fill"></i>
+				Give Feedback
+			</button></div>
+</main></main>
+</div>
+
+
+		<script type="module" data-sveltekit-hydrate="ap2tet">
+		import { start } from "/_app/immutable/start-0def186f.js";
+		start({
+			target: document.querySelector('[data-sveltekit-hydrate="ap2tet"]').parentNode,
+			paths: {"base":"","assets":""},
+			session: {},
+			route: true,
+			spa: false,
+			trailing_slash: "always",
+			hydrate: {
+				status: 200,
+				error: null,
+				nodes: [0, 6],
+				params: {},
+				routeId: "map"
+			}
+		});
+	</script></div>
+	</body>
+</html>
