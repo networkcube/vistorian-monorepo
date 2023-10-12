@@ -16,11 +16,11 @@ const config = {
 			fallback: null
 		}),
 
-		prerender: {
-			default: true,
-			onError: 'continue'
-		},
-		trailingSlash: 'always'
+		//prerender: {
+		//	default: true,
+		//	onError: 'continue'
+		//},
+		// trailingSlash: 'always'
 	}
 };
 

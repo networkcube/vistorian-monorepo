@@ -10,7 +10,8 @@
         "moduleResolution": "node",
         "resolveJsonModule": true,
         "declaration": true,
-        "skipLibCheck": true
+        "skipLibCheck": true,
+        "noImplicitAny": false
     },
     "pretty": false,
     "files": [

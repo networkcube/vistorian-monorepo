@@ -39,7 +39,7 @@ Install lerna on your machine (if it is not already installed):
 Change directory into the working-directory of this repo and bootstrap:
 
     cd vistorian-monorepo/
-    lerna bootstrap
+    npm install
 
 This will install the dependencies for each package by downloading them from NPM and saving them into their corresponding `node_modules`.
 Where the dependency is another package in this repo, it will instead create a symbolic link from the `node_modules/` to the appropriate directory.

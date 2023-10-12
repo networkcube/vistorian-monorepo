@@ -1,16 +1,19 @@
 <script>
+	// TODO:
+	// - imlude science.js ?
+
 	import { onMount, setContext } from 'svelte';
 
-	import { createVisualizationIFrame } from '../lib/createVisIframe';
-	import { getUrlVars } from '../lib/utils';
-	import { trace } from '../lib/trace';
+	import { createVisualizationIFrame } from '../../lib/createVisIframe';
+	import { getUrlVars } from '../../lib/utils';
+	import { trace } from '../../lib/trace';
 
-	import Bookmarks from '../components/Bookmarks.svelte';
-	import Feedback from '../components/Feedback.svelte';
-	import Footer from '../components/Footer.svelte';
-	import LogoFrame from '../components/LogoFrame.svelte';
+	import Bookmarks from '../../components/Bookmarks.svelte';
+	import Feedback from '../../components/Feedback.svelte';
+	import Footer from '../../components/Footer.svelte';
+	import LogoFrame from '../../components/LogoFrame.svelte';
 
-	setContext('viewType', 'nodelink');
+	setContext('viewType', 'matrix');
 
 	// TODO: implement the scripts from the body tag
 
@@ -55,7 +58,7 @@
 
 		createVisualizationIFrame(
 			'visFrame',
-			SERVER + '../node_modules/vistorian-nodelink/web/index.html',
+			SERVER + '../node_modules/vistorian-matrix/web/index.html',
 			params['session'],
 			params['datasetName'],
 			width_col2,
@@ -63,11 +66,13 @@
 		);
 
 		trace.event('log_2', 'load', 'webpage', document.location.pathname);
+
+		// window.exports.networkcube.vistorian.setHeader('logoFrame', params['datasetName']);
 	});
 </script>
 
 <svelte:head>
-	<title>Node Link diagram</title>
+	<title>Matrix</title>
 </svelte:head>
 
 <svelte:body
@@ -102,7 +107,6 @@
 	#divMain {
 		margin: 20px;
 	}
-
 	#visFrame {
 		margin-left: 20px;
 	}

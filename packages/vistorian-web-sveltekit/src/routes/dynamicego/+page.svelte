@@ -1,19 +1,16 @@
 <script>
-	// TODO:
-	// - imlude science.js ?
-
 	import { onMount, setContext } from 'svelte';
 
-	import { createVisualizationIFrame } from '../lib/createVisIframe';
-	import { getUrlVars } from '../lib/utils';
-	import { trace } from '../lib/trace';
+	import { createVisualizationIFrame } from '../../lib/createVisIframe';
+	import { getUrlVars } from '../../lib/utils';
+	import { trace } from '../../lib/trace';
 
-	import Bookmarks from '../components/Bookmarks.svelte';
-	import Feedback from '../components/Feedback.svelte';
-	import Footer from '../components/Footer.svelte';
-	import LogoFrame from '../components/LogoFrame.svelte';
+	import Bookmarks from '../../components/Bookmarks.svelte';
+	import Feedback from '../../components/Feedback.svelte';
+	import Footer from '../../components/Footer.svelte';
+	import LogoFrame from '../../components/LogoFrame.svelte';
 
-	setContext('viewType', 'matrix');
+	setContext('viewType', 'dynamicego');
 
 	// TODO: implement the scripts from the body tag
 
@@ -58,13 +55,14 @@
 
 		createVisualizationIFrame(
 			'visFrame',
-			SERVER + '../node_modules/vistorian-matrix/web/index.html',
+			SERVER + '../node_modules/vistorian-dynamicego/web/index.html',
 			params['session'],
 			params['datasetName'],
 			width_col2,
 			height
 		);
 
+		// these were called in the body tag's onload
 		trace.event('log_2', 'load', 'webpage', document.location.pathname);
 
 		// window.exports.networkcube.vistorian.setHeader('logoFrame', params['datasetName']);
@@ -72,7 +70,7 @@
 </script>
 
 <svelte:head>
-	<title>Matrix</title>
+	<title>Timeline</title>
 </svelte:head>
 
 <svelte:body
@@ -81,12 +79,11 @@
 	on:beforeunload={() => trace.event('log_12', 'page', 'close', document.location.pathname)} />
 
 <div id="divMain">
-	<main>
+	<div style="height: 100vh; overflow: hidden;">
 		<table>
 			<tr>
 				<td width="220px">
 					<LogoFrame {params} />
-					<br />
 					<div width="220" id="bookmarkFrame" />
 				</td>
 				<td width="220px">
@@ -100,7 +97,7 @@
 		<Bookmarks />
 
 		<Feedback />
-	</main>
+	</div>
 </div>
 
 <style>

@@ -1,10 +1,10 @@
 <script>
 	import { onMount } from 'svelte';
 
-	import { createVisualizationIFrame } from '../lib/createVisIframe';
-	import { getUrlVars } from '../lib/utils';
+	import { createVisualizationIFrame } from '../../lib/createVisIframe';
+	import { getUrlVars } from '../../lib/utils';
 
-	import Footer from '../components/Footer.svelte';
+	import Footer from '../../components/Footer.svelte';
 
 	onMount(async () => {
 		let SERVER;

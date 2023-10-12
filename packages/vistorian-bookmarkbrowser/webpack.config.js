@@ -1,6 +1,6 @@
 const path = require("path");
 const CircularDependencyPlugin = require("circular-dependency-plugin");
-const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
 
 module.exports = {
   mode: "production",
@@ -20,7 +20,14 @@ module.exports = {
     rules: [
       {
         test: /\.ts|\.tsx$/,
-        use: "ts-loader",
+        use: [
+          {
+            loader: 'ts-loader',
+            options: {
+              transpileOnly: true
+            }
+          }
+        ],
         exclude: /node_modules/,
       },
     ],
@@ -33,8 +40,9 @@ module.exports = {
     libraryTarget: "umd",
     filename: "index.js",
     path: path.resolve(__dirname, "lib"),
+    //hashFunction: 'xxhash64' // see https://stackoverflow.com/a/73027407
   },
   optimization: {
-    minimizer: [new UglifyJsPlugin()],
-  },
+    minimizer: [new TerserPlugin()],
+    },
 };

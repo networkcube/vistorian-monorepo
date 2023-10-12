@@ -2,20 +2,20 @@
 	import { onMount } from 'svelte';
 	import Grid from 'gridjs-svelte';
 
-	import { trace } from '../lib/trace';
+	import { trace } from '../../lib/trace';
 
 	import { Button } from 'sveltestrap';
 
 	import Fa from 'svelte-fa';
 	import { faPlus, faRedo, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 
-	import Bookmarks from '../components/Bookmarks.svelte';
-	import Feedback from '../components/Feedback.svelte';
-	import Footer from '../components/Footer.svelte';
-	import ImportWizard from '../components/import/ImportWizard.svelte';
+	import Bookmarks from '../../components/Bookmarks.svelte';
+	import Feedback from '../../components/Feedback.svelte';
+	import Footer from '../../components/Footer.svelte';
+	import ImportWizard from '../../components/import/ImportWizard.svelte';
 
-	import * as storage from '../lib/storage';
-	import { getUrlVars } from '../lib/utils';
+	import * as storage from '../../lib/storage';
+	import { getUrlVars } from '../../lib/utils';
 	import * as main from 'vistorian-core/src/data/main';
 
 	// TODO: default to selectng first network

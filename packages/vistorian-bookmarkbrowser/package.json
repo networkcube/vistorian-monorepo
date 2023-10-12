@@ -5,7 +5,7 @@
     "main": "lib/index.js",
     "types": "lib/index.d.js",
     "scripts": {
-        "build": "tsc --pretty false && webpack --config webpack.config.js",
+        "build": "tsc --pretty false; webpack --config webpack.config.js",
         "lint": "eslint src/",
         "clean": "rimraf lib",
         "reformat": "prettier --write src/",
@@ -21,12 +21,12 @@
         "eslint": "^7.32.0",
         "prettier": "^2.4.1",
         "rimraf": "^2.6.3",
-        "ts-loader": "^5.3.3",
-        "typescript": "^3.2.4",
-        "uglifyjs-webpack-plugin": "^2.2.0",
-        "webpack": "^4.29.0",
+        "terser-webpack-plugin": "5.3.6",
+        "ts-loader": "9.3.0",
+		"typescript": "^4.7.4",
+        "webpack": "5.73.0",
         "webpack-bundle-analyzer": "^3.0.3",
-        "webpack-cli": "^3.2.1",
+        "webpack-cli": "5.1.4",
         "webpack-dev-server": "^3.1.14"
     },
     "repository": {
@@ -43,7 +43,12 @@
         "vistorian-core"
     ],
     "dependencies": {
-        "@types/d3": "^7.0.0",
+        "@types/d3": "7.0.0",
+        "@types/lodash": "4.14.172",
+        "@types/lz-string": "1.3.34",
+        "@types/three": "0.93.31",
+        "@types/node": "16.11.1",
+        "@types/d3-array": "3.0.1",
         "circular-dependency-plugin": "^5.0.2",
         "d3": "^7.0.1",
         "vistorian-core": "0.1.5"
